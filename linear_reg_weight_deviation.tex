@@ -1,0 +1,399 @@
+%% LyX 2.4.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[american]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1cm,bmargin=1cm,lmargin=1cm,rmargin=1cm}
+\usepackage{calc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{babel}
+\begin{document}
+
+\subsection{Problem Setup}
+
+Consider the simple linear model with Gaussian data and white Gaussian
+noise, data generative model
+\begin{equation}
+y=\beta^{T}\mathbf{x}+\ \sigma\epsilon\label{eq:linear_model_gauss_noise}
+\end{equation}
+
+Consider $n$ data points, with $d$ dimension. 
+
+Data points $\mathbf{x}$ has population covariance $\Sigma$ (assume
+to be zero mean at this moment).  
+\[
+X=[\mathbf{x}^{(1)}|\mathbf{x}^{(2)}|...|\mathbf{x}^{(n)}]^{\top}\in\mathbb{R}^{n\times d}
+\]
+
+$\eta$ denote the realized noise with unit variance. 
+
+\subsection{Coefficient estimation error along dataset PC }
+
+Consider the OLS estimator, 
+\begin{align*}
+\hat{\beta} & =X^{\dagger}\mathbf{y}\\
+ & =(X^{T}X)^{-1}X^{T}\mathbf{y}\\
+ & =(X^{T}X)^{-1}X^{T}(X\beta^{*}+\sigma\eta)\\
+ & =(X^{T}X)^{-1}X^{T}X\beta^{*}+\sigma(X^{T}X)^{-1}X^{T}\eta\\
+ & =\beta^{*}+\sigma(X^{T}X)^{-1}X^{T}\eta
+\end{align*}
+
+More generally, consider Ridge estimator 
+\begin{align*}
+\hat{\beta} & =(X^{T}X+n\lambda I_{d})^{-1}X^{T}\mathbf{y}\\
+ & =(X^{T}X+n\lambda I_{d})^{-1}X^{T}(X\beta^{*}+\sigma\eta)\\
+ & =(X^{T}X+n\lambda I_{d})^{-1}X^{T}X\beta^{*}+\sigma(X^{T}X+n\lambda I_{d})^{-1}X^{T}\eta\\
+ & =(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
+\end{align*}
+
+We can consider the deviation of the weight from the optimal one,
+using abbreviation $\hat{\Sigma}:=\frac{1}{n}X^{T}X$, and rewrite
+the samples as $X=Z\Sigma^{1/2}$
+\begin{align*}
+(\hat{\beta}-\beta^{*}) & =\Big((X^{T}X+n\lambda I_{d})^{-1}X^{T}X-I\Big)\beta^{*}+\sigma(X^{T}X+n\lambda I_{d})^{-1}X^{\top}\eta\\
+ & =\Big((\frac{1}{n}X^{T}X+\lambda I_{d})^{-1}\frac{1}{n}X^{T}X-I\Big)\beta^{*}+\sigma(\frac{1}{n}X^{T}X+\lambda I_{d})^{-1}\frac{1}{n}X^{\top}\eta\\
+ & =\Big((\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}-I\Big)\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\big(\frac{1}{n}X^{\top}\eta\big)\\
+ & =-\lambda(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\big)\\
+ & =-\lambda(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\big)
+\end{align*}
+
+Note that the 2nd term $\big(\frac{1}{n}Z^{\top}\eta\big)$ it's $d$
+dim vector, where each entry is the average of $n$ i.i.d. product
+normal variable. At the large n limit it will have variance=1. 
+\begin{align*}
+\Delta\beta_{noise} & =\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\big)\\
+ & \approx\sigma(\Sigma+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\big)
+\end{align*}
+
+along each population eigen directions $\mathbf{u}_{k}$. 
+\[
+\mathbf{u}_{k}^{\top}\Delta\beta_{noise}\approx\sigma\frac{\sqrt{\lambda_{k}}}{\lambda+\lambda_{k}}\mathbf{u}_{k}^{\top}\big(\frac{1}{n}Z^{\top}\eta\big)
+\]
+
+We can say
+\[
+X=Z\Sigma^{1/2}
+\]
+
+Using deterministic equivalence we have
+\[
+(\hat{\beta}-\beta^{*})\asymp\Big((\Sigma+\kappa\big(\lambda\big)I_{d})^{-1}\Sigma-I\Big)\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\big)
+\]
+
+We could consider the expectation of the deviation along an PC
+\[
+\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*})\asymp-\frac{\kappa}{\lambda_{k}+\kappa}\mathbf{u}_{k}^{\top}\beta^{*}+
+\]
+
+We could consider the expectation of the squared error on each direction,
+the expectation is taken over realization of data $X$ (or equivalently
+$Z$) and noise $\eta$ 
+\begin{align*}
+\mathbb{E}_{X,\eta}\Big[(\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big] & =\mathbb{E}_{X,\eta}\Big[(\hat{\beta}-\beta^{*})^{\top}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*})\Big]\\
+ & =\mathbb{E}_{X,\eta}\Big[\lambda^{2}\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
+ & \quad\quad+\sigma^{2}\big(\frac{1}{n}Z^{\top}\eta\big)^{\top}\Sigma^{1/2}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\big)\\
+ & \quad\quad+-2\sigma\lambda\big(\frac{1}{n}Z^{\top}\eta\big)^{\top}\Sigma^{1/2}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\Big]
+\end{align*}
+
+Taking expectation over the $\eta$, we have 
+\begin{align*}
+\mathbb{E}_{X,\eta}\Big[(\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big] & =\mathbb{E}_{X}\Big[\lambda^{2}\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
+ & \quad\quad+\frac{\sigma^{2}}{n}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\eta^{\top}Z\big)\Sigma^{1/2}\Big]\\
+ & =\mathbb{E}_{\hat{\Sigma}}\Big[\lambda^{2}\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
+ & \quad\quad+\frac{\sigma^{2}}{n}\text{Tr}\big[(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\big]\Big]
+\end{align*}
+
+We have 
+\begin{align*}
+\mathbb{E}_{\eta}\Big[\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}\eta\eta^{\top}Z\big)\Sigma^{1/2}\Big] & =\Sigma^{1/2}\big(\frac{1}{n}Z^{\top}I_{n}Z\big)\Sigma^{1/2}\\
+ & =\frac{1}{n}\Sigma^{1/2}Z^{\top}Z\Sigma^{1/2}\\
+ & =\frac{1}{n}X^{\top}X\\
+ & =\hat{\Sigma}
+\end{align*}
+
+We could apply deterministic equivalence here 
+\begin{align*}
+(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}(\hat{\Sigma}+\lambda I_{d})^{-1} & =(\hat{\Sigma}+\lambda I_{d})^{-1}-\lambda(\hat{\Sigma}+\lambda I_{d})^{-2}\\
+ & =\frac{d}{d\lambda}\Big(\lambda(\hat{\Sigma}+\lambda I_{d})^{-1}\Big)
+\end{align*}
+
+So 2nd term reads
+\begin{align*}
+ & \mathbb{E}_{\hat{\Sigma}}\Big[\frac{\sigma^{2}}{n}\text{Tr}\big[(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\big]\Big]\\
+= & \frac{\sigma^{2}}{n}\mathbb{E}_{\hat{\Sigma}}\Big[\frac{d}{d\lambda}\Big(\mathbf{u}_{k}^{\top}\lambda(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\Big)\Big]\\
+\asymp & \frac{\sigma^{2}}{n}\mathbb{E}_{\hat{\Sigma}}\Big[\frac{d}{d\lambda}\Big(\mathbf{u}_{k}^{\top}\kappa(\Sigma+\kappa I_{d})^{-1}\mathbf{u}_{k}\Big)\Big]\\
+= & \frac{\sigma^{2}}{n}\frac{d}{d\lambda}\frac{\kappa(\lambda)}{\kappa(\lambda)+\lambda_{k}}\\
+= & \frac{\sigma^{2}}{n}(\frac{d\kappa}{d\lambda})\frac{d}{d\kappa}\frac{\kappa(\lambda)}{\kappa(\lambda)+\lambda_{k}}\\
+= & \frac{\sigma^{2}}{n}\frac{d\kappa}{d\lambda}\frac{\lambda_{k}}{(\kappa+\lambda_{k})^{2}}
+\end{align*}
+
+Using
+\[
+\frac{d}{d\kappa}\left(\frac{\kappa}{\kappa+\lambda_{k}}\right)=\frac{\lambda_{k}}{(\kappa+\lambda_{k})^{2}}
+\]
+
+The 1st term can be tackled by the two-point equivalence 
+\[
+\mbox{Tr}\bigl[A\,(\widehat{\Sigma}+zI)^{-1}\bigr]\sim\frac{\kappa(z)}{z}\mbox{Tr}\bigl[A\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\bigr]
+\]
+\begin{align*}
+\mbox{Tr}\bigl[A(\widehat{\Sigma}+zI)^{-1}B(\widehat{\Sigma}+zI)^{-1}\bigr] & \sim\frac{\kappa(z)^{2}}{z^{2}\,}\mbox{Tr}\bigl[A\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\,B\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\bigr]\\
+ & \quad+\frac{\kappa(z)^{2}}{z^{2}}\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa(z)\bigr)}\mbox{Tr}\bigl[A\,\bigl(\Sigma+\kappa(z)I\bigr)^{-2}\Sigma\bigr]\mbox{Tr}\bigl[B\,\bigl(\Sigma+\kappa(z)I\bigr)^{-2}\Sigma\bigr]
+\end{align*}
+
+\begin{align*}
+ & \mathbb{E}_{\hat{\Sigma}}\Big[\lambda^{2}\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\Big]\\
+\asymp & \kappa(\lambda)^{2}\mbox{Tr}\bigl[\beta^{*\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-1}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-1}\beta^{*}\bigr]\\
+ & +\frac{\kappa^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\mbox{Tr}\bigl[\mathbf{u}_{k}\mathbf{u}_{k}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bigr]\mbox{Tr}\bigl[\beta^{*}\beta^{*\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bigr]\\
+= & \kappa^{2}(\beta^{*\top}\mathbf{u}_{k})^{2}\frac{1}{(\lambda_{k}+\kappa)^{2}}\\
+ & +\frac{\kappa^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\frac{\lambda_{k}}{(\lambda_{k}+\kappa)^{2}}\Big(\beta^{*\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\beta^{*}\Big)\\
+= & \frac{\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}(\beta^{*\top}\mathbf{u}_{k})^{2}+\frac{\kappa^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\frac{\lambda_{k}}{(\lambda_{k}+\kappa)^{2}}\Big(\beta^{*\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\beta^{*}\Big)\\
+= & \frac{\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}(\beta^{*\top}\mathbf{u}_{k})^{2}+\frac{\kappa^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\frac{\lambda_{k}}{(\lambda_{k}+\kappa)^{2}}\Big(\sum_{k}\frac{\lambda_{k}}{(\lambda_{k}+\kappa)^{2}}(\beta^{*\top}\mathbf{u}_{k})^{2}\Big)
+\end{align*}
+
+Taking together we have the formula for the squared deviation along
+PCs. 
+\begin{align*}
+\mathbb{E}_{X,\eta}\Big[(\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big] & \asymp\frac{\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}(\beta^{*\top}\mathbf{u}_{k})^{2}\\
+ & \quad+\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\frac{\lambda_{k}\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}\Big(\beta^{*\top}\bigl(\Sigma+\kappa I\bigr)^{-2}\Sigma\beta^{*}\Big)\\
+ & \quad+\frac{\sigma^{2}}{n}\frac{d\kappa}{d\lambda}\frac{\lambda_{k}}{(\kappa+\lambda_{k})^{2}}\\
+ & \asymp\frac{\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}(\beta^{*\top}\mathbf{u}_{k})^{2}\\
+ & \quad+\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\frac{\lambda_{k}\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}\Big(\beta^{*\top}\bigl(\Sigma+\kappa I\bigr)^{-2}\Sigma\beta^{*}\Big)\\
+ & \quad+\frac{\sigma^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\frac{\lambda_{k}}{(\kappa+\lambda_{k})^{2}}
+\end{align*}
+
+\noindent\begin{minipage}[t]{1\columnwidth}%
+\begin{align*}
+\frac{d\kappa}{d\lambda} & =(\frac{d\lambda}{d\kappa})^{-1}\\
+ & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}
+\end{align*}
+%
+\end{minipage}
+
+\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
+\textbf{Derivation of $d\kappa/d\lambda$}
+
+\[
+\kappa(z)-z=\gamma\kappa(z)\int_{0}^{\infty}\frac{sd\mu(s)}{\kappa(z)+s}
+\]
+
+in discrete case 
+\begin{align*}
+\kappa(\lambda)-\lambda & =\gamma\kappa(\lambda)\frac{1}{d}\sum_{i}\frac{s_{i}}{\kappa(\lambda)+s_{i}}\\
+\lambda & =\kappa(\lambda)\Big[1-\gamma\frac{1}{d}\sum_{i}\frac{s_{i}}{\kappa(\lambda)+s_{i}}\Big]\\
+\frac{d\lambda}{d\kappa} & =1-\gamma\frac{1}{d}\sum_{i}\frac{s_{i}}{\kappa(\lambda)+s_{i}}+\kappa(\lambda)\gamma\frac{1}{d}\sum_{i}\frac{s_{i}}{(\kappa(\lambda)+s_{i})^{2}}\\
+ & =1+\gamma\frac{1}{d}\sum_{i}\frac{s_{i}\kappa(\lambda)-s_{i}(\kappa(\lambda)+s_{i})}{(\kappa(\lambda)+s_{i})^{2}}\\
+ & =1-\gamma\frac{1}{d}\sum_{i}\frac{s_{i}^{2}}{(\kappa(\lambda)+s_{i})^{2}}\\
+ & =1-\gamma\frac{1}{d}\mathrm{df}_{2}\bigl(\kappa\bigr)
+\end{align*}
+
+$\gamma=d/n$ so 
+\begin{align*}
+\frac{d\lambda}{d\kappa} & =1-\frac{1}{n}\mathrm{df}_{2}\bigl(\kappa\bigr)\\
+\frac{d\kappa}{d\lambda} & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}
+\end{align*}
+%
+\end{minipage}}
+
+We have three terms
+\begin{itemize}
+\item 1st term can be understood as ``overshrinkage'' of true weight due
+to Ridge, 
+\begin{itemize}
+\item it's proportional to the true magnitude along this PC $(\beta^{*\top}\mathbf{u}_{k})^{2}$.
+\item It will vanish at the limit (no Ridge) $\kappa^{2}\to0$
+\item and when the $\lambda_{k}>\kappa$ this term is quite small, i.e.
+Ridge will treat it as signal and learn it correctly. 
+\item when $\kappa>\lambda_{k}$, Ridge will tend to treat it as noise and
+shrink too much, leading to the error coef proportional to $\frac{\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}$
+\item This $\frac{\kappa^{2}}{(\lambda_{k}+\kappa)^{2}}\in(0,1)$ cannot
+explode. 
+\item This term is not finite sample effect, even exist in infinite sample. 
+\end{itemize}
+\item 2nd term is still about signal 
+\begin{itemize}
+\item It's a Ridge effect, it's proportional to $\kappa^{2}$ so will vanish
+when no ridge. 
+\item its anisotropic factor is like $\frac{\kappa^{2}\lambda_{k}}{(\lambda_{k}+\kappa)^{2}}$,
+it will peak at $\lambda_{k}=\kappa$ with value $\frac{\kappa}{4}$. 
+\item When $\kappa$ is small this will go up 
+\item It's a finite sample effect, which scales down with $\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}$
+\end{itemize}
+\item 3rd term is about the noise
+\begin{itemize}
+\item it's a finite sample effect, it scales down with $\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}$
+and vanish when $n\to\infty$. 
+\item its anisotropic factor is also $\frac{\lambda_{k}}{(\kappa+\lambda_{k})^{2}}$
+so it will peak at $\lambda_{k}$with value $\frac{1}{4\kappa}$. 
+\item When $\kappa$ is small this will keep go up and explode! 
+\end{itemize}
+\end{itemize}
+
+\subsection{Accentuation error and OOD generalization}
+
+\paragraph{Generalization error on the true distribution}
+
+Normal on manifold test error reads 
+\[
+\mathbb{E}_{X,\eta,\mathbf{x}\sim\mathcal{N}(0,\Sigma)}\Big[((\hat{\beta}-\beta^{*})^{\top}\mathbf{x})^{2}\Big]
+\]
+
+This OOD generalization can be easily calculated via the deterministic
+equivalence above. 
+
+\begin{align*}
+ & \mathbb{E}_{X,\eta,\mathbf{x}\sim\mathcal{N}(0,\Sigma)}\Big[((\hat{\beta}-\beta^{*})^{\top}\mathbf{x})^{2}\Big]\\
+= & \mathbb{E}_{X,\eta,\mathbf{x}\sim\mathcal{N}(0,\Sigma)}\Big[(\hat{\beta}-\beta^{*})^{\top}\mathbf{x}\mathbf{x}^{\top}(\hat{\beta}-\beta^{*})\Big]\\
+= & \mathbb{E}_{X,\eta}\Big[(\hat{\beta}-\beta^{*})^{\top}\Sigma(\hat{\beta}-\beta^{*})\Big]\\
+= & \sum_{k=1}^{d}\lambda_{k}\mathbb{E}_{X,\eta}\Big[(\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]
+\end{align*}
+
+
+\paragraph{Generalization error on the accentuation path}
+
+Let's note that this is also the expected MSE error against the ground
+truth, when we ``accentuate'' along a PC of data $\mathbf{x}=\alpha\mathbf{u}_{k}$,
+then error reads, 
+\[
+\mathbb{E}_{X,\eta}\Big[(\mathbf{u}_{k}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]
+\]
+
+if we accentuate along $\hat{\beta}$ the error will be like
+\[
+\mathbb{E}_{X,\eta}\Big[(\hat{\beta}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]
+\]
+
+But there will be a scaling term to be determined. 
+
+\subparagraph{Normalizer of the scaling.}
+
+We have normalizer the normal response range is 
+\[
+\mathrm{Var}[\mathbf{x}^{\top}\beta^{*}]=\mathbb{E}_{\mathbf{x}\sim\mathcal{N}(0,\Sigma)}\Big[(\mathbf{x}^{\top}\beta^{*})^{2}\Big]=\beta^{*\top}\Sigma\beta^{*}
+\]
+
+Using accentuations to match this range, i.e. if we sample $\mathbf{x}=\alpha\hat{\beta}$,
+let $\mathbb{E}[\alpha]=0$ be centered, then the predicted variance
+is 
+\[
+\mathrm{Var}[\mathbf{x}^{\top}\hat{\beta}]=\mathrm{Var}[\alpha\hat{\beta}^{\top}\hat{\beta}]=(\hat{\beta}^{\top}\hat{\beta})^{2}\mathrm{Var}[\alpha]
+\]
+
+So if one want to match the variance of accentuation to that of the
+natural variations, then 
+\begin{align*}
+(\hat{\beta}^{\top}\hat{\beta})^{2}\mathrm{Var}[\alpha] & =\beta^{*\top}\Sigma\beta^{*}\\
+\mathrm{Var}[\alpha] & =\frac{\beta^{*\top}\Sigma\beta^{*}}{(\hat{\beta}^{\top}\hat{\beta})^{2}}
+\end{align*}
+
+Notably the ``accentuation evaluation error'' should actually be
+\begin{align*}
+ & \mathbb{E}_{X,\eta,\alpha}\Big[(\alpha\hat{\beta}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]\\
+= & \mathbb{E}_{X,\eta,\alpha}\Big[\alpha^{2}(\hat{\beta}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]\\
+= & \mathbb{E}_{X,\eta}\Big[\mathrm{Var}[\alpha](\hat{\beta}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]\\
+= & \mathbb{E}_{X,\eta}\Big[\beta^{*\top}\Sigma\beta^{*}\frac{(\hat{\beta}^{\top}(\hat{\beta}-\beta^{*}))^{2}}{(\hat{\beta}^{\top}\hat{\beta})^{2}}\Big]\\
+= & \beta^{*\top}\Sigma\beta^{*}\cdot\mathbb{E}_{X,\eta}\Big[\frac{(\hat{\beta}^{\top}\hat{\beta}-\hat{\beta}^{\top}\beta^{*})^{2}}{(\hat{\beta}^{\top}\hat{\beta})^{2}}\Big]\\
+= & \beta^{*\top}\Sigma\beta^{*}\cdot\mathbb{E}_{X,\eta}\Big[\frac{(\hat{\beta}^{\top}\hat{\beta})^{2}-2\hat{\beta}^{\top}\hat{\beta}\hat{\beta}^{\top}\beta^{*}+(\hat{\beta}^{\top}\beta^{*})^{2}}{(\hat{\beta}^{\top}\hat{\beta})^{2}}\Big]\\
+= & \beta^{*\top}\Sigma\beta^{*}\cdot\mathbb{E}_{X,\eta}\Big[\Big(1-2\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}+\frac{(\hat{\beta}^{\top}\beta^{*})^{2}}{(\hat{\beta}^{\top}\hat{\beta})^{2}}\Big)\Big]\\
+= & \beta^{*\top}\Sigma\beta^{*}\cdot\mathbb{E}_{X,\eta}\Big[1-2\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}+\Big(\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big)^{2}\Big]
+\end{align*}
+
+Using the definition
+\[
+\hat{\beta}=(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
+\]
+
+The key quantity of analysis is 
+\[
+\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}
+\]
+
+Expanding it, 
+\begin{align*}
+\mathbf{\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}=} & \frac{\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}+\sigma\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}{\big((\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)\big)^{\top}\big((\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)\big)}\\
+= & \frac{\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}+\sigma\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}{\beta^{*\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\beta^{*}+2\sigma\beta^{*\top}\hat{\Sigma}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta)+\sigma^{2}(\frac{1}{n}X^{\top}\eta)^{\top}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta)}
+\end{align*}
+
+Lets do the approximation i.e. 
+\[
+\mathbb{E}_{X,\eta}\Big[\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big]\approx\frac{\mathbb{E}_{X,\eta}\Big[\hat{\beta}^{\top}\beta^{*}\Big]}{\mathbb{E}_{X,\eta}\Big[\hat{\beta}^{\top}\hat{\beta}\Big]}
+\]
+
+The approximation error is missing the covariance between the numerator
+and denominator. 
+
+Both numerator and denominator concentrates, 
+
+The right hand side is much easier to compute 
+\begin{align*}
+\mathbb{E}_{X,\eta}\Big[\hat{\beta}^{\top}\beta^{*}\Big] & =\mathbb{E}_{X}\Big[\beta^{*\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}\Big]\\
+ & \asymp\beta^{*\top}(\Sigma+\kappa(\lambda)I_{d})^{-1}\Sigma\beta^{*}
+\end{align*}
+\begin{align*}
+\mathbb{E}_{X,\eta}\Big[\hat{\beta}^{\top}\hat{\beta}\Big] & =\mathbb{E}_{X}\Big[\beta^{*\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\beta^{*}\Big]+\mathbb{E}_{X,\eta}\Big[\sigma^{2}(\frac{1}{n}X^{\top}\eta)^{\top}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta)\Big]\\
+ & =\mathbb{E}_{X}\Big[\beta^{*\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\beta^{*}\Big]+\sigma^{2}\mathbb{E}_{X,\eta}\mathrm{Tr}\Big[\frac{1}{n}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta\eta^{\top}X)\Big]\\
+ & =\mathbb{E}_{X}\Big[\beta^{*\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\beta^{*}\Big]+\frac{\sigma^{2}}{n}\mathbb{E}_{X}\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-2}\hat{\Sigma}\Big]
+\end{align*}
+
+Both term can be tackled by the two point deterministic equivalence
+or their derivatives. 
+
+The 3rd term reads
+\[
+\mathbb{E}_{X,\eta}\Big[\Big(\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big)^{2}\Big]\approx\frac{\mathbb{E}_{X,\eta}\Big[(\hat{\beta}^{\top}\beta^{*})^{2}\Big]}{\mathbb{E}_{X,\eta}\Big[(\hat{\beta}^{\top}\hat{\beta})^{2}\Big]}
+\]
+
+though doing the numerator and denominator is a bit complex, we may
+approximate 
+\[
+\mathbb{E}_{X,\eta}\Big[\Big(\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big)^{2}\Big]\approx\mathbb{E}_{X,\eta}\Big[\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big]^{2}\approx\Big(\frac{\mathbb{E}_{X,\eta}\Big[\hat{\beta}^{\top}\beta^{*}\Big]}{\mathbb{E}_{X,\eta}\Big[\hat{\beta}^{\top}\hat{\beta}\Big]}\Big)^{2}
+\]
+
+Denote
+\[
+\mathbb{E}_{X,\eta}\Big[\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big]\asymp R_{det}
+\]
+
+Then we can say the error reads,
+\begin{align*}
+ & \mathbb{E}_{X,\eta,\alpha}\Big[(\alpha\hat{\beta}^{\top}(\hat{\beta}-\beta^{*}))^{2}\Big]\\
+ & =\beta^{*\top}\Sigma\beta^{*}\cdot\mathbb{E}_{X,\eta}\Big[1-2\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}+\Big(\frac{\hat{\beta}^{\top}\beta^{*}}{\hat{\beta}^{\top}\hat{\beta}}\Big)^{2}\Big]\\
+ & \asymp\beta^{*\top}\Sigma\beta^{*}\cdot(1-R_{det})^{2}
+\end{align*}
+
+Error is on the (1/n) order. 
+\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
+In our previous notation convention, the equivalence reads
+\[
+A*B(\lambda+A*B)^{-1}MA*B(\lambda'+A*B)^{-1}\simeq T_{A}MT'_{A}+\kappa\kappa'G_{A}AG'_{A}\frac{\,\mbox{Tr}\left[AG_{A}MG'_{A}\right]}{n-\mathrm{df}_{2}(\kappa,\kappa')}.
+\]
+
+with data dimension $d$, number of point $n$, with unnormalized
+trace and unnormalized $\mathrm{df}_{2}\in[0,d]$, and denote the
+$q=d/n$, where $n$ is the data point number 
+As an immediate outcome, set $A=\Sigma$, $B=\frac{1}{n}XX^{T}$ as
+white Wishart, then $A*B=\hat{\Sigma}$. Thus, 
+\[
+\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}M\hat{\Sigma}(\lambda^{\prime}+\hat{\Sigma})^{-1}\simeq T_{\Sigma}MT_{\Sigma}^{\prime}+\kappa\kappa'G_{\Sigma}\Sigma G_{\Sigma}^{\prime}\frac{\mbox{Tr}\left[G_{\Sigma}^{\prime}\Sigma G_{\Sigma}M\right]}{n-\mathrm{df}_{2}(\kappa,\kappa')}
+\]
+
+in trace form we can write 
+\[
+\mbox{Tr}\Big[A\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}B\hat{\Sigma}(\lambda^{\prime}+\hat{\Sigma})^{-1}\Big]\simeq\mbox{Tr}\big[AT_{\Sigma}BT_{\Sigma}^{\prime}\big]+\frac{\kappa\kappa'}{n-\mathrm{df}_{2}(\kappa,\kappa')}\mbox{Tr}\big[AG_{\Sigma}\Sigma G_{\Sigma}^{\prime}\big]\mbox{Tr}\big[G_{\Sigma}^{\prime}\Sigma G_{\Sigma}B\big]
+\]
+%
+\end{minipage}}
+
+\[
+w_{OLS}^{*}=\sigma_{y}\sum_{k=1}^{d}\frac{1}{\sqrt{\lambda_{k}}}\mbox{corr}\bigl(\mathbf{u}_{k}^{T}X,\,y\bigr)\,\mathbf{u}_{k}
+\]
+
+\begin{align*}
+w_{Ridge}^{*} & =(\Sigma_{xx}+\lambda I)^{-1}\,\Sigma_{xy}\\[6pt]
+ & =\sum_{k}\frac{1}{\lambda_{k}+\lambda}\,(\mathbf{u}_{k}^{T}\,\Sigma_{xy})\,\mathbf{u}_{k}\\[6pt]
+w_{Ridge}^{*} & =\sigma_{y}\sum_{k}\frac{\sqrt{\lambda_{k}}}{\lambda_{k}+\lambda}\ \mbox{corr}\bigl(\mathbf{u}_{k}^{T}X,\,y\bigr)\,\mathbf{u}_{k}
+\end{align*}
+
+\end{document}
