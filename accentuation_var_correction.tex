@@ -1,0 +1,235 @@
+%% Deterministic equivalent for Var(R) — the second-order correction to
+%% the accentuation error.  Import into main document via \input{accentuation_var_correction}.
+
+\subsection{Second-order correction to the accentuation error: $\operatorname{Var}(R)$}
+
+\paragraph{Why the leading-order formula is insufficient.}
+
+The accentuation error derived above relies on the approximation
+\begin{equation}
+  \mathbb{E}_{X,\eta}\!\left[\left(1-R\right)^{2}\right]
+  \;\approx\;
+  \left(1-R_{\det}\right)^{2},
+  \label{eq:acc_leading}
+\end{equation}
+where $R = \hat{\beta}^{\top}\beta^{*}/\hat{\beta}^{\top}\hat{\beta}$ and
+$R_{\det}$ is its deterministic equivalent.  By the second-moment
+decomposition,
+\begin{equation}
+  \mathbb{E}\!\left[(1-R)^{2}\right]
+  \;=\;
+  \underbrace{(1-\mathbb{E}[R])^{2}}_{\text{bias}^{2}}
+  \;+\;
+  \underbrace{\operatorname{Var}(R)}_{\text{missing term}}.
+  \label{eq:var_decomp}
+\end{equation}
+The leading-order theory captures $(1-R_{\det})^{2}\approx(1-\mathbb{E}[R])^{2}$
+but ignores $\operatorname{Var}(R)$.  When $R\approx 1$
+(well-regularized regime), the bias$^{2}$ term is tiny while
+$\operatorname{Var}(R)=O(1/n)$ remains finite, so $\operatorname{Var}(R)$
+can dominate.
+
+\paragraph{Delta-method setup.}
+
+Define the numerator and denominator of $R$:
+\[
+  N \;=\; \hat{\beta}^{\top}\beta^{*},
+  \qquad
+  D \;=\; \hat{\beta}^{\top}\hat{\beta}.
+\]
+Both $N$ and $D$ concentrate in the large-$n$, fixed-$\gamma=d/n$ limit:
+$N\to N_{\det}$, $D\to D_{\det}$, with fluctuations of order $1/\sqrt{n}$.
+By the delta method,
+\begin{equation}
+  R - R_{\det}
+  \;\approx\;
+  \frac{1}{D_{\det}}\left[(N-N_{\det}) - R_{\det}(D-D_{\det})\right]
+  \;=\;
+  \frac{\delta Q}{D_{\det}},
+  \label{eq:deltaR}
+\end{equation}
+where $\delta Q = (N - R_{\det}D) - \mathbb{E}[N-R_{\det}D]$.
+Because $R_{\det}=N_{\det}/D_{\det}$, the mean of $Q=N-R_{\det}D$ is
+zero by construction, so $\delta Q = N - R_{\det}D$ exactly.
+Therefore,
+\begin{equation}
+  \operatorname{Var}(R)
+  \;\asymp\;
+  \frac{\operatorname{Var}(Q)}{D_{\det}^{2}},
+  \quad
+  Q \;=\; \hat{\beta}^{\top}(\beta^{*} - R_{\det}\hat{\beta}).
+  \label{eq:varR_via_Q}
+\end{equation}
+
+\paragraph{Decomposing $\hat{\beta}$ into signal and noise.}
+
+Write $\hat{\beta} = \mathbf{g} + \mathbf{h}$ where
+\begin{align*}
+  \mathbf{g} &\;=\; (\hat{\Sigma}+\lambda I)^{-1}\hat{\Sigma}\beta^{*}
+  \;\asymp\;(\Sigma+\kappa I)^{-1}\Sigma\beta^{*},\\
+  \mathbf{h} &\;=\; \sigma(\hat{\Sigma}+\lambda I)^{-1}\!\left(\tfrac{1}{n}X^{\top}\eta\right)
+  \;\sim\;
+  \mathcal{N}\!\left(0,\,\tfrac{\sigma^{2}}{n}H\right),
+  \quad
+  H = (\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa I)^{-1}.
+\end{align*}
+Then
+\[
+  Q \;=\; (\mathbf{g}+\mathbf{h})^{\top}\bigl(\beta^{*}-R_{\det}(\mathbf{g}+\mathbf{h})\bigr).
+\]
+Expanding and using $N_{\det}-R_{\det}D_{\det}=0$,
+\begin{equation}
+  Q
+  \;=\;
+  \underbrace{\mathbf{h}^{\top}\bigl(\beta^{*}-2R_{\det}\mathbf{g}\bigr)}_{\delta Q^{(\mathrm{lin})}}
+  \;-\;
+  R_{\det}\!\underbrace{\bigl(\mathbf{h}^{\top}\mathbf{h} - \mathbb{E}[\mathbf{h}^{\top}\mathbf{h}]\bigr)}_{\delta Q^{(\mathrm{quad})}}.
+  \label{eq:Q_expand}
+\end{equation}
+The two terms have zero mean and are uncorrelated (parity argument:
+$\delta Q^{(\mathrm{lin})}$ is odd in $\mathbf{h}$, $\delta Q^{(\mathrm{quad})}$
+is even), so $\operatorname{Var}(Q)=\operatorname{Var}(\delta Q^{(\mathrm{lin})})+\operatorname{Var}(\delta Q^{(\mathrm{quad})})$.
+
+\paragraph{Linear (noise) contribution.}
+
+Since $\mathbf{h}\sim\mathcal{N}(0,\frac{\sigma^{2}}{n}H)$,
+\[
+  \operatorname{Var}(\delta Q^{(\mathrm{lin})})
+  \;=\;
+  \frac{\sigma^{2}}{n}
+  \bigl(\beta^{*}-2R_{\det}\mathbf{g}_{\det}\bigr)^{\top}H\,
+  \bigl(\beta^{*}-2R_{\det}\mathbf{g}_{\det}\bigr),
+\]
+with $\mathbf{g}_{\det}=(\Sigma+\kappa I)^{-1}\Sigma\beta^{*}$.
+In the eigenbasis of $\Sigma$ (eigenvalues $\lambda_{k}$,
+projections $b_{k}=\mathbf{u}_{k}^{\top}\beta^{*}$):
+\[
+  H_{kk} = \frac{\lambda_{k}}{(\lambda_{k}+\kappa)^{2}},
+  \quad
+  \bigl(g_{\det}\bigr)_{k} = \frac{\lambda_{k}}{\lambda_{k}+\kappa}b_{k},
+  \quad
+  w_{k} := \left(\beta^{*}-2R_{\det}\mathbf{g}_{\det}\right)_{k}
+  = b_{k}\!\left(1 - \frac{2R_{\det}\lambda_{k}}{\lambda_{k}+\kappa}\right).
+\]
+Hence,
+\begin{equation}
+  \operatorname{Var}(\delta Q^{(\mathrm{lin})})
+  \;=\;
+  \frac{\sigma^{2}}{n}\sum_{k}\frac{\lambda_{k}b_{k}^{2}}{(\lambda_{k}+\kappa)^{2}}
+  \!\left(1-\frac{2R_{\det}\lambda_{k}}{\lambda_{k}+\kappa}\right)^{\!2}.
+  \label{eq:varQ_lin}
+\end{equation}
+
+Expanding the square and introducing shorthand sums:
+\begin{align}
+  C_{\mathrm{sig}} &:= \sum_{k}\frac{\lambda_{k}}{(\lambda_{k}+\kappa)^{2}}b_{k}^{2},
+  \label{eq:Csig}\\
+  M_{1} &:= \sum_{k}\frac{\lambda_{k}^{2}}{(\lambda_{k}+\kappa)^{3}}b_{k}^{2},
+  \label{eq:M1}\\
+  M_{2} &:= \sum_{k}\frac{\lambda_{k}^{3}}{(\lambda_{k}+\kappa)^{4}}b_{k}^{2},
+  \label{eq:M2}
+\end{align}
+equation~\eqref{eq:varQ_lin} becomes
+\begin{equation}
+  \operatorname{Var}(\delta Q^{(\mathrm{lin})})
+  \;=\;
+  \frac{\sigma^{2}}{n}\Bigl[C_{\mathrm{sig}} - 4R_{\det}M_{1} + 4R_{\det}^{2}M_{2}\Bigr].
+  \label{eq:varQ_lin_compact}
+\end{equation}
+
+\paragraph{Quadratic correction.}
+
+$\delta Q^{(\mathrm{quad})} = \mathbf{h}^{\top}\mathbf{h}-\mathbb{E}[\mathbf{h}^{\top}\mathbf{h}]$ is
+a centered chi-squared form.  Its variance is
+\[
+  \operatorname{Var}(\delta Q^{(\mathrm{quad})})
+  \;=\;
+  2\left(\frac{\sigma^{2}}{n}\right)^{\!2}\operatorname{Tr}[H^{2}]
+  \;=\;
+  \frac{2\sigma^{4}}{n^{2}}\sum_{k}\frac{\lambda_{k}^{2}}{(\lambda_{k}+\kappa)^{4}}.
+  \label{eq:varQ_quad}
+\]
+This term is $O(\sigma^{4}\gamma/n)$ and dominates when $\sigma^{2}\gg 1/\sqrt{\gamma}$,
+i.e.\ at high noise with fixed aspect ratio.
+
+\paragraph{Deterministic equivalent for $\operatorname{Var}(R)$.}
+
+Combining equations~\eqref{eq:varR_via_Q},~\eqref{eq:varQ_lin_compact},
+and~\eqref{eq:varQ_quad}:
+
+\begin{equation}
+  \boxed{
+  \operatorname{Var}(R)
+  \;\asymp\;
+  \frac{1}{D_{\det}^{2}}
+  \left[
+    \frac{\sigma^{2}}{n}\Bigl(C_{\mathrm{sig}} - 4R_{\det}M_{1} + 4R_{\det}^{2}M_{2}\Bigr)
+    \;+\;
+    \frac{2R_{\det}^{2}\sigma^{4}}{n^{2}}\sum_{k}\frac{\lambda_{k}^{2}}{(\lambda_{k}+\kappa)^{4}}
+  \right]
+  }
+  \label{eq:varR_det}
+\end{equation}
+
+\paragraph{Full accentuation error including $\operatorname{Var}(R)$.}
+
+The improved deterministic equivalent for the accentuation error is:
+\begin{equation}
+  \mathbb{E}\!\left[E_{\mathrm{acc}}\right]
+  \;\asymp\;
+  \beta^{*\top}\Sigma\beta^{*}
+  \cdot
+  \left[
+    (1-R_{\det})^{2}
+    \;+\;
+    \operatorname{Var}(R)
+  \right],
+  \label{eq:Eacc_full}
+\end{equation}
+where $\operatorname{Var}(R)$ is given by~\eqref{eq:varR_det}.
+
+\paragraph{Regime analysis.}
+\begin{itemize}
+\item \textbf{Low noise} ($\sigma\to 0$): the $\eta$-driven terms
+  in~\eqref{eq:varR_det} vanish as $O(\sigma^{2})$, but $\operatorname{Var}(R)$
+  remains finite due to \emph{X-fluctuations}
+  $\operatorname{Var}_{X}(\mathbb{E}_{\eta}[R|X])=O(1/n)$.
+  At low $\sigma$, X-fluctuations dominate
+  (empirically $\approx 90\%$ of total $\operatorname{Var}(R)$) and are
+  \emph{not} captured by equation~\eqref{eq:varR_det}.
+  They require a CLT for quadratic functionals of Wishart matrices
+  (a higher-order RMT result).
+\item \textbf{Moderate-to-high noise}: the $\eta$-driven terms grow as
+  $O(\sigma^{2}/n)$ and quickly dominate ($\approx 97\%$ at $\sigma=1$).
+  The quadratic term $O(\sigma^{4}/n)$ can exceed the linear term when
+  $\sigma^{2}\sqrt{\gamma}\gg 1$.
+\item \textbf{Det.\ equiv.\ accuracy}: even within the $\eta$-driven
+  contribution, replacing $H(X)$ by $H_{\det}$ introduces systematic
+  error.  When $\kappa=O(\lambda)$ is small relative to the eigenvalue
+  spread, the det.\ equiv.\ under-approximates $\operatorname{Tr}[H^{2}]$
+  and $\mathbf{w}^{\top}H\mathbf{w}$ (ratio $\sim 0.4$--$0.7$
+  in the van Hateren example at $\lambda^{*}\approx 0.001$).
+  Using the actual sample eigenvalues of $\hat{\Sigma}$ in place of
+  the population ones restores the accuracy (ratio $\to\approx 0.95$).
+\end{itemize}
+
+\paragraph{Empirical decomposition (van Hateren $16\times 16$, $d=256$, $n=512$).}
+
+The law of total variance $\operatorname{Var}(R)=\mathbb{E}_{X}[\operatorname{Var}_{\eta}(R|X)]+\operatorname{Var}_{X}(\mathbb{E}_{\eta}[R|X])$ was measured with $T=300$ datasets $\times$ $T'=80$ noise replicas each:
+
+\begin{center}
+\begin{tabular}{ccccc}
+\hline
+$\sigma$ & $\lambda^{*}$ & $\eta$-fraction & X-fraction & formula / $\eta$-MC \\
+\hline
+0.10 & 0.001 & 10\% & 90\% & 0.69 \\
+1.00 & 0.002 & 98\% & 2\%  & 0.44 \\
+\hline
+\end{tabular}
+\end{center}
+
+The formula captures the correct order of magnitude and correctly predicts
+that $\operatorname{Var}(R)\sim O(1/n)$, but a complete first-principles
+derivation of $\operatorname{Var}(R)$ requires accounting for both
+X-fluctuations and the finite-$\kappa$ correction to the det.\ equiv.\
+of $H$.
