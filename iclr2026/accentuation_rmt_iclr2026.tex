@@ -39,34 +39,7 @@ The empirical picture is more puzzling. Models with similar held-out encoding ac
 
 This pattern suggests a specific failure mode. Prediction tests model outputs on the natural-image distribution. Control follows model gradients. These are not equivalent. A model can have the right input-output relation on natural images while having a gradient direction that points away from the natural-image manifold.
 
-We study this dissociation in a simplified linear setting. Let a neuron and its encoding model be linear functions of image features,
-\begin{equation}
-    y = {\btrue}^{\top} \x + \sigma \epsilon .
-\end{equation}
-The fitted model is
-\begin{equation}
-    \bhat = (X^\top X + n\lambda I)^{-1}X^\top y.
-\end{equation}
-Prediction on natural images depends on the product $\bhat^\top\x$. Therefore, if natural images have covariance $\Sigma$ with many low-variance directions, large weight errors in those directions can have little effect on held-out prediction. By contrast, feature accentuation follows the weight itself:
-\begin{equation}
-    \x_{\mathrm{acc}} \leftarrow \x_0 + \alpha \bhat
-    \quad\text{or}\quad
-    \x_{\mathrm{acc}} = \x_0 + \frac{r^\star-\bhat^\top\x_0}{\|\bhat\|^2}\bhat .
-\end{equation}
-Thus low-variance errors that are nearly invisible to prediction can dominate the generated image.
-
-This paper develops a theory of that empirical puzzle. The usual generalization error is
-\begin{equation}
-    E_{\mathrm{gen}} = \mathbb{E}_{X,\epsilon,\x}\bigl[(\bhat-\btrue)^\top \x\bigr]^2
-    = \mathbb{E}_{X,\epsilon}(\bhat-\btrue)^\top\Sigma(\bhat-\btrue).
-\end{equation}
-The corresponding accentuation error asks what happens when the fitted direction is used as the control path. If the target response is defined by $\btrue$ but the generated image moves along $\bhat$, the error is controlled by the scalar alignment ratio
-\begin{equation}
-    R=\frac{\bhat^\top\btrue}{\bhat^\top\bhat},
-    \qquad
-    \Eacc = {\btrue}^{\top}\Sigma\btrue \cdot \mathbb{E}\left[(1-R)^2\right].
-\end{equation}
-This quantity is not a reweighted version of $E_{\mathrm{gen}}$: it is sensitive to the direction and norm of $\bhat$, and it can be dominated by modes that contribute little to average test error.
+We study this dissociation in a simplified linear setting. The central contrast is that prediction evaluates a scalar response on natural images, whereas control follows the model's weight or gradient direction. If natural images have many low-variance directions, large errors in those directions can be nearly invisible to held-out prediction but dominate the synthesized control image. This paper develops a theory of that empirical puzzle and uses RMT to identify which modes are most error-prone.
 
 Our contributions are:
 \begin{itemize}
@@ -76,6 +49,14 @@ Our contributions are:
     \item We use the formula to predict when low-variance modes become unstable, when accentuation error diverges from ordinary generalization error, and how the failure depends on $n$, $d$, $\lambda$, and noise level.
     \item We diagnose a second-order alignment-variance gap and give a delta-method correction showing why leading deterministic equivalents accurately predict $\mathbb{E}[R]$ but can underpredict $\mathbb{E}[(1-R)^2]$ in high-noise regimes.
 \end{itemize}
+
+\section{Related Work}
+
+\paragraph{High-dimensional regression and RMT.}
+High-dimensional linear regression has been a central testbed for understanding bias, variance, interpolation, and regularization in modern machine learning \citep{dobriban2018high,hastie2022surprises,mei2022generalization}. Deterministic equivalents from random matrix theory provide sharp asymptotic predictions for ridge risk under anisotropic covariance and proportional scaling \citep{bai2010spectral,couillet2011random}. Our work uses this toolbox but shifts the target from scalar predictive risk to a directional error induced by using the learned coefficient vector as an intervention axis.
+
+\paragraph{Feature visualization and neural control.}
+The problem is also related to representation analysis, feature visualization, and feature accentuation, where gradients are used to generate or modify images that drive model units \citep{olah2017feature,bau2017network,hamblin2024feature}. In neural control, these methods are used not only to interpret a model but also to synthesize candidate stimuli for biological validation. In such settings, average predictive accuracy is not sufficient: one needs the learned direction to be geometrically aligned with the intended neural factor. The accentuation metric studied here is a minimal linear analogue of this directional reliability problem.
 
 \section{Empirical Puzzle: Prediction Is Not Control}
 
@@ -109,11 +90,42 @@ For $j=2$, the generated image moves along hidden low-variance directions and be
 
 The same setup explains the peer-review asymmetry. A model whose own accentuation path is poor can still evaluate another model's stimuli if those stimuli lie near the true axis or natural-image manifold. In notation, $f_2(\x_{\mathrm{acc},1})$ can correlate well with $f^\star(\x_{\mathrm{acc},1})$, even while $f^\star(\x_{\mathrm{acc},2})$ is poor. Evaluation asks whether the model's scalar output is correct on a particular stimulus set; generation asks whether its gradient points in a useful direction.
 
-\section{Related Work}
+\section{Formal Setup}
 
-High-dimensional linear regression has been a central testbed for understanding bias, variance, interpolation, and regularization in modern machine learning \citep{dobriban2018high,hastie2022surprises,mei2022generalization}. Deterministic equivalents from random matrix theory provide sharp asymptotic predictions for ridge risk under anisotropic covariance and proportional scaling \citep{bai2010spectral,couillet2011random}. Our work uses this toolbox but shifts the target from scalar predictive risk to a directional error induced by using the learned coefficient vector as an intervention axis.
-
-The problem is also related to representation analysis, feature visualization, and feature accentuation, where gradients are used to generate or modify images that drive model units \citep{olah2017feature,bau2017network,hamblin2024feature}. In neural control, these methods are used not only to interpret a model but also to synthesize candidate stimuli for biological validation. In such settings, average predictive accuracy is not sufficient: one needs the learned direction to be geometrically aligned with the intended neural factor. The accentuation metric studied here is a minimal linear analogue of this directional reliability problem.
+We model the neuron and its encoding model as linear functions of image features. Training data follow
+\begin{equation}
+    y = {\btrue}^{\top} \x + \sigma \epsilon,
+    \qquad \x\sim\mathcal{N}(0,\Sigma),
+    \label{eq:linear_model}
+\end{equation}
+and the ridge estimator is
+\begin{equation}
+    \bhat = (X^\top X + n\lambda I)^{-1}X^\top y.
+    \label{eq:ridge_estimator}
+\end{equation}
+Prediction on natural images depends on $\bhat^\top\x$. Therefore, if $\Sigma$ has many low-variance directions, large weight errors in those directions can have little effect on held-out prediction. By contrast, feature accentuation follows the weight itself:
+\begin{equation}
+    \x_{\mathrm{acc}} \leftarrow \x_0 + \alpha \bhat
+    \quad\text{or}\quad
+    \x_{\mathrm{acc}} = \x_0 + \frac{r^\star-\bhat^\top\x_0}{\|\bhat\|^2}\bhat .
+    \label{eq:accentuation_path}
+\end{equation}
+The usual generalization error is
+\begin{equation}
+    E_{\mathrm{gen}} =
+    \mathbb{E}_{X,\epsilon,\x}\bigl[(\bhat-\btrue)^\top \x\bigr]^2
+    =
+    \mathbb{E}_{X,\epsilon}(\bhat-\btrue)^\top\Sigma(\bhat-\btrue).
+    \label{eq:gen_error}
+\end{equation}
+The corresponding accentuation error asks what happens when the fitted direction is used as the control path. If the target response is defined by $\btrue$ but the generated image moves along $\bhat$, the error is controlled by
+\begin{equation}
+    R=\frac{\bhat^\top\btrue}{\bhat^\top\bhat},
+    \qquad
+    \Eacc = {\btrue}^{\top}\Sigma\btrue \cdot \mathbb{E}\left[(1-R)^2\right].
+    \label{eq:acc_error}
+\end{equation}
+This quantity is not a reweighted version of $E_{\mathrm{gen}}$: it is sensitive to the direction and norm of $\bhat$, and it can be dominated by modes that contribute little to average test error.
 
 \section{RMT Explanation of Error-Prone Modes}
 
@@ -278,36 +290,19 @@ This setting is intentionally minimal. It does not claim that nonlinear represen
 
 The main technical limitation is second-order fluctuation theory. Leading deterministic equivalents are enough for per-PC error, ordinary generalization, and mean alignment. They are not enough for the full accentuation second moment in regimes where $\operatorname{Var}(R)$ dominates. A complete treatment should combine deterministic equivalents with central limit theorems for quadratic functionals of anisotropic Wishart matrices.
 
-\section{Reproducibility Statement}
-
-The theory assumptions, derivations, and deterministic equivalents are stated in the main text, with full derivations intended for the appendix. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here. The experiments use synthetic Gaussian covariates with specified spectra and empirical natural-image covariance spectra; all random quantities are generated by the scripts.
-
-\section{Ethics Statement}
-
-This work is theoretical and uses synthetic simulations and natural-image covariance spectra for validation. It does not introduce a deployed model, collect human-subject data, or release a dataset with personal information. The main risk is interpretive: directional analyses can be misleading if treated as causal without appropriate assumptions. The paper therefore emphasizes the limits of average test error and the assumptions required for the proposed metric.
-
 \bibliography{accentuation_rmt_iclr2026}
 \bibliographystyle{iclr2026_conference}
 
 \appendix
-\section{Derivation Sketch for the Per-PC Formula}
 
-The ridge estimator can be written as
-\begin{equation}
-    \bhat-\btrue
-    =
-    -\lambda(\widehat{\Sigma}+\lambda I)^{-1}\btrue
-    +
-    \sigma(\widehat{\Sigma}+\lambda I)^{-1}\frac{1}{n}X^\top\epsilon,
-\end{equation}
-where $\widehat{\Sigma}=X^\top X/n$. Taking the squared projection onto $\uhat_k$, averaging over noise, and applying deterministic equivalents for one- and two-resolvent quadratic forms yields the bias, finite-sample signal, and finite-sample noise terms in equation~\ref{eq:per_pc}. The identity
-\begin{equation}
-    \frac{d\kappa}{d\lambda}=\frac{n}{n-\df(\kappa)}
-\end{equation}
-turns the derivative form of the noise term into the effective-sample-size denominator $n-\df(\kappa)$.
+\input{appendix_derivations}
 
-\section{ICLR 2026 Formatting Notes}
+\section{Reproducibility Statement}
 
-This draft uses the official ICLR 2026 style files. The author guide states that submissions are double blind, initial main text is limited to 9 pages, references do not count toward the page limit, and appendices are unlimited but optional for reviewers. The guide also recommends reproducibility and ethics statements before the references.
+The theory assumptions and deterministic equivalents are stated in the main text, with detailed derivations in Appendix~\ref{app:derivations}. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here. The experiments use synthetic Gaussian covariates with specified spectra and empirical natural-image covariance spectra; all random quantities are generated by the scripts.
+
+\section{Ethics Statement}
+
+This work is theoretical and uses synthetic simulations and natural-image covariance spectra for validation. It does not introduce a deployed model, collect human-subject data, or release a dataset with personal information. The main risk is interpretive: directional analyses can be misleading if treated as causal without appropriate assumptions. The paper therefore emphasizes the limits of average test error and the assumptions required for the proposed metric.
 
 \end{document}

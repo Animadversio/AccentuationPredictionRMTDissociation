@@ -1,0 +1,376 @@
+\section{Detailed Derivations}
+\label{app:derivations}
+
+This appendix gives the derivations underlying the deterministic equivalents used in the main text. We keep the notation consistent with Section~\ref{eq:linear_model}: $X\in\mathbb{R}^{n\times d}$, $\widehat{\Sigma}=X^\top X/n$, $\Sigma=\sum_{k=1}^d\lambda_k \uhat_k\uhat_k^\top$, and $b_k=\uhat_k^\top\btrue$.
+
+\subsection{Ridge Decomposition}
+
+For the ridge estimator in equation~\eqref{eq:ridge_estimator},
+\begin{align}
+    \bhat
+    &= (\widehat{\Sigma}+\lambda I)^{-1}\widehat{\Sigma}\btrue
+    + \sigma(\widehat{\Sigma}+\lambda I)^{-1}\frac{1}{n}X^\top\epsilon ,
+    \label{eq:app_bhat_decomp}\\
+    \bhat-\btrue
+    &= -\lambda(\widehat{\Sigma}+\lambda I)^{-1}\btrue
+    + \sigma(\widehat{\Sigma}+\lambda I)^{-1}\frac{1}{n}X^\top\epsilon .
+    \label{eq:app_delta_beta}
+\end{align}
+The first term is the shrinkage of the signal induced by ridge regularization. The second term propagates response noise through the inverse empirical covariance.
+
+\subsection{Deterministic Equivalent and the Effective Ridge Parameter}
+
+In the proportional limit $d/n\to\gamma$, the ridge resolvent of $\widehat{\Sigma}$ is approximated by a deterministic resolvent of $\Sigma$ with an effective regularization parameter $\kappa=\kappa(\lambda)$ satisfying
+\begin{equation}
+    \kappa-\lambda
+    =
+    \gamma\kappa\frac{1}{d}\sum_{j=1}^{d}\frac{\lambda_j}{\kappa+\lambda_j}.
+    \label{eq:app_kappa_fixed_point}
+\end{equation}
+The derivative of $\kappa$ with respect to $\lambda$ determines the finite-sample noise factor. Rewriting equation~\eqref{eq:app_kappa_fixed_point} as
+\begin{equation}
+    \lambda =
+    \kappa\left[
+    1-\gamma\frac{1}{d}\sum_{j=1}^{d}\frac{\lambda_j}{\kappa+\lambda_j}
+    \right],
+\end{equation}
+we obtain
+\begin{align}
+    \frac{d\lambda}{d\kappa}
+    &=
+    1-\gamma\frac{1}{d}\sum_{j=1}^{d}\frac{\lambda_j}{\kappa+\lambda_j}
+    +\gamma\frac{\kappa}{d}\sum_{j=1}^{d}\frac{\lambda_j}{(\kappa+\lambda_j)^2} \\
+    &=
+    1-\gamma\frac{1}{d}\sum_{j=1}^{d}\frac{\lambda_j^2}{(\kappa+\lambda_j)^2}.
+\end{align}
+With the unnormalized degrees of freedom
+\begin{equation}
+    \df(\kappa)=\sum_{j=1}^{d}\frac{\lambda_j^2}{(\lambda_j+\kappa)^2},
+\end{equation}
+and $\gamma=d/n$, this gives
+\begin{equation}
+    \frac{d\lambda}{d\kappa}=1-\frac{\df(\kappa)}{n},
+    \qquad
+    \frac{d\kappa}{d\lambda}=\frac{n}{n-\df(\kappa)}.
+    \label{eq:app_dkappa}
+\end{equation}
+
+\subsection{Per-Eigenmode Coefficient Error}
+
+Projecting equation~\eqref{eq:app_delta_beta} onto $\uhat_k$ and squaring gives three terms: signal bias, noise variance, and a signal-noise cross term. The cross term vanishes after averaging over the response noise. Thus
+\begin{align}
+    \mathbb{E}\left[(\uhat_k^\top(\bhat-\btrue))^2\right]
+    &=
+    \lambda^2
+    \mathbb{E}\left[
+    {\btrue}^{\top}(\widehat{\Sigma}+\lambda I)^{-1}
+    \uhat_k\uhat_k^\top
+    (\widehat{\Sigma}+\lambda I)^{-1}\btrue
+    \right]
+    \nonumber\\
+    &\quad+
+    \frac{\sigma^2}{n}
+    \mathbb{E}\left[
+    \operatorname{Tr}\left(
+    (\widehat{\Sigma}+\lambda I)^{-1}
+    \uhat_k\uhat_k^\top
+    (\widehat{\Sigma}+\lambda I)^{-1}
+    \widehat{\Sigma}
+    \right)\right].
+    \label{eq:app_perpc_start}
+\end{align}
+
+For the noise term, use
+\begin{equation}
+    (\widehat{\Sigma}+\lambda I)^{-1}\widehat{\Sigma}
+    (\widehat{\Sigma}+\lambda I)^{-1}
+    =
+    \frac{d}{d\lambda}\left[\lambda(\widehat{\Sigma}+\lambda I)^{-1}\right].
+\end{equation}
+The deterministic equivalent gives
+\begin{equation}
+    \mathbb{E}\left[
+    \uhat_k^\top
+    (\widehat{\Sigma}+\lambda I)^{-1}\widehat{\Sigma}
+    (\widehat{\Sigma}+\lambda I)^{-1}
+    \uhat_k
+    \right]
+    \asymp
+    \frac{d\kappa}{d\lambda}
+    \frac{\lambda_k}{(\lambda_k+\kappa)^2}.
+\end{equation}
+Using equation~\eqref{eq:app_dkappa}, the noise contribution becomes
+\begin{equation}
+    \frac{\sigma^2}{n-\df(\kappa)}
+    \frac{\lambda_k}{(\lambda_k+\kappa)^2}.
+    \label{eq:app_noise_term}
+\end{equation}
+
+For the signal term, we use the two-resolvent deterministic equivalent. For deterministic matrices $A,B$ with bounded rank or bounded trace norm in the population eigenbasis,
+\begin{align}
+    &\operatorname{Tr}\left[
+    A(\widehat{\Sigma}+\lambda I)^{-1}
+    B(\widehat{\Sigma}+\lambda I)^{-1}
+    \right]
+    \nonumber\\
+    &\quad\asymp
+    \frac{\kappa^2}{\lambda^2}
+    \operatorname{Tr}\left[
+    A(\Sigma+\kappa I)^{-1}
+    B(\Sigma+\kappa I)^{-1}
+    \right]
+    \nonumber\\
+    &\qquad+
+    \frac{\kappa^2}{\lambda^2}
+    \frac{
+    \operatorname{Tr}\left[
+    A(\Sigma+\kappa I)^{-2}\Sigma
+    \right]
+    \operatorname{Tr}\left[
+    B(\Sigma+\kappa I)^{-2}\Sigma
+    \right]}
+    {n-\df(\kappa)} .
+    \label{eq:app_two_resolvent}
+\end{align}
+Taking $A=\btrue{\btrue}^{\top}$ and $B=\uhat_k\uhat_k^\top$ yields
+\begin{align}
+    &\lambda^2
+    \mathbb{E}\left[
+    {\btrue}^{\top}(\widehat{\Sigma}+\lambda I)^{-1}
+    \uhat_k\uhat_k^\top
+    (\widehat{\Sigma}+\lambda I)^{-1}\btrue
+    \right]
+    \nonumber\\
+    &\quad\asymp
+    \frac{\kappa^2}{(\lambda_k+\kappa)^2}b_k^2
+    +
+    \frac{\kappa^2}{n-\df(\kappa)}
+    \frac{\lambda_k}{(\lambda_k+\kappa)^2}
+    \sum_{j=1}^{d}
+    \frac{\lambda_j b_j^2}{(\lambda_j+\kappa)^2}.
+    \label{eq:app_signal_term}
+\end{align}
+Defining
+\begin{equation}
+    C_{\mathrm{sig}}(\kappa)=
+    \sum_{j=1}^{d}
+    \frac{\lambda_j b_j^2}{(\lambda_j+\kappa)^2},
+\end{equation}
+and combining equations~\eqref{eq:app_noise_term} and~\eqref{eq:app_signal_term} gives the main-text formula:
+\begin{align}
+    \mathbb{E}\left[(\uhat_k^\top(\bhat-\btrue))^2\right]
+    &\asymp
+    \frac{\kappa^2}{(\lambda_k+\kappa)^2}b_k^2
+    +
+    \frac{1}{n-\df(\kappa)}
+    \frac{\lambda_k\kappa^2}{(\lambda_k+\kappa)^2}
+    C_{\mathrm{sig}}(\kappa)
+    \nonumber\\
+    &\quad+
+    \frac{\sigma^2}{n-\df(\kappa)}
+    \frac{\lambda_k}{(\lambda_k+\kappa)^2}.
+    \label{eq:app_perpc_final}
+\end{align}
+
+\subsection{Generalization Error}
+
+For a fresh test input $\x\sim\mathcal{N}(0,\Sigma)$,
+\begin{align}
+    E_{\mathrm{gen}}
+    &=
+    \mathbb{E}\left[
+    ((\bhat-\btrue)^\top\x)^2
+    \right] \\
+    &=
+    \mathbb{E}\left[
+    (\bhat-\btrue)^\top\Sigma(\bhat-\btrue)
+    \right] \\
+    &=
+    \sum_{k=1}^{d}
+    \lambda_k
+    \mathbb{E}\left[
+    (\uhat_k^\top(\bhat-\btrue))^2
+    \right].
+    \label{eq:app_gen}
+\end{align}
+Thus average prediction error weights coefficient error along each population PC by the natural-image variance $\lambda_k$.
+
+\subsection{Accentuation Error and Alignment Ratio}
+
+Accentuation uses the learned direction as a control path. Consider centered accentuation samples $\x=\alpha\bhat$, with $\mathbb{E}\alpha=0$. We choose the scale so that the model-predicted variance along the accentuation path matches the natural response variance:
+\begin{align}
+    \operatorname{Var}(\bhat^\top(\alpha\bhat))
+    &=
+    (\bhat^\top\bhat)^2\operatorname{Var}(\alpha)
+    =
+    {\btrue}^{\top}\Sigma\btrue,\\
+    \operatorname{Var}(\alpha)
+    &=
+    \frac{{\btrue}^{\top}\Sigma\btrue}{(\bhat^\top\bhat)^2}.
+\end{align}
+The accentuation error against the true response is then
+\begin{align}
+    \Eacc
+    &=
+    \mathbb{E}_{X,\epsilon,\alpha}
+    \left[
+    \left(\alpha\bhat^\top(\bhat-\btrue)\right)^2
+    \right] \\
+    &=
+    {\btrue}^{\top}\Sigma\btrue\cdot
+    \mathbb{E}_{X,\epsilon}
+    \left[
+    \frac{(\bhat^\top\bhat-\bhat^\top\btrue)^2}
+    {(\bhat^\top\bhat)^2}
+    \right] \\
+    &=
+    {\btrue}^{\top}\Sigma\btrue\cdot
+    \mathbb{E}_{X,\epsilon}
+    \left[
+    \left(1-
+    \frac{\bhat^\top\btrue}{\bhat^\top\bhat}
+    \right)^2
+    \right].
+    \label{eq:app_acc_exact}
+\end{align}
+This motivates the alignment ratio
+\begin{equation}
+    R=\frac{\bhat^\top\btrue}{\bhat^\top\bhat}.
+\end{equation}
+
+\subsection{Deterministic Equivalent for Mean Alignment}
+
+The numerator concentrates around
+\begin{align}
+    N_{\det}
+    &=
+    \mathbb{E}[\bhat^\top\btrue]
+    \asymp
+    {\btrue}^{\top}(\Sigma+\kappa I)^{-1}\Sigma\btrue \\
+    &=
+    \sum_{k=1}^{d}
+    \frac{\lambda_k}{\lambda_k+\kappa}b_k^2.
+    \label{eq:app_Ndet}
+\end{align}
+The denominator must be computed as $\mathbb{E}[\bhat^\top\bhat]$, not as the squared deterministic mean of $\bhat$. Using equation~\eqref{eq:app_bhat_decomp} and the per-PC second moment,
+\begin{align}
+    D_{\det}
+    &=
+    \mathbb{E}[\bhat^\top\bhat]\\
+    &\asymp
+    \sum_{k=1}^{d}
+    \left(\frac{\lambda_k}{\lambda_k+\kappa}\right)^2 b_k^2
+    +
+    \frac{\kappa^2 C_{\mathrm{sig}}(\kappa)+\sigma^2}{n-\df(\kappa)}
+    \sum_{k=1}^{d}
+    \frac{\lambda_k}{(\lambda_k+\kappa)^2}.
+    \label{eq:app_Ddet}
+\end{align}
+The second term in equation~\eqref{eq:app_Ddet} is crucial: it contains both finite-sample signal variance and the corrected effective-sample-size denominator for the noise term. The leading deterministic alignment is
+\begin{equation}
+    R_{\det}=\frac{N_{\det}}{D_{\det}},
+    \qquad
+    \Eacc^{(0)}
+    =
+    {\btrue}^{\top}\Sigma\btrue(1-R_{\det})^2.
+    \label{eq:app_Rdet}
+\end{equation}
+
+\subsection{Second-Order Correction: Variance of the Alignment Ratio}
+
+The approximation in equation~\eqref{eq:app_Rdet} captures the squared bias term in
+\begin{equation}
+    \mathbb{E}[(1-R)^2]=(1-\mathbb{E}R)^2+\operatorname{Var}(R),
+\end{equation}
+but omits $\operatorname{Var}(R)$. When $R\approx 1$, this variance term can dominate the full accentuation error.
+
+Let $N=\bhat^\top\btrue$, $D=\bhat^\top\bhat$, and $R_{\det}=N_{\det}/D_{\det}$. A delta-method expansion gives
+\begin{equation}
+    R-R_{\det}
+    \approx
+    \frac{(N-N_{\det})-R_{\det}(D-D_{\det})}{D_{\det}}
+    =
+    \frac{\delta Q}{D_{\det}},
+\end{equation}
+where $Q=N-R_{\det}D=\bhat^\top(\btrue-R_{\det}\bhat)$. Thus
+\begin{equation}
+    \operatorname{Var}(R)
+    \asymp
+    \frac{\operatorname{Var}(Q)}{D_{\det}^2}.
+    \label{eq:app_varR_Q}
+\end{equation}
+
+Decompose $\bhat=g+h$, with
+\begin{align}
+    g &\asymp (\Sigma+\kappa I)^{-1}\Sigma\btrue,\\
+    h &\sim
+    \mathcal{N}\left(0,\frac{\sigma^2}{n}H\right),
+    \qquad
+    H=(\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa I)^{-1}.
+\end{align}
+Keeping the noise-driven fluctuations and centering the quadratic form,
+\begin{equation}
+    Q
+    =
+    h^\top(\btrue-2R_{\det}g)
+    -
+    R_{\det}\left(h^\top h-\mathbb{E}[h^\top h]\right).
+\end{equation}
+The first term is odd in $h$ and the second is even, so they are uncorrelated. Therefore,
+\begin{align}
+    \operatorname{Var}(Q)
+    &=
+    \frac{\sigma^2}{n}
+    (\btrue-2R_{\det}g)^\top H(\btrue-2R_{\det}g)
+    +
+    2R_{\det}^2
+    \left(\frac{\sigma^2}{n}\right)^2
+    \operatorname{Tr}(H^2).
+\end{align}
+In the eigenbasis of $\Sigma$, this becomes
+\begin{align}
+    \operatorname{Var}(R)
+    &\asymp
+    \frac{1}{D_{\det}^2}
+    \left[
+    \frac{\sigma^2}{n}
+    \sum_{k=1}^{d}
+    \frac{\lambda_k b_k^2}{(\lambda_k+\kappa)^2}
+    \left(1-\frac{2R_{\det}\lambda_k}{\lambda_k+\kappa}\right)^2
+    +
+    \frac{2R_{\det}^2\sigma^4}{n^2}
+    \sum_{k=1}^{d}
+    \frac{\lambda_k^2}{(\lambda_k+\kappa)^4}
+    \right].
+    \label{eq:app_varR_final}
+\end{align}
+The full second-order accentuation approximation is
+\begin{equation}
+    \mathbb{E}[\Eacc]
+    \asymp
+    {\btrue}^{\top}\Sigma\btrue
+    \left[
+    (1-R_{\det})^2+\operatorname{Var}(R)
+    \right].
+    \label{eq:app_acc_full}
+\end{equation}
+Equation~\eqref{eq:app_varR_final} captures the response-noise contribution to alignment variance. A complete finite-$n$ theory should also include random-design fluctuations of $\widehat{\Sigma}$, which empirically dominate at very low response noise and require a higher-order CLT for anisotropic Wishart quadratic forms.
+
+\subsection{Why Low-Variance Modes Are Dangerous for Control}
+
+For ordinary least squares, the population coefficient along PC $k$ can be written heuristically as
+\begin{equation}
+    w_{\mathrm{OLS},k}
+    =
+    \sigma_y\frac{1}{\sqrt{\lambda_k}}
+    \operatorname{corr}(\uhat_k^\top X,y).
+\end{equation}
+For ridge regression,
+\begin{equation}
+    w_{\mathrm{ridge},k}
+    =
+    \sigma_y
+    \frac{\sqrt{\lambda_k}}{\lambda_k+\lambda}
+    \operatorname{corr}(\uhat_k^\top X,y).
+\end{equation}
+OLS therefore has explicit $1/\sqrt{\lambda_k}$ amplification in low-variance directions, while ridge suppresses the most extreme blow-up but still amplifies modes near $\lambda_k\approx\lambda$ or, in the finite-sample deterministic equivalent, near $\lambda_k\approx\kappa$. This is the linear mechanism behind high-frequency, off-manifold feature accentuations: low-variance directions barely affect prediction on natural images but can dominate the model gradient used for control.
