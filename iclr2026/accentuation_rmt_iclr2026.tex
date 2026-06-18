@@ -162,7 +162,8 @@ Under the Gaussian design model above and in the proportional high-dimensional l
 \end{align}
 \end{proposition}
 
-The three terms in equation~\ref{eq:per_pc} have distinct geometric meanings. The first term is deterministic shrinkage of true signal along eigenmodes of $\Sigma$. The second is a finite-sample fluctuation of the signal component induced by the random training design. The third is noise amplification; it peaks around $\lambda_k\approx\kappa$ and grows as $\kappa$ becomes small. Ordinary test error is obtained by summing equation~\ref{eq:per_pc} with weights $\lambda_k$:
+\paragraph{Interpretation.}
+The three terms in Proposition~1 have distinct geometric meanings. The first term is deterministic shrinkage of true signal along eigenmodes of $\Sigma$. The second is a finite-sample fluctuation of the signal component induced by the random training design. The third is noise amplification; it peaks around $\lambda_k\approx\kappa$ and grows as $\kappa$ becomes small. This is the formal version of the empirical intuition: low-variance modes can carry large coefficient error without being strongly penalized by natural-image prediction. Ordinary test error is obtained by summing equation~\ref{eq:per_pc} with weights $\lambda_k$:
 \begin{equation}
     E_{\mathrm{gen}}\asymp
     \sum_{k=1}^{d}\lambda_k\,
@@ -193,7 +194,8 @@ Thus $R_{\det}=N_{\det}/D_{\det}$, and the leading accentuation prediction is
     \label{eq:eacc0}
 \end{equation}
 
-Equation~\ref{eq:eacc0} makes the dissociation from ordinary generalization explicit. $E_{\mathrm{gen}}$ weights per-mode error by the data variance $\lambda_k$, while accentuation depends on the ratio of two global quadratic forms in $\bhat$. As a result, the same ridge penalty can reduce average prediction error while producing a fitted direction whose extrapolation scale is biased.
+\paragraph{Remark.}
+Equation~\ref{eq:eacc0} makes the dissociation from ordinary generalization explicit. $E_{\mathrm{gen}}$ weights per-mode error by the data variance $\lambda_k$, while accentuation depends on the ratio of two global quadratic forms in $\bhat$. As a result, the same ridge penalty can reduce average prediction error while producing a fitted direction whose extrapolation scale is biased. This is why a model can be a good evaluator on natural images or on another model's stimuli, but still be a poor generator when its own gradient is followed.
 
 \section{Regression and RMT Validation}
 
