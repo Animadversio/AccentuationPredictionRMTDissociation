@@ -1,0 +1,266 @@
+\documentclass{article}
+\usepackage{iclr2026_conference,times}
+
+\input{math_commands.tex}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{url}
+
+\title{When Test Error Hides Directional Failure: Random Matrix Theory for Accentuation in Ridge Regression}
+
+% Keep anonymous for ICLR submission.
+\author{Anonymous Authors}
+
+\newtheorem{proposition}{Proposition}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\bhat}{\widehat{\boldsymbol{\beta}}}
+\newcommand{\btrue}{\boldsymbol{\beta}^{\star}}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\uhat}{\mathbf{u}}
+\newcommand{\df}{\mathrm{df}_{2}}
+\newcommand{\Eacc}{E_{\mathrm{acc}}}
+
+%\iclrfinalcopy
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Modern learning systems are often evaluated by average in-distribution error, yet scientific and perceptual applications frequently probe a learned model along a distinguished direction: a response axis, a feature vector, or an intervention path. We study this mismatch in a solvable high-dimensional setting. For ridge regression with anisotropic Gaussian covariates, we derive deterministic equivalents for the per-eigenmode coefficient error and for an \emph{accentuation} error obtained by moving along the learned direction rather than the ground-truth direction. The theory decomposes coefficient error into three interpretable terms: regularization bias, finite-sample signal fluctuation, and finite-sample noise amplification. It predicts when average generalization and accentuation error disagree, and yields a crossing criterion for the noise level at which the dominant failure mode changes. Monte Carlo experiments across isotropic, power-law, and natural-image spectra validate the formula up to dimension $10{,}000$. The analysis identifies a second-order limitation of leading deterministic equivalents: the mean alignment is accurately predicted, while the variance of the alignment ratio dominates accentuation error in high-noise regimes. These results give a minimal theory for directional failure modes that are invisible to scalar test error.
+\end{abstract}
+
+\section{Introduction}
+
+Average test error is a coarse statistic. It measures how well a fitted predictor performs under the test distribution, but it does not say whether the fitted direction is reliable when the predictor is used as a coordinate for intervention, extrapolation, or ``accentuation.'' In many representation-learning and scientific settings, the learned direction itself becomes an object of analysis: one moves along it to amplify a factor, reads off its alignment with a biological or perceptual axis, or studies model behavior under directional perturbations. A predictor can therefore have acceptable average error while inducing a misleading direction.
+
+We isolate this issue in the simplest high-dimensional model where it can be studied exactly: ridge regression with covariates $\x\sim\mathcal{N}(0,\Sigma)$ and responses
+\begin{equation}
+    y = {\btrue}^{\top} \x + \sigma \epsilon .
+\end{equation}
+The estimator is
+\begin{equation}
+    \bhat = (X^\top X + n\lambda I)^{-1}X^\top y.
+\end{equation}
+The usual generalization error is
+\begin{equation}
+    E_{\mathrm{gen}} = \mathbb{E}_{X,\epsilon,\x}\bigl[(\bhat-\btrue)^\top \x\bigr]^2
+    = \mathbb{E}_{X,\epsilon}(\bhat-\btrue)^\top\Sigma(\bhat-\btrue).
+\end{equation}
+By contrast, an accentuation evaluation asks what happens when the fitted direction is used as the test path. If a user moves along $\bhat$ but the target response should move along $\btrue$, the error is controlled by the scalar alignment ratio
+\begin{equation}
+    R=\frac{\bhat^\top\btrue}{\bhat^\top\bhat},
+    \qquad
+    \Eacc = {\btrue}^{\top}\Sigma\btrue \cdot \mathbb{E}\left[(1-R)^2\right].
+\end{equation}
+This quantity is not a reweighted version of $E_{\mathrm{gen}}$: it is sensitive to the direction and norm of $\bhat$, and it can be dominated by modes that contribute little to average test error.
+
+This paper develops a random matrix theory (RMT) account of this dissociation. In the proportional limit $n,d\to\infty$ with $d/n\to\gamma$, we derive a deterministic equivalent for the per-principal-component coefficient error. The formula yields a closed-form decomposition of $E_{\mathrm{gen}}$ and an analytic prediction for the mean accentuation alignment. It also exposes the regime where leading-order RMT is insufficient: when the mean alignment is near one, $\operatorname{Var}(R)$ rather than $(1-\mathbb{E}R)^2$ controls $\Eacc$.
+
+Our contributions are:
+\begin{itemize}
+    \item We derive a three-term deterministic equivalent for the per-eigenmode ridge coefficient error under general population spectrum $\Sigma$ and arbitrary signal orientation $\btrue$.
+    \item We use this formula to predict a directional accentuation error and to identify when accentuation error and ordinary generalization error cross as the noise level changes.
+    \item We validate the theory across synthetic spectra and natural-image covariance spectra, including GPU Monte Carlo experiments up to $d=10{,}000$.
+    \item We diagnose a second-order alignment-variance gap and give a delta-method correction showing why leading deterministic equivalents accurately predict $\mathbb{E}[R]$ but can underpredict $\mathbb{E}[(1-R)^2]$ in high-noise regimes.
+\end{itemize}
+
+\section{Related Work}
+
+High-dimensional linear regression has been a central testbed for understanding bias, variance, interpolation, and regularization in modern machine learning \citep{dobriban2018high,hastie2022surprises,mei2022generalization}. Deterministic equivalents from random matrix theory provide sharp asymptotic predictions for ridge risk under anisotropic covariance and proportional scaling \citep{bai2010spectral,couillet2011random}. Our work uses this toolbox but shifts the target from scalar predictive risk to a directional error induced by using the learned coefficient vector as an intervention axis.
+
+The problem is also related to representation analysis and feature visualization, where learned directions are used to generate or accentuate semantic factors \citep{olah2017feature,bau2017network}. In such settings, average predictive accuracy is not sufficient: one needs the learned direction to be geometrically aligned with the intended factor. The accentuation metric studied here is a minimal linear analogue of this directional reliability problem.
+
+\section{Setup and Deterministic Equivalent}
+
+Let $\Sigma=\sum_{k=1}^{d}\lambda_k \uhat_k\uhat_k^\top$ and write $b_k=\uhat_k^\top\btrue$. Define $\kappa=\kappa(\lambda)$ as the positive solution of the fixed-point equation
+\begin{equation}
+    \kappa-\lambda
+    = \gamma\kappa \frac{1}{d}\sum_{j=1}^{d}\frac{\lambda_j}{\kappa+\lambda_j}.
+    \label{eq:kappa}
+\end{equation}
+We also define
+\begin{equation}
+    \df(\kappa)=\sum_{j=1}^{d}\frac{\lambda_j^2}{(\lambda_j+\kappa)^2},
+    \qquad
+    C_{\mathrm{sig}}(\kappa)=\sum_{j=1}^{d}\frac{\lambda_j b_j^2}{(\lambda_j+\kappa)^2}.
+\end{equation}
+
+\begin{proposition}[Per-eigenmode ridge error]
+Under the Gaussian design model above and in the proportional high-dimensional limit, the squared coefficient error along the $k$th population eigenvector satisfies the deterministic equivalent
+\begin{align}
+    \mathbb{E}\bigl[(\uhat_k^\top(\bhat-\btrue))^2\bigr]
+    &\asymp
+    \underbrace{\frac{\kappa^2}{(\lambda_k+\kappa)^2}b_k^2}_{\text{regularization bias}}
+    +
+    \underbrace{
+    \frac{1}{n-\df(\kappa)}
+    \frac{\lambda_k\kappa^2}{(\lambda_k+\kappa)^2}
+    C_{\mathrm{sig}}(\kappa)}_{\text{finite-sample signal fluctuation}}
+    \nonumber\\
+    &\quad+
+    \underbrace{
+    \frac{\sigma^2}{n-\df(\kappa)}
+    \frac{\lambda_k}{(\lambda_k+\kappa)^2}}_{\text{finite-sample noise amplification}} .
+    \label{eq:per_pc}
+\end{align}
+\end{proposition}
+
+The three terms in equation~\ref{eq:per_pc} have distinct geometric meanings. The first term is deterministic shrinkage of true signal along eigenmodes of $\Sigma$. The second is a finite-sample fluctuation of the signal component induced by the random training design. The third is noise amplification; it peaks around $\lambda_k\approx\kappa$ and grows as $\kappa$ becomes small. Ordinary test error is obtained by summing equation~\ref{eq:per_pc} with weights $\lambda_k$:
+\begin{equation}
+    E_{\mathrm{gen}}\asymp
+    \sum_{k=1}^{d}\lambda_k\,
+    \mathbb{E}\bigl[(\uhat_k^\top(\bhat-\btrue))^2\bigr].
+\end{equation}
+
+\section{Accentuation Error}
+
+The accentuation metric depends on the ratio
+\begin{equation}
+    R=\frac{\bhat^\top\btrue}{\bhat^\top\bhat}.
+\end{equation}
+Using equation~\ref{eq:per_pc}, the deterministic equivalents for numerator and denominator are
+\begin{align}
+    N_{\det}
+    &= \sum_{k=1}^{d}\frac{\lambda_k}{\lambda_k+\kappa}b_k^2,\\
+    D_{\det}
+    &= \sum_{k=1}^{d}\left(\frac{\lambda_k}{\lambda_k+\kappa}\right)^2b_k^2
+    +
+    \frac{\kappa^2 C_{\mathrm{sig}}+\sigma^2}{n-\df(\kappa)}
+    \sum_{k=1}^{d}\frac{\lambda_k}{(\lambda_k+\kappa)^2}.
+\end{align}
+Thus $R_{\det}=N_{\det}/D_{\det}$, and the leading accentuation prediction is
+\begin{equation}
+    \Eacc^{(0)}
+    =
+    {\btrue}^{\top}\Sigma\btrue\,(1-R_{\det})^2.
+    \label{eq:eacc0}
+\end{equation}
+
+Equation~\ref{eq:eacc0} makes the dissociation from ordinary generalization explicit. $E_{\mathrm{gen}}$ weights per-mode error by the data variance $\lambda_k$, while accentuation depends on the ratio of two global quadratic forms in $\bhat$. As a result, the same ridge penalty can reduce average prediction error while producing a fitted direction whose extrapolation scale is biased.
+
+\section{Experiments}
+
+We evaluate the deterministic equivalents on three spectra: isotropic covariance, power-law covariance, and empirical covariance from van Hateren natural-image patches. Monte Carlo estimates are computed by repeatedly sampling $X$ and response noise, fitting ridge regression, and comparing the fitted coefficient vector to the ground-truth coefficient vector. For large dimensions we use the kernel form of ridge regression and GPU Monte Carlo.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{../figures/nb_small_d_per_pc.png}
+    \caption{Per-eigenmode coefficient error. The three-term deterministic equivalent tracks Monte Carlo estimates across isotropic, power-law, and natural-image spectra, including the shape of the error across population PCs.}
+    \label{fig:per_pc}
+\end{figure}
+
+Figure~\ref{fig:per_pc} validates equation~\ref{eq:per_pc} at small dimension, where per-PC Monte Carlo estimates are directly observable. The theory captures not only total error but also the anisotropic distribution of coefficient error across eigendirections.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{../figures/nb_large_d.png}
+    \caption{Large-dimensional validation. GPU simulations agree with the deterministic equivalent for power-law spectra and natural-image covariance spectra up to $d=10{,}000$.}
+    \label{fig:large_d}
+\end{figure}
+
+Figure~\ref{fig:large_d} confirms that the formulas remain accurate in the high-dimensional regime where the asymptotic theory is intended to apply. On power-law and natural-image spectra, total generalization error agrees with Monte Carlo to within the small gaps reported in the validation code.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{../figures/sigma_sweep_fixed_accentuation.png}
+    \caption{Noise sweep. The deterministic equivalent tracks ordinary generalization error and the mean accentuation alignment across noise levels. Correctly accounting for finite-sample signal variance in $D_{\det}$ is essential for the alignment prediction.}
+    \label{fig:sigma}
+\end{figure}
+
+Figure~\ref{fig:sigma} shows a sweep over response noise. The leading RMT prediction matches average generalization error across the full range, and it accurately predicts the mean alignment ratio $R$. This experiment also identifies a practical failure mode in incomplete formulas: replacing $\mathbb{E}[\bhat^\top\bhat]$ by a squared mean omits the finite-sample signal term and produces a biased alignment estimate.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=.82\textwidth]{../figures/gen_vs_acc_optimal_lambda_vh.png}
+    \caption{Generalization--accentuation crossing on van Hateren spectra. With $\lambda$ chosen to minimize predicted generalization error at each $\sigma$, the theory predicts the noise level at which ordinary test error overtakes accentuation error.}
+    \label{fig:crossing}
+\end{figure}
+
+Figure~\ref{fig:crossing} illustrates the central qualitative prediction. At low noise, directional accentuation error can dominate because regularization biases the learned direction. At high noise, ordinary prediction error dominates because noise contaminates the coefficient estimate. The crossing point gives a concise operating-regime summary.
+
+\section{Second-Order Gap: Variance of the Alignment Ratio}
+
+The leading accentuation formula uses
+\begin{equation}
+    \mathbb{E}[(1-R)^2]\approx (1-R_{\det})^2.
+\end{equation}
+This is accurate when the bias term dominates. However,
+\begin{equation}
+    \mathbb{E}[(1-R)^2]=(1-\mathbb{E}R)^2+\operatorname{Var}(R),
+\end{equation}
+so a leading deterministic equivalent for $\mathbb{E}R$ is insufficient when $R$ concentrates near one.
+
+Let $N=\bhat^\top\btrue$, $D=\bhat^\top\bhat$, and $R_{\det}=N_{\det}/D_{\det}$. A delta-method expansion gives
+\begin{equation}
+    \operatorname{Var}(R)\asymp
+    \frac{\operatorname{Var}(N-R_{\det}D)}{D_{\det}^{2}}.
+\end{equation}
+Writing $\bhat=g+h$ with deterministic signal component $g\approx(\Sigma+\kappa I)^{-1}\Sigma\btrue$ and noise component $h$, the noise-driven contribution is
+\begin{align}
+    \operatorname{Var}(R)
+    &\approx
+    \frac{1}{D_{\det}^{2}}
+    \left[
+    \frac{\sigma^2}{n}
+    \sum_k
+    \frac{\lambda_k b_k^2}{(\lambda_k+\kappa)^2}
+    \left(1-\frac{2R_{\det}\lambda_k}{\lambda_k+\kappa}\right)^2
+    +
+    \frac{2R_{\det}^2\sigma^4}{n^2}
+    \sum_k
+    \frac{\lambda_k^2}{(\lambda_k+\kappa)^4}
+    \right].
+    \label{eq:varr}
+\end{align}
+Equation~\ref{eq:varr} captures the correct order and growth with $\sigma$, but a full correction also requires fluctuations from the random design $X$ itself. This explains why the mean alignment in Figure~\ref{fig:sigma} is accurate while the full second moment can be underestimated in high-noise regimes.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=.82\textwidth]{../figures/var_R_theory_vs_mc.png}
+    \caption{Variance correction for the alignment ratio. The missing $\operatorname{Var}(R)$ term is negligible when alignment bias is large, but can dominate $\Eacc$ when $R$ is close to one.}
+    \label{fig:varr}
+\end{figure}
+
+\section{Discussion}
+
+The analysis suggests a simple lesson: evaluating a model by average prediction error can miss failures that appear when the model is used directionally. In ridge regression, the problem is already visible and exactly characterizable. The learned vector is pulled by regularization, finite-sample covariance fluctuations, and noise amplification in ways that affect average prediction and directional accentuation differently.
+
+This setting is intentionally minimal. It does not claim that nonlinear representation accentuation reduces to ridge regression. Instead, it provides a solvable baseline for a broader phenomenon: when learned directions are used as coordinates for intervention, their geometry matters independently of scalar predictive risk. The RMT formulas identify which parts of the data spectrum and signal orientation control this geometry.
+
+The main technical limitation is second-order fluctuation theory. Leading deterministic equivalents are enough for per-PC error, ordinary generalization, and mean alignment. They are not enough for the full accentuation second moment in regimes where $\operatorname{Var}(R)$ dominates. A complete treatment should combine deterministic equivalents with central limit theorems for quadratic functionals of anisotropic Wishart matrices.
+
+\section{Reproducibility Statement}
+
+The theory assumptions, derivations, and deterministic equivalents are stated in the main text, with full derivations intended for the appendix. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here. The experiments use synthetic Gaussian covariates with specified spectra and empirical natural-image covariance spectra; all random quantities are generated by the scripts.
+
+\section{Ethics Statement}
+
+This work is theoretical and uses synthetic simulations and natural-image covariance spectra for validation. It does not introduce a deployed model, collect human-subject data, or release a dataset with personal information. The main risk is interpretive: directional analyses can be misleading if treated as causal without appropriate assumptions. The paper therefore emphasizes the limits of average test error and the assumptions required for the proposed metric.
+
+\bibliography{accentuation_rmt_iclr2026}
+\bibliographystyle{iclr2026_conference}
+
+\appendix
+\section{Derivation Sketch for the Per-PC Formula}
+
+The ridge estimator can be written as
+\begin{equation}
+    \bhat-\btrue
+    =
+    -\lambda(\widehat{\Sigma}+\lambda I)^{-1}\btrue
+    +
+    \sigma(\widehat{\Sigma}+\lambda I)^{-1}\frac{1}{n}X^\top\epsilon,
+\end{equation}
+where $\widehat{\Sigma}=X^\top X/n$. Taking the squared projection onto $\uhat_k$, averaging over noise, and applying deterministic equivalents for one- and two-resolvent quadratic forms yields the bias, finite-sample signal, and finite-sample noise terms in equation~\ref{eq:per_pc}. The identity
+\begin{equation}
+    \frac{d\kappa}{d\lambda}=\frac{n}{n-\df(\kappa)}
+\end{equation}
+turns the derivative form of the noise term into the effective-sample-size denominator $n-\df(\kappa)$.
+
+\section{ICLR 2026 Formatting Notes}
+
+This draft uses the official ICLR 2026 style files. The author guide states that submissions are double blind, initial main text is limited to 9 pages, references do not count toward the page limit, and appendices are unlimited but optional for reviewers. The guide also recommends reproducibility and ethics statements before the references.
+
+\end{document}
