@@ -1,0 +1,290 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{empheq}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Tr}{\operatorname{tr}}
+\newcommand{\Sig}{\Sigma}
+\newcommand{\Sighat}{\hat{\Sigma}}
+\newcommand{\bstar}{\beta^{*}}
+\newcommand{\bhat}{\hat{\beta}}
+\newcommand{\Id}{I_{d}}
+\newcommand{\Res}{G}                     % resolvent
+\newcommand{\dfone}{\mathrm{df}_{1}}
+\newcommand{\dftwo}{\mathrm{df}_{2}}
+\newcommand{\kap}{\kappa}
+\newcommand{\kapp}{\kappa'}
+\newcommand{\Sk}{(\Sig+\kap \Id)}
+\newcommand{\deq}{\simeq}                % deterministic equivalence
+
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\title{Two-Point Deterministic Equivalents for Ridge Regression:\\
+The Dot-Product and Squared-Norm Terms}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Setup and notation}
+
+Let $X \in \R^{n \times d}$ have i.i.d.\ rows with population covariance $\Sig$, let
+\begin{equation}
+  \Sighat = \frac{1}{n} X^{\top} X,
+  \qquad
+  \Res(\lambda) = (\Sighat + \lambda \Id)^{-1},
+\end{equation}
+and consider the ridge estimator in the bias--variance decomposed form
+\begin{equation}
+  \label{eq:bhat}
+  \bhat
+  = (\Sighat + \lambda \Id)^{-1} \Sighat\, \bstar
+  \;+\; \sigma (\Sighat + \lambda \Id)^{-1} \Big( \tfrac{1}{n} X^{\top} \eta \Big),
+  \qquad \eta \sim \mathcal{N}(0, I_{n}).
+\end{equation}
+We work in the proportional regime $n, d \to \infty$ with $d/n \to \gamma \in (0,\infty)$,
+and write $A \deq B$ for deterministic equivalence, i.e.\ $\Tr[ \Theta (A - B)] \to 0$ for
+any deterministic $\Theta$ of bounded trace norm.
+
+Define the \emph{effective degrees of freedom}
+\begin{equation}
+  \label{eq:df}
+  \dfone(\kap) = \Tr\!\big[ \Sig \Sk^{-1} \big],
+  \qquad
+  \dftwo(\kap) = \Tr\!\big[ \Sig^{2} \Sk^{-2} \big],
+\end{equation}
+and let $\kap = \kap(\lambda) > 0$ be the unique positive solution of the self-consistent equation
+\begin{equation}
+  \label{eq:selfconsistent}
+  \boxed{\;
+  \kap - \lambda = \frac{\kap}{n} \dfone(\kap)
+  \qquad \Longleftrightarrow \qquad
+  \lambda = \kap \left( 1 - \frac{\dfone(\kap)}{n} \right).
+  \;}
+\end{equation}
+
+The \emph{one-point} (single-resolvent) deterministic equivalent is
+\begin{equation}
+  \label{eq:onepoint}
+  \lambda \Res(\lambda) \deq \kap \Sk^{-1},
+  \qquad \text{equivalently} \qquad
+  \Sighat \Res(\lambda) \deq \Sig \Sk^{-1},
+\end{equation}
+the second form following from $\Sighat \Res = I - \lambda \Res$.
+Equation~\eqref{eq:onepoint} is exactly the substitution
+$\Sighat \mapsto \Sig$, $\lambda \mapsto \kap$ used for the dot-product term.
+
+\section{The key trick: two-point $=$ $\partial_{\lambda}$ of one-point}
+
+Both squared-resolvent terms appearing in $\E[\bhat^{\top}\bhat]$ have a middle matrix that is a
+\emph{function of $\Sighat$} (or the identity). Consequently one does not need the general
+two-point lemma: it suffices to differentiate the one-point equivalent~\eqref{eq:onepoint} in
+$\lambda$. This is legitimate because deterministic equivalence for resolvents holds locally
+uniformly on compact subsets of $\mathbb{C} \setminus \R_{-}$ and all quantities are holomorphic
+there, so $\partial_{\lambda}$ commutes with $\deq$.
+
+The only new ingredient is $\kapp(\lambda) = d\kap/d\lambda$.
+
+\begin{lemma}[Derivative of the effective regularizer]
+\label{lem:kappaprime}
+With $\kap(\lambda)$ defined by~\eqref{eq:selfconsistent},
+\begin{equation}
+  \boxed{\;
+  \kapp(\lambda) = \frac{1}{1 - \dftwo(\kap)/n}.
+  \;}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+First note the identity
+\begin{equation}
+  \label{eq:dfidentity}
+  \frac{d}{d\kap} \big[ \kap\, \dfone(\kap) \big] = \dftwo(\kap),
+\end{equation}
+which follows from
+$\frac{d}{d\kap}\big[ \kap \Sk^{-1} \big] = \Sk^{-1} - \kap \Sk^{-2}
+= \Sk^{-2}\big[ (\Sig + \kap) - \kap \big] = \Sig \Sk^{-2}$,
+so that
+$\frac{d}{d\kap}\big[\kap \dfone\big] = \Tr\!\big[ \Sig \cdot \Sig \Sk^{-2} \big] = \dftwo$.
+Differentiating $\lambda = \kap - \kap\,\dfone(\kap)/n$ with respect to $\kap$ and
+using~\eqref{eq:dfidentity} gives $d\lambda/d\kap = 1 - \dftwo(\kap)/n$, and inverting yields the claim.
+\end{proof}
+
+\begin{remark}
+Since $\dftwo < \dfone < n$ for $\lambda > 0$, we always have $\kapp > 1$. The factor
+$(1 - \dftwo/n)^{-1}$ is the origin of \emph{every} ``extra'' correction appearing in
+variance and squared-norm formulas; naive substitution
+$\Sighat \mapsto \Sig, \lambda \mapsto \kap$ corresponds to setting $\kapp = 1$ and is wrong.
+\end{remark}
+
+Applying $\partial_{\lambda}$ to~\eqref{eq:onepoint}, and using $\partial_{\lambda} \Res = -\Res^{2}$,
+\begin{equation}
+  \Res - \lambda \Res^{2}
+  \deq \kapp \big[ \Sk^{-1} - \kap \Sk^{-2} \big]
+  = \kapp\, \Sig \Sk^{-2}.
+\end{equation}
+Combining with~\eqref{eq:onepoint} gives the master list of two-point equivalents:
+\begin{empheq}[box=\fbox]{align}
+  \label{eq:master1}
+  \Sighat \Res^{2} &\deq \kapp\, \Sig \Sk^{-2}, \\
+  \label{eq:master2}
+  \Res^{2} &\deq \frac{\kap}{\lambda^{2}} \Sk^{-1} - \frac{\kapp}{\lambda}\, \Sig \Sk^{-2}, \\
+  \label{eq:master3}
+  \Sighat^{2} \Res^{2} = (I - \lambda \Res)^{2}
+  &\deq \Sig \Sk^{-1} - \lambda \kapp\, \Sig \Sk^{-2}.
+\end{empheq}
+Here~\eqref{eq:master1} used $\Sighat \Res^{2} = (I - \lambda \Res)\Res = \Res - \lambda \Res^{2}$,
+and~\eqref{eq:master3} used
+$(I - \lambda\Res)^{2} = I - 2\lambda \Res + \lambda^{2}\Res^{2}$ together
+with~\eqref{eq:onepoint} and~\eqref{eq:master2}.
+
+We also record two elementary identities used repeatedly below:
+\begin{equation}
+  \label{eq:split}
+  \Sig \Sk^{-1} = \Sig^{2}\Sk^{-2} + \kap\, \Sig \Sk^{-2},
+  \qquad
+  \dfone - \dftwo = \kap \Tr\!\big[ \Sig \Sk^{-2} \big].
+\end{equation}
+
+\section{Term 1: the dot product}
+
+Since $\E_{\eta}[\eta] = 0$ and $\eta \perp X$, the noise contribution in~\eqref{eq:bhat} drops:
+\begin{align}
+  \E_{X,\eta}\big[ \bhat^{\top} \bstar \big]
+  &= \E_{X}\big[ \bstar{}^{\top} (\Sighat + \lambda \Id)^{-1} \Sighat\, \bstar \big] \\
+  &\asymp \bstar{}^{\top} \Sig \Sk^{-1} \bstar,
+\end{align}
+which is the direct one-point substitution~\eqref{eq:onepoint}. No two-point object appears.
+
+\section{Term 2: the squared norm}
+
+Expanding~\eqref{eq:bhat} and taking expectations, the cross term vanishes and the noise term
+reduces to a trace via $\E_{\eta}[\eta \eta^{\top}] = I_{n}$:
+\begin{align}
+  \E_{X,\eta}\big[ \bhat^{\top} \bhat \big]
+  &= \underbrace{\E_{X}\big[ \bstar{}^{\top} \Sighat^{2} (\Sighat + \lambda \Id)^{-2} \bstar \big]}_{\text{(S) signal}}
+  \;+\; \underbrace{\frac{\sigma^{2}}{n} \E_{X} \Tr\!\big[ (\Sighat + \lambda \Id)^{-2} \Sighat \big]}_{\text{(N) noise}}.
+\end{align}
+
+\subsection*{(S) Signal term}
+
+Apply~\eqref{eq:master3}, then split with~\eqref{eq:split}:
+\begin{align}
+  \text{(S)}
+  &\asymp \bstar{}^{\top} \Big[ \Sig \Sk^{-1} - \lambda \kapp\, \Sig \Sk^{-2} \Big] \bstar \\
+  &= \bstar{}^{\top} \Sig^{2}\Sk^{-2} \bstar
+   + \big( \kap - \lambda \kapp \big)\, \bstar{}^{\top} \Sig \Sk^{-2} \bstar .
+\end{align}
+The prefactor simplifies using Lemma~\ref{lem:kappaprime}, \eqref{eq:selfconsistent} and~\eqref{eq:split}:
+\begin{equation}
+  \kap - \lambda \kapp
+  = \kap \left[ 1 - \frac{1 - \dfone/n}{1 - \dftwo/n} \right]
+  = \kap \cdot \frac{(\dfone - \dftwo)/n}{1 - \dftwo/n}
+  = \frac{ \tfrac{\kap^{2}}{n} \Tr\!\big[ \Sig \Sk^{-2} \big] }{ 1 - \dftwo/n }.
+\end{equation}
+Hence
+\begin{equation}
+  \boxed{\;
+  \E_{X}\big[ \bstar{}^{\top} \Sighat^{2}(\Sighat + \lambda \Id)^{-2} \bstar \big]
+  \asymp
+  \bstar{}^{\top} \Sig^{2} \Sk^{-2} \bstar
+  + \frac{ \tfrac{\kap^{2}}{n} \Tr\!\big[ \Sig \Sk^{-2} \big] }{ 1 - \dftwo/n }\,
+    \bstar{}^{\top} \Sig \Sk^{-2} \bstar .
+  \;}
+\end{equation}
+The first piece is the naive substitution; the second is the genuine two-point fluctuation
+correction that naive substitution misses.
+
+\subsection*{(N) Noise term}
+
+Directly from~\eqref{eq:master1} and~\eqref{eq:split},
+\begin{equation}
+  \boxed{\;
+  \frac{\sigma^{2}}{n} \E_{X}\Tr\!\big[ (\Sighat + \lambda \Id)^{-2} \Sighat \big]
+  \asymp
+  \frac{\sigma^{2}}{n} \cdot \frac{ \Tr\!\big[ \Sig \Sk^{-2} \big] }{ 1 - \dftwo/n }
+  = \frac{\sigma^{2}}{n} \cdot \frac{ (\dfone - \dftwo)/\kap }{ 1 - \dftwo/n }.
+  \;}
+\end{equation}
+
+\subsection*{Assembled result}
+
+Pulling out the shared prefactor,
+\begin{empheq}[box=\fbox]{align}
+  \E\big[ \bstar{}^{\top} \bhat \big]
+  &\asymp \bstar{}^{\top} \Sig \Sk^{-1} \bstar, \\[4pt]
+  \E\big[ \| \bhat \|^{2} \big]
+  &\asymp \bstar{}^{\top} \Sig^{2}\Sk^{-2} \bstar
+  + \frac{ \tfrac{1}{n} \Tr\!\big[ \Sig \Sk^{-2} \big] }{ 1 - \dftwo/n }
+    \Big( \kap^{2}\, \bstar{}^{\top} \Sig \Sk^{-2} \bstar + \sigma^{2} \Big).
+\end{empheq}
+The parenthetical is precisely (bias $+$ noise) from the standard ridge risk formula, which is a
+useful consistency signal.
+
+\section{The general two-point lemma}
+
+If a middle matrix appears that is \emph{not} a function of $\Sighat$ --- e.g.\ $\Res \Sig \Res$ in the
+excess-risk bias --- the $\partial_{\lambda}$ trick no longer applies and one needs:
+
+\begin{lemma}[General two-point equivalent]
+For deterministic $A$ of bounded trace norm,
+\begin{equation}
+  \label{eq:general}
+  \Res A \Res \deq \frac{\kap^{2}}{\lambda^{2}}
+  \left[ \Sk^{-1} A \Sk^{-1}
+  + \frac{ \tfrac{1}{n} \Tr\!\big[ \Sig \Sk^{-1} A \Sk^{-1} \big] }{ 1 - \dftwo/n }\, \Sig \Sk^{-2}
+  \right].
+\end{equation}
+\end{lemma}
+
+\paragraph{Consistency check.}
+Setting $A = I$ must reproduce~\eqref{eq:master2}. Write $S = \Sk^{-1}$, $T = \Sig \Sk^{-2}$, so that
+$\kap S^{2} = S - T$ by~\eqref{eq:split}. Then~\eqref{eq:general} gives
+\begin{equation}
+  \frac{\kap^{2}}{\lambda^{2}}\big[ S^{2} + cT \big]
+  = \frac{\kap}{\lambda^{2}}(S - T) + \frac{\kap^{2}c}{\lambda^{2}} T
+  = \frac{\kap}{\lambda^{2}} S + \frac{\kap^{2}c - \kap}{\lambda^{2}} T,
+  \qquad c := \frac{ \Tr[T]/n }{1 - \dftwo/n},
+\end{equation}
+and since $\kap \Tr[T] = \dfone - \dftwo$,
+\begin{equation}
+  \kap - \kap^{2} c
+  = \kap \cdot \frac{ (1 - \dftwo/n) - (\dfone - \dftwo)/n }{ 1 - \dftwo/n }
+  = \frac{\kap(1 - \dfone/n)}{1 - \dftwo/n}
+  = \lambda \kapp,
+\end{equation}
+so the coefficient of $T$ is $-\kapp/\lambda$, matching~\eqref{eq:master2} exactly. This is a good check
+that the conventions for $\kap$ and $\dftwo$ are consistent. The $\partial_{\lambda}$ route is the
+special case of~\eqref{eq:general} in which $A$ lies in the algebra generated by $\Sighat$; the
+``scaling and renormalization'' framework of Atanasov, Zavatone-Veth and Pehlevan organizes both
+under the same $\kapp$ factor.
+
+\section{Sanity checks}
+
+\begin{enumerate}
+  \item \textbf{Ridgeless, isotropic, $n > d$.} Take $\Sig = \Id$ and $\lambda \to 0^{+}$. Then
+  $\kap \to 0$, $\dfone, \dftwo \to d$, and $\Tr[\Sig\Sk^{-2}] \to d$, so the noise term tends to
+  $\sigma^{2} d/(n - d)$, matching
+  $\sigma^{2}\,\E\Tr[(X^{\top}X)^{-1}] = \sigma^{2} d/(n - d - 1)$ to leading order; the signal term
+  tends to $\|\bstar\|^{2}$.
+
+  \item \textbf{Classical limit.} For $n \to \infty$ at fixed $d$: $\kap \to \lambda$,
+  $\dftwo/n \to 0$, $\kapp \to 1$, and all expressions collapse to the population ridge formulas.
+
+  \item \textbf{Monotonicity.} Since $\dftwo < \dfone < n$ for $\lambda > 0$, one has $\kapp > 1$
+  always, so the two-point correction can only \emph{inflate} the squared norm relative to naive
+  substitution.
+\end{enumerate}
+
+\end{document}
