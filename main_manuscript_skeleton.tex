@@ -24,7 +24,6 @@
 \newcommand{\bstar}{\bm\beta^{\star}}
 \newcommand{\that}{\widehat{\bm\theta}}
 \newcommand{\tstar}{\bm\theta^{\star}}
-\newcommand{\Rcal}{\mathcal R}
 
 \title{Prediction Does Not Imply Control:\\
 Geometry and Random-Matrix Theory of Self-Generated Distribution Shift}
@@ -343,35 +342,104 @@ whereas exact pixel-gradient control is centered at $\bm\theta_{\rm E}$ in the
 $G$ geometry. These centers need not agree.
 \end{proposition}
 
-\begin{proposition}[Feature-space deterministic equivalents]
+\begin{proposition}[Feature-space DE has the same structure as pixel-space DE]
 \label{prop:feature-de}
-Let $\kappa$ solve Eq.~\eqref{eq:kappa-fixed-point} with $\Sigma$ replaced by
-$C$, and define
-\begin{equation}
-  \Rcal=(C+\kappa I)^{-1},
-  \qquad
-  \bm\mu=C\Rcal\tstar,
-\end{equation}
-\begin{equation}
-  v_0
-  =\frac{\kappa^2\tstar^{\top}\Rcal C\Rcal\tstar
-          +S_{\perp}+\sigma^2}
-         {n-\tr(C^2\Rcal^2)}.
-  \label{eq:v0}
-\end{equation}
-Then
+Write the feature covariance, prediction-optimal realizable weight, and
+unrealizable signal variance as
 \begin{align}
-  E_{\rm gen}^{\rm DE}
-    &=S_{\perp}
-      +(\bm\mu-\tstar)^{\top}C(\bm\mu-\tstar)
-      +v_0\tr(C\Rcal C\Rcal),\label{eq:feature-egen-de}\\
-  N_{\rm acc}^{\rm DE}
-    &=\bm q^{\top}\bm\mu,\label{eq:feature-nacc-de}\\
-  D_{\rm acc}^{\rm DE}
-    &=\bm\mu^{\top}G\bm\mu
-      +v_0\tr(G\Rcal C\Rcal).\label{eq:feature-dacc-de}
+  \Sigma_F&:=F\Sigma F^{\top}=C,\\
+  \bm w^{\star}&:=\Sigma_F^{\dagger}F\Sigma\bstar=\tstar,\\
+  S_{\perp}&=S-(\bm w^{\star})^{\top}\Sigma_F\bm w^{\star}.
+  \label{eq:feature-effective-problem}
 \end{align}
-Equivalently, $v_0=(E_{\rm gen}^{\rm DE}+\sigma^2)/n$.
+Conditional on the retained features, feature regression is therefore the
+same ridge problem as pixel regression under the substitutions
+\begin{equation}
+  \boxed{
+  \Sigma\ \longmapsto\ \Sigma_F,
+  \qquad
+  \bstar\ \longmapsto\ \bm w^{\star},
+  \qquad
+  \sigma^2\ \longmapsto\ \sigma^2+S_{\perp}.}
+  \label{eq:pixel-to-feature-substitution}
+\end{equation}
+Define the feature-space versions of the same spectral summaries,
+\begin{align}
+  B^{F}_{p,q}(\kappa)
+    &=(\bm w^{\star})^{\top}
+      \Sigma_F^{p}(\Sigma_F+\kappa I)^{-q}\bm w^{\star},\\
+  \mathrm{df}^{F}_{p,q}(\kappa)
+    &=\tr\!\left[
+      \Sigma_F^{p}(\Sigma_F+\kappa I)^{-q}\right],
+  \qquad
+  \mathrm{df}^{F}_{2}=\mathrm{df}^{F}_{2,2}.
+  \label{eq:feature-B-df}
+\end{align}
+Here $\kappa$ obeys the same fixed-point equation,
+\begin{equation}
+  \kappa-\lambda
+  =\frac{\kappa}{n}\mathrm{df}^{F}_{1,1}(\kappa).
+  \label{eq:feature-kappa-fixed-point}
+\end{equation}
+The generalization error is consequently
+\begin{equation}
+  \boxed{
+  E_{\rm gen}^{\rm DE}
+  \asymp
+  \frac{n}{n-\mathrm{df}^{F}_{2}}
+  \left[
+    \kappa^2B^{F}_{1,2}
+    +S_{\perp}+\sigma^2
+  \right]-\sigma^2.}
+  \label{eq:feature-egen-de}
+\end{equation}
+This is exactly Eq.~\eqref{eq:pixel-egen-de}, with the substitutions in
+Eq.~\eqref{eq:pixel-to-feature-substitution}, except that $S_{\perp}$ remains
+part of the noiseless test error because it is omitted teacher signal rather
+than measurement noise.
+
+To express pixel-space accentuation, define the shrinkage effective weight
+mapped back to input space,
+\begin{align}
+  \widetilde{\bm\beta}_{\kappa}
+  &:=F^{\top}\Sigma_F(\Sigma_F+\kappa I)^{-1}\bm w^{\star}\\
+  &=F^{\top}(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar.
+  \label{eq:feature-shrunken-pixel-weight}
+\end{align}
+Then the leading numerator and denominator take the pixel-parallel form
+\begin{align}
+  \mu_N^{F}
+  &\asymp
+  \bstar^{\top}\widetilde{\bm\beta}_{\kappa},
+  \label{eq:feature-nacc-de}\\
+  \mu_D^{F}
+  &\asymp
+  \left\lVert\widetilde{\bm\beta}_{\kappa}\right\rVert^2
+  +\frac{\kappa^2B^{F}_{1,2}+S_{\perp}+\sigma^2}
+         {n-\mathrm{df}^{F}_{2}}
+   \tr\!\left[
+     FF^{\top}(\Sigma_F+\kappa I)^{-2}\Sigma_F
+   \right]
+  \label{eq:feature-dacc-de}\\
+  &=
+  \left\lVert\widetilde{\bm\beta}_{\kappa}\right\rVert^2
+  +\frac{E_{\rm gen}^{\rm DE}+\sigma^2}{n}
+   \tr\!\left[
+     FF^{\top}(\Sigma_F+\kappa I)^{-2}\Sigma_F
+   \right].
+  \label{eq:feature-dacc-egen}
+\end{align}
+Thus
+\begin{equation}
+  z_{\rm acc}^{F,\rm DE}
+  \asymp \frac{\mu_D^{F}}{\mu_N^{F}}-1,
+  \qquad
+  R_{\rm acc}^{2,\rm DE}
+  \asymp 1-\left(z_{\rm acc}^{F,\rm DE}\right)^2.
+\end{equation}
+Setting $F=I$ gives
+$\Sigma_F=\Sigma$, $\bm w^{\star}=\bstar$, $S_{\perp}=0$, and recovers
+Proposition~\ref{prop:pixel-de} exactly.
 \end{proposition}
 
 \begin{theorem}[Prediction statistics do not identify pixel control]
@@ -624,13 +692,23 @@ Top-$K$ PCs & $1$, $j\le K$ & $s_j$ & $1$ & $\sum_{j>K}s_jb_j^2$\\
   \item Explain why a ratio of deterministic means can predict typical
         accentuation while failing for an empirical mean near a singular
         denominator.
-  \item Retain an approximate Gaussian distribution for the fitted feature
-        coefficient:
-  \begin{equation}
-    \that\ \dot\sim\ \mathcal N(\bm\mu,V),
-    \qquad V=v_0\Rcal C\Rcal.
+  \item For this finite-size subsection only, retain the Gaussian approximation
+        to the fitted feature coefficient using notation parallel to the
+        preceding proposition:
+  \begin{align}
+    \bm m_F
+      &:=\Sigma_F(\Sigma_F+\kappa I)^{-1}\bm w^{\star},\\
+    \tau_F
+      &:=\frac{\kappa^2B^F_{1,2}+S_{\perp}+\sigma^2}
+                   {n-\mathrm{df}^{F}_{2}}
+       =\frac{E_{\rm gen}^{\rm DE}+\sigma^2}{n},\\
+    V_F
+      &:=\tau_F(\Sigma_F+\kappa I)^{-1}
+                    \Sigma_F(\Sigma_F+\kappa I)^{-1},\\
+    \that
+      &\ \dot\sim\ \mathcal N(\bm m_F,V_F).
     \label{eq:gaussian-de}
-  \end{equation}
+  \end{align}
 \end{itemize}
 
 \begin{proposition}[Gaussian distributional deterministic equivalent]
@@ -638,13 +716,13 @@ Top-$K$ PCs & $1$, $j\le K$ & $s_j$ & $1$ & $\sum_{j>K}s_jb_j^2$\\
 Under Eq.~\eqref{eq:gaussian-de}, the linear--quadratic accentuation moments
 are
 \begin{align}
-  \E N_{\rm acc}&=\bm q^{\top}\bm\mu,
-  &\Var(N_{\rm acc})&=\bm q^{\top}V\bm q,\\
-  \E D_{\rm acc}&=\bm\mu^{\top}G\bm\mu+\tr(GV),
+  \E N_{\rm acc}&=\bm q^{\top}\bm m_F,
+  &\Var(N_{\rm acc})&=\bm q^{\top}V_F\bm q,\\
+  \E D_{\rm acc}&=\bm m_F^{\top}G\bm m_F+\tr(GV_F),
   &\Var(D_{\rm acc})
-    &=2\tr[(GV)^2]+4\bm\mu^{\top}GVG\bm\mu,\\
+    &=2\tr[(GV_F)^2]+4\bm m_F^{\top}GV_FG\bm m_F,\\
   &&\Cov(N_{\rm acc},D_{\rm acc})
-    &=2\bm q^{\top}VG\bm\mu.
+    &=2\bm q^{\top}V_FG\bm m_F.
 \end{align}
 Sampling $\that$ from this surrogate and applying the exact per-fit metric
 definitions yields approximate means, medians, intervals, and tail
