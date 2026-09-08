@@ -157,7 +157,7 @@ The precise analysis of the effect of learning will be done in the next section.
 % The key observation is that prediction is associated with the function itself $f(x)$, while accentuation and control is associated with the input gradient of the function $\nabla f(x)$. 
 \paragraph{Set up}
 Consider a linear model of the form $f(\x) = \w^\top \x$, where $f(\x)$ is the predicted response, $\w$ is the weight vector, and $\x$ is the input image. 
-Consider a simplified gradient based feature accentuation approach: from a seed image $\x_0$, iteratively move it along the gradient direction $\x \gets \x +\alpha \nabla f=\x +\alpha \w$ until $f(\x)=y^*$. \footnotemark
+Consider a simplified gradient based feature accentuation approach: from a seed image $\x_0$, iteratively move it along the gradient direction $\x \gets \x +\alpha \nabla f=\x +\alpha \w$ until $f(\x)=y^*$. \footnote
 In this simplified case, the accentuated images have closed form solution (see xxx)
 $$\x^*=\x_0+\frac{y^*-\w^\top\x_0}{\|\w\|^2}\w$$
 % may chuck
