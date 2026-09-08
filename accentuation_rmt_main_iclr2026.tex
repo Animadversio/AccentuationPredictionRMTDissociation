@@ -3,6 +3,10 @@
 
 \input{math_commands.tex}
 
+\usepackage{xcolor}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\todo}[1]{\textcolor{magenta}{\textbf{[TODO: #1]}}}
+
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -11,17 +15,17 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
 \pagestyle{empty}
-
 \definecolor{inputgray}{RGB}{76,84,92}
 \definecolor{predblue}{RGB}{42,104,145}
 \definecolor{predgreen}{RGB}{42,124,91}
 \definecolor{controlred}{RGB}{181,74,58}
 \definecolor{controlorange}{RGB}{196,116,42}
 \definecolor{fitpurple}{RGB}{102,75,145}
+
 \usepackage{adjustbox}
 \usepackage{algorithm}
-\newcommand{\x}{\mathbf{x}}
-\newcommand{\w}{\mathbf{w}}
+
+
 % \newcommand{\Sigma}{\mathbf{\Sigma}}
 % \newcommand{\R}{\mathbb{R}}
 % \title{When Test Error Hides Directional Failure: Random Matrix Theory for Accentuation in Ridge Regression}
@@ -51,12 +55,6 @@
 \newtheorem{example}[thm]{\examplename}
 
 
-\newcommand{\bbeta}{\boldsymbol{\beta}}
-\newcommand{\bhat}{\widehat{\boldsymbol{\beta}}}
-\newcommand{\btrue}{\boldsymbol{\beta}^{\star}}
-\newcommand{\uhat}{\mathbf{u}}
-\newcommand{\df}{\mathrm{df}_{2}}
-\newcommand{\Eacc}{E_{\mathrm{acc}}}
 
 %\iclrfinalcopy
 \begin{document}
@@ -159,7 +157,7 @@ The precise analysis of the effect of learning will be done in the next section.
 % The key observation is that prediction is associated with the function itself $f(x)$, while accentuation and control is associated with the input gradient of the function $\nabla f(x)$. 
 \paragraph{Set up}
 Consider a linear model of the form $f(\x) = \w^\top \x$, where $f(\x)$ is the predicted response, $\w$ is the weight vector, and $\x$ is the input image. 
-Consider a simplified gradient based feature accentuation approach: from a seed image $\x_0$, iteratively move it along the gradient direction $\x \gets \x +\alpha \nabla f=\x +\alpha \w$ until $f(\x)=y^*$. 
+Consider a simplified gradient based feature accentuation approach: from a seed image $\x_0$, iteratively move it along the gradient direction $\x \gets \x +\alpha \nabla f=\x +\alpha \w$ until $f(\x)=y^*$. \footnotemark
 In this simplified case, the accentuated images have closed form solution (see xxx)
 $$\x^*=\x_0+\frac{y^*-\w^\top\x_0}{\|\w\|^2}\w$$
 % may chuck
@@ -179,7 +177,7 @@ This tells us the images are updated in the gradient direction of the predictive
 %          &= \x_t - \eta (f(\x_t) - y^*) \w
 % \end{align}
 % where $\eta$ is the learning rate. 
-\footnote{This is a simplified version of the actual procedure used for deep networks, which typically involve additional pre-conditioning and augmentation steps to regularize the optimization process.}
+\footnotetext{This is a simplified version of the actual procedure used for deep networks, which typically involve additional pre-conditioning and augmentation steps to regularize the optimization process.}
 
 % \paragraph{Prediction vs Control} 
 \paragraph{Prediction neglects the low variance direction while Control emphasizes it.} 
@@ -231,58 +229,56 @@ This constructed example shows that the dissociation of prediction and control i
 
 \section{A random matrix characterization of the dissociation}
 
-In the example above, we designed the weight and their differences, but how does learning or optimization arrive at such different weights? Here we argue that noisy target and spectrum of the input distribution accentuates this issue, at least in the linear case.  
+In the example above, we designed the weight and their differences, but how does learning or optimization arrive at such different weights? 
+\red{Here we argue that noisy target, spectrum of the input distribution, and the feature map all accentuates this issue. at least in the linear case.}
 
-Here we consider a classical set up where a linear model is learning from a linear teacher with additive noise. % This system is very well studied, with ample beautiful papers. 
+Here we consider a classical set up where a linear model is learning from a linear teacher with additive noise \cite{}. % This system is very well studied, with ample beautiful papers. 
 
 \subsection{Set up: Linear noisy teacher student and feature accentuation}
 % \subsection{Teacher Student setup and different evaluations of the same predictor}
 
-On a natural data distribution $(0,\Sigma)$ . The teacher weights
-are $\beta^{\star}$, with Gaussian i.i.d. noise level $\sigma$ 
+\paragraph{Teacher-Student}
+On a natural data distribution \red{$\x\sim\mathcal{N}(0,\Sigma)$ in $d$-dim}\todo{Gaussian assumption can be alleviated}. 
+The teacher is linear model with weights $\bstar\in\R^d$. Where the student observe the response with additive i.i.d. Gaussian noise $\epsilon\sim\mathcal{N}(0,1)$ at level $\sigma$
 \[
-y=\mathbf{x}^{\top}\beta^{\star}+\sigma\epsilon
+y=\x^{\top}\bstar+\sigma\epsilon
 \]
-
-A student model is bias-free linear model with weight $\hat{\beta}$,
-(or effective weight in linear feature case.) 
+The student model is bias-free linear model with weight $\bhat$,
+which we will extend to effective weights in linear feature case in Sec.~\ref{}. 
 \[
-f(\mathbf{x})=\mathbf{x}^{\top}\hat{\beta}
+f(\x)=\x^{\top}\bhat
 \]
+The student see $n$ training samples $\{\x_i,y_i\}$. We stack the training samples into a matrix $X\in \R^{n\times d}$, oberved noisy responses into $\mathbf y\in \R^n$ and the realized noise $\eta\in\R^n$, and the empirical data covariance $\hat\Sigma=\frac{1}{n}X^\top X$.  %observation
 
-For classic generalization, one sample new samples from basically
-the population data distribution, and evaluate on it, thus the distribution
-is 
+\paragraph{Evaluation}
+For classic held-out prediction, we sample fresh samples from the population data distribution, and evaluate on it, thus the evaluation distribution is $\mathcal{N}(0,\Sigma)$ and the classic generalization error reads %can be written as 
+\begin{equation}
+    E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)
+\end{equation}
+For accentuation and control, however, the student model propose inputs based on its predicted weights. As a result, the model is evaluated on a self generated distribution
 \[
-\mathcal{N}(0,\Sigma)
+\x_{0}+\alpha\bhat
 \]
-
-For accentuation and control, one create self generated path and then
-evaluate the prediction on it. 
-\[
-\mathbf{x}_{0}+\alpha\hat{\beta}
-\]
-
-In the main paper, we assume a single seed image which is $\mathbf{x}_{0}=0$,
+% and then the model prediction is evaluated on it. 
+In the main paper, we assume a single seed image, $\x_{0}=0$,
 and $\alpha$ is sampled from a distribution to make the \emph{predicted
-model variance} matched with a target variance. e.g. 
+model variance} match with a target variance. e.g. 
 \[
-\mathrm{Var}[\alpha]\hat{\beta}^{\top}\hat{\beta}=\beta^{\star\top}\Sigma\beta^{\star}
+\mathrm{Var}[\alpha](\bhat^{\top}\bhat)^2=\beta^{\star\top}\Sigma\bstar
 \]
-
-In supplementary, we will discuss the generalization to non-centered seed image and multi seed images case. 
+In Appendix \ref{}, we will discuss the generalization to non-centered seed image and multi seed images case. 
 
 For peer review, model is evaluated on the accentuation path created
 by other models with weight $\beta^{\prime}$, with similar structure
 \[
-\mathbf{x}_{0}+\alpha\beta^{\prime}
+\x_{0}+\alpha\beta^{\prime}
 \]
 
 
 \subsection{Intuition about the geometry}
 
 With these structure we can already construct various cases where
-two students $\hat{\beta}_{1},\hat{\beta}_{2}$ result in the same
+two students $\bhat_{1},\bhat_{2}$ result in the same
 prediction and accuracy, but with diverse control scores. 
 
 As long as the weight difference is along some low var dimension of
@@ -305,110 +301,133 @@ We note that Pearson correlation is a degenerate metric when evaluating
 on a single linear path, noiseless evaluation setting, so we focus
 on other metrics, MSE, R2, slope. 
 \begin{center}
-\scriptsize
-\begin{tabular}{|c|c|c|c|c|c|c|}
+\small
+\begin{tabular}{c|c|c|c|c|c}
 \hline 
- & $\mu_{p}$ & $\Sigma_{p}$ & MSE & R2 & Slope & Pearson r\tabularnewline
+ & $\mu_{p}$ & $\Sigma_{p}$ & MSE & $R^2$ & Slope \tabularnewline % & Pearson r
 \hline 
+% \hline 
+% General & $\mu_{p}$ & $\Sigma_{p}$ & $(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)$ & $1-\frac{(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)}{\bstar{}^{\top}\Sigma_{p}\bstar}$ & $\frac{\bhat{}^{\top}\Sigma_{p}\bstar}{\bhat{}^{\top}\Sigma_{p}\bhat}$ & $\frac{\bhat{}^{\top}\Sigma_{p}\bstar}{\sqrt{(\bhat{}^{\top}\Sigma_{p}\bhat)(\bstar{}^{\top}\Sigma_{p}\bstar)}}$\tabularnewline
 \hline 
-General & $\mu_{p}$ & $\Sigma_{p}$ & $(\hat{\beta}-\beta^{\star})^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\hat{\beta}-\beta^{\star})$ & $1-\frac{(\hat{\beta}-\beta^{\star})^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\hat{\beta}-\beta^{\star})}{\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma_{p}\beta^{\star}}{\hat{\beta}{}^{\top}\Sigma_{p}\hat{\beta}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma_{p}\beta^{\star}}{\sqrt{(\hat{\beta}{}^{\top}\Sigma_{p}\hat{\beta})(\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star})}}$\tabularnewline
+Generalization & $0$ & $\Sigma$ & $(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)$ & $1-\frac{(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)}{\bstar{}^{\top}\Sigma\bstar}$ & $\frac{\bhat{}^{\top}\Sigma\bstar}{\bhat{}^{\top}\Sigma\bhat}$ \tabularnewline % & $\frac{\bhat{}^{\top}\Sigma\bstar}{\sqrt{(\bhat{}^{\top}\Sigma\bhat)(\bstar{}^{\top}\Sigma\bstar)}}$
 \hline 
-Generalization & $0$ & $\Sigma$ & $(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})$ & $1-\frac{(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})}{\beta^{\star}{}^{\top}\Sigma\beta^{\star}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma\beta^{\star}}{\hat{\beta}{}^{\top}\Sigma\hat{\beta}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma\beta^{\star}}{\sqrt{(\hat{\beta}{}^{\top}\Sigma\hat{\beta})(\beta^{\star}{}^{\top}\Sigma\beta^{\star})}}$\tabularnewline
+Accentuation & $0$ & $\mathrm{Var}[\alpha]\bhat\bhat^{\top}$ & $\mathrm{Var}[\alpha]\big(\bhat^{\top}(\bhat-\bstar)\big)^{2}$ & $1-\big(\frac{\bhat^{\top}\bhat}{\bhat^{\top}\bstar}-1\big)^{2}$ & $\frac{\bhat^{\top}\bstar}{\bhat^{\top}\bhat}$ \tabularnewline %\textbf{}
 \hline 
-Accentuation & $0$ & $\mathrm{Var}[\alpha]\hat{\beta}\hat{\beta}^{\top}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\hat{\beta}^{\top}\hat{\beta}}{\hat{\beta}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
-\hline 
-Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{{\beta^\prime}^{\top}\hat{\beta}}{{\beta^\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
+Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\bhat-\bstar)\big)^{2}$ & $1-\big(\frac{{\beta^\prime}^{\top}\bhat}{{\beta^\prime}^{\top}\bstar}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\bstar}{\beta^{\prime}{}^{\top}\bhat}$ \tabularnewline % & $1$ or $nan$
 \hline 
 \end{tabular}
 \par\end{center}
 
-\subsection{Estimation of ratio of random variables}
+% \subsection{Estimation of ratio of random variables}
 
-One key structural observations is, 
-\begin{prop}
-All three metrics (MSE,R2,Slope) of accentuation and control error
-are controlled by a scalar summary statistics, a ratio between two
-inner product scalars 
-\[
-\frac{N}{D}=\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}
-\]
-\end{prop}
-Thus so for accentuation, the central goal is to estimation of this
-ratio. 
+One key structural observations is, all three metrics (MSE,R2,Slope) of accentuation and control error are governed by a scalar summary statistics, 
+a ratio between two scalars, where $N:=\bhat^{\top}\bstar$ is the dot-product of teacher and student weight and $D:=\bhat^{\top}\bhat$ is the squared norm of student weight. 
+\begin{equation}
+% \frac{N}{D}=\frac{\bhat^{\top}\bstar}{\bhat^{\top}\bhat}
+E_{acc}/S=(1-\frac{N}{D})^2,\quad R^2=1-(\frac DN-1)^2,\quad slope=\frac ND \label{eq:acc_metric_ND_depen}
+\end{equation}
+Thus, to study accentuation error, the central aim is to estimation of this ratio and various nonlinear functions of it (MSE, R2, slope). 
+\paragraph{Estimate ratio of random variables} 
+In the main paper, we keep the analytical results as leading order approximation to this ratio, i.e. replacing $N$ and $D$ with their expected value $\mu_D,\mu_N$. 
+This is justified when $N$ and $D$ concentrates around their mean (App.~\ref{}), which is the case at the proportional high-dimensional limit. Our claims are supported by numerical experiments in normal high-dim regime, showing the leading order approximation is often enough. 
 
-Note that $\hat{\beta}$ itself is a random variable, depending on
-the noise realization $\eta$ and the data realization $X$. So this
-ratio is a ratio of two random variables, and other metrics are also
-nonlinear functions of this ratio. We will estimate this ratio via
-2-3 ways 
-\begin{enumerate}
-\item \textbf{0th order ratio of DE:} In most\textbf{ }part of the paper,
-as analytical tractability is needed, we will approximate expectation
-of ratio via ratio of expectation 
-\[
-\mathbb{E}\Big[\frac{N}{D}\Big]\approx\frac{\mu_{N}}{\mu_{D}}
-\]
-This can be justified via concentration, when both N,D concentrates,
-and Var and Cov are small w.r.t. the mean it's a viable choice. 
-\item \textbf{DE of 2nd order correction}: Rarely we will incorporate 2nd
-order correction to this estimate 
-\[
-\mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)
-\]
-\item \textbf{DE-Gaussian approximation}: Use DE to determine mean and cov
-of $\hat{\beta}$, then approximate the distribution of $\hat{\beta}\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})$
-then evaluate all the ratio and nonlinear functions via this monte
-carlo averaging. 
-\[
-\mathbb{E}\Big[\frac{N}{D}\Big]\approx\mathbb{E}_{\hat{\beta}\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})}\Big[\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}\Big]
-\]
+However, we developed other higher order ways to estimate this ratio, e.g. adding 2nd order variance correction term, and estimating the nonlinear function with Monte Carlo of $\bhat$. These corrections are useful when $d,n$ are not high enough and $N,D$ has significant variance. For details, see App. \ref{}.
 
-\begin{enumerate}
-\item Take n to 0 raise to power $(n-1)$
-\end{enumerate}
-\end{enumerate}
+\paragraph{Random matrix toolkit: Deterministic Equivalents}
+The major tool we used to estimate $\mu_D,\mu_N$ are deterministic equivalents (DE). 
+In short, these relations allow us to replace resolvents and functions of stochastic sample covariance matrix $\hat\Sigma$ with those of the deterministic population covariance matrix $\Sigma$, thus evaluating $D,N$. 
+While the effect stochasticity is captured via a scalar value $\kappa$, which satisfy the self-consistent Silverstein equation 
+\begin{equation}
+    \kappa(\lambda)-\lambda=\gamma\kappa(\lambda)\mathrm{tr}[\Sigma(\Sigma+\kappa(\lambda))^{-1}]
+\end{equation}
+where $\mathrm{tr}$ is the normalized trace, and $\mathrm{Tr}$ is the unnormalized one, and $\gamma=d/n$. We use the following generalized definitions of degree of freedom and weighted degree of freedom, 
+\begin{equation}
+B_{p,q}(\kappa)=\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}b_{k}^{2}\qquad
+\mathrm{df}_{p,q}(\kappa)=\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}
+\end{equation}
+where the classic $\mathrm{df}_{1}\equiv\mathrm{df}_{1,1}$ and $\mathrm{df}_{1}\equiv\mathrm{df}_{2,2}$. 
+The full notations, 1-point and 2-point DE formula and their technical meanings are provided in App.~\ref{}. 
+
+% Note that $\bhat$ itself is a random variable, depending on
+% the noise realization $\eta$ and the data realization $X$. So this
+% ratio is a ratio of two random variables, and other metrics are also
+% nonlinear functions of this ratio. We will estimate this ratio via
+% 2-3 ways 
+% \begin{enumerate}
+% \item \textbf{0th order ratio of DE:} In most\textbf{ }part of the paper,
+% as analytical tractability is needed, we will approximate expectation
+% of ratio via ratio of expectation 
+% \[
+% \mathbb{E}\Big[\frac{N}{D}\Big]\approx\frac{\mu_{N}}{\mu_{D}}
+% \]
+% This can be justified via concentration, when both N,D concentrates,
+% and Var and Cov are small w.r.t. the mean it's a viable choice. 
+% \item \textbf{DE of 2nd order correction}: Rarely we will incorporate 2nd
+% order correction to this estimate 
+% \[
+% \mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)
+% \]
+% \item \textbf{DE-Gaussian approximation}: Use DE to determine mean and cov
+% of $\bhat$, then approximate the distribution of $\bhat\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})$
+% then evaluate all the ratio and nonlinear functions via this monte
+% carlo averaging. 
+% \[
+% \mathbb{E}\Big[\frac{N}{D}\Big]\approx\mathbb{E}_{\bhat\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})}\Big[\frac{\bhat^{\top}\bstar}{\bhat^{\top}\bhat}\Big]
+% \]
+
+% \begin{enumerate}
+% \item Take n to 0 raise to power $(n-1)$
+% \end{enumerate}
+% \end{enumerate}
 
 \subsection{Ridge regression: Effect of noise and regularization}
+Next we consider how the regression algorithm (estimator) and noise shapes this dissociation. 
 
-Next we consider how the learning algorithm / estimator and noise
-shapes this dissociation. 
-
-We first consider ridge in the input space -- since intuitively ridge
-regularization will penalize the non-aligned weights which alleviate
-this problem. 
+We first consider ridge regression in the input space. 
+\begin{equation}
+    \bhat=\arg\min_\beta \frac1n\|X\beta-\mathbf y\|^2+\lambda\|\beta\|^2
+\end{equation}
+\red{where $\alpha=n\lambda$ is more commonly used in packages like \texttt{sklearn}. }
+Since ridge regularization will penalize weights in the small variance dimensions of data manifolds, intuitively it will alleviate the danger of accentuation error. 
+But does the issue persists? 
 \begin{lem}
 The ridge estimated solution reads 
-\[
-\hat{\beta}=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
-\]
+\begin{equation}
+\bhat=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
+\end{equation}
 \end{lem}
-\begin{prop}
+\begin{prop}\label{prop:pix_ridge_gen_err}
 Classic generalization (mean squared) error, has the following DE
 \begin{align*}
-E_{gen} & =(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})\\
- & \asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}\beta^{*}{}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\beta^{*}+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\\
- & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)-\sigma^{2}
+E_{gen} & =(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)\\
+ &\asymp \frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}\bstar^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\big)-\sigma^{2} =\frac{n\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}-\sigma^{2}
+ % & \asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}\bstar{}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\\
+ % & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)-\sigma^{2}
 \end{align*}
 which we will define as $E_{gen,DE}$. 
 \end{prop}
 This is different from the accentuation error
-\begin{prop}
+\begin{prop}\label{prop:pix_ridge_acc_ND}
 Accentuation and control error is characterized by the following ratio
 $\frac{N}{D}$, where numerator and denominator each admits a deterministic
 equivalence. 
-\begin{align*}
-\mu_{N}=\mathbb{E}_{X,\eta}\Big[N\Big] & \asymp\beta^{*\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\beta^{*}\\
- & =B_{1,1}(\kappa)\\
-\mu_{D}=\mathbb{E}_{X,\eta}\Big[D\Big] & \asymp\beta^{*\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\beta^{*}+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}\beta^{*\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\beta^{*}\Big)\\
+\begin{align}\label{eq:pix_ridge_ND_DE_rel}
+\mu_{N}=\mathbb{E}_{X,\eta}\Big[N\Big] & \asymp\beta^{*\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\bstar =B_{1,1}(\kappa)\\
+\mu_{D}=\mathbb{E}_{X,\eta}\Big[D\Big] & \asymp\beta^{*\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}\beta^{*\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)\notag\\
  & =B_{2,2}(\kappa)+\frac{\mathrm{df}_{1,2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\Big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\Big)\\
  & =B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})
-\end{align*}
-So on the leading order it can be approximated by the ratio of the
-two DE.
-\[
-\frac{N}{D}\approx\frac{\mu_{N}}{\mu_{D}}
-\]
+\end{align}
+and MSE, $R^2$, slope can be calculated with $\mu_D,\mu_N$ via Eq.~\ref{eq:acc_metric_ND_depen}. 
+% So on the leading order it can be approximated by the ratio of the
+% two DE.
+% \[
+% \frac{N}{D}\approx\frac{\mu_{N}}{\mu_{D}}
+% \]
 \end{prop}
+
+\red{COMMENT ON THIS, when is it the most vulnerable} 
+
+
 This can be central quantity represented in various forms 
 \begin{cor}
 equivalent forms of the accentuation error
@@ -446,102 +465,117 @@ z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kap
 \end{prop}
 
 \subsection{Ridge Regression on Linear Feature: Effect of feature projection and gradient}
+The analysis above shows us good prediction doesn't guarantee good control, 
+but it ignores the effect of the feature space or model backbone. 
+Thus, it cannot explain the diversity across DNN backbones. 
+Here, we idealize the model backbones as linear feature mappings, and study Ridge regression on this fixed feature map.  
 
-When we consider feature space $F$ i.e. teacher remain the same,
-while student is a linear function on a feature space 
+We consider a linear feature map $F\in\R^{p \times d}$. Teacher remains the same, while student is a linear function on the feature space with weights $w\in\R^p$
 \[
-f(\mathbf{x})=w^{\top}F\mathbf{x}
+f(\x)=w^{\top}F\x
 \]
-
-the effective weights is 
-\[
-\hat{\beta}=F^{\top}w
-\]
+so the effective weights in input space i.e. gradient is $\bhat=F^{\top}w=\nabla_\x f$
 
 With a feature space, the original teacher signal may not be representable.
 So first we need to define a sense of optimal ``realizable'' weight
 and its associated irreducible error. 
+Surprisingly, there are two sense of optimality, for prediction vs for reconstruction, 
+which preludes the dissociation of prediction and control. 
 \begin{lem}
 In a feature space, there are two sense of ``optimal'' weight, the
 weight minimizing population prediction loss is
 \[
-w^{\star}=(F\Sigma F^{\top})^{\dagger}F\Sigma\beta^{\star}=\Sigma_{F}^{\dagger}F\Sigma\beta^{\star}
+w^{\star}=(F\Sigma F^{\top})^{\dagger}F\Sigma\bstar=\Sigma_{F}^{\dagger}F\Sigma\bstar
 \]
 The population level error of this weight predicting noiseless teacher
 is $S_{\perp}$, i.e. irreducible non-representable error of this
 feature space. 
 \[
-S_{\perp}:=\mathbb{E}_{\mathbf{x}}[(\mathbf{x}^{\top}\beta^{\star}-\mathbf{x}^{\top}F^{\top}w^{\star})^{2}]=\beta^{\star}{}^{\top}\Sigma\beta^{\star}-w^{\star}{}^{\top}\Sigma_{F}w^{\star}
+S_{\perp}:=\mathbb{E}_{\x}[(\x^{\top}\bstar-\x^{\top}F^{\top}w^{\star})^{2}]=\bstar{}^{\top}\Sigma\bstar-w^{\star}{}^{\top}\Sigma_{F}w^{\star}
 \]
 
 While the weight minimizing the reconstruction error of teacher weight
 is 
 \[
-w^{P}=(FF^{\top})^{-1}F\beta^{*}
+w^{P}=(FF^{\top})^{-1}F\bstar
 \]
-and these two senses in general do not coincide. 
+and in non-white data ($\Sigma\neq I_d$) these two weights do not coincide. 
 \end{lem}
-\begin{prop}
+The classic held-out prediction error reads
+\begin{prop}[Generalization Error for Linear Feature Ridge]\label{prop:linfeat_gen_err}
 Classic generalization mean squared error, 
-\[
+\begin{equation}
 E_{gen}\asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\Big(\kappa^{2}w^{\star}{}^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}w^{\star}+S_{\perp}+\sigma^{2}\Big)-\sigma^{2}
-\]
-where $w^{\star}:=\Sigma_{F}^{\dagger}F\Sigma\beta^{\star}$ and $S_{\perp}=\beta^{\star}{}^{\top}\Sigma\beta^{\star}-w^{\star}{}^{\top}\Sigma_{F}w^{\star}$.
+\end{equation}
+where $w^{\star}:=\Sigma_{F}^{\dagger}F\Sigma\bstar$ and $S_{\perp}=\bstar{}^{\top}\Sigma\bstar-w^{\star}{}^{\top}\Sigma_{F}w^{\star}$.
 and $\kappa$ is computed via self-consistent equation on spectrum
 of $\Sigma_{F}$. 
 \end{prop}
 In contrast, the accentuation and control error is 
-\begin{prop}
+\begin{prop}[Accentuation Error for Linear Feature Ridge]\label{prop:linfeat_acc_ND}
 Accentuation and control error is characterized by the ratio $D/N$
 where numerator and denominator has their own DE, 
-\begin{align*}
-D & \asymp\|\tilde{\beta}_{\kappa}\|^{2}+\frac{1}{n}(E_{gen,DE}+\sigma^{2})\mbox{Tr}\bigl[FF^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}\bigr]\\
-N & \asymp\beta^{\star}{}^{\top}\tilde{\beta}_{\kappa}
-\end{align*}
-and $\tilde{\beta}_{\kappa}:=F^{\top}\Sigma_{F}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}w^{\star}=F^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}F\Sigma\beta^{\star}$,
-can be understood as optimal shrinkaged effective weight. 
-\[
-z_{acc}=\frac{D}{N}-1
-\]
+\begin{align}\label{eq:linfeat_ridge_ND_DE_rel}
+N & \asymp\bstar{}^{\top}\tilde{\beta}_{\kappa}\\
+D & \asymp\|\tilde{\beta}_{\kappa}\|^{2}+\frac{1}{n}(E_{gen,DE}+\sigma^{2})\mbox{Tr}\bigl[FF^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}\bigr]
+\end{align}
+and $\tilde{\beta}_{\kappa}:=F^{\top}\Sigma_{F}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}w^{\star}=F^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}F\Sigma\bstar$,
+can be understood as Ridge shrinkaged effective weight. 
 \end{prop}
-One salient observation, 
-\begin{prop}
-On the leading DE level, generalization error $E_{gen,DE}$ has summary
-statistics $\Sigma_{F},F\Sigma\beta^{\star},\beta^{\star}{}^{\top}\Sigma\beta^{\star},\kappa$,
-while it does not explicitly depend on $\Sigma,F,\beta^{\star}$condition
-on these summary stats. 
+It's easy to see, setting $F=I$ recovers the identity in Eq.~\ref{eq:pix_ridge_ND_DE_rel}
 
-In contrast, control and accentuation error depend on the stats above
-while having additional dependency on summary statistics $FF^{\top}$
-and $F\beta^{\star}$
-\end{prop}
-As a construction, We can explicitly characterize the prediction-gauge
-invariance group of $F$ that leaves generalization error and CV selection
-unchanged, while accentuation error changes. 
+
+
+\subsection{The Gauge Transformation that Leaves Generalization Error Unchanged}
+Comparing Prop.~\ref{prop:linfeat_gen_err} and \ref{prop:linfeat_acc_ND}, one observation is salient,  
+\begin{cor}[Distinct summary statistics of prediction and control]
+\red{On the leading DE level}, generalization error $E_{gen,DE}$ has summary
+statistics $\Sigma_{F},F\Sigma\bstar,\bstar^{\top}\Sigma\bstar,\kappa$,
+while it does not explicitly depend on $\Sigma,F,\bstar$. %condition on these summary stats. 
+In contrast, control and accentuation error have additional dependency on $FF^{\top}$ and $F\bstar$. This dependency structure is summarized in Fig.~\ref{fig:summary_stats_dep_graph}. 
+\end{cor}
+
+\begin{figure}[!ht]
+\begin{centering}
+\includegraphics[width=1\textwidth]{figures/feature_summary_statistics_flow}
+\par\end{centering}
+\caption{Relation of summary statistics and generalization vs accentuation.}\label{fig:summary_stats_dep_graph}
+\end{figure}
+
+
+Further, we can explicitly characterize the gauge transformation group of $F$ that leaves generalization error, and consequently CV selection
+unchanged, while accentuation error varies. 
 \begin{prop}
 The transformation of $F$ that leaves prediction $E_{gen}$ and $E_{gen}$
 based cross validation unchanged is the Gauge transformation group
-that leaves $F\Sigma F^{\top},F\Sigma\beta^{\star}$ unchanged. 
+that leaves $F\Sigma F^{\top},F\Sigma\bstar$ unchanged. 
 \[
 F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}
 \]
 where $Q\in\mathcal{G}_{b}$ is an orthogonal transform, in the subgroup
 of orthogonal group dim $d$. 
 \[
-\mathcal{G}_{b}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\beta^{\star}=\Sigma^{1/2}\beta^{\star}\big\}
+\mathcal{G}_{b}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar\big\}
 \]
 
 One can define a even further more invariant subgroup which leave
-$F\Sigma F^{\top},F\Sigma\beta^{\star},F\beta^{\star}$ unchanged.
+$F\Sigma F^{\top},F\Sigma\bstar,F\bstar$ unchanged.
 \[
-\mathcal{G}_{b,c}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\beta^{\star}=\Sigma^{1/2}\beta^{\star},Q\Sigma^{-1/2}\beta^{\star}=\Sigma^{-1/2}\beta^{\star}\big\}
+\mathcal{G}_{b,c}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar,Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar\big\}
 \]
 In that case, $FF^{\top}$will be the only summary statistics that
 affects the accentuation error. 
 \end{prop}
 
+\red{Answer given a teacher what kind of feature map is the most dangerous?}
 
+\subsection{Diagnostics of the Cause}
 
+Input spectrum -- for white, non structured data, this dissociation doen't exist. 
+
+Noisy target -- 
+
+Feature map -- Given these conditions, some feature maps are more vulnerable than others. 
 
 \clearpage
 
@@ -572,7 +606,7 @@ The usual generalization error is
 By contrast, ignoring the seed image $\x_0=0$, then the accentuation path lies on the direction of the estimated weight, with a scaling coefficient, $\x=\alpha \bhat$ with $\alpha\sim p_\alpha$. 
 We idealized the control experiment as above and study the case where the experimenters choose the target levels such that the model predicted response has the same variance as the observed response variance over the natural distribution, namely  
 $$Var_{\alpha\sim p_\alpha}[\bhat^\top (\alpha \bhat)]=Var_{\x\sim\mathcal{N}(0,\Sigma)}[\btrue \x]$$
-under such case we have $Var[\alpha]=\frac{\beta^{*\top}\Sigma\beta^{*}}{(\hat{\beta}^{\top}\hat{\beta})^{2}}$
+under such case we have $Var[\alpha]=\frac{\beta^{*\top}\Sigma\bstar}{(\bhat^{\top}\bhat)^{2}}$
 
 Thus, an accentuation evaluation asks what happens when the fitted direction is used as the test path instead of the training distribution $\mathcal{N}(0,\Sigma)$. 
 % by asking if the experimenter with the fitted model will accentuate a sample, to reach the same dynamic range as the training 
@@ -602,7 +636,7 @@ This paper develops a random matrix theory (RMT) account of this dissociation. I
 \begin{figure}
     \centering
     % \includegraphics[width=0.5\linewidth]{}
-    \caption{\textbf{Linear theory of accentuation in visual neural models}. (A) Schematic of the accentuation phenomenon. A true neural weight w* and a model weight w share the same predictions on natural images (blue ellipse, high-variance axes), but diverge along the low-variance axis. During closed-loop accentuation, gradient steps along w push stimuli off the natural image manifold in the direction of low-variance eigenmodes, generating images that drive w strongly but fail to activate w*. (B) Natural image eigenspectrum and eigenmode gallery (van Hateren). The singular value spectrum decays steeply, spanning orders of magnitude. Top eigenmodes (high variance, k=0,1,4…) capture global luminance and low-spatial-frequency structure; bottom eigenmodes (k=−1,−4,−16…) encode high-frequency, noise-like textures invisible in natural statistics. (C) Eigenmode visualizations. Five high-variance (top row) and five low-variance (bottom row) eigenmodes shown as 100×100 images with their singular values. High-variance modes are smooth and spatially structured; low-variance modes are high-frequency and less structured. (D) Weight perturbation along low-variance modes has negligible effect on in-distribution prediction. Starting from a circle-mask ground truth w*, adding a large perturbation (α=1000) along the bottom eigenspace yields a visually very different weight, yet predictions on 1000 natural images are nearly identical (R²=1−4.42×10⁻³). (E) Diverse generation with similar prediction: accentuation experiment. Starting from a seed natural image, gradient accentuation using w₁ (w* with perturbation in mid-low eigenspace, α=1) produces images that preserve natural appearance while genuinely increasing f*(x). Accentuation using w₂ (w* with perturbation in bottom eigenspace, α=100) produces structurally altered, adversarial-like images that drive f₂ to target levels but leave f(x) near baseline — demonstrating failure of control. (F) Asymmetry of generation and evaluation. Scatter plots confirm that while both w₁- and w₂-accentuated images are well-evaluated by f₁ (top), only w₁-accentuated images show correlated f* responses (bottom left). w₂-accentuated images decouple completely from f* (bottom right), exposing the accentuation failure mode, but even w2 model can appreciate the success of w₁-accentuated images. (G) OLS/Ridge regression from noisy data contribute to this pattern. Linear regression with natural image data fails to recover the ground truth circle mask accurately under OLS or Ridge regression, both introduce spurious high-frequency components (low-variance eigenmodes) into the estimated weight, recapitulating the w₂ scenario. (H) Summary. Natural image statistics concentrate variance in low-spatial-frequency modes, leaving high-frequency directions in the near-null space. Regression solutions (especially OLS) absorb spurious correlations along these low-variance modes. In closed-loop neural experiments, such models generate adversarial high-frequency stimuli that drive the model strongly but fail to control the true neural response.}
+    % \caption{\textbf{Linear theory of accentuation in visual neural models}. (A) Schematic of the accentuation phenomenon. A true neural weight w* and a model weight w share the same predictions on natural images (blue ellipse, high-variance axes), but diverge along the low-variance axis. During closed-loop accentuation, gradient steps along w push stimuli off the natural image manifold in the direction of low-variance eigenmodes, generating images that drive w strongly but fail to activate w*. (B) Natural image eigenspectrum and eigenmode gallery (van Hateren). The singular value spectrum decays steeply, spanning orders of magnitude. Top eigenmodes (high variance, k=0,1,4…) capture global luminance and low-spatial-frequency structure; bottom eigenmodes (k=−1,−4,−16…) encode high-frequency, noise-like textures invisible in natural statistics. (C) Eigenmode visualizations. Five high-variance (top row) and five low-variance (bottom row) eigenmodes shown as 100×100 images with their singular values. High-variance modes are smooth and spatially structured; low-variance modes are high-frequency and less structured. (D) Weight perturbation along low-variance modes has negligible effect on in-distribution prediction. Starting from a circle-mask ground truth w*, adding a large perturbation (α=1000) along the bottom eigenspace yields a visually very different weight, yet predictions on 1000 natural images are nearly identical (R²=1−4.42×10⁻³). (E) Diverse generation with similar prediction: accentuation experiment. Starting from a seed natural image, gradient accentuation using w₁ (w* with perturbation in mid-low eigenspace, α=1) produces images that preserve natural appearance while genuinely increasing f*(x). Accentuation using w₂ (w* with perturbation in bottom eigenspace, α=100) produces structurally altered, adversarial-like images that drive f₂ to target levels but leave f(x) near baseline — demonstrating failure of control. (F) Asymmetry of generation and evaluation. Scatter plots confirm that while both w₁- and w₂-accentuated images are well-evaluated by f₁ (top), only w₁-accentuated images show correlated f* responses (bottom left). w₂-accentuated images decouple completely from f* (bottom right), exposing the accentuation failure mode, but even w2 model can appreciate the success of w₁-accentuated images. (G) OLS/Ridge regression from noisy data contribute to this pattern. Linear regression with natural image data fails to recover the ground truth circle mask accurately under OLS or Ridge regression, both introduce spurious high-frequency components (low-variance eigenmodes) into the estimated weight, recapitulating the w₂ scenario. (H) Summary. Natural image statistics concentrate variance in low-spatial-frequency modes, leaving high-frequency directions in the near-null space. Regression solutions (especially OLS) absorb spurious correlations along these low-variance modes. In closed-loop neural experiments, such models generate adversarial high-frequency stimuli that drive the model strongly but fail to control the true neural response.}
     \label{fig:placeholder}
 \end{figure}
 
@@ -630,6 +664,7 @@ This work is theoretical and uses synthetic simulations and natural-image covari
 \bibliography{accentuation_rmt_iclr2026}
 \bibliographystyle{iclr2026_conference}
 
+\clearpage
 \appendix
 \tableofcontents{}
 \input{accentuation_rmt_theory_appendix.tex}
