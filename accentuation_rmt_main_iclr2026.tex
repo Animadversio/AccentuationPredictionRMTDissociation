@@ -8,7 +8,17 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\pagestyle{empty}
 
+\definecolor{inputgray}{RGB}{76,84,92}
+\definecolor{predblue}{RGB}{42,104,145}
+\definecolor{predgreen}{RGB}{42,124,91}
+\definecolor{controlred}{RGB}{181,74,58}
+\definecolor{controlorange}{RGB}{196,116,42}
+\definecolor{fitpurple}{RGB}{102,75,145}
+\usepackage{adjustbox}
 \newcommand{\x}{\mathbf{x}}
 \newcommand{\w}{\mathbf{w}}
 % \newcommand{\Sigma}{\mathbf{\Sigma}}
@@ -20,6 +30,18 @@
 \author{Anonymous Authors}
 
 \newtheorem{proposition}{Proposition}
+\theoremstyle{plain}
+\newtheorem{thm}{\protect\theoremname}
+\theoremstyle{plain}
+\newtheorem{prop}[thm]{\protect\propositionname}
+\theoremstyle{plain}
+\newtheorem{lem}[thm]{\protect\lemmaname}
+\theoremstyle{plain}
+\newtheorem{cor}[thm]{\protect\corollaryname}
+\theoremstyle{definition}
+\newtheorem{example}[thm]{\protect\examplename}
+
+
 \newcommand{\bbeta}{\boldsymbol{\beta}}
 \newcommand{\bhat}{\widehat{\boldsymbol{\beta}}}
 \newcommand{\btrue}{\boldsymbol{\beta}^{\star}}
@@ -33,7 +55,39 @@
 
 \begin{abstract}
 % Modern learning systems are often evaluated by average in-distribution error, yet scientific and perceptual applications frequently probe a learned model along a distinguished direction: a response axis, a feature vector, or an intervention path. We study this mismatch in a solvable high-dimensional setting. For ridge regression with anisotropic Gaussian covariates, we derive deterministic equivalents for the per-eigenmode coefficient error and for an \emph{accentuation} error obtained by moving along the learned direction rather than the ground-truth direction. The theory decomposes coefficient error into three interpretable terms: regularization bias, finite-sample signal fluctuation, and finite-sample noise amplification. It predicts when average generalization and accentuation error disagree, and yields a crossing criterion for the noise level at which the dominant failure mode changes. Monte Carlo experiments across isotropic, power-law, and natural-image spectra validate the formula up to dimension $10{,}000$. The analysis identifies a second-order limitation of leading deterministic equivalents: the mean alignment is accurately predicted, while the variance of the alignment ratio dominates accentuation error in high-noise regimes. These results give a minimal theory for directional failure modes that are invisible to scalar test error. 
+In visual neuroscience, many people have found there are many models
+that could predict neurons well on held out data but cannot generate
+perturbations to control them. Further, the control success is more
+predicted by structure of input gradient instead of metrics about
+the representation geometry.
 
+Here we show that these phenomena can be captured by linear model.
+
+The key idea is failure of control is a special kind of OOD generalization
+failure, where the distribution is model-generated. This self-generated
+distribution induced interesting structure in the evaluation metrics
+(R2, slope, MSE) on it, different from the classic generalization
+error.
+
+In Ridge regression, we derived the leading order (deterministic equivalent)
+approximation for the generalization error and control error, showing
+their differences. We show that the failure in control can still happen
+for noisy regression on non-isotropic data, even when the regularization
+parameter is selected via cross validation.
+
+Extending the analysis to linear feature regression case, we show
+that the generalization error and control error has different summary
+statistics -- generalization error cares about feature space covariance
+while control cares about the feature outer product themselves. 
+
+We specifically characterized the \textit{gauge invariance
+group} of the feature map, which will not change the
+classic generalization error and CV selection; but changes the control
+/ accentuation error dramatically.
+
+This shows our thesis that even for linear feature regression, prediction
+and control can be dissociated, and inspire us to look deeper into
+the gradient structure of feature maps.
 \end{abstract}
 
 \section{Introduction}
@@ -162,12 +216,330 @@ More formally, we can prove that, when we fit a linear model via Ridge regressio
 
 This constructed example shows that the dissociation of prediction and control is not necessarily a phenomena of deep neural networks, even linear models can exhibit this. 
 
+
+
+
+
 \section{A random matrix characterization of the dissociation}
-\subsection{Ridge regression: Effect of noise and regularization}
+
 In the example above, we designed the weight and their differences, but how does learning or optimization arrive at such different weights? Here we argue that noisy target and spectrum of the input distribution accentuates this issue, at least in the linear case.  
 
-Here we consider a classical set up where a linear model is learning from a linear teacher with additive noise. 
-This system is very well studied, with ample beautiful papers. 
+Here we consider a classical set up where a linear model is learning from a linear teacher with additive noise. % This system is very well studied, with ample beautiful papers. 
+
+\subsection{Set up: Linear noisy teacher student and feature accentuation}
+% \subsection{Teacher Student setup and different evaluations of the same predictor}
+
+On a natural data distribution $(0,\Sigma)$ . The teacher weights
+are $\beta^{\star}$, with Gaussian i.i.d. noise level $\sigma$ 
+\[
+y=\mathbf{x}^{\top}\beta^{\star}+\sigma\epsilon
+\]
+
+A student model is bias-free linear model with weight $\hat{\beta}$,
+(or effective weight in linear feature case.) 
+\[
+f(\mathbf{x})=\mathbf{x}^{\top}\hat{\beta}
+\]
+
+For classic generalization, one sample new samples from basically
+the population data distribution, and evaluate on it, thus the distribution
+is 
+\[
+\mathcal{N}(0,\Sigma)
+\]
+
+For accentuation and control, one create self generated path and then
+evaluate the prediction on it. 
+\[
+\mathbf{x}_{0}+\alpha\hat{\beta}
+\]
+
+In the main paper, we assume a single seed image which is $\mathbf{x}_{0}=0$,
+and $\alpha$ is sampled from a distribution to make the \emph{predicted
+model variance} matched with a target variance. e.g. 
+\[
+\mathrm{Var}[\alpha]\hat{\beta}^{\top}\hat{\beta}=\beta^{\star\top}\Sigma\beta^{\star}
+\]
+
+In supplementary, we will discuss the generalization to non-centered seed image and multi seed images case. 
+
+For peer review, model is evaluated on the accentuation path created
+by other models with weight $\beta^{\prime}$, with similar structure
+\[
+\mathbf{x}_{0}+\alpha\beta^{\prime}
+\]
+
+
+\subsection{Intuition about the geometry}
+
+With these structure we can already construct various cases where
+two students $\hat{\beta}_{1},\hat{\beta}_{2}$ result in the same
+prediction and accuracy, but with diverse control scores. 
+
+As long as the weight difference is along some low var dimension of
+data $\Sigma$, then prediction will be not sensitive to it while
+control will be very sensitive to it. 
+
+\subsection{Structure of the generalization and accentuation error}
+
+Using the Lemma \ref{lem:pred_error}\ref{lem:R2_pred_obs}\ref{lem:Pearson-r_pred_obs}\ref{lem:linear_slope},
+we can write down various form of evaluation metrics, MSE, R2, slope,
+Pearson r, given the mean and covariance of a evaluation distribution. 
+
+The difference between classic generalization, accentuation and peer
+review can be seen via the (mean and) covariance of their evaluation
+distribution. 
+
+Using these difference we can write down the following table. 
+
+We note that Pearson correlation is a degenerate metric when evaluating
+on a single linear path, noiseless evaluation setting, so we focus
+on other metrics, MSE, R2, slope. 
+\begin{center}
+\scriptsize
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline 
+ & $\mu_{p}$ & $\Sigma_{p}$ & MSE & R2 & Slope & Pearson r\tabularnewline
+\hline 
+\hline 
+General & $\mu_{p}$ & $\Sigma_{p}$ & $(\hat{\beta}-\beta^{\star})^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\hat{\beta}-\beta^{\star})$ & $1-\frac{(\hat{\beta}-\beta^{\star})^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\hat{\beta}-\beta^{\star})}{\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma_{p}\beta^{\star}}{\hat{\beta}{}^{\top}\Sigma_{p}\hat{\beta}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma_{p}\beta^{\star}}{\sqrt{(\hat{\beta}{}^{\top}\Sigma_{p}\hat{\beta})(\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star})}}$\tabularnewline
+\hline 
+Generalization & $0$ & $\Sigma$ & $(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})$ & $1-\frac{(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})}{\beta^{\star}{}^{\top}\Sigma\beta^{\star}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma\beta^{\star}}{\hat{\beta}{}^{\top}\Sigma\hat{\beta}}$ & $\frac{\hat{\beta}{}^{\top}\Sigma\beta^{\star}}{\sqrt{(\hat{\beta}{}^{\top}\Sigma\hat{\beta})(\beta^{\star}{}^{\top}\Sigma\beta^{\star})}}$\tabularnewline
+\hline 
+Accentuation & $0$ & $\mathrm{Var}[\alpha]\hat{\beta}\hat{\beta}^{\top}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\hat{\beta}^{\top}\hat{\beta}}{\hat{\beta}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
+\hline 
+Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\beta^{\prime}^{\top}\hat{\beta}}{\beta^{\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+\subsection{Estimation of ratio of random variables}
+
+One key structural observations is, 
+\begin{prop}
+All three metrics (MSE,R2,Slope) of accentuation and control error
+are controlled by a scalar summary statistics, a ratio between two
+inner product scalars 
+\[
+\frac{N}{D}=\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}
+\]
+\end{prop}
+Thus so for accentuation, the central goal is to estimation of this
+ratio. 
+
+Note that $\hat{\beta}$ itself is a random variable, depending on
+the noise realization $\eta$ and the data realization $X$. So this
+ratio is a ratio of two random variables, and other metrics are also
+nonlinear functions of this ratio. We will estimate this ratio via
+2-3 ways 
+\begin{enumerate}
+\item \textbf{0th order ratio of DE:} In most\textbf{ }part of the paper,
+as analytical tractability is needed, we will approximate expectation
+of ratio via ratio of expectation 
+\[
+\mathbb{E}\Big[\frac{N}{D}\Big]\approx\frac{\mu_{N}}{\mu_{D}}
+\]
+This can be justified via concentration, when both N,D concentrates,
+and Var and Cov are small w.r.t. the mean it's a viable choice. 
+\item \textbf{DE of 2nd order correction}: Rarely we will incorporate 2nd
+order correction to this estimate 
+\[
+\mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)
+\]
+\item \textbf{DE-Gaussian approximation}: Use DE to determine mean and cov
+of $\hat{\beta}$, then approximate the distribution of $\hat{\beta}\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})$
+then evaluate all the ratio and nonlinear functions via this monte
+carlo averaging. 
+\[
+\mathbb{E}\Big[\frac{N}{D}\Big]\approx\mathbb{E}_{\hat{\beta}\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})}\Big[\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}\Big]
+\]
+
+\begin{enumerate}
+\item Take n to 0 raise to power $(n-1)$
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Ridge regression: Effect of noise and regularization}
+
+Next we consider how the learning algorithm / estimator and noise
+shapes this dissociation. 
+
+We first consider ridge in the input space -- since intuitively ridge
+regularization will penalize the non-aligned weights which alleviate
+this problem. 
+\begin{lem}
+The ridge estimated solution reads 
+\[
+\hat{\beta}=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\beta^{*}}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
+\]
+\end{lem}
+\begin{prop}
+Classic generalization (mean squared) error, has the following DE
+\begin{align*}
+E_{gen} & =(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})\\
+ & \asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}\beta^{*}{}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\beta^{*}+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\\
+ & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)-\sigma^{2}
+\end{align*}
+which we will define as $E_{gen,DE}$. 
+\end{prop}
+This is different from the accentuation error
+\begin{prop}
+Accentuation and control error is characterized by the following ratio
+$\frac{N}{D}$, where numerator and denominator each admits a deterministic
+equivalence. 
+\begin{align*}
+\mu_{N}=\mathbb{E}_{X,\eta}\Big[N\Big] & \asymp\beta^{*\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\beta^{*}\\
+ & =B_{1,1}(\kappa)\\
+\mu_{D}=\mathbb{E}_{X,\eta}\Big[D\Big] & \asymp\beta^{*\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\beta^{*}+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}\beta^{*\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\beta^{*}\Big)\\
+ & =B_{2,2}(\kappa)+\frac{\mathrm{df}_{1,2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\Big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\Big)\\
+ & =B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})
+\end{align*}
+So on the leading order it can be approximated by the ratio of the
+two DE.
+\[
+\frac{N}{D}\approx\frac{\mu_{N}}{\mu_{D}}
+\]
+\end{prop}
+This can be central quantity represented in various forms 
+\begin{cor}
+equivalent forms of the accentuation error
+\begin{align*}
+z_{acc}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}-1\\
+ & =\frac{-\kappa B_{1,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}\\
+ & =\frac{\sigma^{2}\mathrm{df}_{1,2}(\kappa)-n\lambda B_{1,2}(\kappa)}{(n-\mathrm{df}_{2}(\kappa))B_{1,1}(\kappa)}
+\end{align*}
+\end{cor}
+%
+We can see non-optimal regularization strength with noisy setting
+can easily lead to catastrophic failure in control. But what if the
+ridge parameter is optimized -- in reality people often do cross
+validated selection in RidgeCV? 
+\begin{lem}
+The ridge parameter selection based on DE of generalization loss needs
+to satisfy the first order condition
+\[
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)
+\]
+which can also be written through the generalization error at DE level.
+\[
+\kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}=\frac{1}{n}(E_{gen,DE}+\sigma^{2})
+\]
+\end{lem}
+Further even if we select the best ridge parameter, the accentuation
+error can still be written as 
+\begin{prop}
+When we select regularization parameter by minimizing generalization
+error (RidgeCV), at this stationary point, accentuation error has
+additional structure. and can be written as 
+\begin{align*}
+z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)\\
+\end{align*}
+\end{prop}
+
+\subsection{Ridge Regression on Linear Feature: Effect of feature projection and gradient}
+
+When we consider feature space $F$ i.e. teacher remain the same,
+while student is a linear function on a feature space 
+\[
+f(\mathbf{x})=w^{\top}F\mathbf{x}
+\]
+
+the effective weights is 
+\[
+\hat{\beta}=F^{\top}w
+\]
+
+With a feature space, the original teacher signal may not be representable.
+So first we need to define a sense of optimal ``realizable'' weight
+and its associated irreducible error. 
+\begin{lem}
+In a feature space, there are two sense of ``optimal'' weight, the
+weight minimizing population prediction loss is
+\[
+w^{\star}=(F\Sigma F^{\top})^{\dagger}F\Sigma\beta^{\star}=\Sigma_{F}^{\dagger}F\Sigma\beta^{\star}
+\]
+The population level error of this weight predicting noiseless teacher
+is $S_{\perp}$, i.e. irreducible non-representable error of this
+feature space. 
+\[
+S_{\perp}:=\mathbb{E}_{\mathbf{x}}[(\mathbf{x}^{\top}\beta^{\star}-\mathbf{x}^{\top}F^{\top}w^{\star})^{2}]=\beta^{\star}{}^{\top}\Sigma\beta^{\star}-w^{\star}{}^{\top}\Sigma_{F}w^{\star}
+\]
+
+While the weight minimizing the reconstruction error of teacher weight
+is 
+\[
+w^{P}=(FF^{\top})^{-1}F\beta^{*}
+\]
+and these two senses in general do not coincide. 
+\end{lem}
+\begin{prop}
+Classic generalization mean squared error, 
+\[
+E_{gen}\asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\Big(\kappa^{2}w^{\star}{}^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}w^{\star}+S_{\perp}+\sigma^{2}\Big)-\sigma^{2}
+\]
+where $w^{\star}:=\Sigma_{F}^{\dagger}F\Sigma\beta^{\star}$ and $S_{\perp}=\beta^{\star}{}^{\top}\Sigma\beta^{\star}-w^{\star}{}^{\top}\Sigma_{F}w^{\star}$.
+and $\kappa$ is computed via self-consistent equation on spectrum
+of $\Sigma_{F}$. 
+\end{prop}
+In contrast, the accentuation and control error is 
+\begin{prop}
+Accentuation and control error is characterized by the ratio $D/N$
+where numerator and denominator has their own DE, 
+\begin{align*}
+D & \asymp\|\tilde{\beta}_{\kappa}\|^{2}+\frac{1}{n}(E_{gen,DE}+\sigma^{2})\mbox{Tr}\bigl[FF^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}\bigr]\\
+N & \asymp\beta^{\star}{}^{\top}\tilde{\beta}_{\kappa}
+\end{align*}
+and $\tilde{\beta}_{\kappa}:=F^{\top}\Sigma_{F}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}w^{\star}=F^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}F\Sigma\beta^{\star}$,
+can be understood as optimal shrinkaged effective weight. 
+\[
+z_{acc}=\frac{D}{N}-1
+\]
+\end{prop}
+One salient observation, 
+\begin{prop}
+On the leading DE level, generalization error $E_{gen,DE}$ has summary
+statistics $\Sigma_{F},F\Sigma\beta^{\star},\beta^{\star}{}^{\top}\Sigma\beta^{\star},\kappa$,
+while it does not explicitly depend on $\Sigma,F,\beta^{\star}$condition
+on these summary stats. 
+
+In contrast, control and accentuation error depend on the stats above
+while having additional dependency on summary statistics $FF^{\top}$
+and $F\beta^{\star}$
+\end{prop}
+As a construction, We can explicitly characterize the prediction-gauge
+invariance group of $F$ that leaves generalization error and CV selection
+unchanged, while accentuation error changes. 
+\begin{prop}
+The transformation of $F$ that leaves prediction $E_{gen}$ and $E_{gen}$
+based cross validation unchanged is the Gauge transformation group
+that leaves $F\Sigma F^{\top},F\Sigma\beta^{\star}$ unchanged. 
+\[
+F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}
+\]
+where $Q\in\mathcal{G}_{b}$ is an orthogonal transform, in the subgroup
+of orthogonal group dim $d$. 
+\[
+\mathcal{G}_{b}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\beta^{\star}=\Sigma^{1/2}\beta^{\star}\big\}
+\]
+
+One can define a even further more invariant subgroup which leave
+$F\Sigma F^{\top},F\Sigma\beta^{\star},F\beta^{\star}$ unchanged.
+\[
+\mathcal{G}_{b,c}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\beta^{\star}=\Sigma^{1/2}\beta^{\star},Q\Sigma^{-1/2}\beta^{\star}=\Sigma^{-1/2}\beta^{\star}\big\}
+\]
+In that case, $FF^{\top}$will be the only summary statistics that
+affects the accentuation error. 
+\end{prop}
+
+
+
+
+\clearpage
+
+
+
+
+
 
 However, most theory works examined the population loss or test loss, i.e. evaluating the estimated model on the population distribution. => this is very similar to the experimental set up where the encoding models are evaluated on the held out images, and indeed this test loss does not show differences among many models. 
 
@@ -205,10 +577,10 @@ If a user moves along $\bhat$ but the target response should move along $\btrue$
 \end{equation}
 This quantity is not a reweighted version of $E_{\mathrm{gen}}$: it is sensitive to the direction and norm of $\bhat$, and it can be dominated by modes that contribute little to average test error.
 
-This paper develops a random matrix theory (RMT) account of this dissociation. In the proportional limit $n,d\to\infty$ with $d/n\to\gamma$, we derive a deterministic equivalent for the per-principal-component coefficient error. The formula yields a closed-form decomposition of $E_{\mathrm{gen}}$ and an analytic prediction for the mean accentuation alignment. It also exposes the regime where leading-order RMT is insufficient: when the mean alignment is near one, $\operatorname{Var}(R)$ rather than $(1-\mathbb{E}R)^2$ controls $\Eacc$.
+This paper develops a random matrix theory (RMT) account of this dissociation. In the proportional limit $n,d\to\infty$ with $d/n\to\gamma$, we derive a deterministic equivalent for the per-principal-component coefficient error. The formula yields a closed-form decomposition of $E_{\mathrm{gen}}$ and an analytic prediction for the mean accentuation alignment. 
+% It also exposes the regime where leading-order RMT is insufficient: when the mean alignment is near one, $\operatorname{Var}(R)$ rather than $(1-\mathbb{E}R)^2$ controls $\Eacc$.
 
 
-\subsection{Linear Feature Regression: Effect of feature projection and gradient}
 
 
 \clearpage
@@ -231,6 +603,47 @@ This paper develops a random matrix theory (RMT) account of this dissociation. I
 
 
 
+
+
+\clearpage
+
+
+
+
+\section{Reproducibility Statement}
+
+The theory assumptions, derivations, and deterministic equivalents are stated in the main text, with full derivations intended for the appendix. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here. The experiments use synthetic Gaussian covariates with specified spectra and empirical natural-image covariance spectra; all random quantities are generated by the scripts.
+
+\section{Ethics Statement}
+
+This work is theoretical and uses synthetic simulations and natural-image covariance spectra for validation. It does not introduce a deployed model, collect human-subject data, or release a dataset with personal information. The main risk is interpretive: directional analyses can be misleading if treated as causal without appropriate assumptions. The paper therefore emphasizes the limits of average test error and the assumptions required for the proposed metric.
+
+\bibliography{accentuation_rmt_iclr2026}
+\bibliographystyle{iclr2026_conference}
+
+\appendix
+\tableofcontents{}
+\input{accentuation_rmt_theory_appendix.tex}
+% \section{Derivation Sketch for the Per-PC Formula}
+
+% The ridge estimator can be written as
+% \begin{equation}
+%     \bhat-\btrue
+%     =
+%     -\lambda(\widehat{\Sigma}+\lambda I)^{-1}\btrue
+%     +
+%     \sigma(\widehat{\Sigma}+\lambda I)^{-1}\frac{1}{n}X^\top\epsilon,
+% \end{equation}
+% where $\widehat{\Sigma}=X^\top X/n$. Taking the squared projection onto $\uhat_k$, averaging over noise, and applying deterministic equivalents for one- and two-resolvent quadratic forms yields the bias, finite-sample signal, and finite-sample noise terms in equation~\ref{eq:per_pc}. The identity
+% \begin{equation}
+%     \frac{d\kappa}{d\lambda}=\frac{n}{n-\df(\kappa)}
+% \end{equation}
+% turns the derivative form of the noise term into the effective-sample-size denominator $n-\df(\kappa)$.
+
+\section{ICLR 2026 Formatting Notes}
+
+This draft uses the official ICLR 2026 style files. The author guide states that submissions are double blind, initial main text is limited to 9 pages, references do not count toward the page limit, and appendices are unlimited but optional for reviewers. The guide also recommends reproducibility and ethics statements before the references.
+\end{document}
 
 
 
@@ -411,37 +824,3 @@ The analysis suggests a simple lesson: evaluating a model by average prediction 
 This setting is intentionally minimal. It does not claim that nonlinear representation accentuation reduces to ridge regression. Instead, it provides a solvable baseline for a broader phenomenon: when learned directions are used as coordinates for intervention, their geometry matters independently of scalar predictive risk. The RMT formulas identify which parts of the data spectrum and signal orientation control this geometry.
 
 The main technical limitation is second-order fluctuation theory. Leading deterministic equivalents are enough for per-PC error, ordinary generalization, and mean alignment. They are not enough for the full accentuation second moment in regimes where $\operatorname{Var}(R)$ dominates. A complete treatment should combine deterministic equivalents with central limit theorems for quadratic functionals of anisotropic Wishart matrices.
-
-\section{Reproducibility Statement}
-
-The theory assumptions, derivations, and deterministic equivalents are stated in the main text, with full derivations intended for the appendix. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here. The experiments use synthetic Gaussian covariates with specified spectra and empirical natural-image covariance spectra; all random quantities are generated by the scripts.
-
-\section{Ethics Statement}
-
-This work is theoretical and uses synthetic simulations and natural-image covariance spectra for validation. It does not introduce a deployed model, collect human-subject data, or release a dataset with personal information. The main risk is interpretive: directional analyses can be misleading if treated as causal without appropriate assumptions. The paper therefore emphasizes the limits of average test error and the assumptions required for the proposed metric.
-
-\bibliography{accentuation_rmt_iclr2026}
-\bibliographystyle{iclr2026_conference}
-
-\appendix
-\section{Derivation Sketch for the Per-PC Formula}
-
-The ridge estimator can be written as
-\begin{equation}
-    \bhat-\btrue
-    =
-    -\lambda(\widehat{\Sigma}+\lambda I)^{-1}\btrue
-    +
-    \sigma(\widehat{\Sigma}+\lambda I)^{-1}\frac{1}{n}X^\top\epsilon,
-\end{equation}
-where $\widehat{\Sigma}=X^\top X/n$. Taking the squared projection onto $\uhat_k$, averaging over noise, and applying deterministic equivalents for one- and two-resolvent quadratic forms yields the bias, finite-sample signal, and finite-sample noise terms in equation~\ref{eq:per_pc}. The identity
-\begin{equation}
-    \frac{d\kappa}{d\lambda}=\frac{n}{n-\df(\kappa)}
-\end{equation}
-turns the derivative form of the noise term into the effective-sample-size denominator $n-\df(\kappa)$.
-
-\section{ICLR 2026 Formatting Notes}
-
-This draft uses the official ICLR 2026 style files. The author guide states that submissions are double blind, initial main text is limited to 9 pages, references do not count toward the page limit, and appendices are unlimited but optional for reviewers. The guide also recommends reproducibility and ethics statements before the references.
-
-\end{document}
