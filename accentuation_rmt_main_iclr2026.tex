@@ -29,17 +29,25 @@
 % Keep anonymous for ICLR submission.
 \author{Anonymous Authors}
 
-\newtheorem{proposition}{Proposition}
+% Compatibility layer for theorem environments imported from LyX.
+% Define localized names before amsthm binds them to environment headings.
+\providecommand{\theoremname}{Theorem}
+\providecommand{\propositionname}{Proposition}
+\providecommand{\lemmaname}{Lemma}
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\examplename}{Example}
+
 \theoremstyle{plain}
-\newtheorem{thm}{\protect\theoremname}
-\theoremstyle{plain}
-\newtheorem{prop}[thm]{\protect\propositionname}
-\theoremstyle{plain}
-\newtheorem{lem}[thm]{\protect\lemmaname}
-\theoremstyle{plain}
-\newtheorem{cor}[thm]{\protect\corollaryname}
+\newtheorem{thm}{\theoremname}
+\newtheorem{theorem}[thm]{\theoremname}
+\newtheorem{proposition}[thm]{\propositionname}
+\newtheorem{prop}[thm]{\propositionname}
+\newtheorem{lemma}[thm]{\lemmaname}
+\newtheorem{lem}[thm]{\lemmaname}
+\newtheorem{corollary}[thm]{\corollaryname}
+\newtheorem{cor}[thm]{\corollaryname}
 \theoremstyle{definition}
-\newtheorem{example}[thm]{\protect\examplename}
+\newtheorem{example}[thm]{\examplename}
 
 
 \newcommand{\bbeta}{\boldsymbol{\beta}}
