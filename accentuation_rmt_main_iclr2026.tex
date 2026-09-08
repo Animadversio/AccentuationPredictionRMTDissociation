@@ -150,87 +150,11 @@ Now, we have a few salient observations from the experiments.
 \end{enumerate}
 
 
-%%%%%%%%
-\section{Intuition: Linear models exhibit dissociation of prediction and control}
-% Here, we develop a linear theory to interpret these observations in a unified geometric framework.
-In this section, we will first construct a setting where linear models recapitulate all the phenomena seen above in deep networks, and illustrate its geometry.
-The precise analysis of the effect of learning will be done in the next section.
-% The key observation is that prediction is associated with the function itself $f(x)$, while accentuation and control is associated with the input gradient of the function $\nabla f(x)$.
-\paragraph{Set up}
-Consider a linear model of the form $f(\x) = \w^\top \x$, where $f(\x)$ is the predicted response, $\w$ is the weight vector, and $\x$ is the input image.
-Consider a simplified gradient based feature accentuation approach: from a seed image $\x_0$, iteratively move it along the gradient direction $\x \gets \x +\alpha \nabla f=\x +\alpha \w$ until $f(\x)=y^*$. \footnotemark
-In this simplified case, the accentuated images have closed form solution (see xxx)
-$$\x^*=\x_0+\frac{y^*-\w^\top\x_0}{\|\w\|^2}\w$$
-% may chuck
-Consider we select a set of levels $y^*$ such that the predicted variance of response matches the observed variance of the natural distribution.
-%
-This tells us the images are updated in the gradient direction of the predictive model $\nabla_{\x} f(\x)$, and in the linear case, along the weight vector $\w$.
-
-% We consider a simplified feature accentuation procedure that optimizes the image $\x$ to control the response $f(\x)$ to a target response level $y^*$.
-% \begin{equation}
-% \x^* = \arg \min_{\x} \|f(\x) - y^*\|^2
-% \end{equation}
-% where $\x^*$ is the optimized image, and $\|\cdot\|^2$ is the squared Euclidean norm.
-
-% Note that in many cases, the solution that minimize the loss to zero is not unique, and there is a set of them. The property of the solution we get actually largely depend on the optimization procedure and the prior / regularization we used. Here we all used gradient based optimization, which we simplified into gradient descent and ascent. In each iteration, the image is updated via gradient descent as:
-% \begin{align}
-% \x_{t+1} &= \x_t - \eta (f(\x_t) - y^*) \nabla_{\x} f(\x_t) \\
-%          &= \x_t - \eta (f(\x_t) - y^*) \w
-% \end{align}
-% where $\eta$ is the learning rate.
-\footnotetext{This is a simplified version of the actual procedure used for deep networks, which typically involve additional pre-conditioning and augmentation steps to regularize the optimization process.}
-
-% \paragraph{Prediction vs Control}
-\paragraph{Prediction neglects the low variance direction while Control emphasizes it.}
-Even in the simplest linear model, an interesting point can be made: prediction and control are distinct, in that, control majorly concerns with the weights $\w$ (or gradient $\nabla_{\x} f(\x)$), while prediction is concerned with the inner product of the weight and the input image $\w^\top \x$.
-Thus, when there are null-space in modes of variations of $\x$ it won't be visible in prediction, but visible in control.
-
-Consider the case where the natural distribution of $\x$ lies on a low-dimensional manifold, from which we draw samples to train and evaluate the model.
-As a toy example, suppose our samples are $\x\in \R^2$ with covariance $\Sigma=\mathrm{diag}(1, 0.001)$, i.e. the 2nd feature dimension has nearly no variance.
-Then, consider two predictive models $f_1(\x) = \w_1^\top \x$ and $f_2(\x) = \w_2^\top \x$ with $\w_1=[1, 0.0]^\top$ and $\w_2=[1, 10.0]^\top$.
-For prediction, despite different weights in the small variance direction, the two models will have almost the same prediction for any sample drawn from the distribution $\x\sim \mathcal{N}(0, \Sigma)$; $f(\x)-f^\prime(\x)\approx 0$.
-But for control, these two models will generate vastly different accentuations, almost orthogonal to each other (Fig.~\ref{}).
-This explains the Observation 1: models with similar predictive accuracy can have vastly different accentuations.
-
-Assume the true neuronal tuning function is $f^*(\x) = {\w^*}^\top \x$, e.g. ${\w^*}=[1, 0.1]^\top$.
-Note that the accentuation with $\w$ is more "on the manifold", i.e. in the distribution of $\x$, while the accentuation with $\w^\prime$ is more "off the manifold".
-Then for accentuated images of $f_1(\x)$, both models can predict the true tuning function, just like they can both predict the natural samples.
-However, for accentuated images of $f_2(\x)$, $f_2(\x)$ itself will vastly overestimate its success, and but $f_1(\x)$ correctly predict its not so strong modulation.
-This explains the Observation 2 and 3: most models are "over-confident" in their own accentuation; and that the "ability" to generate accentuations and the ability to recognize the goodness of them are asymmetric.
-
-This seems like a plausible explanation, but why does it happen in real image computable models?
-
-\paragraph{Natural image statistics contains numerous low-variance, high-frequency modes.}
-One long recognized fact is that the natural images distribution contains a signature power-law spectrum, where low-variance modes are usually associated with high-frequency features\cite{}.
-We empirically verified this for image pixels for our NSD shared1000 dataset, and also analyzed the spectrum of the features produced by the encoding models, where the spectral fall-off follows a power law $\lambda_k \approx k^{-\alpha}$, where $\alpha\approx ...$.
-Indeed, the low-variance features in both pixel and feature spaces are associated with high-spatial-frequency modes.
-
-Linking back to the linear theory, this suggests that the regression weight difference along these low-variance, high-frequency modes are not salient for prediction, but are critical for control.
-
-\paragraph{Regression naturally amplifies low-variance features.}
-Next, we will show how the regression problem itself naturally amplifies low-variance features. Consider the Ridge regression problem,
-\begin{equation}
-    \min_{\w} \|X\w - y\|^2 + \lambda \|\w\|^2
-\end{equation}
-where $X$ is the design matrix, $y$ is the response vector, $\lambda$ is the regularization parameter, and $\w$ is the regression weight. Then
-
-More formally, we can prove that, when we fit a linear model via Ridge regression, using finite data from a noisy teacher, the regression weight will differ from the true weight in the following fashion:
-\begin{proposition}
-
-\end{proposition}
-
-
-
-
-This constructed example shows that the dissociation of prediction and control is not necessarily a phenomena of deep neural networks, even linear models can exhibit this.
-
-
-
-
-
 \section{A random matrix characterization of the dissociation}
 
-In the example above, we designed the weight and their differences, but how does learning or optimization arrive at such different weights?
+We first expose the geometry of the prediction--control dissociation in the simplest linear setting, and then ask how learning from finite noisy data produces the relevant weight errors.
+The same setup therefore supports both the geometric construction and its random-matrix characterization, without introducing a separate notation for the two arguments.
+In the geometric construction below the student weights may be chosen directly; from Sec.~\ref{sec:pixel-ridge} onward, they are generated by ridge regression.
 \red{Here we argue that noisy target, spectrum of the input distribution, and the feature map all accentuates this issue. at least in the linear case.}
 
 Here we consider a classical set up where a linear model is learning from a linear teacher with additive noise \cite{}. % This system is very well studied, with ample beautiful papers.
@@ -256,9 +180,18 @@ For classic held-out prediction, we sample fresh samples from the population dat
 \begin{equation}
     E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)
 \end{equation}
-For accentuation and control, however, the student model propose inputs based on its predicted weights. As a result, the model is evaluated on a self generated distribution
+For accentuation and control, however, the student proposes inputs using its own weight.
+Starting from a seed $\x_0$, gradient-based optimization of $f_{\bhat}(\x)=\x^\top\bhat$ moves along $\nabla_{\x}f_{\bhat}=\bhat$.
+The minimum-norm point on this path that reaches the student-predicted target $y^*$ is
+\begin{equation}
+    \x_{acc}(y^*)
+    =\x_0+\frac{y^*-\x_0^\top\bhat}{\|\bhat\|^2}\bhat.
+    \label{eq:linear-accentuation-path}
+\end{equation}
+Thus the fitted weight is not only a predictor: it also determines the direction along which the predictor is evaluated.\footnote{This is an idealized version of deep-network feature accentuation, which may additionally use preconditioning, augmentation, and image priors.}
+As a result, the model is evaluated on the self-generated distribution
 \[
-\x_{0}+\alpha\bhat
+\x_{0}+\alpha\bhat.
 \]
 % and then the model prediction is evaluated on it.
 In the main paper, we assume a single seed image, $\x_{0}=0$,
@@ -285,6 +218,55 @@ prediction and accuracy, but with diverse control scores.
 As long as the weight difference is along some low var dimension of
 data $\Sigma$, then prediction will be not sensitive to it while
 control will be very sensitive to it.
+
+For a concrete two-dimensional example, let $\Sigma=\operatorname{diag}(1,\varepsilon)$ with $0<\varepsilon\ll1$, and take
+$\bstar=(1,0.1)^\top$, $\bhat_1=(1,0)^\top$, and $\bhat_2=(1,a)^\top$.
+The difference between the two students contributes only $\varepsilon a^2$ to their prediction discrepancy under the natural distribution, so even a large $a$ can be nearly invisible to held-out prediction.
+Their accentuation paths, however, point along $\bhat_1$ and $\bhat_2$ themselves and can therefore be nearly orthogonal (Fig.~\ref{fig:linear-dissociation-geometry}).
+The second student can be highly confident along its own path while producing little change in the teacher response; the first student can nevertheless diagnose that failure by evaluating the second path.
+This single geometry recapitulates the observed diversity of generated accentuations, model over-confidence, and the asymmetry between generation and peer review.
+
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\scriptsize]
+        % Natural-data geometry.
+        \begin{scope}[xshift=-2.2cm]
+            \fill[blue!8] (0,0) ellipse (1.75 and 0.36);
+            \draw[blue!45,thick] (0,0) ellipse (1.75 and 0.36);
+            \draw[->,gray!70] (-1.95,0)--(1.95,0);
+            \node[gray!70] at (1.05,-0.48) {high variance};
+            \draw[->,gray!70] (0,-0.55)--(0,1.65)
+                node[above,align=center] {low variance\\(nearly hidden)};
+            \draw[->,black,very thick] (0,0)--(1.45,0.15)
+                node[above right] {$\bstar$};
+            \draw[->,blue!70!black,very thick] (0,0)--(1.5,0)
+                node[below right] {$\bhat_1$};
+            \draw[->,red!75!black,very thick] (0,0)--(0.42,1.42)
+                node[above right] {$\bhat_2$};
+            \node[align=center] at (0,-0.95)
+                {natural samples weight errors by $\Sigma$};
+        \end{scope}
+        % Self-generated evaluation paths.
+        \begin{scope}[xshift=2.55cm]
+            \draw[->,gray!70] (-0.2,0)--(2.9,0);
+            \draw[->,gray!70] (0,-0.2)--(0,1.8);
+            \draw[blue!70!black,very thick,->] (0,0)--(2.55,0.2)
+                node[right,align=left] {$\x_0+\alpha\bhat_1$\\teacher responds};
+            \draw[red!75!black,very thick,->] (0,0)--(0.75,1.55)
+                node[above right,align=left] {$\x_0+\alpha\bhat_2$\\student responds,\\teacher barely does};
+            \node[align=center] at (1.25,-0.95)
+                {accentuation exposes the full direction $\bhat$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{\textbf{Geometry of prediction--accentuation dissociation.}
+    Natural-distribution prediction suppresses errors along low-variance directions through the covariance metric $\Sigma$ (left).
+    Accentuation instead evaluates the teacher on a path selected by the student weight itself (right), so a component that is nearly invisible in distribution can dominate control.}
+    \label{fig:linear-dissociation-geometry}
+\end{figure}
+
+The mechanism is especially plausible for images because natural-image covariance has a strongly decaying spectrum: low-variance modes are often high spatial frequency.
+Errors along these modes are suppressed by the $\Sigma$-weighted generalization loss but remain fully visible in the Euclidean direction used for accentuation.
+The remaining question is no longer whether such a dissociation is possible, but when finite-sample learning, response noise, and a feature map produce it; the following sections answer that question quantitatively.
 
 \subsection{Structure of the generalization and accentuation error}
 
@@ -382,6 +364,7 @@ The full notations, 1-point and 2-point DE formula and their technical meanings 
 % \end{enumerate}
 
 \subsection{Ridge regression: Effect of noise and regularization}
+\label{sec:pixel-ridge}
 Next we consider how the regression algorithm (estimator) and noise shapes this dissociation.
 
 We first consider ridge regression in the input space.
@@ -572,11 +555,24 @@ affects the accentuation error.
 
 \subsection{Diagnostics of the Cause}
 
-Input spectrum -- for white, non structured data, this dissociation doen't exist.
+The preceding results separate three ingredients that jointly determine whether good prediction coexists with poor accentuation.
+\todo{check this }
+\paragraph{Input spectrum.}
+Prediction measures weight error in the covariance geometry, $(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)$, whereas accentuation uses the Euclidean direction $\bhat$.
+A broad or rapidly decaying spectrum therefore creates directions that are cheap for prediction but consequential for control.
+For isotropic data, these two geometries are proportional and this particular hiding mechanism is absent.
+Natural images provide the opposite regime: their low-variance tail is dominated by high-spatial-frequency modes, so visually unnatural weight components can have little effect on held-out prediction.
 
-Noisy target --
+\paragraph{Noisy targets and finite samples.}
+An anisotropic spectrum creates vulnerable directions but does not by itself populate them.
+Finite-sample regression of noisy responses injects estimation variance into the fitted coefficients, with the weakest data modes being the least constrained.
+Ridge regularization suppresses this amplification but generally does not remove it uniformly, especially when its strength is selected to optimize generalization rather than accentuation.
+The pixel-space deterministic equivalent above quantifies how $\sigma$, $n$, and the spectrum jointly determine the hidden Euclidean weight error.
 
-Feature map -- Given these conditions, some feature maps are more vulnerable than others.
+\paragraph{Feature map.}
+Feature regression adds a second mismatch: prediction depends on the induced feature covariance and realizable teacher, whereas pixel-space accentuation backpropagates through $F$ and consequently depends on additional Euclidean statistics such as $FF^\top$.
+Hence feature maps with indistinguishable prediction summaries can have sharply different accentuation behavior, as formalized by the gauge family above.
+This identifies feature geometry---not predictive accuracy alone---as a diagnostic target: among equally predictive models, the more vulnerable map is the one that sends weakly constrained feature directions to large or poorly teacher-aligned pixel gradients.
 
 \clearpage
 
