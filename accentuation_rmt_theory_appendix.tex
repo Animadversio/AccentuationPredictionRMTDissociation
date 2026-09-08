@@ -150,7 +150,7 @@ In the main paper, we assume a single seed image which is $\mathbf{x}_{0}=0$,
 and $\alpha$ is sampled from a distribution to make the \emph{predicted
 model variance} matched with a target variance. e.g.
 \[
-\mathrm{Var}[\alpha]{\bhat}^{\top}\bhat={\bstar}^{\top}\Sigma\bstar
+\mathrm{Var}[\alpha]({\bhat}^{\top}\bhat)^2={\bstar}^{\top}\Sigma\bstar
 \]
 
 In supplementary, we will discuss the generalization to multi seed
@@ -206,6 +206,7 @@ Peer review & $0$ & $\mathrm{Var}[\alpha]\bprime{\bprime}^{\top}$ & $\mathrm{Var
 \par\end{center}
 
 \subsection{Estimation of ratio of random variables}
+\label{sec:app-ratio-approximations}
 
 One key structural observations is,
 \begin{prop}
@@ -599,6 +600,7 @@ noise, or multiple seed images for accentuation experiments.
 \end{itemize}
 
 \subsection{Generalization, Accentuation and Peer-review distribution and error. }
+\label{sec:app-evaluation-distributions}
 
 We can consider three types of errors. The key difference is where
 do we evaluate our predictions. Notably, for some cases (e.g. accentuation),
@@ -1335,6 +1337,7 @@ This formula is validated empirically with numerical RidgeCV.
 
 \subsubsection{2nd order expansion random matrix calculation: Variance and covariance
 of numerator and denominator}
+\label{sec:app-ratio-corrections}
 
 Next we can compute the leading order term.
 \begin{align*}
@@ -1345,6 +1348,7 @@ Next we can compute the leading order term.
 
 \subsubsection{Alternative way to evaluate this ratio ``Gaussian distributional
 DE'' }
+\label{sec:app-ratio-gaussian}
 
 Another way to estimate this ratio is to say $\bhat$ is a Gaussian
 random variable, then express its expectation and covariance -- note
@@ -2522,8 +2526,10 @@ error.
 
 
 \section{Appendix for deterministic equivalence and RMT}
+\label{sec:app-de-toolkit}
 
 \subsection{Deterministic equivalence relationships}
+\label{sec:app-de-identities}
 
 Denote $1/\varphi(-z)=\kappa(z)$
 
