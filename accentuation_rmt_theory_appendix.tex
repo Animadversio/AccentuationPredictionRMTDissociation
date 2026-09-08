@@ -200,7 +200,7 @@ Generalization & $0$ & $\Sigma$ & $(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat
 \hline 
 Accentuation & $0$ & $\mathrm{Var}[\alpha]\hat{\beta}\hat{\beta}^{\top}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\hat{\beta}^{\top}\hat{\beta}}{\hat{\beta}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
 \hline 
-Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\beta^{\prime}^{\top}\hat{\beta}}{\beta^{\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
+Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{{\beta^\prime}^{\top}\hat{\beta}}{{\beta^\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
 \hline 
 \end{tabular}
 \par\end{center}
@@ -559,7 +559,7 @@ $\hat{y}$ with the ground truth $y^{\star}$on this distribution
 $p$ is
 \begin{align*}
 R^{2} & =1-\frac{\mathbb{\mathbb{E}}[(\hat{y}-y^{\star})^{2}]}{\mathrm{Var}[y^{\star}]}\\
- & =1-\frac{\mathbb{E}_{\mathbf{x}\sim p}[\big((\hat{\beta}-\beta^{\star})^{\top}\mathbf{x}\big)^{2}]}{\mathrm{Var}[\beta^{\star}^{\top}\mathbf{x}]}\\
+ & =1-\frac{\mathbb{E}_{\mathbf{x}\sim p}[\big((\hat{\beta}-\beta^{\star})^{\top}\mathbf{x}\big)^{2}]}{\mathrm{Var}[{\beta^\star}^{\top}\mathbf{x}]}\\
  & =1-\frac{(\hat{\beta}-\beta^{\star})^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\hat{\beta}-\beta^{\star})}{\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star}}\\
  & =1-\frac{\mathrm{MSE}[p]}{\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star}}
 \end{align*}
@@ -570,7 +570,7 @@ R^{2} & =1-\frac{\mathbb{\mathbb{E}}[(\hat{y}-y^{\star})^{2}]}{\mathrm{Var}[y^{\
 the noiseless ground truth is 
 \begin{align*}
 r & =\frac{\mathbb{E}[(\hat{y}-\bar{\hat{y}})(y^{\star}-\bar{y^{\star}})]}{\sqrt{\mathrm{Var}[\hat{y}]\mathrm{Var}[y^{\star}]}}\\
- & =\frac{\mathbb{E}[(\hat{\beta}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))(\beta^{\star}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))]}{\sqrt{\mathrm{Var}[\hat{y}]\mathrm{Var}[y^{\star}]}}\\
+ & =\frac{\mathbb{E}[(\hat{\beta}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))({\beta^\star}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))]}{\sqrt{\mathrm{Var}[\hat{y}]\mathrm{Var}[y^{\star}]}}\\
  & =\frac{\hat{\beta}{}^{\top}\Sigma_{p}\beta^{\star}}{\sqrt{(\hat{\beta}{}^{\top}\Sigma_{p}\hat{\beta})(\beta^{\star}{}^{\top}\Sigma_{p}\beta^{\star})}}
 \end{align*}
 \end{lem}
@@ -655,7 +655,7 @@ Generalization & $0$ & $\Sigma$ & $(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat
 \hline 
 Accentuation & $0$ & $\mathrm{Var}[\alpha]\hat{\beta}\hat{\beta}^{\top}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\hat{\beta}^{\top}\hat{\beta}}{\hat{\beta}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
 \hline 
-Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\beta^{\prime}^{\top}\hat{\beta}}{\beta^{\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
+Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{{\beta^\prime}^{\top}\hat{\beta}}{{\beta^\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
 \hline 
 \end{tabular}
 \par\end{centering}
@@ -701,7 +701,7 @@ E_{acc} & =\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star}
 Note the variance of the true model on the accentuation path will
 be 
 \[
-\mathrm{Var_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha\hat{\beta}}}[\beta^{\star}^{\top}\mathbf{x}^{\prime}]=(\beta^{\star}^{\top}\hat{\beta})^{2}\mathrm{Var}[\alpha]
+\mathrm{Var_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha\hat{\beta}}}[{\beta^\star}^{\top}\mathbf{x}^{\prime}]=({\beta^\star}^{\top}\hat{\beta})^{2}\mathrm{Var}[\alpha]
 \]
 \begin{align*}
 R_{acc}^{2} & =1-\frac{E_{acc}}{\mathrm{Var}[\beta^{\star}{}^{\top}\mathbf{x}^{\prime}]}\\
@@ -725,13 +725,13 @@ The slope between true activation and predicted activation will be
 Similarly 
 \begin{align*}
 E_{peer\ rev} & =\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}\\
- & =\frac{\beta^{\star\top}\Sigma\beta^{\star}}{(\beta^{\prime}^{\top}\beta^{\prime})^{2}}\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}\\
- & =\beta^{\star\top}\Sigma\beta^{\star}\big(\frac{\beta^{\prime}{}^{\top}\hat{\beta}}{\beta^{\prime}{}^{\top}\beta^{\prime}}-\frac{\beta^{\prime}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\beta^{\prime}}\big)^{2}
+ & =\frac{\beta^{\star\top}\Sigma\beta^{\star}}{({\beta^\prime}^{\top}\beta^{\prime})^{2}}\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}\\
+ & =\beta^{\star\top}\Sigma\beta^{\star}\big(\frac{\beta^{\prime}{}^{\top}\hat{\beta}}{\beta^{\prime}{}^{\top}\beta^{\prime}}-\frac{{\beta^\prime}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\beta^{\prime}}\big)^{2}
 \end{align*}
 
 The true neural variance is 
 \[
-\mathrm{Var_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha^{\prime}\beta^{\prime}}}[\beta^{\star}^{\top}\mathbf{x}^{\prime}]=(\beta^{\star}{}^{\top}\beta^{\prime})^{2}\mathrm{Var}[\alpha^{\prime}]
+\mathrm{Var_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha^{\prime}\beta^{\prime}}}[{\beta^\star}^{\top}\mathbf{x}^{\prime}]=(\beta^{\star}{}^{\top}\beta^{\prime})^{2}\mathrm{Var}[\alpha^{\prime}]
 \]
 
 the corresponding peer reviewed R2 is 
@@ -779,7 +779,7 @@ Recall the weight form,
 \]
 \begin{align*}
 E_{gen} & =(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat{\beta}-\beta^{\star})\\
-\mathbb{E}_{\eta}[E_{gen}] & =\lambda^{2}\beta^{*}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
+\mathbb{E}_{\eta}[E_{gen}] & =\lambda^{2}{\beta^*}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
  & \quad+\sigma^{2}\mathbb{E}_{\eta}\Big[(\frac{1}{n}X^{\top}\eta)^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)\Big]\\
  & =\lambda^{2}\beta^{*}{}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
  & \quad+\sigma^{2}\mathbb{E}_{\eta}\mathrm{Tr}\Big[(\frac{1}{n^{2}}X^{\top}\eta\eta^{\top}X(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Big]\\
@@ -1377,7 +1377,7 @@ R_{\text{peer rev}}^{2}= & 1-\big(\frac{\beta^{\prime}{}^{\top}\hat{\beta}}{\bet
  & Peer Review & Peer Review on Perfect Accentuator & Accentuation\tabularnewline
 \hline 
 \hline 
-MSE & $\mathrm{Var}[\alpha]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $\mathrm{Var}[\alpha]\big(\beta^{\star}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$\tabularnewline
+MSE & $\mathrm{Var}[\alpha]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\beta^\star}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$\tabularnewline
 \hline 
 R2 & $1-\big(\frac{\beta^{\prime}{}^{\top}\hat{\beta}}{\beta^{\prime}{}^{\top}\beta^{\star}}-1\big)^{2}$ & $1-\big(\frac{\beta^{\star}{}^{\top}\hat{\beta}}{\beta^{\star}{}^{\top}\beta^{\star}}-1\big)^{2}$ & $1-\big(\frac{\hat{\beta}^{\top}\hat{\beta}}{\hat{\beta}^{\top}\beta^{\star}}-1\big)^{2}$\tabularnewline
 \hline 
@@ -1414,7 +1414,7 @@ So we can reuse the numerator expectation from above
 Now consider a student model that is based on a linear feature space,
 where teacher is the same. 
 \[
-y=\beta^{\star}^{\top}\mathbf{x}+\sigma\epsilon
+y={\beta^\star}^{\top}\mathbf{x}+\sigma\epsilon
 \]
 
 The feature projection $F\in\mathbb{R}^{p\times d}$ 
@@ -1476,7 +1476,7 @@ instead of averaging over random $F$.
 
 First consider the noiseless population limit 
 \begin{align*}
- & \arg\min_{w}\mathbb{E}_{\mathbf{x}\sim\mathcal{N}(0,\Sigma)}\|\beta^{\star}^{\top}\mathbf{x}-w^{\top}F\mathbf{x}\|^{2}\\
+ & \arg\min_{w}\mathbb{E}_{\mathbf{x}\sim\mathcal{N}(0,\Sigma)}\|{\beta^\star}^{\top}\mathbf{x}-w^{\top}F\mathbf{x}\|^{2}\\
 = & \arg\min_{w}\Big[(\beta^{\star}{}^{\top}-w^{\top}F)\Sigma(\beta^{\star}-F^{\top}w)\Big]\\
 = & \arg\min_{w}\Big[-2w^{\top}F\Sigma\beta^{\star}+w^{\top}F\Sigma F^{\top}w\Big]
 \end{align*}
@@ -1605,9 +1605,9 @@ Further it has variance
 \begin{align*}
 \mathrm{Var}[r_{i}]=\mathbb{E}\big[r_{i}^{2}\big] & =\mathbb{E}_{\mathbf{x}_{i}}\big[(\mathbf{x}_{i}^{\top}\beta^{\star}-\mathbf{x}_{i}^{\top}F^{\top}w^{\star})^{\top}(\mathbf{x}_{i}^{\top}\beta^{\star}-\mathbf{x}_{i}^{\top}F^{\top}w^{\star})]\\
  & =(\beta^{\star}-F^{\top}w^{\star})^{\top}\Sigma(\beta^{\star}-F^{\top}w^{\star})\\
- & =\beta^{\star}^{\top}\Sigma(\beta^{\star}-F^{\top}w^{\star})-w^{\star}^{\top}\cancelto{0}{\cancel{F\Sigma(\beta^{\star}-F^{\top}w^{\star})}}\\
+ & ={\beta^\star}^{\top}\Sigma(\beta^{\star}-F^{\top}w^{\star})-{w^\star}^{\top}\cancelto{0}{\cancel{F\Sigma(\beta^{\star}-F^{\top}w^{\star})}}\\
  & =\beta^{\star}{}^{\top}\Sigma\beta^{\star}-\beta^{\star}{}^{\top}\Sigma F^{\top}(F\Sigma F^{\top})^{\dagger}F\Sigma\beta^{\star}\\
- & =\beta^{\star}{}^{\top}\Sigma\beta^{\star}-w^{\star}^{\top}(F\Sigma F^{\top})w^{\star}\\
+ & =\beta^{\star}{}^{\top}\Sigma\beta^{\star}-{w^\star}^{\top}(F\Sigma F^{\top})w^{\star}\\
  & =\beta^{\star}{}^{\top}\Sigma\beta^{\star}-w^{\star}{}^{\top}\Sigma_{F}w^{\star}
 \end{align*}
 
@@ -1628,7 +1628,7 @@ The noiseless covariance between teacher signal and feature response
 reads 
 \begin{align*}
 \Sigma_{Fy} & =F\Sigma\beta^{\star}\\
- & =\mathrm{cov}(F\mathbf{x},\beta^{\star}^{\top}\mathbf{x})
+ & =\mathrm{cov}(F\mathbf{x},{\beta^\star}^{\top}\mathbf{x})
 \end{align*}
 
 Further 
@@ -1686,7 +1686,7 @@ Recall the weight form,
 
 Thus 
 \begin{align*}
-E_{gen} & =\lambda^{2}\beta^{*}^{\top}(F^{\top}F\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(F^{\top}F\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
+E_{gen} & =\lambda^{2}{\beta^*}^{\top}(F^{\top}F\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(F^{\top}F\hat{\Sigma}+\lambda I_{d})^{-1}\beta^{*}\\
  & \quad+\frac{\sigma^{2}}{n^{2}}\eta^{\top}XF^{\top}F(F^{\top}F\hat{\Sigma}+\lambda I_{p})^{-1}\Sigma(F^{\top}F\hat{\Sigma}+\lambda I_{p})^{-1}F^{\top}FX^{\top}\eta
 \end{align*}
 
@@ -1725,7 +1725,7 @@ Evaluating the two terms, we are taking expectation over $X,\eta$
 $Z$ residual $r$ and $\eta$. 
 \begin{align*}
  & \mathbb{E}_{X,\eta}\big[(\hat{w}-w^{\star})^{\top}\Sigma_{F}(\hat{w}-w^{\star})\big]\\
-= & \mathbb{E}_{X}\big[\lambda^{2}w^{\star}^{\top}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}\Sigma_{F}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}w^{\star}\big]\\
+= & \mathbb{E}_{X}\big[\lambda^{2}{w^\star}^{\top}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}\Sigma_{F}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}w^{\star}\big]\\
  & +\frac{1}{n^{2}}\mathbb{E}_{Z,r,\eta}\mathrm{Tr}\big[\Sigma_{F}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}Z^{\top}(r+\sigma\eta)(r+\sigma\eta)^{\top}Z(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}\big]\\
 = & \mathbb{E}_{Z}\big[\lambda^{2}w^{\star}{}^{\top}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}\Sigma_{F}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}w^{\star}\big]\\
  & +(S_{\perp}+\sigma^{2})\frac{1}{n}\mathbb{E}_{Z}\mathrm{Tr}\big[\Sigma_{F}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}Z^{\top}Z(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}\big]\\
@@ -1826,7 +1826,7 @@ Using the new representation \ref{eq:feat-regr-non-repr-as-noise-decomp},
 we can write 
 \begin{align*}
 N & =\hat{\beta}^{\top}\beta^{\star}\\
- & =\beta^{\star}^{\top}F^{\top}\hat{w}\\
+ & ={\beta^\star}^{\top}F^{\top}\hat{w}\\
  & =\beta^{\star}{}^{\top}F^{\top}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}\hat{\Sigma}_{F}w^{\star}+\frac{1}{n}\beta^{\star}{}^{\top}F^{\top}(\hat{\Sigma}_{F}+\lambda I_{p})^{-1}Z^{\top}(r+\sigma\eta)
 \end{align*}
 
@@ -2069,15 +2069,13 @@ that do not change these summary statistics.
 other than the statistics controlling $E_{gen}$ the summary statistics
 also involves $FF^{\top}$ and $F\beta^{\star}$. 
 \end{itemize}
-\selectlanguage{english}%
 \begin{figure}
 \begin{centering}
 \includegraphics[width=1\textwidth]{/Users/binxuwang/Library/CloudStorage/OneDrive-HarvardUniversity/AccentuationRMTDissociationTheory/Figures/feature_summary_statistics_flow}
 \par\end{centering}
-\caption{\foreignlanguage{american}{Relation of summary statistics and generalization vs accentuation.}}
+\caption{Relation of summary statistics and generalization vs accentuation.}
 \end{figure}
 
-\selectlanguage{american}%
 \begin{adjustbox}{max width=\linewidth}
 \begin{tikzpicture}[
   x=1cm,y=1cm,
@@ -2338,7 +2336,7 @@ While $\Sigma=U\Lambda U^{\top}$
 The two slutions will satisify
 \begin{align*}
 F\Sigma\beta^{\star}-F^{\prime}\Sigma\beta^{\star} & =0\\
-F\Sigma F^{\top}-F^{\prime}\Sigma F^{\prime}^{\top} & =0
+F\Sigma F^{\top}-F^{\prime}\Sigma {F^\prime}^{\top} & =0
 \end{align*}
 
 Thus the first constraint is 
@@ -2358,7 +2356,7 @@ $b\in\mathbb{R}^{d}$.
 Then the constrains simplifies 
 \begin{align*}
 Ab-A^{\prime}b & =0\\
-AA^{\top}-A^{\prime}A^{\prime}^{\top} & =0
+AA^{\top}-A^{\prime}{A^\prime}^{\top} & =0
 \end{align*}
 \[
 (A-A^{\prime})b=0
@@ -2526,7 +2524,6 @@ error.
 
 \section{Nonlinear feature and kernel regression }
 
-\appendix{}
 
 \section{Appendix for deterministic equivalence and RMT}
 

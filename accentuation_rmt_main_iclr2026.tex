@@ -19,6 +19,7 @@
 \definecolor{controlorange}{RGB}{196,116,42}
 \definecolor{fitpurple}{RGB}{102,75,145}
 \usepackage{adjustbox}
+\usepackage{algorithm}
 \newcommand{\x}{\mathbf{x}}
 \newcommand{\w}{\mathbf{w}}
 % \newcommand{\Sigma}{\mathbf{\Sigma}}
@@ -316,7 +317,7 @@ Generalization & $0$ & $\Sigma$ & $(\hat{\beta}-\beta^{\star})^{\top}\Sigma(\hat
 \hline 
 Accentuation & $0$ & $\mathrm{Var}[\alpha]\hat{\beta}\hat{\beta}^{\top}$ & $\mathrm{Var}[\alpha]\big(\hat{\beta}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\hat{\beta}^{\top}\hat{\beta}}{\hat{\beta}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\hat{\beta}^{\top}\beta^{\star}}{\hat{\beta}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
 \hline 
-Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{\beta^{\prime}^{\top}\hat{\beta}}{\beta^{\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
+Peer review & $0$ & $\mathrm{Var}[\alpha]\beta^{\prime}\beta^{\prime}{}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big(\beta^{\prime}{}^{\top}(\hat{\beta}-\beta^{\star})\big)^{2}$ & $1-\big(\frac{{\beta^\prime}^{\top}\hat{\beta}}{{\beta^\prime}^{\top}\beta^{\star}}-1\big)^{2}$ & $\frac{\beta^{\prime}{}^{\top}\beta^{\star}}{\beta^{\prime}{}^{\top}\hat{\beta}}$ & $1$ or $nan$\tabularnewline
 \hline 
 \end{tabular}
 \par\end{center}
