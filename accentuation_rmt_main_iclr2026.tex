@@ -30,7 +30,7 @@
 % \newcommand{\Sigma}{\mathbf{\Sigma}}
 % \newcommand{\R}{\mathbb{R}}
 % \title{When Test Error Hides Directional Failure: Random Matrix Theory for Accentuation in Ridge Regression}
-\title{Why good predictor can be bad controller: \\A Random Matrix Analysis for Dissociation of Neural Prediction and Control}
+\title{Why a good predictor can be a bad controller: \\A Random Matrix Analysis for Dissociation of Neural Prediction and Control}
 
 % Keep anonymous for ICLR submission.
 \author{Anonymous Authors}
@@ -126,6 +126,12 @@ We precisely characterized the scaling of accentuation and held-out prediction e
 
 \paragraph{Degeneracy in linear model}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}
+    \caption{Neuronal Control Results}
+    \label{fig:Setup_NeuroControl_Results}
+\end{figure}
 
 \section{Key phenomena from neuronal control experiments}
 To motivate our theory, we will first recapitulate the key findings from Prince, Wang et al.
@@ -152,7 +158,12 @@ Now, we have a few salient observations from the experiments.
     \item Control capability is correlated with structures of input gradients, i.e. more low frequency component in them. %In general, adversarially trained, robust models are better at generating accentuations to control neurons.
 \end{enumerate}
 
-
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel.png}
+    \caption{A linear model recapitulating the phenomena}
+    \label{fig:LinearToyExample_Geometry}
+\end{figure}
 \section{A random matrix characterization of the dissociation}
 \label{sec:linear-rmt}
 
@@ -356,7 +367,7 @@ The remaining question is no longer whether such a dissociation is possible, but
 \label{sec:technical-considerations}
 
 \paragraph{Deterministic-equivalent toolkit.}
-\red{Our main analytical tool is a collection of deterministic equivalents (DEs) relationships applied to the quadratic forms $N$ and $D$. These relations replace resolvents of the random sample covariance $\hat\Sigma$ with those of the population covariance $\Sigma$. Finite-sample randomness is summarized at leading order by an effective regularization parameter $\kappa$, determined by the self-consistent Silverstein equation}
+Our main analytical tool is a collection of deterministic equivalents (DEs) relationships applied to the quadratic forms $N$ and $D$. These relations replace resolvents of the random sample covariance $\hat\Sigma$ with those of the population covariance $\Sigma$. Finite-sample randomness is summarized at leading order by an effective regularization parameter $\kappa$, determined by the self-consistent Silverstein equation \todo{add meaning of equivalence??}
 \begin{equation}
     \kappa(\lambda)-\lambda=\gamma\kappa(\lambda)\mathrm{tr}[\Sigma(\Sigma+\kappa(\lambda)I_d)^{-1}]
     \label{eq:kappa-fixed-point}
@@ -493,7 +504,7 @@ z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kap
 \end{prop}
 \red{Equation~\eqref{eq:pixel-zacc-cv} is the residual failure left after generalization-optimal tuning: CV cancels the derivative of prediction risk, but it does not generally equate the two differently weighted spectral averages $B_{2,3}/\mathrm{df}_{2,3}$ and $B_{1,2}/\mathrm{df}_{1,2}$. The leading accentuation bias vanishes in special symmetric cases, such as an isotropic spectrum, but can persist when teacher energy is aligned nonuniformly across an anisotropic spectrum.}
 
-\subsection{Ridge Regression on Linear Feature: Effect of feature projection and gradient}
+\subsection{Ridge on Linear Feature: Effect of feature projection and gradient} % Regression
 \label{sec:feature-ridge}
 The analysis above shows us good prediction doesn't guarantee good control,
 but it ignores the effect of the feature space or model backbone.
@@ -509,7 +520,7 @@ and the pixel-space accentuation direction is $\nabla_\x f=\bhat$, not $\hat w$.
 With a feature space, the original teacher signal may not be representable.
 So first we need to define a sense of optimal ``realizable'' weight
 and its associated irreducible error.
-Surprisingly, there are two sense of optimality, for prediction vs for reconstruction,
+Notably, there are two sense of optimality, for prediction vs for reconstruction,
 which preludes the dissociation of prediction and control.
 \begin{lem}\label{lem:feature-population-projections}
 In a feature space, there are two sense of ``optimal'' weight, the
