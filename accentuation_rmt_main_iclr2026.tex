@@ -130,41 +130,25 @@ We precisely characterized the scaling of accentuation and held-out prediction e
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}
-    \caption{\textbf{Motivating Results from Neuronal Control Experiments.} 
-    \textbf{Top.} Experimental paradigm, and feature accentuation algorithm
-    \textbf{A.} Matching prediction accuracy on held out data. 
-    \textbf{B.} Diverse accentuation images. 
-    \textbf{C.} Diverse control outcome and assymetry between prediction and control.}
+    \caption{\red{\textbf{Motivating neuronal-control results.} Top: fitted encoding models generate images targeting graded neural responses, which are then tested in vivo. \textbf{A:} ResNet50 and ResNet50-Robust predict held-out natural-image responses similarly. \textbf{B:} The same seed and response targets yield visibly different accentuations. \textbf{C:} Cross-evaluation of the two stimulus sets illustrates the distinction between generating a useful sweep and tracking the neural responses to another model's sweep.}}
     \label{fig:Setup_NeuroControl_Results}
 \end{figure}
 
 \section{Key phenomena from neuronal control experiments}
-To motivate our theory, we will first recapitulate the key findings from Prince, Wang et al.
-\paragraph{Set up of the experiments}
+\red{We summarize the closed-loop experiments of \citet{prince2026parametric}, which motivate the distinction between prediction and control (Fig.~\ref{fig:Setup_NeuroControl_Results}).}
+\paragraph{Experimental setup.}
+\red{For each of $25$ visual-cortical sites in five macaques, ten DNN feature spaces were paired with cross-validated ridge readouts fit to responses to natural images. Each fitted model then generated graded image sweeps from natural-image seeds, targeting $11$ predicted response levels; the $27{,}500$ synthesized stimuli were presented back to the animals. This tests the model on inputs chosen by its own encoding axis rather than on another held-out sample from the natural-image distribution.}
 
-\paragraph{Similar prediction accuracy on held-out data, diverse control capability}
+\paragraph{Similar held-out prediction, divergent control.}
+\red{The nine trained models were tightly matched on natural-image re-test responses (model-mean Pearson $r=0.58$--$0.61$), yet their ability to predict and modulate responses to their own accentuated stimuli diverged sharply. Across all ten models, mean control correlation fell to $r=0.45$, with substantially greater between-model spread than on natural images. Many models generated conspicuous texture or high-frequency changes while achieving the requested \emph{model-predicted} response, but the measured neural response was weaker. In one reported site, natural-image re-test prediction reached $r=0.81$ whereas the accentuation control slope was only $0.05$ (a slope of $1$ would indicate calibrated control).}
 
+\paragraph{Asymmetry of recognition and generation.}
+\red{The illustrative cross-evaluation in Fig.~\ref{fig:Setup_NeuroControl_Results}C separates evaluating a stimulus from generating it. For the shown site, ResNet50-Robust's images produced graded neural responses that both it and ordinary ResNet50 could track (response correlations $r=0.52$ and $0.54$, respectively). Ordinary ResNet50's own images, by contrast, barely modulated the neuron despite large predicted changes (self-evaluation $r\approx0$, $R^2=-24.23$). Here ``recognition'' means tracking response ordering, not calibrated amplitude: even the robust model's own $R^2$ is negative. This is a selected example, not a population estimate.}
 
-\paragraph{Asymmetry of recognition and generation}
-The success of strong controlling model is recognize by other weak control models, but they cannot generate themselves.
+\paragraph{Control tracks input-gradient structure.}
+\red{Across the $250$ site--model encoding axes, low-frequency concentration of the input gradient predicted control slope (site-level $r\approx0.65$; model-mean $r=0.91$). The association persisted after excluding the two adversarially trained models (site-level $r=0.26$), whereas the relationship with adversarial sensitivity did not. Thus the observed failure is linked to \emph{which input directions} a model uses to change its prediction, not simply to how well it predicts natural images. Our linear theory isolates a tractable version of this directional mismatch; it does not claim that the DNN gradients or neuronal responses are globally linear.}
 
-% \paragraph{}
-\paragraph{Control capability seems to be associated with structures of input gradient}
-Spectral structure of input gradient is one of the strongest predictor of accentuation success: the strong control is associated with spectral power concentrated in lower spatial frequency. Weak controlling models often create more high frequency modulation on the images
-
-
-
-
-Now, we have a few salient observations from the experiments.
-\begin{enumerate}
-    \item Models generate diverse feature accentuations with diverse degrees of modulation, despite similar predictive accuracy for natural images.
-    \item Most models generated accentuations contain more high-frequency modulations.
-    \item Most models are "over-confident" in their own accentuation, i.e. the actual degree of neural modulation (slope) is generally lower than the self-predicted one. (Fig.~\ref{})
-    \item The ability to generate accentuations and the ability to recognize the goodness of them are asymmetric. Many models can recognize the goodness of accentuations from robust models, but cannot generate those themselves. (Fig.~\ref{})
-    \item Control capability is correlated with structures of input gradients, i.e. more low frequency component in them. %In general, adversarially trained, robust models are better at generating accentuations to control neurons.
-\end{enumerate}
-
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel.png}
     \caption{\textbf{A linear model recapitulating the phenomena}
