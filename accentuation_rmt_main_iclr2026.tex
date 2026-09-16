@@ -30,7 +30,8 @@
 % \newcommand{\Sigma}{\mathbf{\Sigma}}
 % \newcommand{\R}{\mathbb{R}}
 % \title{When Test Error Hides Directional Failure: Random Matrix Theory for Accentuation in Ridge Regression}
-\title{Why a good predictor can be a bad controller: \\A Random Matrix Analysis for Dissociation of Neural Prediction and Control}
+% \title{Why a good predictor can be a bad controller: \\A Random Matrix Analysis for Dissociation of Neural Prediction and Control}
+\title{When Good Brain Predictors Make Bad Brain Controllers: A Regression Theory of Prediction–Control Dissociation}
 
 % Keep anonymous for ICLR submission.
 \author{Anonymous Authors}
@@ -129,7 +130,11 @@ We precisely characterized the scaling of accentuation and held-out prediction e
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}
-    \caption{Neuronal Control Results}
+    \caption{\textbf{Motivating Results from Neuronal Control Experiments.} 
+    \textbf{Top.} Experimental paradigm, and feature accentuation algorithm
+    \textbf{A.} Matching prediction accuracy on held out data. 
+    \textbf{B.} Diverse accentuation images. 
+    \textbf{C.} Diverse control outcome and assymetry between prediction and control.}
     \label{fig:Setup_NeuroControl_Results}
 \end{figure}
 
@@ -143,11 +148,12 @@ To motivate our theory, we will first recapitulate the key findings from Prince,
 \paragraph{Asymmetry of recognition and generation}
 The success of strong controlling model is recognize by other weak control models, but they cannot generate themselves.
 
-\paragraph{Weak controlling models often create more high frequency modulation on the images}
-Actually spectral structure of input gradient is one of the strongest predictor of accentuation success: the strong control is associated with spectral power concentrated in lower spatial frequency.
-
-
+% \paragraph{}
 \paragraph{Control capability seems to be associated with structures of input gradient}
+Spectral structure of input gradient is one of the strongest predictor of accentuation success: the strong control is associated with spectral power concentrated in lower spatial frequency. Weak controlling models often create more high frequency modulation on the images
+
+
+
 
 Now, we have a few salient observations from the experiments.
 \begin{enumerate}
@@ -161,7 +167,10 @@ Now, we have a few salient observations from the experiments.
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel.png}
-    \caption{A linear model recapitulating the phenomena}
+    \caption{\textbf{A linear model recapitulating the phenomena}
+    \textbf{Geometry of prediction--accentuation dissociation.}
+    Natural-distribution prediction suppresses errors along low-variance directions through the covariance metric $\Sigma$; Accentuation instead evaluates the model on a path selected by the student weight itself (right), so a component that is nearly invisible in distribution can dominate control.}
+    \label{fig:linear-dissociation-geometry}
     \label{fig:LinearToyExample_Geometry}
 \end{figure}
 \section{A random matrix characterization of the dissociation}
@@ -191,7 +200,7 @@ The student observes $n$ training pairs $\{\x_i,y_i\}_{i=1}^n$. We stack the inp
 \paragraph{Evaluation}
 For classic held-out prediction, we sample fresh samples from the population data distribution, and evaluate on it, thus the evaluation distribution is $\mathcal{N}(0,\Sigma)$ and the classic generalization error reads %can be written as
 \begin{equation}
-    E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)
+    E_{gen}=\mathbb{E}_{\x\sim \mathcal{N}(0,\Sigma)}[\|f(\x)-\x^\top\bstar\|^2]=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)
     \label{eq:gen-risk}
 \end{equation}
 \red{Eq.~\ref{eq:gen-risk} is the population risk conditional on the fitted weight $\bhat$. Below, $E_{gen,DE}$ denotes its deterministic equivalent after the training-data and response-noise fluctuations concentrate.}
@@ -203,14 +212,14 @@ The solution of gradient descent i.e. the minimum-norm change that reaches the s
     =\x_0+\frac{y^*-\x_0^\top\bhat}{\|\bhat\|^2}\bhat.
     \label{eq:linear-accentuation-path}
 \end{equation}
-Thus the fitted weight is not only a predictor: it also determines the direction along which the predictor is evaluated.\footnote{This is an idealized version of deep-network feature accentuation, which may additionally use preconditioning, augmentation, and image priors.\cite{} }
+Thus the fitted weight is not only a predictor: it also determines the direction along which the predictor is evaluated.\footnote{This is an idealized version of deep-network feature accentuation, which may additionally use gradient preconditioning, augmentation, and image priors.\cite{hamblin2024feature,Fel_maco} }
 As a result, the model is evaluated on the self-generated distribution
 \[
 \x_{0}+\alpha\bhat.
 \]
 % and then the model prediction is evaluated on it.
 In the main paper, we assume a single seed image, $\x_{0}=0$,
-and $\alpha$ is sampled from a distribution to make the \emph{predicted
+and $\alpha$ is sampled from a centered distribution ($\mathbb{E}[\alpha]=0$) to make the \emph{predicted
 model variance} match with a target variance. e.g.
 \begin{equation}
 \mathrm{Var}[\alpha]({\bhat}^{\top}\bhat)^2={\bstar}^{\top}\Sigma\bstar
@@ -296,8 +305,7 @@ Their accentuation paths, however, point along $\bhat_1$ and $\bhat_2$ themselve
 The second student can be highly confident along its own path while producing little change in the teacher response; the first student can nevertheless diagnose that failure by evaluating the second path.
 This single geometry recapitulates the observed diversity of generated accentuations, model over-confidence, and the asymmetry between generation and peer review.
 \fi
-% \red{}%\textbf{Tentative example: an asymptotically exact separation.}}
-{\color{red}
+{
 \begin{example}[Prediction can remain intact while accentuation fails]\label{ex:toy-separation-tentative}
 Let $\Sigma_\varepsilon=\operatorname{diag}(1,\varepsilon)$, set $\bstar=\bhat_1=(1,0)^\top$, and let $\bhat_2=(1,a_\varepsilon)^\top$ with $a_\varepsilon=\varepsilon^{-q}$ for any $0<q<1/2$.
 Then, as $\varepsilon\to0$,
@@ -321,43 +329,43 @@ and the reverse direction is also perfect $R_{peer}^2(\bhat_1\leftarrow\bhat_2)=
 % Similarly, $\bhat_2$ is also a perfect peer reviewer on the path generated by $\bhat_1$, 
 \end{example}
 }
-Thus a set of students can be almost indistinguishable from the teacher under the natural distribution, while becoming arbitrarily poor controllers. The same construction also makes generation--evaluation asymmetry exact rather than qualitative; Fig.~\ref{fig:linear-dissociation-geometry} illustrates the geometry of such dissociation.%finite-$\varepsilon$ 
+Thus a set of students can be almost indistinguishable from the teacher under the natural distribution, while becoming arbitrarily poor controllers. The same construction also makes generation--evaluation asymmetry exact; Fig.~\ref{fig:linear-dissociation-geometry} illustrates the geometry of such dissociation.%finite-$\varepsilon$ rather than qualitative
 
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\scriptsize]
-        % Natural-data geometry.
-        \begin{scope}[xshift=-2.2cm]
-            \fill[blue!8] (0,0) ellipse (1.75 and 0.36);
-            \draw[blue!45,thick] (0,0) ellipse (1.75 and 0.36);
-            \draw[->,gray!70] (-1.95,0)--(1.95,0);
-            \node[gray!70] at (1.05,-0.48) {high variance};
-            \draw[->,gray!70] (0,-0.55)--(0,1.65)
-                node[above,align=center] {low variance\\(nearly hidden)};
-            \draw[->,blue!70!black,very thick] (0,0)--(1.5,0)
-                node[above right] {$\bstar=\bhat_1$};
-            \draw[->,red!75!black,very thick] (0,0)--(0.42,1.42)
-                node[above right] {$\bhat_2$};
-            \node[align=center] at (0,-0.95)
-                {natural samples weight errors by $\Sigma$};
-        \end{scope}
-        % Self-generated evaluation paths.
-        \begin{scope}[xshift=2.55cm]
-            \draw[->,gray!70] (-0.2,0)--(2.9,0);
-            \draw[->,gray!70] (0,-0.2)--(0,1.8);
-            \draw[blue!70!black,very thick,->] (0,0)--(2.55,0.2)
-                node[right,align=left] {$\x_0+\alpha\bhat_1$\\teacher responds};
-            \draw[red!75!black,very thick,->] (0,0)--(0.75,1.55)
-                node[above right,align=left] {$\x_0+\alpha\bhat_2$\\student responds,\\teacher barely does};
-            \node[align=center] at (1.25,-0.95)
-                {accentuation exposes the full direction $\bhat$};
-        \end{scope}
-    \end{tikzpicture}
-    \caption{\textbf{Geometry of prediction--accentuation dissociation.}
-    Natural-distribution prediction suppresses errors along low-variance directions through the covariance metric $\Sigma$ (left).
-    Accentuation instead evaluates the teacher on a path selected by the student weight itself (right), so a component that is nearly invisible in distribution can dominate control.}
-    \label{fig:linear-dissociation-geometry}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\scriptsize]
+%         % Natural-data geometry.
+%         \begin{scope}[xshift=-2.2cm]
+%             \fill[blue!8] (0,0) ellipse (1.75 and 0.36);
+%             \draw[blue!45,thick] (0,0) ellipse (1.75 and 0.36);
+%             \draw[->,gray!70] (-1.95,0)--(1.95,0);
+%             \node[gray!70] at (1.05,-0.48) {high variance};
+%             \draw[->,gray!70] (0,-0.55)--(0,1.65)
+%                 node[above,align=center] {low variance\\(nearly hidden)};
+%             \draw[->,blue!70!black,very thick] (0,0)--(1.5,0)
+%                 node[above right] {$\bstar=\bhat_1$};
+%             \draw[->,red!75!black,very thick] (0,0)--(0.42,1.42)
+%                 node[above right] {$\bhat_2$};
+%             \node[align=center] at (0,-0.95)
+%                 {natural samples weight errors by $\Sigma$};
+%         \end{scope}
+%         % Self-generated evaluation paths.
+%         \begin{scope}[xshift=2.55cm]
+%             \draw[->,gray!70] (-0.2,0)--(2.9,0);
+%             \draw[->,gray!70] (0,-0.2)--(0,1.8);
+%             \draw[blue!70!black,very thick,->] (0,0)--(2.55,0.2)
+%                 node[right,align=left] {$\x_0+\alpha\bhat_1$\\teacher responds};
+%             \draw[red!75!black,very thick,->] (0,0)--(0.75,1.55)
+%                 node[above right,align=left] {$\x_0+\alpha\bhat_2$\\student responds,\\teacher barely does};
+%             \node[align=center] at (1.25,-0.95)
+%                 {accentuation exposes the full direction $\bhat$};
+%         \end{scope}
+%     \end{tikzpicture}
+%     \caption{\textbf{Geometry of prediction--accentuation dissociation.}
+%     Natural-distribution prediction suppresses errors along low-variance directions through the covariance metric $\Sigma$ (left).
+%     Accentuation instead evaluates the teacher on a path selected by the student weight itself (right), so a component that is nearly invisible in distribution can dominate control.}
+%     \label{fig:linear-dissociation-geometry}
+% \end{figure}
 
 The mechanism is especially plausible for images because natural-image covariance has a strongly decaying spectrum: low-variance modes are often high spatial frequency.
 Errors along these modes are suppressed by the $\Sigma$-weighted generalization loss but remain fully visible in the Euclidean direction used for accentuation.
@@ -383,7 +391,7 @@ The classic degrees of freedom are $\mathrm{df}_{1}\equiv\mathrm{df}_{1,1}$ and 
 The full notations, 1-point and 2-point DE formula and their technical meanings are provided in App.~\ref{sec:app-de-identities}.
 
 \paragraph{Expectation of a ratio.}
-The accentuation metrics are nonlinear functions of the random scalar pair $(N,D)$. In the main text we use the leading approximation obtained by replacing each quadratic form with its deterministic equivalent, for example $D/N\approx\mu_D/\mu_N$. This approximation is accurate when $N$ and $D$ concentrate jointly in the proportional high-dimensional limit, but it is not an exact identity for finite $n,d$. The appendix develops a perturbative ratio correction and a \red{Gaussian distributional-DE approximation} for regimes in which the residual variance of $(N,D)$ is non-negligible; see App.~\ref{sec:app-ratio-approximations} and App.~\ref{sec:app-ratio-corrections}.
+The accentuation metrics are nonlinear functions of the random scalar pair $(N,D)$. In the main text we use the leading approximation obtained by replacing each quadratic form with its deterministic equivalent, for example $D/N\approx\mu_D/\mu_N$. This approximation is accurate when $N$ and $D$ concentrate jointly in the proportional high-dimensional limit, but it is not an exact identity for finite $n,d$. The appendix develops a perturbative variance correction and a \red{Gaussian distributional-DE approximation} for regimes in which the residual variance of $(N,D)$ is non-negligible; see App.~\ref{sec:app-ratio-approximations} and App.~\ref{sec:app-ratio-corrections}.
 
 % Note that $\bhat$ itself is a random variable, depending on
 % the noise realization $\eta$ and the data realization $X$. So this
@@ -427,18 +435,22 @@ We reserve the plain $\alpha$ for the accentuation-path coordinate.}
 \begin{equation}
     \bhat=\arg\min_\beta \frac1n\|X\beta-\mathbf y\|^2+\lambda\|\beta\|^2
 \end{equation}
+Leading to the Ridge estimated student weight, 
+\begin{equation}\label{eq:ridge-decomposition}
+\bhat=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar}_{\text{signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
+\end{equation}
 Since ridge regularization will penalize weights in the small variance dimensions of data manifolds, intuitively it will alleviate the danger of accentuation error.
 But does the issue persists?
-\begin{lem}\label{lem:ridge-decomposition}
-The ridge estimated solution reads
-\begin{equation}\label{eq:ridge-decomposition}
-\bhat=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
-\end{equation}
-\end{lem}
+% \begin{lem}\label{lem:ridge-decomposition}
+% The ridge estimated solution reads
+% \begin{equation}\label{eq:ridge-decomposition}
+% \bhat=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
+% \end{equation}
+% \end{lem}
 \begin{prop}\label{prop:pix_ridge_gen_err}
 Classic generalization (mean squared) error, has the following DE
 \begin{align}
-E_{gen} & =(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)\notag\\
+E_{gen} %& =(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)\notag\\
  &\asymp \frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\big)-\sigma^{2} =\frac{n\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}-\sigma^{2}
  % & \asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\\
  % & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)-\sigma^{2}
@@ -453,7 +465,7 @@ equivalence.
 \begin{align}\label{eq:pix_ridge_ND_DE_rel}
 \mu_{N}=\mathbb{E}_{X,\eta}\Big[N\Big] & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\bstar =B_{1,1}(\kappa)\\
 \mu_{D}=\mathbb{E}_{X,\eta}\Big[D\Big] & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)\notag\\
- & =B_{2,2}(\kappa)+\frac{\mathrm{df}_{1,2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\Big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\Big)\\
+ % & =B_{2,2}(\kappa)+\frac{\mathrm{df}_{1,2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\Big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\Big)\\
  & =B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})
 \end{align}
 and MSE, $R^2$, slope can be calculated with $\mu_D,\mu_N$ via Eq.~\ref{eq:acc_metric_ND_depen}.
@@ -515,31 +527,28 @@ Let $F\in\mathbb{R}^{p\times d}$ be a fixed linear feature map and define the po
 \[
 f(\x)={\hat w}^{\top}F\x=\x^\top\bhat,
 \]
-and the pixel-space accentuation direction is $\nabla_\x f=\bhat$, not $\hat w$. We reserve $w^\star$ for the population-optimal realizable coefficient below.
-
-With a feature space, the original teacher signal may not be representable.
-So first we need to define a sense of optimal ``realizable'' weight
-and its associated irreducible error.
-Notably, there are two sense of optimality, for prediction vs for reconstruction,
+and the pixel-space accentuation direction is $\nabla_\x f=\bhat$, not $\hat w$. We reserve $w^\star$ for the population-optimal realizable coefficient below. 
+Notably, in feature space, there are two sense of optimality, for prediction vs for reconstruction,
 which preludes the dissociation of prediction and control.
+% With a feature space, the original teacher signal may not be representable.
+% So first we need to define a sense of optimal ``realizable'' weight
+% and its associated irreducible error.
 \begin{lem}\label{lem:feature-population-projections}
-In a feature space, there are two sense of ``optimal'' weight, the
-weight minimizing population prediction loss is
-\[
+In a feature space, the
+weight minimizing population prediction loss is %there are two sense of ``optimal'' weight, 
+\begin{equation}
 w^{\star}=(F\Sigma F^{\top})^{\dagger}F\Sigma\bstar=\Sigma_{F}^{\dagger}F\Sigma\bstar
-\]
+\end{equation}
 The population level error of this weight predicting noiseless teacher
 is $S_{\perp}$, i.e. irreducible non-representable error of this
 feature space.
-\[
+\begin{equation}
 S_{\perp}:=\mathbb{E}_{\x}[(\x^{\top}\bstar-\x^{\top}F^{\top}w^{\star})^{2}]={\bstar}^{\top}\Sigma\bstar-{w^\star}^{\top}\Sigma_{F}w^{\star}
-\]
-
-While the weight minimizing the reconstruction error of teacher weight
-is
-\[
+\end{equation}
+While the weight minimizing the reconstruction error of teacher weight is
+\begin{equation}
 w^{P}=(FF^{\top})^{\dagger}F\bstar
-\]
+\end{equation}
 and in non-white data ($\Sigma\neq I_d$) these two weights do not coincide.
 \end{lem}
 The classic held-out prediction error reads
@@ -552,7 +561,7 @@ where $w^{\star}:=\Sigma_{F}^{\dagger}F\Sigma\bstar$ and $S_{\perp}={\bstar}^{\t
 and $\kappa$ is computed via self-consistent equation on spectrum
 of $\Sigma_{F}$.
 \end{prop}
-Note for this feature-space DE, the proportional aspect ratio is $p/n$ and every $\mathrm{df}_{r,q}$ is evaluated using the spectrum of $\Sigma_F$; this replaces the pixel-space ratio $d/n$ and spectrum of $\Sigma$.
+Note for this feature-space DE, the proportional aspect ratio is $p/n$ and every $\mathrm{df}_{r,q}$ is evaluated using the spectrum of $\Sigma_F$; \red{this replaces the pixel-space ratio $d/n$ and spectrum of $\Sigma$.}
 In contrast, the accentuation and control error is
 \begin{prop}[Accentuation Error for Linear Feature Ridge]\label{prop:linfeat_acc_ND}
 Accentuation and control error is characterized by the ratio $D/N$
