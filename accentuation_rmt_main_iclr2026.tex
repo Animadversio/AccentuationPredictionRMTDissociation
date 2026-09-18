@@ -224,7 +224,7 @@ As a result, the model is evaluated on the self-generated rank-1 distribution
 % \]
 \begin{equation}
     E_{acc}=\mathbb{E}_{\x=\x_{0}+\alpha\bhat;\alpha\sim p(\alpha)}[\|f(\x)-\x^\top\bstar\|^2]=\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}
-    \label{eq:acc-error}
+    \label{eq:accentuation-path-error}
 \end{equation}
 For peer review, model is evaluated on the accentuation path created
 by other models with weight $\bprime$, with similar structure
@@ -233,7 +233,7 @@ by other models with weight $\bprime$, with similar structure
 % \]
 \begin{equation}
     E_{peer}=\mathbb{E}_{\x=\x_{0}+\alpha\bprime;\alpha\sim p(\alpha)}[\|f(\x)-\x^\top\bstar\|^2]=\mathrm{Var}[\alpha]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}
-    \label{eq:acc-error}
+    \label{eq:peer-path-error}
 \end{equation}
 Structurally, generalization error evaluate the teacher student deviation $\bhat-\bstar$ weighted over the full natural data covariance $\Sigma$, while accentuation focused on one direction selected by the student $\bhat$, and peer-review focus on one direction selected by the peer $\bprime$. One can easily see this introduces an out-of-distribution generalization problem. 
 
@@ -481,132 +481,50 @@ and MSE, $R^2$, slope can be calculated with $\mu_D,\mu_N$ via Eq.~\ref{eq:acc_m
 
 \subsection{Prediction and Control optimal regularization}
 
-In practice, people often do cross validated regularization selection e.g. RidgeCV. 
-We note that, in ideal case, the RidgeCV is optimizing regularization for in distribution $E_{gen}$. How does that affects or constrain the accentuation and control error?
+\red{Cross-validation selects a ridge penalty for natural-distribution prediction, whereas accentuation uses the fitted weight as its own evaluation direction. Their optimal penalties therefore obey different conditions, even in pixel-space ridge regression.}
 
-We can see non-optimal regularization strength with noisy setting
-can easily lead to catastrophic failure in control. But what if the
-ridge parameter is optimized -- in reality people often do cross
-validated selection in RidgeCV? 
-
-First we show that in our simplistic setting, there is always a regularization strength that minimizes accentuation error, and in general case that regularization strength is not identical to the one selected for generalization, and this difference is also what causes the failure of control even regularization has been optimized for prediction. 
-
-\begin{lem}[Interior stationarity condition for prediction-optimal regularization]
-\red{Assuming the DE risk has an interior differentiable minimizer, the ridge parameter selected by minimizing generalization loss satisfies the first-order condition}
-% The ridge parameter selection based on DE of generalization loss
-% needs to satisfy the first order condition
+\begin{lem}[Interior prediction-optimal stationarity]\label{lem:pixel-cv-stationarity}
+\red{If the DE generalization risk has an interior differentiable minimizer $\kappa_{gen}^{\star}$ on the admissible $\lambda\geq0$ path, then}
 \begin{equation}
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)\label{eq:pred_optim_reg_cond1}
+\color{red}
+E_{gen,DE}(\kappa_{gen}^{\star})+\sigma^{2}
+=n\kappa_{gen}^{\star}\frac{B_{2,3}(\kappa_{gen}^{\star})}{\mathrm{df}_{2,3}(\kappa_{gen}^{\star})}.
+\label{eq:pred_optim_reg_cond2}
 \end{equation}
-which can also be written through the generalization error at DE level.
-\begin{equation}
-E_{gen,DE}+\sigma^{2}=n\kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}\label{eq:pred_optim_reg_cond2}
-\end{equation}
-Note we didn't prove the uniqueness or existence of such stationary
-point across $\kappa$, also not sure about the solution regarding
-“physical” $\lambda\geq0$. 
+\red{This is a necessary condition; boundary optima and uniqueness are not covered.}
 \end{lem}
-In contrast, the condition that makes the accentuation error optimal
-is the following, 
-\begin{prop}[Equivalent conditions for accentuation-optimal regularization]
-On the leading DE level the condition of $\lambda$ or $\kappa$
-that minimize and zeros accentuation error $E_{acc,DE}$, is $\mu_{N}=\mu_{D}$,
-which makes $E_{acc}=0,R_{acc}^{2}=1,\text{slope}_{acc}=1$. There
-exists $\exists\lambda\in[0,\infty)$ that satisfy this condition,
-but the solution is not always unique. The condition $\kappa_{acc}^{\star}$
-has the following equivalent forms 
-\begin{align}
-E_{gen,DE}(\kappa)+\sigma^{2} & =n\kappa\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\label{eq:acc_optim_reg_cond1}\\
-\sigma^{2} & =\kappa\Big(n-\mathrm{df}_{1}(\kappa)\Big)\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\label{eq:acc_optim_reg_cond2}\\
-\sigma^{2} & =n\lambda(\kappa)\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\label{eq:acc_optim_reg_cond3}\\
-E_{gen,DE}(\kappa) & =(\frac{\kappa}{\lambda(\kappa)}-1)\sigma^{2}=\sigma^{2}\frac{\mathrm{df}_{1}(\kappa)}{n-\mathrm{df}_{1}(\kappa)}
-\end{align}
+
+\begin{prop}[Accentuation-optimal regularization at leading DE order]\label{prop:pixel-control-optimal}
+\red{At a point with $\mu_N>0$, the ratio-of-DE accentuation error vanishes precisely when $\mu_D=\mu_N$. Equivalently,}
+\begin{equation}
+\color{red}
+E_{gen,DE}(\kappa)+\sigma^{2}
+=n\kappa\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}.
+\label{eq:acc_optim_reg_cond1}
+\end{equation}
+\red{Whenever an admissible root $\kappa_{acc}^{\star}$ exists, the leading ratio-of-DE metrics satisfy $E_{acc}^{(0)}=0$, $R_{acc}^{2,(0)}=1$, and $\mathrm{slope}_{acc}^{(0)}=1$. This does not imply zero expected finite-sample accentuation error, because fluctuations of $N/D$ remain.}
 \end{prop}
-Note, this has the following note-worthy consequence, i.e. when optimizing
-regularization strength for accentuation error (DE) the prediction
-error satisfies some universal law. 
-\begin{prop}[Generalization error at accentuation-optimal regularization]
-This entails, at the zero-accentuation error points $\kappa_{acc}^{\star}$,
-the generalization error at DE levels equates 
-\begin{align*}
-E_{gen,DE}(\kappa_{acc}^{\star}) & =\frac{\kappa}{\lambda(\kappa)}\sigma^{2}-\sigma^{2}\\
- & =\sigma^{2}\frac{\mathrm{df}_{1}(\kappa)}{n-\mathrm{df}_{1}(\kappa)}
-\end{align*}
 
-\end{prop}
-\begin{remark}
-This result is surprising because at the ``control optimal'' point,
-the generalization error no longer depend on the teacher weight explicitly,
-it only depend on $\kappa$ and the function of data spectral density
-$\mathrm{df}_{1}(\kappa)$. In a certain sense this is an universality
-result, i.e. at this special point where $\mu_{D}=\mu_{N}$ and accentuation
-error is zeroed on leading order, then the generalization error follows
-such universal law just depending on input geometry, 
+\red{Using $n\lambda=\kappa(n-\mathrm{df}_{1})$, Eq.~\eqref{eq:acc_optim_reg_cond1} also gives $\sigma^{2}=n\lambda B_{1,2}/\mathrm{df}_{1,2}$ and, at such a root,}
+\begin{equation}
+\color{red}
+E_{gen,DE}(\kappa_{acc}^{\star})
+=\sigma^{2}\frac{\mathrm{df}_{1}(\kappa_{acc}^{\star})}{n-\mathrm{df}_{1}(\kappa_{acc}^{\star})}.
+\label{eq:pixel-risk-at-control-optimum}
+\end{equation}
+\red{The teacher enters this identity implicitly through the location of $\kappa_{acc}^{\star}$; it is not a teacher-independent value of prediction risk. The algebra and qualifications are given in Appendix~\ref{app:regularization-derivations}.}
 
-Further this quantity upper bounded the minimal generalization error
-$E_{gen,DE}(\kappa)$ one can obtain at the same noise scale. the
-real optimal $\kappa$ can not be higher than this at leading level. 
-\end{remark}
-
-
-
-With this we can say the regularization strength optimal for prediction
-is nearly always not optimal for accentuation and vice versa. 
-\red{For compactness in the following DE identities only, define the relative accentuation response error $z_{acc}:=D/N-1$.}
-\begin{prop}[Accentuation error at generalization-optimal regularization]
-Further even if we select the best ridge parameter, the accentuation
-error can still be written as 
-
-When we select regularization parameter by minimizing generalization
-error (RidgeCV), at this stationary point $\kappa_{gen}^{\star}$\ref{eq:pred_optim_reg_cond2},
-accentuation error can be written as 
-\begin{align*}
-z_{acc,CV}(\kappa_{gen}^{\star})\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)
-\end{align*}
-\end{prop}
-This form can be read as proportional to the difference between the
-``optimal'' regularization condition for prediction and accentuation
-\ref{eq:pred_optim_reg_cond2} and \ref{eq:acc_optim_reg_cond1}. 
-\red{Equation~\eqref{eq:pixel-zacc-cv} is the residual failure left after generalization-optimal tuning: CV cancels the derivative of prediction risk, but it does not generally equate the two differently weighted spectral averages $B_{2,3}/\mathrm{df}_{2,3}$ and $B_{1,2}/\mathrm{df}_{1,2}$. The leading accentuation bias vanishes in special symmetric cases, such as an isotropic spectrum, but can persist when teacher energy is aligned nonuniformly across an anisotropic spectrum.}
-
-% \todo{COMMENT ON THIS, when is it the most vulnerable}
-
-
-% \red{For compactness in the following DE identities only, define the relative accentuation response error $z_{acc}:=D/N-1$.}
-% \begin{cor}\label{cor:pixel-zacc-de}
-% Equivalent forms of the relative accentuation response error are
-% \begin{align}
-% z_{acc}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}-1\notag\\
-%  & =\frac{-\kappa B_{1,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}\notag\\
-%  & =\frac{\sigma^{2}\mathrm{df}_{1,2}(\kappa)-n\lambda B_{1,2}(\kappa)}{(n-\mathrm{df}_{2}(\kappa))B_{1,1}(\kappa)}\label{eq:pixel-zacc-de}
-% \end{align}
-% \end{cor}
-% %
-% We can see non-optimal regularization strength with noisy setting
-% can easily lead to catastrophic failure in control. But what if the
-% ridge parameter is optimized -- in reality people often do cross
-% validated selection in RidgeCV?
-% \begin{lem}\label{lem:pixel-cv-stationarity}
-% \red{Assuming the DE risk has an interior differentiable minimizer, the ridge parameter selected by minimizing generalization loss satisfies the first-order condition}
-% \begin{equation}
-% (n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)
-% \label{eq:pixel-cv-stationarity}
-% \end{equation}
-% which can also be written through the generalization error at DE level.
-% \[
-% \kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}=\frac{1}{n}(E_{gen,DE}+\sigma^{2})
-% \]
-% \end{lem}
-% Further even if we select the best ridge parameter, the accentuation
-% error can still be written as
-% \begin{prop}\label{prop:pixel-zacc-cv}
-% When we select regularization parameter by minimizing generalization
-% error $E_{gen,DE}$ similar to RidgeCV, at this stationary point, accentuation error reads
-% \begin{align}
-% z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)\label{eq:pixel-zacc-cv}
-% \end{align}
-% \end{prop}
-% \red{Equation~\eqref{eq:pixel-zacc-cv} is the residual failure left after generalization-optimal tuning: CV cancels the derivative of prediction risk, but it does not generally equate the two differently weighted spectral averages $B_{2,3}/\mathrm{df}_{2,3}$ and $B_{1,2}/\mathrm{df}_{1,2}$. The leading accentuation bias vanishes in special symmetric cases, such as an isotropic spectrum, but can persist when teacher energy is aligned nonuniformly across an anisotropic spectrum.}
+\red{For compactness, write $z_{acc}:=D/N-1$. At an interior prediction-optimal point, the surviving leading accentuation response error is}
+\begin{equation}
+\color{red}
+z_{acc,CV}^{(0)}
+=\frac{\mu_D}{\mu_N}-1
+=\frac{\kappa\,\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}
+\left(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}
+-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\right)_{\kappa=\kappa_{gen}^{\star}}.
+\label{eq:pixel-zacc-cv}
+\end{equation}
+\red{CV cancels the derivative of prediction risk but does not generally equate these differently weighted spectral averages. Their difference can persist for anisotropic spectra and nonuniform teacher alignment, so prediction-optimal and control-optimal penalties need not coincide.}
 
 \todo{Answer the question from the title: when is control esp. bad? discuss it}
 
@@ -668,6 +586,37 @@ and $\tilde{\beta}_{\kappa}:=F^{\top}\Sigma_{F}\bigl(\Sigma_{F}+\kappa I_{p}\big
 can be understood as Ridge shrinkaged effective weight.
 \end{prop}
 It's easy to see, setting $F=I$ recovers the identity in Eq.~\ref{eq:pix_ridge_ND_DE_rel}
+
+\paragraph{Prediction- versus control-optimal feature ridge.}
+\red{The same contrast survives projection into a fixed feature space. Write $C:=\Sigma_F$, $G:=FF^\top$, and, only in this paragraph,}
+\begin{equation}
+\color{red}
+B^F_{a,b}(\kappa):={w^\star}^\top C^a(C+\kappa I)^{-b}w^\star,
+\qquad
+\mathrm{df}^F_{a,b}(\kappa):=\operatorname{tr}\!\left[C^a(C+\kappa I)^{-b}\right].
+\label{eq:feature-spectral-shorthand}
+\end{equation}
+\red{Thus the effective response-noise variance for learning $w^\star$ is $\sigma^2+S_\perp$, while the population prediction error also retains the irreducible term $S_\perp$.}
+\begin{prop}[Distinct feature-ridge tuning conditions]\label{prop:feature-ridge-tuning}
+\red{If the DE prediction risk has an interior minimizer on the admissible ridge path, its effective regularization satisfies}
+\begin{equation}
+\color{red}
+E_{gen,DE}(\kappa_{gen}^\star)+\sigma^2
+=n\kappa_{gen}^\star
+\frac{B^F_{2,3}(\kappa_{gen}^\star)}{\mathrm{df}^F_{2,3}(\kappa_{gen}^\star)}.
+\label{eq:feature-prediction-optimal}
+\end{equation}
+\red{By contrast, at a point with $N_{DE}>0$ and $T_F(\kappa)>0$, the leading ratio-of-DE accentuation error is zero exactly when}
+\begin{equation}
+\color{red}
+E_{gen,DE}(\kappa)+\sigma^2
+=n\frac{{\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2}{T_F(\kappa)},
+\qquad
+T_F(\kappa):=\operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
+\label{eq:feature-control-optimal}
+\end{equation}
+\end{prop}
+\red{Equation~\eqref{eq:feature-prediction-optimal} depends only on the prediction summaries in Corollary~\ref{cor:feature-summary-statistics}; Eq.~\eqref{eq:feature-control-optimal} additionally probes the Euclidean input-gradient geometry through $G$ and $\tilde\beta_\kappa$. An admissible zero-control-error root is not guaranteed for an arbitrary feature map. The derivation and the pixel-space reduction appear in Appendix~\ref{app:regularization-derivations}.}
 
 
 

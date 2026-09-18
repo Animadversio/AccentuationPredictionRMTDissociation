@@ -2691,4 +2691,92 @@ B_{p+1,q+1}(\kappa)-B_{p,q}(\kappa) & =-\kappa B_{p,q+1}(\kappa)
 \end{align*}
 
 
+\begingroup\color{red}
+\section{Prediction- and accentuation-optimal ridge penalties}
+\label{app:regularization-derivations}
+
+We derive the tuning conditions used in the main text. The calculations concern
+the deterministic-equivalent risk along the admissible ridge path
+$\lambda\geq0$; a stationary condition alone does not establish that the
+stationary point is a global minimum. Throughout, the spectral ratios are
+used only when their denominators are nonzero.
+
+\paragraph{Pixel-space prediction optimum.}
+Set $H(\kappa)=\kappa^2B_{1,2}(\kappa)+\sigma^2$ and
+$q(\kappa)=n-\mathrm{df}_{2}(\kappa)$. The spectral identities give
+$H'=2\kappa B_{2,3}$ and $q'=2\mathrm{df}_{2,3}$. Hence an interior
+stationary point of $E_{gen,DE}+\sigma^2=nH/q$ obeys
+\begin{equation}
+q\kappa B_{2,3}=H\,\mathrm{df}_{2,3}
+\quad\Longleftrightarrow\quad
+E_{gen,DE}+\sigma^2=n\kappa\frac{B_{2,3}}{\mathrm{df}_{2,3}}.
+\label{eq:appendix-pixel-prediction-stationary}
+\end{equation}
+
+\paragraph{Pixel-space accentuation optimum.}
+The identity $B_{1,1}-B_{2,2}=\kappa B_{1,2}$ yields
+\begin{equation}
+\mu_D-\mu_N
+=-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n}
+(E_{gen,DE}+\sigma^2).
+\label{eq:appendix-pixel-d-minus-n}
+\end{equation}
+Equating this expression to zero proves Eq.~\eqref{eq:acc_optim_reg_cond1}.
+Substituting $E_{gen,DE}+\sigma^2=nH/q$, and using
+$\mathrm{df}_{1}=\mathrm{df}_{2}+\kappa\mathrm{df}_{1,2}$ and
+$n\lambda=\kappa(n-\mathrm{df}_{1})$, gives the equivalent condition
+\begin{equation}
+\sigma^2
+=\kappa(n-\mathrm{df}_{1})\frac{B_{1,2}}{\mathrm{df}_{1,2}}
+=n\lambda\frac{B_{1,2}}{\mathrm{df}_{1,2}}.
+\label{eq:appendix-pixel-control-noise}
+\end{equation}
+At a root with $\lambda>0$ and $\sigma^2>0$, dividing the two equivalent
+conditions gives
+$(E_{gen,DE}+\sigma^2)/\sigma^2=\kappa/\lambda$, and therefore
+\begin{equation}
+E_{gen,DE}=\sigma^2\frac{\mathrm{df}_{1}}{n-\mathrm{df}_{1}}.
+\label{eq:appendix-pixel-risk-at-control}
+\end{equation}
+The value is not independent of the teacher across different problems:
+the teacher changes the root $\kappa_{acc}^{\star}$. At an interior
+prediction optimum, inserting Eq.~\eqref{eq:appendix-pixel-prediction-stationary}
+into Eq.~\eqref{eq:appendix-pixel-d-minus-n} gives
+Eq.~\eqref{eq:pixel-zacc-cv}.
+
+\paragraph{Feature-space prediction optimum.}
+Let $C=F\Sigma F^\top$, $G=FF^\top$,
+$\tau^2=S_\perp+\sigma^2$, and use the shorthand in
+Eq.~\eqref{eq:feature-spectral-shorthand}. Here
+$E_{gen,DE}+\sigma^2=nH_F/q_F$, with
+$H_F=\kappa^2B^F_{1,2}+\tau^2$ and
+$q_F=n-\mathrm{df}^F_{2,2}$. The same derivative calculation yields
+\begin{equation}
+q_F\kappa B^F_{2,3}=H_F\,\mathrm{df}^F_{2,3}
+\quad\Longleftrightarrow\quad
+E_{gen,DE}+\sigma^2=n\kappa\frac{B^F_{2,3}}{\mathrm{df}^F_{2,3}}.
+\label{eq:appendix-feature-prediction-stationary}
+\end{equation}
+The irreducible error $S_\perp$ enters the location of the optimum
+through $H_F$ even though it is absorbed into $E_{gen,DE}+\sigma^2$
+in the compact form on the right.
+
+\paragraph{Feature-space accentuation optimum.}
+Writing $\tilde\beta_\kappa=F^\top(C+\kappa I)^{-1}F\Sigma\bstar$,
+the DEs in Proposition~\ref{prop:linfeat_acc_ND} imply
+\begin{equation}
+D_{DE}-N_{DE}
+=\|\tilde\beta_\kappa\|^2-\bstar^\top\tilde\beta_\kappa
++\frac{E_{gen,DE}+\sigma^2}{n}
+\operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
+\label{eq:appendix-feature-d-minus-n}
+\end{equation}
+Setting this to zero proves Eq.~\eqref{eq:feature-control-optimal}
+when its trace is positive. Unlike the pixel case, the first two terms
+need not have a sign that guarantees an admissible root. For $F=I_d$,
+$\bstar^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2
+=\kappa B_{1,2}$ and the trace equals $\mathrm{df}_{1,2}$,
+recovering Eq.~\eqref{eq:acc_optim_reg_cond1}.
+\endgroup
+
 % \end{document}
