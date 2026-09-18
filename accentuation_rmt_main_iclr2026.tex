@@ -118,15 +118,6 @@ We show that the same dissociation can exist even in linear models.
 In a certain sense, the failure of control can be interpreted as failure of "out-of-distribution" (OOD) prediction, and specifically in a case where the evaluation distribution is self-generated.
 We precisely characterized the scaling of accentuation and held-out prediction error and how that depends on noise, spectral structure, feature space and other properties of the learning problem.
 
-
-\section{Related works}
-\paragraph{Predictive model and control of neurons}
-
-
-\paragraph{Ridge regression and OOD evaluation}
-
-\paragraph{Degeneracy in linear model}
-
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}
@@ -135,20 +126,41 @@ We precisely characterized the scaling of accentuation and held-out prediction e
 \end{figure}
 
 \section{Key phenomena from neuronal control experiments}
-\red{We summarize the closed-loop experiments of \citet{prince2026parametric}, which motivate the distinction between prediction and control (Fig.~\ref{fig:Setup_NeuroControl_Results}).}
+We summarize and reproduce the results from the data of the closed-loop experiments of \citet{prince2026parametric}, which motivate the distinction between prediction and control (Fig.~\ref{fig:Setup_NeuroControl_Results}). 
+
 \paragraph{Experimental setup.}
-\red{For each of $25$ visual-cortical sites in five macaques, ten DNN feature spaces were paired with cross-validated ridge readouts fit to responses to natural images. Each fitted model then generated graded image sweeps from natural-image seeds, targeting $11$ predicted response levels; the $27{,}500$ synthesized stimuli were presented back to the animals. This tests the model on inputs chosen by its own encoding axis rather than on another held-out sample from the natural-image distribution.}
+The experiments have four phases (Fig.~\ref{fig:Setup_NeuroControl_Results} A): 
+\textbf{I.} First, visual cortical neuronal responses to a fixed set (\~1000) of natural image stimuli (mixture of Natural Scene Dataset shared images, and segmented objects) during fixation were recorded (using arrays and neuropixels). 
+\textbf{II.} Next, encoding models are fitted: linear regressing neuronal responses onto the top PCA of the features in 10 DNN backbones (Tab.~\ref{}), with optimal Ridge regularization and layer selected via cross validation. These neuronal predictive models are denoted $f(.)$. 
+\textbf{III.} Then, control (\textit{"accentuated"}) stimuli were generated: initialized from 10 seed images $\x_0$ selected from NSD, one perform \textit{feature accentuation} on each model $f_i$, roughly iterating $\x\gets \x +\nabla_{\x}f(\x)$, until $f(\x)$ reaches a target level $y^*$. In practice, preconditioning of the gradient and augmentation during optimization was done \citep{hamblin2024feature}, so more robust optima are found. For each seed, one select $11$ $y^*$ levels with uniform spacing, spanning the natural dynamic range of the neuron (range over training set), resulting in $1100$ accentuated images per target neuron. 
+\textbf{IV.} Finally, one tested these images (along with some held out natural images) in the next recording session, 
+recording actual neuronal responses of the same sites to these images -- designed by the 10 models to linearly modulate the neuronal firing. 
+The premise is that, if the predictive model $f$ is a faithful model of the neuron, the designed stimuli should be able to control the neuronal firing with \textit{model predictive control}. So the difference between the 10 models signify their difference in \textit{control capability}, while the prediction accuracy on the the held out natural images shows the \textit{prediction capability}. 
+This procedure is replicated for $25$ visual cortical sites in 5 primates, spanning V2,V3,V4,aIT,pIT,STS. Figures were reproduced using the published data. 
+
 
 \paragraph{Similar held-out prediction, divergent control.}
 \red{The nine trained models were tightly matched on natural-image re-test responses (model-mean Pearson $r=0.58$--$0.61$), yet their ability to predict and modulate responses to their own accentuated stimuli diverged sharply. Across all ten models, mean control correlation fell to $r=0.45$, with substantially greater between-model spread than on natural images. Many models generated conspicuous texture or high-frequency changes while achieving the requested \emph{model-predicted} response, but the measured neural response was weaker. In one reported site, natural-image re-test prediction reached $r=0.81$ whereas the accentuation control slope was only $0.05$ (a slope of $1$ would indicate calibrated control).}
 
 \paragraph{Asymmetry of recognition and generation.}
+When a model fails to \textit{generate} images and control neurons, could it \textit{recognize} the success of other models' control?
+In the so-called \textit{peer-review} analysis, we send the accentuation images generated by A model to B model, and evaluate the B model's neural prediction accuracy on A models' generation. One can see ResNet50-robust (\texttt{robust})'s generation modulate neuronal firing as predicted; while neurons are almost not modulated by ResNet50 (\texttt{RN50})'s generation (Fig.~\ref{fig:Setup_NeuroControl_Results}C diagonal panels), showing the much stronger control capability of \texttt{robust}, while both overestimated the magnitude of their modulation. 
+However, when showing generated images from strong controller (\texttt{robust}) to the weaker controller (\texttt{RN50}), the Pearson r is also good, with a more calibrated magnitude, and much less worse R2. 
+Similarly, in the inverse direction, the stronger controller can also predict the neuronal responses on generated images from the weaker controllers. 
+This create an interesting "assymmetry", models can recognize good successful control images, but cannot generate good controlling images themselves. 
+The structure of peer review matrix between the 10 models are showed in App.~\ref{???}.
+\iffalse
 \red{The illustrative cross-evaluation in Fig.~\ref{fig:Setup_NeuroControl_Results}C separates evaluating a stimulus from generating it. For the shown site, ResNet50-Robust's images produced graded neural responses that both it and ordinary ResNet50 could track (response correlations $r=0.52$ and $0.54$, respectively). Ordinary ResNet50's own images, by contrast, barely modulated the neuron despite large predicted changes (self-evaluation $r\approx0$, $R^2=-24.23$). Here ``recognition'' means tracking response ordering, not calibrated amplitude: even the robust model's own $R^2$ is negative. This is a selected example, not a population estimate.}
+\fi 
 
 \paragraph{Control tracks input-gradient structure.}
+What predicts the success of neuronal control? Apparently, the top-2 most performant neuronal control models are both adversarially trained or finetuned \cite{advers}. 
+Generally, if one quantify the structure of the input gradient $\nabla_{\x} f$, one can see the stronger control models have perceptually better gradient: the gradient has more Fourier power in the low frequency band, and the spectral profile shows more natural image like fall off. This fall-off exponent (or some related spectral concentration measures) the can predict the control success across the $250$ model x neuron pairs \red{(site-level $r\approx0.65$; model-mean $r=0.91$). The association persisted after excluding the two adversarially trained models (site-level $r=0.26$), whereas the relationship with adversarial sensitivity did not.}
+\iffalse
 \red{Across the $250$ site--model encoding axes, low-frequency concentration of the input gradient predicted control slope (site-level $r\approx0.65$; model-mean $r=0.91$). The association persisted after excluding the two adversarially trained models (site-level $r=0.26$), whereas the relationship with adversarial sensitivity did not. Thus the observed failure is linked to \emph{which input directions} a model uses to change its prediction, not simply to how well it predicts natural images. Our linear theory isolates a tractable version of this directional mismatch; it does not claim that the DNN gradients or neuronal responses are globally linear.}
+\fi
 
-\begin{figure}[H]
+\begin{figure}[!htp]
     \centering
     \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel.png}
     \caption{\textbf{A linear model recapitulating the phenomena}
@@ -196,41 +208,46 @@ The solution of gradient descent i.e. the minimum-norm change that reaches the s
     =\x_0+\frac{y^*-\x_0^\top\bhat}{\|\bhat\|^2}\bhat.
     \label{eq:linear-accentuation-path}
 \end{equation}
-Thus the fitted weight is not only a predictor: it also determines the direction along which the predictor is evaluated.\footnote{This is an idealized version of deep-network feature accentuation, which may additionally use gradient preconditioning, augmentation, and image priors.\cite{hamblin2024feature,Fel_maco} }
-As a result, the model is evaluated on the self-generated distribution
-\[
-\x_{0}+\alpha\bhat.
-\]
+Thus the fitted weight is not only a predictor: it also determines the distribution i.e. direction along which the predictor is evaluated $\x_{0}+\alpha\bhat,\alpha\sim p(\alpha)$.
+\footnote{This is an idealized version of deep-network feature accentuation, which may additionally use gradient preconditioning, augmentation, and image priors.\cite{hamblin2024feature,Fel_maco} }
 % and then the model prediction is evaluated on it.
 In the main paper, we assume a single seed image, $\x_{0}=0$,
-and $\alpha$ is sampled from a centered distribution ($\mathbb{E}[\alpha]=0$) to make the \emph{predicted
-model variance} match with a target variance. e.g.
+and $\alpha$ is sampled from a centered distribution ($\mathbb{E}[\alpha]=0$) which makes the \emph{predicted model variance} match with the natural variance of teacher, e.g.
 \begin{equation}
 \mathrm{Var}[\alpha]({\bhat}^{\top}\bhat)^2={\bstar}^{\top}\Sigma\bstar
 \label{eq:variance-matching}
 \end{equation}
 In \red{Appendix~\ref{sec:app-evaluation-distributions}}, we discuss the extension to non-centered seed images and multiple seed images.
-
+As a result, the model is evaluated on the self-generated rank-1 distribution
+% \[
+% \x_{0}+\alpha\bhat.
+% \]
+\begin{equation}
+    E_{acc}=\mathbb{E}_{\x=\x_{0}+\alpha\bhat;\alpha\sim p(\alpha)}[\|f(\x)-\x^\top\bstar\|^2]=\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}
+    \label{eq:acc-error}
+\end{equation}
 For peer review, model is evaluated on the accentuation path created
 by other models with weight $\bprime$, with similar structure
-\[
-\x_{0}+\alpha\bprime
-\]
+% \[
+% \x_{0}+\alpha\bprime
+% \]
+\begin{equation}
+    E_{peer}=\mathbb{E}_{\x=\x_{0}+\alpha\bprime;\alpha\sim p(\alpha)}[\|f(\x)-\x^\top\bstar\|^2]=\mathrm{Var}[\alpha]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}
+    \label{eq:acc-error}
+\end{equation}
+Structurally, generalization error evaluate the teacher student deviation $\bhat-\bstar$ weighted over the full natural data covariance $\Sigma$, while accentuation focused on one direction selected by the student $\bhat$, and peer-review focus on one direction selected by the peer $\bprime$. One can easily see this introduces an out-of-distribution generalization problem. 
 
 
 \subsection{Structure of the generalization and accentuation error}
 \label{sec:evaluation-metrics}
+% Using the Lemma \ref{lem:pred_error}\ref{lem:R2_pred_obs}\ref{lem:Pearson-r_pred_obs}\ref{lem:linear_slope},
+% we can write down various form of evaluation metrics, MSE, R2, slope,
+% Pearson r, given the mean and covariance $\mu_p,\Sigma_p$ of the evaluation distributions.
 
-Using the Lemma \ref{lem:pred_error}\ref{lem:R2_pred_obs}\ref{lem:Pearson-r_pred_obs}\ref{lem:linear_slope},
-we can write down various form of evaluation metrics, MSE, R2, slope,
-Pearson r, given the mean and covariance of a evaluation distribution.
-
-The difference between classic generalization, accentuation and peer
-review can be seen via the (mean and) covariance of their evaluation
-distribution.
-
-Using these difference we can write down the following table.
-
+The key difference between classic generalization, accentuation and peer
+review error can be seen via the (mean and) covariance of their evaluation
+distribution ($\mu_p,\Sigma_p$). We can write down the form of MSE, R2, slope,
+Pearson r in the the following Table \ref{tab:evaluation-metrics}, using Lemma \ref{lem:pred_error},\ref{lem:R2_pred_obs},\ref{lem:Pearson-r_pred_obs},\ref{lem:linear_slope}. 
 We note that Pearson correlation is a degenerate metric when evaluating
 on a single linear path, noiseless evaluation setting, so we focus
 on other metrics, MSE, R2, slope.
@@ -359,7 +376,7 @@ The remaining question is no longer whether such a dissociation is possible, but
 \label{sec:technical-considerations}
 
 \paragraph{Deterministic-equivalent toolkit.}
-Our main analytical tool is a collection of deterministic equivalents (DEs) relationships applied to the quadratic forms $N$ and $D$. These relations replace resolvents of the random sample covariance $\hat\Sigma$ with those of the population covariance $\Sigma$. Finite-sample randomness is summarized at leading order by an effective regularization parameter $\kappa$, determined by the self-consistent Silverstein equation \todo{add meaning of equivalence??}
+Our main analytical tool is a collection of deterministic equivalents (DEs) relationships applied to the quadratic forms $N$ and $D$. These relations replace resolvents of the random sample covariance $\hat\Sigma$ with those of the population covariance $\Sigma$. Finite-sample randomness is summarized at leading order by an effective regularization parameter $\kappa$, determined by the self-consistent (Silverstein) equation\cite{} \todo{add meaning of equivalence??}
 \begin{equation}
     \kappa(\lambda)-\lambda=\gamma\kappa(\lambda)\mathrm{tr}[\Sigma(\Sigma+\kappa(\lambda)I_d)^{-1}]
     \label{eq:kappa-fixed-point}
@@ -460,45 +477,138 @@ and MSE, $R^2$, slope can be calculated with $\mu_D,\mu_N$ via Eq.~\ref{eq:acc_m
 % \]
 \end{prop}
 
-\todo{COMMENT ON THIS, when is it the most vulnerable}
 
 
-\red{For compactness in the following DE identities only, define the relative accentuation response error $z_{acc}:=D/N-1$.}
-\begin{cor}\label{cor:pixel-zacc-de}
-Equivalent forms of the relative accentuation response error are
-\begin{align}
-z_{acc}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}-1\notag\\
- & =\frac{-\kappa B_{1,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}\notag\\
- & =\frac{\sigma^{2}\mathrm{df}_{1,2}(\kappa)-n\lambda B_{1,2}(\kappa)}{(n-\mathrm{df}_{2}(\kappa))B_{1,1}(\kappa)}\label{eq:pixel-zacc-de}
-\end{align}
-\end{cor}
-%
+\subsection{Prediction and Control optimal regularization}
+
+In practice, people often do cross validated regularization selection e.g. RidgeCV. 
+We note that, in ideal case, the RidgeCV is optimizing regularization for in distribution $E_{gen}$. How does that affects or constrain the accentuation and control error?
+
 We can see non-optimal regularization strength with noisy setting
 can easily lead to catastrophic failure in control. But what if the
 ridge parameter is optimized -- in reality people often do cross
-validated selection in RidgeCV?
-\begin{lem}\label{lem:pixel-cv-stationarity}
+validated selection in RidgeCV? 
+
+First we show that in our simplistic setting, there is always a regularization strength that minimizes accentuation error, and in general case that regularization strength is not identical to the one selected for generalization, and this difference is also what causes the failure of control even regularization has been optimized for prediction. 
+
+\begin{lem}[Interior stationarity condition for prediction-optimal regularization]
 \red{Assuming the DE risk has an interior differentiable minimizer, the ridge parameter selected by minimizing generalization loss satisfies the first-order condition}
+% The ridge parameter selection based on DE of generalization loss
+% needs to satisfy the first order condition
 \begin{equation}
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)
-\label{eq:pixel-cv-stationarity}
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)\label{eq:pred_optim_reg_cond1}
 \end{equation}
 which can also be written through the generalization error at DE level.
-\[
-\kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}=\frac{1}{n}(E_{gen,DE}+\sigma^{2})
-\]
+\begin{equation}
+E_{gen,DE}+\sigma^{2}=n\kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}\label{eq:pred_optim_reg_cond2}
+\end{equation}
+Note we didn't prove the uniqueness or existence of such stationary
+point across $\kappa$, also not sure about the solution regarding
+“physical” $\lambda\geq0$. 
 \end{lem}
-Further even if we select the best ridge parameter, the accentuation
-error can still be written as
-\begin{prop}\label{prop:pixel-zacc-cv}
-When we select regularization parameter by minimizing generalization
-error (RidgeCV), at this stationary point, accentuation error has
-additional structure. and can be written as
+In contrast, the condition that makes the accentuation error optimal
+is the following, 
+\begin{prop}[Equivalent conditions for accentuation-optimal regularization]
+On the leading DE level the condition of $\lambda$ or $\kappa$
+that minimize and zeros accentuation error $E_{acc,DE}$, is $\mu_{N}=\mu_{D}$,
+which makes $E_{acc}=0,R_{acc}^{2}=1,\text{slope}_{acc}=1$. There
+exists $\exists\lambda\in[0,\infty)$ that satisfy this condition,
+but the solution is not always unique. The condition $\kappa_{acc}^{\star}$
+has the following equivalent forms 
 \begin{align}
-z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)\label{eq:pixel-zacc-cv}
+E_{gen,DE}(\kappa)+\sigma^{2} & =n\kappa\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\label{eq:acc_optim_reg_cond1}\\
+\sigma^{2} & =\kappa\Big(n-\mathrm{df}_{1}(\kappa)\Big)\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\label{eq:acc_optim_reg_cond2}\\
+\sigma^{2} & =n\lambda(\kappa)\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\label{eq:acc_optim_reg_cond3}\\
+E_{gen,DE}(\kappa) & =(\frac{\kappa}{\lambda(\kappa)}-1)\sigma^{2}=\sigma^{2}\frac{\mathrm{df}_{1}(\kappa)}{n-\mathrm{df}_{1}(\kappa)}
 \end{align}
 \end{prop}
+Note, this has the following note-worthy consequence, i.e. when optimizing
+regularization strength for accentuation error (DE) the prediction
+error satisfies some universal law. 
+\begin{prop}[Generalization error at accentuation-optimal regularization]
+This entails, at the zero-accentuation error points $\kappa_{acc}^{\star}$,
+the generalization error at DE levels equates 
+\begin{align*}
+E_{gen,DE}(\kappa_{acc}^{\star}) & =\frac{\kappa}{\lambda(\kappa)}\sigma^{2}-\sigma^{2}\\
+ & =\sigma^{2}\frac{\mathrm{df}_{1}(\kappa)}{n-\mathrm{df}_{1}(\kappa)}
+\end{align*}
+
+\end{prop}
+\begin{remark}
+This result is surprising because at the ``control optimal'' point,
+the generalization error no longer depend on the teacher weight explicitly,
+it only depend on $\kappa$ and the function of data spectral density
+$\mathrm{df}_{1}(\kappa)$. In a certain sense this is an universality
+result, i.e. at this special point where $\mu_{D}=\mu_{N}$ and accentuation
+error is zeroed on leading order, then the generalization error follows
+such universal law just depending on input geometry, 
+
+Further this quantity upper bounded the minimal generalization error
+$E_{gen,DE}(\kappa)$ one can obtain at the same noise scale. the
+real optimal $\kappa$ can not be higher than this at leading level. 
+\end{remark}
+
+
+
+With this we can say the regularization strength optimal for prediction
+is nearly always not optimal for accentuation and vice versa. 
+\red{For compactness in the following DE identities only, define the relative accentuation response error $z_{acc}:=D/N-1$.}
+\begin{prop}[Accentuation error at generalization-optimal regularization]
+Further even if we select the best ridge parameter, the accentuation
+error can still be written as 
+
+When we select regularization parameter by minimizing generalization
+error (RidgeCV), at this stationary point $\kappa_{gen}^{\star}$\ref{eq:pred_optim_reg_cond2},
+accentuation error can be written as 
+\begin{align*}
+z_{acc,CV}(\kappa_{gen}^{\star})\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)
+\end{align*}
+\end{prop}
+This form can be read as proportional to the difference between the
+``optimal'' regularization condition for prediction and accentuation
+\ref{eq:pred_optim_reg_cond2} and \ref{eq:acc_optim_reg_cond1}. 
 \red{Equation~\eqref{eq:pixel-zacc-cv} is the residual failure left after generalization-optimal tuning: CV cancels the derivative of prediction risk, but it does not generally equate the two differently weighted spectral averages $B_{2,3}/\mathrm{df}_{2,3}$ and $B_{1,2}/\mathrm{df}_{1,2}$. The leading accentuation bias vanishes in special symmetric cases, such as an isotropic spectrum, but can persist when teacher energy is aligned nonuniformly across an anisotropic spectrum.}
+
+% \todo{COMMENT ON THIS, when is it the most vulnerable}
+
+
+% \red{For compactness in the following DE identities only, define the relative accentuation response error $z_{acc}:=D/N-1$.}
+% \begin{cor}\label{cor:pixel-zacc-de}
+% Equivalent forms of the relative accentuation response error are
+% \begin{align}
+% z_{acc}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}-1\notag\\
+%  & =\frac{-\kappa B_{1,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}\notag\\
+%  & =\frac{\sigma^{2}\mathrm{df}_{1,2}(\kappa)-n\lambda B_{1,2}(\kappa)}{(n-\mathrm{df}_{2}(\kappa))B_{1,1}(\kappa)}\label{eq:pixel-zacc-de}
+% \end{align}
+% \end{cor}
+% %
+% We can see non-optimal regularization strength with noisy setting
+% can easily lead to catastrophic failure in control. But what if the
+% ridge parameter is optimized -- in reality people often do cross
+% validated selection in RidgeCV?
+% \begin{lem}\label{lem:pixel-cv-stationarity}
+% \red{Assuming the DE risk has an interior differentiable minimizer, the ridge parameter selected by minimizing generalization loss satisfies the first-order condition}
+% \begin{equation}
+% (n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)
+% \label{eq:pixel-cv-stationarity}
+% \end{equation}
+% which can also be written through the generalization error at DE level.
+% \[
+% \kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}=\frac{1}{n}(E_{gen,DE}+\sigma^{2})
+% \]
+% \end{lem}
+% Further even if we select the best ridge parameter, the accentuation
+% error can still be written as
+% \begin{prop}\label{prop:pixel-zacc-cv}
+% When we select regularization parameter by minimizing generalization
+% error $E_{gen,DE}$ similar to RidgeCV, at this stationary point, accentuation error reads
+% \begin{align}
+% z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)\label{eq:pixel-zacc-cv}
+% \end{align}
+% \end{prop}
+% \red{Equation~\eqref{eq:pixel-zacc-cv} is the residual failure left after generalization-optimal tuning: CV cancels the derivative of prediction risk, but it does not generally equate the two differently weighted spectral averages $B_{2,3}/\mathrm{df}_{2,3}$ and $B_{1,2}/\mathrm{df}_{1,2}$. The leading accentuation bias vanishes in special symmetric cases, such as an isotropic spectrum, but can persist when teacher energy is aligned nonuniformly across an anisotropic spectrum.}
+
+\todo{Answer the question from the title: when is control esp. bad? discuss it}
 
 \subsection{Ridge on Linear Feature: Effect of feature projection and gradient} % Regression
 \label{sec:feature-ridge}
@@ -600,9 +710,11 @@ affects the accentuation error.
 
 Note that when the population data is white $\Sigma=I$, then in Corollary \ref{cor:feature-summary-statistics}, the sufficient statistics for accentuation and prediction fall back to be the same, further the Gauge invariance group in Prop.~\ref{prop:feature-gauge-family} will become degenerate i.e. leaving both prediction and control error unchanged. 
 
+\todo{Exactly Answer the question from the title: when is control esp. bad? discuss it}
+
 \todo{Answer given a teacher what kind of feature map is the most dangerous?}
 
-\subsection{Diagnostics of the Cause}
+\subsection{Summary of the Cause}
 \label{sec:diagnostics}
 
 The preceding results separate three ingredients that jointly determine whether good prediction coexists with poor accentuation.
@@ -624,12 +736,28 @@ Feature regression adds a second mismatch: prediction depends on the induced fea
 Hence feature maps with indistinguishable prediction summaries can have sharply different accentuation behavior, as formalized by the gauge family above.
 This identifies feature geometry---not predictive accuracy alone---as a diagnostic target: among equally predictive models, the more vulnerable map is the one that sends weakly constrained feature directions to large or poorly teacher-aligned pixel gradients.
 
+
+
+
+
+\section{Related works}
+\paragraph{Predictive model and control of neurons}
+
+
+\paragraph{Ridge regression and OOD evaluation}
+
+
+\paragraph{Degeneracy in linear model}
+
+
+
+
 \clearpage
 
 
 
 
-
+\iffalse
 
 However, most theory works examined the population loss or test loss, i.e. evaluating the estimated model on the population distribution. => this is very similar to the experimental set up where the encoding models are evaluated on the held out images, and indeed this test loss does not show differences among many models.
 
@@ -670,10 +798,9 @@ This quantity is not a reweighted version of $E_{\mathrm{gen}}$: it is sensitive
 This paper develops a random matrix theory (RMT) account of this dissociation. In the proportional limit $n,d\to\infty$ with $d/n\to\gamma$, we derive a deterministic equivalent for the per-principal-component coefficient error. The formula yields a closed-form decomposition of $E_{\mathrm{gen}}$ and an analytic prediction for the mean accentuation alignment.
 % It also exposes the regime where leading-order RMT is insufficient: when the mean alignment is near one, $\operatorname{Var}(R)$ rather than $(1-\mathbb{E}R)^2$ controls $\Eacc$.
 
+\fi 
 
 
-
-\clearpage
 
 
 
@@ -692,10 +819,6 @@ This paper develops a random matrix theory (RMT) account of this dissociation. I
 
 
 
-
-
-
-\clearpage
 
 
 
