@@ -67,39 +67,34 @@
 
 \begin{abstract}
 % Modern learning systems are often evaluated by average in-distribution error, yet scientific and perceptual applications frequently probe a learned model along a distinguished direction: a response axis, a feature vector, or an intervention path. We study this mismatch in a solvable high-dimensional setting. For ridge regression with anisotropic Gaussian covariates, we derive deterministic equivalents for the per-eigenmode coefficient error and for an \emph{accentuation} error obtained by moving along the learned direction rather than the ground-truth direction. The theory decomposes coefficient error into three interpretable terms: regularization bias, finite-sample signal fluctuation, and finite-sample noise amplification. It predicts when average generalization and accentuation error disagree, and yields a crossing criterion for the noise level at which the dominant failure mode changes. Monte Carlo experiments across isotropic, power-law, and natural-image spectra validate the formula up to dimension $10{,}000$. The analysis identifies a second-order limitation of leading deterministic equivalents: the mean alignment is accurately predicted, while the variance of the alignment ratio dominates accentuation error in high-noise regimes. These results give a minimal theory for directional failure modes that are invisible to scalar test error.
-In visual neuroscience, many people have found there are many models
-that could predict neurons well on held out data but cannot generate
-perturbations to control them. Further, the control success is more
-predicted by structure of input gradient instead of metrics about
-the representation geometry.
-
-Here we show that these phenomena can be captured by linear model.
-
-The key idea is failure of control is a special kind of OOD generalization
-failure, where the distribution is model-generated. This self-generated
-distribution induced interesting structure in the evaluation metrics
-(R2, slope, MSE) on it, different from the classic generalization
-error.
-
-In Ridge regression, we derived the leading order (deterministic equivalent)
-approximation for the generalization error and control error, showing
-their differences. We show that the failure in control can still happen
-for noisy regression on non-isotropic data, even when the regularization
-parameter is selected via cross validation.
-
-Extending the analysis to linear feature regression case, we show
-that the generalization error and control error has different summary
-statistics -- generalization error cares about feature space covariance
-while control cares about the feature outer product themselves.
-
-We specifically characterized the \textit{gauge invariance
-group} of the feature map, which will not change the
-classic generalization error and CV selection; but changes the control
-/ accentuation error dramatically.
-
-This shows our thesis that even for linear feature regression, prediction
-and control can be dissociated, and inspire us to look deeper into
-the gradient structure of feature maps.
+% In visual neuroscience, many people have found there are many models
+% that could predict neurons well on held out data but cannot generate
+% perturbations to control them. Further, the control success is more
+% predicted by structure of input gradient instead of metrics about
+% the representation geometry.
+% Here we show that these phenomena can be captured by linear model.
+% The key idea is failure of control is a special kind of OOD generalization
+% failure, where the distribution is model-generated. This self-generated
+% distribution induced interesting structure in the evaluation metrics
+% (R2, slope, MSE) on it, different from the classic generalization
+% error.
+% In Ridge regression, we derived the leading order (deterministic equivalent)
+% approximation for the generalization error and control error, showing
+% their differences. We show that the failure in control can still happen
+% for noisy regression on non-isotropic data, even when the regularization
+% parameter is selected via cross validation.
+% Extending the analysis to linear feature regression case, we show
+% that the generalization error and control error has different summary
+% statistics -- generalization error cares about feature space covariance
+% while control cares about the feature outer product themselves.
+% We specifically characterized the \textit{gauge invariance
+% group} of the feature map, which will not change the
+% classic generalization error and CV selection; but changes the control
+% / accentuation error dramatically.
+% This shows our thesis that even for linear feature regression, prediction
+% and control can be dissociated, and inspire us to look deeper into
+% the gradient structure of feature maps.
+Models that predict visual-neuron responses similarly well on held-out images can differ sharply in the stimuli they generate and in their ability to control those neurons. Experimental control success also tracks the structure of a model’s input gradient more closely than conventional measures of predictive performance. We study this prediction–control dissociation in a linear teacher–student model. Ordinary generalization evaluates a fitted predictor on the natural-image distribution; feature accentuation instead evaluates it on a distribution generated along its own fitted direction. This change of distribution gives accentuation error, \(R^2\), and response slope a different dependence on estimation error than standard test loss. Using deterministic equivalents for ridge regression, we show that prediction-optimal regularization generally differs from control-optimal regularization: cross-validation for prediction can therefore leave substantial control error under noisy, anisotropic data. We then extend the analysis to fixed linear feature maps. Prediction depends on the feature covariance and its alignment with the teacher, whereas control additionally depends on the feature map’s Euclidean geometry. We construct a family of feature maps that preserves leading-order generalization error and its cross-validated optimum while changing accentuation performance. These results identify input-gradient geometry as a diagnostic of control failure that predictive accuracy alone cannot provide.
 \end{abstract}
 
 \section{Introduction}
@@ -289,10 +284,24 @@ Thus the three accentuation metrics depend on the same two quadratic forms, whic
 %Their apparent asymmetry comes from the orientation of the ratio: slope and normalized MSE use $N/D$, whereas $R_{acc}^2$ is naturally expressed through $D/N-1$. Keeping the formulas in terms of $N$ and $D$ makes this geometry explicit.
 }
 
-\subsection{Intuition about the geometry}
+\subsection{Geometric intuition: iso-error surface and toy example}
 \label{sec:linear-geometry}
-
-With these structure we can already construct cases where
+\paragraph{Iso-error geometry}
+With these structure, we can see the distinct geometry of iso-error surface for prediction and control. 
+\begin{prop}
+For fixed $\bstar,\Sigma$ (positive definite), in the space of all student weights $\bhat$, 
+the iso-prediction error $E_{gen}$ surface is an ellipsoid, with radius $\sqrt{E_{gen}/s_k}$ at each data PC $\uvec_k$; 
+the iso-control error surface for $z$ and consequently all accentuation metrics is a hyper-sphere spanned by $0$ and $(1+z)\bstar$ as diameter; 
+the iso-peer review error surface is a hyperplane anchored at $(1+z)\bstar$, orthogonal to $\bprime$. 
+\end{prop}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.5\linewidth]{}
+%     \caption{Caption}
+%     \label{iso-response_surface}
+% \end{figure}
+\paragraph{Concrete dissociation}
+Concretely, we can construct cases where
 two students $\bhat_{1},\bhat_{2}$ result in the same prediction accuracy, 
 but with diverse control scores. 
 Briefly, if the weight difference is along some low variance dimension of
@@ -368,9 +377,9 @@ Thus a set of students can be almost indistinguishable from the teacher under th
 %     \label{fig:linear-dissociation-geometry}
 % \end{figure}
 
-The mechanism is especially plausible for images because natural-image covariance has a strongly decaying spectrum: low-variance modes are often high spatial frequency.
+The mechanism is especially plausible for images because natural-image covariance has a strongly decaying spectrum, with numerous high spatial frequency and low-variance modes \cite{nat image stats}. 
 Errors along these modes are suppressed by the $\Sigma$-weighted generalization loss but remain fully visible in the Euclidean direction used for accentuation.
-The remaining question is no longer whether such a dissociation is possible, but when finite-sample learning, response noise, and a feature map produce it, and whether regularization fixes it; the following sections answer that question quantitatively.
+The remaining question is no longer whether such a dissociation is \textbf{possible}, but when \textit{finite-sample learning}, \textit{response noise}, and \textit{feature maps} produce it, and whether regularization fixes it; the following sections answer that question quantitatively.
 
 \subsection{Technical considerations}
 \label{sec:technical-considerations}
@@ -677,14 +686,6 @@ Comparing Prop.~\ref{prop:linfeat_gen_err} and \ref{prop:linfeat_acc_ND}, one ob
 \begin{cor}[Distinct summary statistics of prediction and control]\label{cor:feature-summary-statistics}
 \red{At leading DE order, the primitive prediction summaries are $\Sigma_F$, $F\Sigma\bstar$, ${\bstar}^{\top}\Sigma\bstar$, $\sigma^2$, and $n$. Quantities such as $w^\star$, $S_\perp$, the CV-selected $\kappa$, and $E_{gen,DE}$ are derived from these summaries. In contrast, accentuation additionally depends on the Euclidean feature geometry $FF^\top$ and the teacher image $F\bstar$. This dependency structure is summarized in Fig.~\ref{fig:summary_stats_dep_graph}.}
 \end{cor}
-
-\begin{figure}[!ht]
-\begin{centering}
-\includegraphics[width=1\textwidth]{figures/feature_summary_statistics_flow}
-\par\end{centering}
-\caption{Relation of summary statistics and generalization vs accentuation.}\label{fig:summary_stats_dep_graph}
-\end{figure}
-
 
 Further, we can explicitly \red{characterize/construct} the gauge transformation group of $F$ that leaves generalization error, and consequently CV selection
 unchanged, while accentuation error varies.
