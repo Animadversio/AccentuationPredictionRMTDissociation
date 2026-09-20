@@ -8,6 +8,7 @@
 %   Fig 1  neuronal results (top row) + linear recapitulation (bottom row)
 %   Fig 2  pixel ridge: landscape + CV path
 %   Fig 3  feature ridge: dependency graph + null rotation + biological validation
+%   wrapfig  iso-error geometry + ridge path (Sec 3)
 % ---------------------------------------------------------------------------
 
 \begin{abstract}
@@ -92,6 +93,17 @@ z_{acc}:=\frac DN-1=\frac{{\bhat}^\top(\bhat-\bstar)}{{\bhat}^\top\bstar},
 \end{equation}
 which weights $\Delta$ by $\bhat$ itself, with no covariance in sight. Geometrically (App.~\ref{prop:mr-iso-geometry}), the equal-$E_{gen}$ sets are ellipsoids around $\bstar$ elongated along low-variance axes, whereas the equal-$z_{acc}$ sets are Euclidean spheres with diameter from $0$ to $(1+z)\bstar$, and the equal-peer-error sets are hyperplanes normal to $\bprime$. A student can sit deep inside the prediction ellipsoid, far from the control sphere, and still lie on the peer hyperplane of a good generator: this is exactly the configuration of Fig.~\ref{fig:phenomena} (bottom), and it can be made arbitrarily extreme by adding weight along a direction with $s_k\to0$ (App.~\ref{ex:mr-dissociation}).
 
+\begin{wrapfigure}{r}{0.5\linewidth}
+    \vspace{-8pt}
+    \centering
+    \includegraphics[width=\linewidth]{figures/draft_ridge_paths_iso_error_geometry.png}
+    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control calibration is the sphere through $0$ and $\bstar$ (orange). The fitted weight is scattered around the ridge path (purple) with a spread elongated along the low-variance axis. Cross-validation picks the tangency of the path with an ellipsoid; control calibration is its crossing with the sphere. (Placeholder from the validation repository; to be polished.)}
+    \label{fig:geometry}
+    \vspace{-6pt}
+\end{wrapfigure}
+\paragraph{Learning as a path through these landscapes.}
+Learning now has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, the ridge estimator traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around this path, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. The deterministic equivalents of the next two sections compute where the center of this cloud sits and how much Euclidean spread it carries. Cross-validation then selects the point of the path that is tangent to the smallest reachable prediction ellipsoid, whereas control calibration asks where the path crosses the sphere $D=N$. The two points coincide only in special cases (isotropic data is one, Sec.~\ref{sec:pixel}); in general the noise cloud pushes the path off the sphere in precisely the directions the ellipsoid does not see.
+
 The remaining question is therefore not whether the dissociation is possible but when \emph{learning} produces it. Three ingredients are in play: finite-sample regression on noisy responses, the choice of regularization, and the feature map through which the gradient reaches the pixels. We take them in turn.
 
 \section{Pixel-space ridge: noise, spectrum and the choice of regularization}
@@ -125,7 +137,7 @@ E_{gen}\asymp E_{gen,DE}=\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\si
 \label{eq:pixel-de}
 \end{equation}
 \end{prop}
-The three quantities are sums of the same per-eigenmode weight error (App.~\ref{prop:mr-per-pc}) with different weights: $E_{gen}$ weights mode $k$ by $s_k$, $D$ weights every mode equally. The last term of $\mu_D$ is the Euclidean energy of estimation noise, $\frac1n(E_{gen}+\sigma^2)$ per effective mode times $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, which counts modes near and below $\kappa$ heavily. It inflates the student's norm without helping it predict, so the student over-shoots along its own path: $z_{acc}>0$, slope $<1$. Ridge also shrinks the signal ($B_{2,2}<B_{1,1}$), which pulls in the opposite direction. Whether the two cancel is a question about $\lambda$.
+The three quantities are sums of the same per-eigenmode weight error (App.~\ref{prop:mr-per-pc}) with different weights: $E_{gen}$ weights mode $k$ by $s_k$, $D$ weights every mode equally. The last term of $\mu_D$ is the Euclidean energy of estimation noise, $\frac1n(E_{gen}+\sigma^2)$ per effective mode times $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, which counts modes near and below $\kappa$ heavily. It inflates the student's norm without helping it predict, so the student over-shoots along its own path: $z_{acc}>0$, slope $<1$. Ridge also shrinks the signal ($B_{2,2}<B_{1,1}$), which pulls in the opposite direction. Whether the two cancel is a question about $\lambda$. For natural images, whose spectrum decays as a power law over $10^4$ pixel modes, $\mathrm{df}_{1,2}$ counts thousands of weakly constrained high-spatial-frequency modes; the estimation noise that lands there is precisely the high-frequency texture of failed accentuations, and it costs almost nothing in $E_{gen}$.
 
 \begin{prop}[Prediction-optimal and control-optimal penalties differ]\label{prop:pixel-tuning}
 An interior minimizer of $E_{gen,DE}$ and a zero of the leading control error satisfy, respectively,
@@ -155,7 +167,17 @@ Both conditions equate the noisy prediction risk to $n\kappa$ times a teacher-we
     \label{fig:pixel}
 \end{figure}
 
-Figure~\ref{fig:pixel} confirms the picture on real natural-image regression. The DE surfaces track Monte Carlo over eight decades of noise; the prediction-optimal and control-calibrated penalties form two distinct ridges; and along the cross-validated path the student remains an excellent predictor while its accentuation $R^2$ becomes negative at moderate noise. Peer review between independent fits at the same $\kappa$ removes the Euclidean noise term entirely, $G_{peer}\asymp B_{2,2}/B_{1,1}$ (App.~\ref{prop:mr-peer}), which is the linear version of recognition without generation.
+Figure~\ref{fig:pixel} confirms the picture on real natural-image regression. The DE surfaces track Monte Carlo over eight decades of noise; the prediction-optimal and control-calibrated penalties form two distinct ridges; and along the cross-validated path the student remains an excellent predictor while its accentuation $R^2$ becomes negative at moderate noise. 
+
+\paragraph{Peer review: recognition without generation.}
+Now evaluate $\bhat$ on the path of an independently fitted peer $\bprime$ at the same $\kappa$. The two noise realizations are uncorrelated, so the Euclidean noise term that inflates $D$ drops out of the cross products: ${\bhat}^\top\bprime\asymp B_{2,2}$ and ${\bstar}^\top\bprime\asymp B_{1,1}$, and the peer gain and score are
+\begin{equation}
+G_{peer}=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],
+\qquad
+R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1]
+\label{eq:peer-de}
+\end{equation}
+(App.~\ref{prop:mr-peer}). Peer review measures only the shared shrinkage bias: at leading order it is never negative, degrades gracefully with noise, and is symmetric between the two fits. Self-evaluation instead carries the estimator's own Euclidean noise energy through Eq.~\eqref{eq:pixel-de}, so $z_{acc}$ grows without bound with $\sigma^2/n$ and $R^2_{acc}$ becomes arbitrarily negative. A student can therefore track a peer's path while failing on its own, which is the linear form of Fig.~\ref{fig:phenomena}C. The asymmetry between a strong and a weak generator in the data arises when the two differ in noise energy, i.e. in their feature maps (Sec.~\ref{sec:feature}); and measured responses along a barely modulated path add trial noise that no evaluator can explain, which is why even the peer scores of a weak generator's images are poor.
 
 \section{Feature-space ridge: the map decides what reaches the gradient}
 \label{sec:feature}
@@ -189,8 +211,18 @@ T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k
 \end{equation}
 with $(s_k,v_k)$ the eigenpairs of $C$. It averages, over the feature PCs that survive ridge shrinkage, the ratio between the Euclidean energy of the backpropagated PC gradient and its energy under the natural-image covariance. A map is fragile when its well-resolved feature directions backpropagate into low-variance, high-spatial-frequency pixel directions. This is the linear counterpart of the third observation of Sec.~\ref{sec:phenomena}, and it can be computed from the map and the image statistics alone.
 
-\paragraph{A diagnostic for nonlinear networks.}
-For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian gives $T_\phi(x,\kappa)=\sum_k\frac{s_k}{(s_k+\kappa)^2}\|J_\phi(x)^\top v_k\|^2$ and the variance proxy $V_\phi=\frac{E_{val}}{n}\E_x[T_\phi]$, with $\kappa$ from the empirical feature spectrum and the cross-validated penalty. This is a diagnostic motivated by Eq.~\eqref{eq:feature-de}, not a nonlinear theorem; we also evaluate smoothed and finite-neighborhood versions (App.~\ref{sec:app-nonlinear-diagnostic}). On the neuronal data (25 sites, 10 models, Fig.~\ref{fig:feature}C), after removing site means, $V_\phi$ and $T_\phi$ recover the ordering of models by control slope and by direct control error across the nine trained models, whereas held-out prediction error carries essentially no such information; the association is weaker but same-signed among the seven conventionally trained models. These are descriptive associations with repeated models within sites, not independent-sample tests.
+\subsection{From the linear factor to a diagnostic for deep networks and neurons}
+\label{sec:nonlinear}
+For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian in Eq.~\eqref{eq:TF} gives
+\begin{equation}
+T_\phi(x,\kappa)=\sum_k\frac{s_k}{(s_k+\kappa)^2}\,\|J_\phi(x)^\top v_k\|^2,
+\qquad
+V_\phi:=\frac{E_{val}}{n}\,\E_x\big[T_\phi(x,\kappa)\big],
+\label{eq:Tphi}
+\end{equation}
+where $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the pixel gradient of feature PC $k$, obtainable by one backward pass per PC, and $V_\phi$ mirrors the variance term of Eq.~\eqref{eq:feature-de}. For linear $\phi$ this is exact; for a network it is a diagnostic motivated by the theory, not a theorem, because the identity $s_k=g_k^\top\Sigma g_k$ that made $T_F$ a ratio of gradient energies no longer holds. Since an accentuation path travels far from the seed, we also evaluate smoothed versions in which the Jacobian is averaged, or the squared gradient is averaged, over a Gaussian neighborhood of the seed at pixel-noise scales from $0.5/255$ to $16/255$ (App.~\ref{sec:app-nonlinear-diagnostic}).
+
+We computed these quantities for all 250 site--model pairs of the neuronal experiment, using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:feature}C). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\eqref{eq:feature-de} would also be needed.
 
 \begin{figure}[t]
     \centering
