@@ -149,7 +149,7 @@ B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \label{eq:mr-spectral-sums}
 \end{equation}
 The relation $n\lambda=\kappa\,(n-\mathrm{df}_1)$ and the derivative
-$d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ follow from Eq.~\eqref{eq:mr-kappa}.
+$d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ follow from Eq.~\ref{eq:mr-kappa}.
 The notation $A\asymp B$ means that $A-B\to0$ almost surely in the
 proportional limit $n,d\to\infty$, $d/n\to\gamma$; the one- and two-resolvent
 deterministic equivalents used throughout are listed in
@@ -174,7 +174,7 @@ Proof: Section~\ref{sec:app-pixel-ridge}.
 
 \begin{prop}[Pixel-ridge deterministic equivalents for prediction and control]
 \label{prop:mr-pixel-de}
-With $\kappa$ from Eq.~\eqref{eq:mr-kappa} on the spectrum of $\Sigma$,
+With $\kappa$ from Eq.~\ref{eq:mr-kappa} on the spectrum of $\Sigma$,
 \begin{align}
 E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{df}_2}-\sigma^2,
 \label{eq:mr-pixel-egen}\\
@@ -183,10 +183,10 @@ N&\asymp\mu_N:=B_{1,1},
 D&\asymp\mu_D:=B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big).
 \label{eq:mr-pixel-D}
 \end{align}
-Equation~\eqref{eq:mr-pixel-egen} is the sum of Eq.~\eqref{eq:mr-per-pc}
-weighted by $s_k$; Eq.~\eqref{eq:mr-pixel-D} is its unweighted sum plus the
+Equation~\ref{eq:mr-pixel-egen} is the sum of Eq.~\ref{eq:mr-per-pc}
+weighted by $s_k$; Eq.~\ref{eq:mr-pixel-D} is its unweighted sum plus the
 squared mean.  The leading (ratio-of-DE) accentuation metrics follow from
-Eq.~\eqref{eq:mr-acc-metrics} with $N/D\approx\mu_N/\mu_D$, i.e.
+Eq.~\ref{eq:mr-acc-metrics} with $N/D\approx\mu_N/\mu_D$, i.e.
 \begin{equation}
 z^{(0)}_{acc}=\frac{\mu_D}{\mu_N}-1
 =\frac{B_{2,2}-B_{1,1}}{B_{1,1}}
@@ -249,7 +249,7 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2 .
 \label{eq:mr-peer}
 \end{equation}
 The peer path removes the Euclidean variance term of
-Eq.~\eqref{eq:mr-pixel-D} because independent noise realizations are
+Eq.~\ref{eq:mr-pixel-D} because independent noise realizations are
 uncorrelated; peer review therefore measures shared shrinkage bias only.
 Proof: Section~\ref{sec:app-ratio-corrections}, peer-review subsection.
 \end{prop}
@@ -285,7 +285,7 @@ Proof: Section~\ref{sec:app-ratio-delta}.
 \label{rem:mr-gaussian-surrogate}
 Approximating $\bhat$ by a Gaussian with the DE mean
 $\Sigma(\Sigma+\kappa I)^{-1}\bstar$ and diagonal per-mode variance from
-Eq.~\eqref{eq:mr-per-pc}, and pushing it through $N$ and $D$, yields
+Eq.~\ref{eq:mr-per-pc}, and pushing it through $N$ and $D$, yields
 medians, quantiles and the probability of sign changes of $N$.  It is a
 surrogate, not a proved distributional deterministic equivalent: it does not
 enforce the exact ridgeless identity $N=D$, and it inherits the missing
@@ -310,7 +310,7 @@ space of $F$ and differ otherwise.  Proof: Section~\ref{sec:app-feature-regressi
 
 \begin{prop}[Feature-ridge deterministic equivalents]
 \label{prop:mr-feature-de}
-Let $\kappa$ solve Eq.~\eqref{eq:mr-kappa} on the spectrum of $C$ with
+Let $\kappa$ solve Eq.~\ref{eq:mr-kappa} on the spectrum of $C$ with
 aspect ratio $p/n$, and define the feature-space spectral sums
 \begin{equation}
 B^F_{a,b}(\kappa):={w^\star}^\top C^a(C+\kappa I)^{-b}w^\star,\qquad
@@ -351,9 +351,9 @@ $N_{DE}$).  Fixing $\mathcal P$ fixes prediction; it does not fix control
 
 \begin{prop}[Prediction- and control-optimal feature ridge]
 \label{prop:mr-feature-tuning}
-An interior minimizer of Eq.~\eqref{eq:mr-feature-egen} satisfies
+An interior minimizer of Eq.~\ref{eq:mr-feature-egen} satisfies
 $E_{gen,DE}+\sigma^2=n\kappa B^F_{2,3}/\mathrm{df}^F_{2,3}$, the same form as
-Eq.~\eqref{eq:mr-pred-optimal} with $\sigma^2\mapsto\sigma^2+S_\perp$ inside
+Eq.~\ref{eq:mr-pred-optimal} with $\sigma^2\mapsto\sigma^2+S_\perp$ inside
 $E_{gen,DE}$.  The leading accentuation error vanishes exactly when
 \begin{equation}
 E_{gen,DE}+\sigma^2
@@ -423,7 +423,7 @@ Combining Propositions~\ref{prop:mr-feature-de}, \ref{prop:mr-feature-tuning}
 and \ref{prop:mr-fragility}, the leading control error at fixed prediction
 error grows with three separable factors:
 (i) the estimation-noise level $(E_{gen,DE}+\sigma^2)/n$;
-(ii) the spectral mismatch of Eq.~\eqref{eq:mr-zacc-cv}, i.e. how far the
+(ii) the spectral mismatch of Eq.~\ref{eq:mr-zacc-cv}, i.e. how far the
 CV-selected $\kappa$ sits from the control-calibrated $\kappa$, which
 vanishes for isotropic data and grows with anisotropy and with teacher
 energy in low-variance modes;
@@ -448,8 +448,8 @@ V_\phi:=\frac{E_{val}}{n}\,\E_x[T_\phi(x,\kappa)],
 where $E_{val}$ is the held-out prediction error and $\kappa$ is computed
 from the empirical feature spectrum and the CV-selected penalty.  For
 $\phi(x)=Fx$ this equals $T_F$ and the variance term of
-Eq.~\eqref{eq:mr-feature-D}.  For nonlinear $\phi$ the identity
-$s_k=g_k^\top\Sigma g_k$ fails, so Eq.~\eqref{eq:mr-nonlinear-T} is a
+Eq.~\ref{eq:mr-feature-D}.  For nonlinear $\phi$ the identity
+$s_k=g_k^\top\Sigma g_k$ fails, so Eq.~\ref{eq:mr-nonlinear-T} is a
 diagnostic motivated by the linear theory; it is evaluated in exact-local,
 finite-difference, smoothed-Jacobian, neighborhood and finite-step versions
 (Section~\ref{sec:app-nonlinear-diagnostic}).

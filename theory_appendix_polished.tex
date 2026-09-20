@@ -281,8 +281,8 @@ R^2_{acc}=1-z_{acc}^2,\qquad
 \end{equation}
 \end{cor}
 \begin{proof}
-\emph{Accentuation.}  Substituting Eq.~\eqref{eq:app-variance-matching} into
-Eq.~\eqref{eq:app-three-errors},
+\emph{Accentuation.}  Substituting Eq.~\ref{eq:app-variance-matching} into
+Eq.~\ref{eq:app-three-errors},
 \[
 E_{acc}=\frac{S}{({\bhat}^\top\bhat)^2}\big({\bhat}^\top(\bhat-\bstar)\big)^2
 =S\Big(1-\frac{{\bhat}^\top\bstar}{{\bhat}^\top\bhat}\Big)^2 .
@@ -298,9 +298,9 @@ ${\bstar}^\top\bhat/{\bhat}^\top\bhat$ because both are proportional to
 $\alpha$.
 \emph{Peer review.}  The same three steps with $\bhat$ replaced by $\bprime$
 in the path and $\Var[\alpha']=S/({\bprime}^\top\bprime)^2$ give
-Eq.~\eqref{eq:app-peer-metrics}.
+Eq.~\ref{eq:app-peer-metrics}.
 \emph{Reduction to $z$.}  Write $N/D=1/(1+z)$ and $D/N=1+z$ in
-Eq.~\eqref{eq:app-acc-metrics-ND}.
+Eq.~\ref{eq:app-acc-metrics-ND}.
 \end{proof}
 
 \begin{remark}[The two singularities of accentuation]
@@ -351,10 +351,10 @@ normal to $\bprime$.
 (i) is the definition of $E_{gen}$ in the eigenbasis of $\Sigma$.
 (ii) For a finite level $z$ with ${\bhat}^\top\bstar\ne0$, the condition
 $D/N=a$ reads ${\bhat}^\top\bhat=a\,{\bhat}^\top\bstar$; completing the
-square gives Eq.~\eqref{eq:iso-accentuation-sphere}.  Since $R^2_{acc}$,
+square gives Eq.~\ref{eq:iso-accentuation-sphere}.  Since $R^2_{acc}$,
 $\mathrm{slope}_{acc}$ and $E_{acc}/S$ are functions of $z_{acc}$ alone
 (Eq.~\ref{eq:app-acc-metrics-z}), their level sets are unions of such
-spheres.  (iii) Each peer metric in Eq.~\eqref{eq:app-peer-metrics} is a
+spheres.  (iii) Each peer metric in Eq.~\ref{eq:app-peer-metrics} is a
 function of ${\bprime}^\top\bhat/{\bprime}^\top\bstar$, which is constant
 on affine hyperplanes normal to $\bprime$.
 \end{proof}
@@ -388,13 +388,13 @@ be for control to succeed.  This section computes where ridge regression on
 noisy data actually puts it.  We work in the proportional limit
 $n,d\to\infty$, $d/n\to\gamma$, with Gaussian design, and use the
 deterministic equivalents (DEs) collected in Section~\ref{sec:app-rmt-toolkit}:
-the effective penalty $\kappa(\lambda)$ of Eq.~\eqref{eq:app-kappa-fixed-point},
-the one-point equivalent Eq.~\eqref{eq:app-one-point-de}, the two-point
-equivalent Eq.~\eqref{eq:app-two-point-de}, and the derivative
-$d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ of Eq.~\eqref{eq:app-dkappa-dlambda}.
+the effective penalty $\kappa(\lambda)$ of Eq.~\ref{eq:app-kappa-fixed-point},
+the one-point equivalent Eq.~\ref{eq:app-one-point-de}, the two-point
+equivalent Eq.~\ref{eq:app-two-point-de}, and the derivative
+$d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ of Eq.~\ref{eq:app-dkappa-dlambda}.
 Throughout, $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$, $\bstar=\sum_kb_k\uvec_k$,
 and $B_{p,q}$, $\mathrm{df}_{p,q}$ are the spectral sums of
-Eq.~\eqref{eq:mr-spectral-sums}.
+Eq.~\ref{eq:mr-spectral-sums}.
 
 \begin{prop}[Restatement of Propositions~\ref{prop:mr-per-pc} and \ref{prop:mr-pixel-de}]
 \label{prop:app-pixel-ridge-de}
@@ -415,9 +415,9 @@ E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{
 
 \subsection{Generalization risk}
 
-\begin{proof}[Proof of Eq.~\eqref{eq:app-pixel-egen-summary}]
+\begin{proof}[Proof of Eq.~\ref{eq:app-pixel-egen-summary}]
 \emph{Step 1: conditional expectation over the noise.}  Insert the error
-decomposition Eq.~\eqref{eq:app-ridge-decomposition} into
+decomposition Eq.~\ref{eq:app-ridge-decomposition} into
 $E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)$.  The cross term is linear
 in $\eta$ and averages to zero; the quadratic term uses
 $\E_\eta[\eta\eta^\top]=I_n$:
@@ -436,11 +436,11 @@ using the one-point DE,
 \asymp-\frac{d}{d\lambda}\operatorname{Tr}\big[\Sigma(\Sigma+\kappa(\lambda)I)^{-1}\Sigma\big]
 =\frac{d\kappa}{d\lambda}\,\mathrm{df}_2(\kappa),
 \end{align*}
-so that with Eq.~\eqref{eq:app-dkappa-dlambda} the noise term equals
+so that with Eq.~\ref{eq:app-dkappa-dlambda} the noise term equals
 $\sigma^2\mathrm{df}_2/(n-\mathrm{df}_2)$.
 
 \emph{Step 3: bias term.}  Apply the two-point DE
-Eq.~\eqref{eq:app-two-point-de} with $A=\bstar{\bstar}^\top$ and $B=\Sigma$:
+Eq.~\ref{eq:app-two-point-de} with $A=\bstar{\bstar}^\top$ and $B=\Sigma$:
 \begin{align*}
 \lambda^2\operatorname{Tr}\big[\bstar{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\Sigma(\hat\Sigma+\lambda I)^{-1}\big]
 &\asymp\kappa^2{\bstar}^\top(\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa I)^{-1}\bstar
@@ -454,14 +454,14 @@ Eq.~\eqref{eq:app-two-point-de} with $A=\bstar{\bstar}^\top$ and $B=\Sigma$:
 =\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\sigma^2 ,
 \label{eq:generalization_error_classic}
 \end{equation}
-which is Eq.~\eqref{eq:app-pixel-egen-summary} and agrees with the classical
+which is Eq.~\ref{eq:app-pixel-egen-summary} and agrees with the classical
 anisotropic ridge risk \citep{dobriban2018high,hastie2022surprises}.
 \end{proof}
 
 \subsection{The accentuation forms $N$ and $D$}
 
-\begin{proof}[Proof of Eqs.~\eqref{eq:app-pixel-N-summary} and \eqref{eq:app-pixel-D-summary}]
-\emph{Numerator.}  From Eq.~\eqref{eq:app-ridge-decomposition},
+\begin{proof}[Proof of Eqs.~\ref{eq:app-pixel-N-summary} and \ref{eq:app-pixel-D-summary}]
+\emph{Numerator.}  From Eq.~\ref{eq:app-ridge-decomposition},
 $N={\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\bstar
 +\sigma{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\frac1nX^\top\eta$.  The noise
 part has zero mean, and the one-point DE gives
@@ -492,11 +492,11 @@ Collecting,
 =B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big),
 \label{eq:mean_denom_sqnorm}
 \end{equation}
-where the last equality uses Eq.~\eqref{eq:app-pixel-egen-summary}.
+where the last equality uses Eq.~\ref{eq:app-pixel-egen-summary}.
 \end{proof}
 
-\begin{proof}[Proof of Eq.~\eqref{eq:app-per-pc}]
-Project Eq.~\eqref{eq:app-ridge-decomposition} onto $\uvec_k$ and average
+\begin{proof}[Proof of Eq.~\ref{eq:app-per-pc}]
+Project Eq.~\ref{eq:app-ridge-decomposition} onto $\uvec_k$ and average
 over $\eta$:
 \[
 \E_\eta\big[(\uvec_k^\top(\bhat-\bstar))^2\big]
@@ -508,10 +508,10 @@ for the first term
 $\kappa^2\big[b_k^2/(s_k+\kappa)^2+\frac{s_k}{(s_k+\kappa)^2}\frac{B_{1,2}}{n-\mathrm{df}_2}\big]$,
 and the derivative argument of Step 2 gives for the second
 $\frac{\sigma^2}{n}\frac{n}{n-\mathrm{df}_2}\frac{s_k}{(s_k+\kappa)^2}$.
-Summing yields Eq.~\eqref{eq:app-per-pc}.  Weighting by $s_k$ and summing
-over $k$ recovers Eq.~\eqref{eq:app-pixel-egen-summary}; summing without
+Summing yields Eq.~\ref{eq:app-per-pc}.  Weighting by $s_k$ and summing
+over $k$ recovers Eq.~\ref{eq:app-pixel-egen-summary}; summing without
 weights and adding the squared mean $\sum_k(s_kb_k/(s_k+\kappa))^2=B_{2,2}$
-recovers Eq.~\eqref{eq:app-pixel-D-summary}.
+recovers Eq.~\ref{eq:app-pixel-D-summary}.
 \end{proof}
 
 \begin{remark}[Reading the three quantities]
@@ -526,7 +526,7 @@ a count of modes in a bell-shaped band around $s_k\approx\kappa$ (the weight
 $4\kappa s_k/(s_k+\kappa)^2$ peaks at $1$ for $s_k=\kappa$ with constant
 width on a logarithmic axis).  Prediction weights this same noise by $s_k$;
 control does not.
-\item The per-mode error Eq.~\eqref{eq:app-per-pc} is largest, relative to the
+\item The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
 mode's own variance $s_k$, for low-variance modes: the variance term divided
 by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
 \end{enumerate}
@@ -534,7 +534,7 @@ by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
 
 \subsection{The leading control error $z_{acc}$}
 
-Substituting $N\approx\mu_N$, $D\approx\mu_D$ into Eq.~\eqref{eq:app-acc-metrics-z}
+Substituting $N\approx\mu_N$, $D\approx\mu_D$ into Eq.~\ref{eq:app-acc-metrics-z}
 gives the leading (ratio-of-DE) accentuation metrics.  The central quantity
 admits a compact form.
 
@@ -548,13 +548,13 @@ z^{(0)}_{acc}:=\frac{\mu_D}{\mu_N}-1
 \end{equation}
 \end{lem}
 \begin{proof}
-From Eqs.~\eqref{eq:mean_numerator_dotprod} and \eqref{eq:mean_denom_sqnorm},
+From Eqs.~\ref{eq:mean_numerator_dotprod} and \ref{eq:mean_denom_sqnorm},
 \[
 \mu_D-\mu_N=B_{2,2}-B_{1,1}+\frac{\mathrm{df}_{1,2}}{n-\mathrm{df}_2}(\sigma^2+\kappa^2B_{1,2})
 =-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n-\mathrm{df}_2}(\sigma^2+\kappa^2B_{1,2}),
 \]
 using the recursion $B_{1,1}-B_{2,2}=\kappa B_{1,2}$ of
-Eq.~\eqref{eq:app-spectral-recursion}.  The coefficient of $B_{1,2}$ is
+Eq.~\ref{eq:app-spectral-recursion}.  The coefficient of $B_{1,2}$ is
 \[
 \frac{\kappa^2\mathrm{df}_{1,2}}{n-\mathrm{df}_2}-\kappa
 =\frac{\kappa\,(\kappa\mathrm{df}_{1,2}+\mathrm{df}_2-n)}{n-\mathrm{df}_2}
@@ -564,11 +564,11 @@ Eq.~\eqref{eq:app-spectral-recursion}.  The coefficient of $B_{1,2}$ is
 by $\mathrm{df}_1=\mathrm{df}_2+\kappa\mathrm{df}_{1,2}$ and the fixed-point
 relation $n\lambda=\kappa(n-\mathrm{df}_1)$.  Dividing by $\mu_N=B_{1,1}$
 gives the first form; the second is
-Eq.~\eqref{eq:app-pixel-D-summary} divided by $B_{1,1}$.
+Eq.~\ref{eq:app-pixel-D-summary} divided by $B_{1,1}$.
 \end{proof}
 
 \begin{remark}[Two competing terms, and when $R^2_{acc}$ turns negative]
-The two forms of Eq.~\eqref{eq:z_simplify_identity} expose the competition.
+The two forms of Eq.~\ref{eq:z_simplify_identity} expose the competition.
 The ridge term $-n\lambda B_{1,2}$ (equivalently $B_{2,2}-B_{1,1}<0$) is
 shrinkage: the student under-shoots along its own path, $z<0$, slope $>1$.
 The noise term $\sigma^2\mathrm{df}_{1,2}$ is Euclidean noise energy: the
@@ -627,14 +627,14 @@ z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 
 \subsection{Prediction-optimal stationarity}
 
-\begin{proof}[Proof of Eq.~\eqref{eq:appendix-pixel-prediction-stationary}]
-Write the noisy prediction risk of Eq.~\eqref{eq:app-pixel-egen-summary} as
+\begin{proof}[Proof of Eq.~\ref{eq:appendix-pixel-prediction-stationary}]
+Write the noisy prediction risk of Eq.~\ref{eq:app-pixel-egen-summary} as
 \[
 E_{gen,DE}+\sigma^2=n\,\frac{H(\kappa)}{q(\kappa)},\qquad
 H(\kappa):=\kappa^2B_{1,2}(\kappa)+\sigma^2,\qquad
 q(\kappa):=n-\mathrm{df}_2(\kappa).
 \]
-By the derivative identities of Eq.~\eqref{eq:app-spectral-derivative},
+By the derivative identities of Eq.~\ref{eq:app-spectral-derivative},
 \[
 H'(\kappa)=\frac{d}{d\kappa}\sum_k\frac{\kappa^2s_k}{(s_k+\kappa)^2}b_k^2
 =2\sum_k\frac{\kappa s_k^2}{(s_k+\kappa)^3}b_k^2=2\kappa B_{2,3},
@@ -646,7 +646,7 @@ An interior stationary point of $H/q$ satisfies $qH'=Hq'$, i.e.
 (n-\mathrm{df}_2)\,\kappa\,B_{2,3}=\mathrm{df}_{2,3}\big(\kappa^2B_{1,2}+\sigma^2\big),
 \label{eq:optimal_CV_E_gen_condition_abbrev}
 \end{equation}
-which is Eq.~\eqref{eq:appendix-pixel-prediction-stationary} after
+which is Eq.~\ref{eq:appendix-pixel-prediction-stationary} after
 multiplying by $n/(q\,\mathrm{df}_{2,3})$.  The condition is necessary; a
 stationary point need not be the global minimum, and the minimum may sit at
 the boundary $\lambda=0$ (see Remark~\ref{rem:app-tuning-remarks}).
@@ -654,14 +654,14 @@ the boundary $\lambda=0$ (see Remark~\ref{rem:app-tuning-remarks}).
 
 \subsection{Control-optimal condition and the risk at the control optimum}
 
-\begin{proof}[Proof of Eq.~\eqref{eq:appendix-pixel-control-noise}]
+\begin{proof}[Proof of Eq.~\ref{eq:appendix-pixel-control-noise}]
 From Lemma~\ref{lem:app-z-closed-form},
 \begin{equation}
 \mu_D-\mu_N=-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big).
 \label{eq:appendix-pixel-d-minus-n}
 \end{equation}
 With $\mu_N>0$, $z^{(0)}_{acc}=0$ iff this vanishes, which is the first form
-of Eq.~\eqref{eq:appendix-pixel-control-noise}.  Substituting
+of Eq.~\ref{eq:appendix-pixel-control-noise}.  Substituting
 $E_{gen,DE}+\sigma^2=nH/q$ and clearing denominators,
 \[
 \mathrm{df}_{1,2}(\kappa^2B_{1,2}+\sigma^2)=(n-\mathrm{df}_2)\kappa B_{1,2}
@@ -683,9 +683,9 @@ teacher-independent value of the risk.
 
 \subsection{Residual control error at the prediction optimum}
 
-\begin{proof}[Proof of Eq.~\eqref{eq:app-zacc-cv-summary}]
-Insert Eq.~\eqref{eq:appendix-pixel-prediction-stationary} into
-Eq.~\eqref{eq:appendix-pixel-d-minus-n}:
+\begin{proof}[Proof of Eq.~\ref{eq:app-zacc-cv-summary}]
+Insert Eq.~\ref{eq:appendix-pixel-prediction-stationary} into
+Eq.~\ref{eq:appendix-pixel-d-minus-n}:
 \[
 \mu_D-\mu_N=-\kappa B_{1,2}+\kappa\,\mathrm{df}_{1,2}\frac{B_{2,3}}{\mathrm{df}_{2,3}}
 =\kappa\,\mathrm{df}_{1,2}\Big(\frac{B_{2,3}}{\mathrm{df}_{2,3}}-\frac{B_{1,2}}{\mathrm{df}_{1,2}}\Big),
@@ -718,9 +718,9 @@ minimized at the boundary $\lambda\to0$ of the admissible path; there the
 stationarity formula does not apply and the ridgeless identity $N=D$ makes
 the leading control error vanish.  In the van Hateren experiment the interior
 optimum appears above a noise threshold, and
-Eq.~\eqref{eq:app-zacc-cv-summary} was checked against the leading DE
+Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
 evaluated at the numerically selected optimum and against empirical RidgeCV.
-\item \emph{Existence of a control root.}  Eq.~\eqref{eq:appendix-pixel-control-noise}
+\item \emph{Existence of a control root.}  Eq.~\ref{eq:appendix-pixel-control-noise}
 need not have an admissible solution for every $(\Sigma,\bstar,\sigma^2,n)$;
 it is a condition, not a guarantee.  Where a root exists, the leading metrics
 are perfectly calibrated ($z^{(0)}_{acc}=0$), but the finite-sample expectation
@@ -791,8 +791,8 @@ the row space of $F$, in particular for white data, and differ otherwise.
 \begin{proof}
 Expanding, the risk equals $S-2w^\top F\Sigma\bstar+w^\top Cw$, whose
 gradient vanishes at $Cw=F\Sigma\bstar$; the minimum-norm solution is
-Eq.~\eqref{eq:feat_regr_optim_weight}, and $Cw^\star=F\Sigma\bstar$ is
-Eq.~\eqref{eq:feat_regr_optim_weight_condition} since $F\Sigma\bstar$ lies in
+Eq.~\ref{eq:feat_regr_optim_weight}, and $Cw^\star=F\Sigma\bstar$ is
+Eq.~\ref{eq:feat_regr_optim_weight_condition} since $F\Sigma\bstar$ lies in
 the range of $C$.  The reconstruction problem is the same computation with
 $\Sigma$ replaced by $I$.
 \end{proof}
@@ -819,17 +819,17 @@ $\Sigma_{yy}=S$.
 \end{lem}
 \begin{proof}
 Writing $X\bstar=Zw^\star+r$ gives $F\hat\Sigma\bstar=\hat\Sigma_Fw^\star+\frac1nZ^\top r$,
-and substituting into Eq.~\eqref{eq:app-feature-estimator} gives
-Eq.~\eqref{eq:feat-regr-non-repr-as-noise-decomp}.  For a single sample,
+and substituting into Eq.~\ref{eq:app-feature-estimator} gives
+Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp}.  For a single sample,
 $\mathbf z_i=F\x_i$ and $r_i=\x_i^\top(\bstar-F^\top w^\star)$ are jointly
 Gaussian with $\E[\mathbf z_ir_i]=F\Sigma(\bstar-F^\top w^\star)=0$ by
-Eq.~\eqref{eq:feat_regr_optim_weight_condition}, hence independent; different
+Eq.~\ref{eq:feat_regr_optim_weight_condition}, hence independent; different
 samples are independent by construction.  The variance follows by expanding
 the quadratic form and using the orthogonality condition once more to drop
 the cross term.
 \end{proof}
 
-The decomposition Eq.~\eqref{eq:feat-regr-non-repr-as-noise-decomp} is the
+The decomposition Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp} is the
 key structural fact of feature-space regression: the fit of $w^\star$ from
 the design $Z$ sees the unrealizable part of the teacher exactly as an
 additional response noise of variance $S_\perp$.  Note that $S_\perp$ is a
@@ -857,7 +857,7 @@ E_{gen}&\asymp E_{gen,DE}=\frac{n}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\p
 \end{align}
 \end{prop}
 
-\begin{proof}[Proof of Eq.~\eqref{eq:app-feature-egen-summary}]
+\begin{proof}[Proof of Eq.~\ref{eq:app-feature-egen-summary}]
 \emph{Step 1: split off the unrealizable error.}  With
 $\Delta_w:=\hat w-w^\star$,
 \[
@@ -865,25 +865,25 @@ E_{gen}=(F^\top\hat w-\bstar)^\top\Sigma(F^\top\hat w-\bstar)
 =\Delta_w^\top C\Delta_w+S_\perp+2\Delta_w^\top F\Sigma(F^\top w^\star-\bstar)
 =\Delta_w^\top C\Delta_w+S_\perp ,
 \]
-the cross term vanishing by Eq.~\eqref{eq:feat_regr_optim_weight_condition}.
+the cross term vanishing by Eq.~\ref{eq:feat_regr_optim_weight_condition}.
 
 \emph{Step 2: reduce to the pixel computation.}  By
 Lemma~\ref{lem:app-residual-as-noise},
 $\Delta_w=-\lambda(\hat\Sigma_F+\lambda I)^{-1}w^\star+\frac1n(\hat\Sigma_F+\lambda I)^{-1}Z^\top(r+\sigma\eta)$,
 where conditionally on $Z$ the vector $r+\sigma\eta$ has mean zero and
-covariance $(S_\perp+\sigma^2)I_n$.  This is Eq.~\eqref{eq:app-ridge-decomposition}
+covariance $(S_\perp+\sigma^2)I_n$.  This is Eq.~\ref{eq:app-ridge-decomposition}
 with $(X,\Sigma,\bstar,\sigma^2)$ replaced by $(Z,C,w^\star,S_\perp+\sigma^2)$,
-so the proof of Eq.~\eqref{eq:app-pixel-egen-summary} applies verbatim:
+so the proof of Eq.~\ref{eq:app-pixel-egen-summary} applies verbatim:
 \[
 \E\big[\Delta_w^\top C\Delta_w\big]
 \asymp\frac{n}{n-\mathrm{df}^F_2}\kappa^2B^F_{1,2}+(S_\perp+\sigma^2)\frac{\mathrm{df}^F_2}{n-\mathrm{df}^F_2}.
 \]
-Adding $S_\perp$ and rearranging gives Eq.~\eqref{eq:app-feature-egen-summary}.
+Adding $S_\perp$ and rearranging gives Eq.~\ref{eq:app-feature-egen-summary}.
 \end{proof}
 
-\begin{proof}[Proof of Eqs.~\eqref{eq:feat_regr_shrinkage_effective_weight} and \eqref{eq:app-feature-D-summary}]
+\begin{proof}[Proof of Eqs.~\ref{eq:feat_regr_shrinkage_effective_weight} and \ref{eq:app-feature-D-summary}]
 \emph{Numerator.}  $N={\bstar}^\top F^\top\hat w$.  The noise part of
-Eq.~\eqref{eq:feat-regr-non-repr-as-noise-decomp} has zero conditional mean
+Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp} has zero conditional mean
 given $Z$ (since $\E[r\,|\,Z]=0$ and $\E[\eta]=0$), and the one-point DE
 $(\hat\Sigma_F+\lambda I)^{-1}\hat\Sigma_F\asymp(C+\kappa I)^{-1}C$ gives
 \begin{equation}
@@ -906,7 +906,7 @@ kills the cross term and leaves
 The noise trace is the derivative argument of Section~\ref{sec:app-pixel-ridge}
 on the design $Z$:
 $\frac1n\operatorname{Tr}[\hat\Sigma_F(\hat\Sigma_F+\lambda I)^{-2}G]\asymp T_F(\kappa)/(n-\mathrm{df}^F_2)$.
-The signal term is the two-point DE Eq.~\eqref{eq:app-two-point-de} on $Z$
+The signal term is the two-point DE Eq.~\ref{eq:app-two-point-de} on $Z$
 with $A=w^\star{w^\star}^\top$ and $B=G$:
 \[
 {w^\star}^\top C(C+\kappa I)^{-1}G(C+\kappa I)^{-1}Cw^\star
@@ -919,7 +919,7 @@ and the second combines with the noise trace into
 =\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
 \label{eq:feat_space_acc_D_expectation_DE}
 \end{equation}
-by Eq.~\eqref{eq:app-feature-egen-summary}.
+by Eq.~\ref{eq:app-feature-egen-summary}.
 \end{proof}
 
 \begin{remark}[Reading the feature-space forms]
@@ -949,7 +949,7 @@ ${\bstar}^\top\tilde\beta_\kappa$, and through $T_F$.
 \label{app:regularization-derivations}
 
 \begin{proof}[Proof of Proposition~\ref{prop:mr-feature-tuning}]
-\emph{Prediction optimum.}  Eq.~\eqref{eq:app-feature-egen-summary} has the
+\emph{Prediction optimum.}  Eq.~\ref{eq:app-feature-egen-summary} has the
 form $E_{gen,DE}+\sigma^2=nH_F/q_F$ with $H_F=\kappa^2B^F_{1,2}+\tau^2$,
 $\tau^2:=S_\perp+\sigma^2$, and $q_F=n-\mathrm{df}^F_2$.  The computation of
 Section~\ref{sec:app-optimal-regularization} applies with the spectrum of
@@ -983,7 +983,7 @@ $F\bstar=Gw^P$ (as $F\bstar$ lies in the range of $G$):
 =(w^P-w^\star)^\top G\tilde w_\kappa+\kappa\,{w^\star}^\top(C+\kappa I)^{-1}G\tilde w_\kappa .
 \end{align*}
 For $F=I_d$ the first term vanishes ($w^P=w^\star=\bstar$) and the second is
-$\kappa B_{1,2}$, recovering Eq.~\eqref{eq:appendix-pixel-control-noise}.
+$\kappa B_{1,2}$, recovering Eq.~\ref{eq:appendix-pixel-control-noise}.
 In general the first term has no definite sign: when the prediction-optimal
 and reconstruction-optimal weights differ, the numerator can be negative for
 every $\kappa$, in which case no ridge level calibrates control at leading
@@ -1225,14 +1225,14 @@ For the ratio,
 -\frac{\delta_N\delta_D}{\mu_D^2}+\frac{\mu_N\delta_D^2}{\mu_D^3}+O(\delta^3),
 \]
 and taking expectations, the first-order terms vanish and the second-order
-terms give Eq.~\eqref{eq:app-ratio-mean}.  For the square,
+terms give Eq.~\ref{eq:app-ratio-mean}.  For the square,
 \[
 \Big(\frac ND\Big)^2=\frac{\mu_N^2+2\mu_N\delta_N+\delta_N^2}{\mu_D^2}
 \Big(1-2\frac{\delta_D}{\mu_D}+3\frac{\delta_D^2}{\mu_D^2}+O(\delta^3)\Big),
 \]
 whose expectation retains
 $\mu_N^2/\mu_D^2+3\mu_N^2\Var(D)/\mu_D^4-4\mu_N\Cov(N,D)/\mu_D^3+\Var(N)/\mu_D^2$,
-which is Eq.~\eqref{eq:app-ratio-second-moment}.
+which is Eq.~\ref{eq:app-ratio-second-moment}.
 \end{proof}
 
 The leading term needs $\mu_N,\mu_D$ only; the correction needs
@@ -1278,11 +1278,11 @@ and for a centered Gaussian $h$ with independent coordinates of variance
 $v_k$, $\Var[h^\top a]=\sum_kv_ka_k^2$, $\Var[h^\top h]=2\sum_kv_k^2$, and
 the two are uncorrelated (odd moments vanish).  With
 $a_k=b_k-2Rg_k=b_k(1-2Rs_k/(s_k+\kappa))$ this gives
-Eq.~\eqref{eq:app-var-ratio-noise}.
+Eq.~\ref{eq:app-var-ratio-noise}.
 \end{proof}
 
 \begin{remark}[What the correction captures and what it misses]
-Eq.~\eqref{eq:app-var-ratio-noise} has the right order and the right growth
+Eq.~\ref{eq:app-var-ratio-noise} has the right order and the right growth
 in $\sigma$, and it uses $1/n$ rather than $1/(n-\mathrm{df}_2)$ because it
 neglects the fluctuations of the random design $X$ itself, both in $g$ and
 in the conditional noise covariance.  Near ridgeless operating points the
@@ -1301,7 +1301,7 @@ A third approximation treats the fitted weight itself as Gaussian,
 $\bhat\,\dot\sim\,\mathcal N(m_{DE},V_{DE})$, with the DE mean
 $m_{DE}=\Sigma(\Sigma+\kappa I)^{-1}\bstar$ and a covariance that is diagonal in
 the eigenbasis of $\Sigma$ with the per-mode variances of
-Eq.~\eqref{eq:app-per-pc} (signal and noise fluctuation terms), and evaluates
+Eq.~\ref{eq:app-per-pc} (signal and noise fluctuation terms), and evaluates
 any metric by Monte Carlo over this surrogate:
 $\E_{\bhat\sim\mathcal N(m_{DE},V_{DE})}[\,{\bhat}^\top\bstar/{\bhat}^\top\bhat\,]$
 and likewise for $R^2_{acc}$ and the slope.  It yields medians, quantiles
@@ -1381,7 +1381,7 @@ side divides by the student's own norm, the evaluation side by the teacher's.
 The peer slope is again an expectation of a random ratio and is handled by
 Proposition~\ref{prop:app-ratio-delta}.  For two independent fits, writing
 $m_k=s_kb_k/(s_k+\kappa)$ and $v_k$ for the per-mode fluctuation variance of
-Eq.~\eqref{eq:app-per-pc}, the delta method with $U={\bhat}^\top\bprime$,
+Eq.~\ref{eq:app-per-pc}, the delta method with $U={\bhat}^\top\bprime$,
 $V={\bstar}^\top\bprime$ uses $\Var(U)=2\sum_km_k^2v_k+\sum_kv_k^2$,
 $\Var(V)=\sum_kb_k^2v_k$, $\Cov(U,V)=\sum_km_kb_kv_k$; the resulting
 corrections to $R^2_{peer}$ are small (maximum gap below $0.005$ in the
@@ -1400,7 +1400,7 @@ J_\phi(x):=\frac{\partial\phi(x)}{\partial x}\in\R^{p\times d},\qquad
 \Sigma_\phi:=\Cov_{x\sim P_x}[\phi(x)]=\sum_ks_kv_kv_k^\top .
 \end{equation}
 Replacing the constant Jacobian $F$ by $J_\phi(x)$ in
-Eq.~\eqref{eq:feature-fragility-spectrum} gives
+Eq.~\ref{eq:feature-fragility-spectrum} gives
 \begin{equation}
 T_\phi(x,\kappa):=\sum_k\frac{s_k}{(s_k+\kappa)^2}\|J_\phi(x)^\top v_k\|^2,
 \qquad
@@ -1416,7 +1416,7 @@ with $G_Q:=\E_Q[J_\phi J_\phi^\top]$ and $q_k:=\E_Q\|\nabla_x(v_k^\top\phi)\|^2$
 is exact, so $\E_Q[T_\phi]$ can be computed from one backward pass per PC
 without materializing the Jacobian, averaging \emph{squared} gradients.
 Second, unlike the linear case, $s_k\ne\nabla_x[v_k^\top\phi]^\top\Sigma\nabla_x[v_k^\top\phi]$
-in general, so Eq.~\eqref{eq:nonlinear-local-fragility} is a diagnostic
+in general, so Eq.~\ref{eq:nonlinear-local-fragility} is a diagnostic
 motivated by the theory, not a deterministic equivalent for nonlinear
 regression: it compares a local gradient energy with a global response
 variance.
@@ -1484,7 +1484,7 @@ are the strongest controllers and have by far the smallest $T_\phi$.  These
 are descriptive repeated-measures associations with models nested within
 sites, not independent-observation significance tests, and they concern
 model ordering rather than absolute control error, for which the
-teacher-dependent terms of Eq.~\eqref{eq:app-feature-D-summary} would also be
+teacher-dependent terms of Eq.~\ref{eq:app-feature-D-summary} would also be
 needed.  Figure~\ref{fig:nonlinear-biological-validation} reports the full
 comparison of estimators.
 
@@ -1571,7 +1571,7 @@ normalization used here follows the deterministic-equivalent calculus for
 products of resolvents.
 
 \paragraph{Derivative of the effective penalty.}
-Differentiating Eq.~\eqref{eq:app-kappa-fixed-point} in the form
+Differentiating Eq.~\ref{eq:app-kappa-fixed-point} in the form
 $\lambda=\kappa-\gamma\kappa\operatorname{tr}[\Sigma(\Sigma+\kappa I)^{-1}]$,
 \[
 \frac{d\lambda}{d\kappa}=1-\gamma\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-1}\big]+\gamma\kappa\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-2}\big]

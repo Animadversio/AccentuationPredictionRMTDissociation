@@ -529,7 +529,7 @@ E_{gen,DE}(\kappa)+\sigma^{2}
 \red{Whenever an admissible root $\kappa_{acc}^{\star}$ exists, the leading ratio-of-DE metrics satisfy $E_{acc}^{(0)}=0$, $R_{acc}^{2,(0)}=1$, and $\mathrm{slope}_{acc}^{(0)}=1$. This does not imply zero expected finite-sample accentuation error, because fluctuations of $N/D$ remain.}
 \end{prop}
 
-\red{Using $n\lambda=\kappa(n-\mathrm{df}_{1})$, Eq.~\eqref{eq:acc_optim_reg_cond1} also gives $\sigma^{2}=n\lambda B_{1,2}/\mathrm{df}_{1,2}$ and, at such a root,}
+\red{Using $n\lambda=\kappa(n-\mathrm{df}_{1})$, Eq.~\ref{eq:acc_optim_reg_cond1} also gives $\sigma^{2}=n\lambda B_{1,2}/\mathrm{df}_{1,2}$ and, at such a root,}
 \begin{equation}
 \color{red}
 E_{gen,DE}(\kappa_{acc}^{\star})
@@ -640,7 +640,7 @@ T_F(\kappa):=\operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
 \label{eq:feature-control-optimal}
 \end{equation}
 \end{prop}
-\red{Equation~\eqref{eq:feature-prediction-optimal} depends only on the prediction summaries in Corollary~\ref{cor:feature-summary-statistics}; Eq.~\eqref{eq:feature-control-optimal} additionally probes the Euclidean input-gradient geometry through $G$ and $\tilde\beta_\kappa$. An admissible zero-control-error root is not guaranteed for an arbitrary feature map. The derivation and the pixel-space reduction appear in Appendix~\ref{app:regularization-derivations}.}
+\red{Equation~\ref{eq:feature-prediction-optimal} depends only on the prediction summaries in Corollary~\ref{cor:feature-summary-statistics}; Eq.~\ref{eq:feature-control-optimal} additionally probes the Euclidean input-gradient geometry through $G$ and $\tilde\beta_\kappa$. An admissible zero-control-error root is not guaranteed for an arbitrary feature map. The derivation and the pixel-space reduction appear in Appendix~\ref{app:regularization-derivations}.}
 
 
 
@@ -690,7 +690,7 @@ T_F(\kappa)
 \label{eq:main-feature-fragility}
 \end{align}
 where $(s_k,v_k)$ are eigenpairs of $\Sigma_F$.  The ratio in
-Eq.~\eqref{eq:main-feature-fragility} compares the Euclidean energy of the
+Eq.~\ref{eq:main-feature-fragility} compares the Euclidean energy of the
 backpropagated gradient with its energy under the natural-image covariance.
 It becomes large when feature PCs that survive ridge shrinkage backpropagate
 predominantly into low-variance input directions.  This supplies a concrete
@@ -710,7 +710,7 @@ T_\phi(x,\kappa)
 V_\phi:=\frac{E_{val}}{n}\,\mathbb E_x[T_\phi(x,\kappa)].
 \label{eq:main-nonlinear-fragility}
 \end{equation}
-Equation~\eqref{eq:main-nonlinear-fragility} is a nonlinear diagnostic rather
+Equation~\ref{eq:main-nonlinear-fragility} is a nonlinear diagnostic rather
 than a proved nonlinear DE: global feature variance and local Jacobian energy
 need not obey the identity used in the linear proof.  We therefore evaluate
 exact-local, finite-difference, and neighborhood-smoothed versions separately.

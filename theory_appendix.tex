@@ -480,7 +480,7 @@ E_{gen,DE}
 \end{align}
 Consequently, the leading accentuation metrics follow by substituting
 $N\approx\mu_N$ and $D\approx\mu_D$ into
-Eq.~\eqref{eq:acc_metric_ND_depen}.  Prediction and accentuation share the
+Eq.~\ref{eq:acc_metric_ND_depen}.  Prediction and accentuation share the
 same fitted estimator but apply different spectral weightings to its error.
 \end{proposition}
 \endgroup
@@ -1055,7 +1055,7 @@ The identity $B_{1,1}-B_{2,2}=\kappa B_{1,2}$ yields
 (E_{gen,DE}+\sigma^2).
 \label{eq:appendix-pixel-d-minus-n}
 \end{equation}
-Equating this expression to zero proves Eq.~\eqref{eq:acc_optim_reg_cond1}.
+Equating this expression to zero proves Eq.~\ref{eq:acc_optim_reg_cond1}.
 Substituting $E_{gen,DE}+\sigma^2=nH/q$, and using
 $\mathrm{df}_{1}=\mathrm{df}_{2}+\kappa\mathrm{df}_{1,2}$ and
 $n\lambda=\kappa(n-\mathrm{df}_{1})$, gives the equivalent condition
@@ -1074,14 +1074,14 @@ E_{gen,DE}=\sigma^2\frac{\mathrm{df}_{1}}{n-\mathrm{df}_{1}}.
 \end{equation}
 The value is not independent of the teacher across different problems:
 the teacher changes the root $\kappa_{acc}^{\star}$. At an interior
-prediction optimum, inserting Eq.~\eqref{eq:appendix-pixel-prediction-stationary}
-into Eq.~\eqref{eq:appendix-pixel-d-minus-n} gives
-Eq.~\eqref{eq:pixel-zacc-cv}.
+prediction optimum, inserting Eq.~\ref{eq:appendix-pixel-prediction-stationary}
+into Eq.~\ref{eq:appendix-pixel-d-minus-n} gives
+Eq.~\ref{eq:pixel-zacc-cv}.
 
 \paragraph{Feature-space prediction optimum.}
 Let $C=F\Sigma F^\top$, $G=FF^\top$,
 $\tau^2=S_\perp+\sigma^2$, and use the shorthand in
-Eq.~\eqref{eq:feature-spectral-shorthand}. Here
+Eq.~\ref{eq:feature-spectral-shorthand}. Here
 $E_{gen,DE}+\sigma^2=nH_F/q_F$, with
 $H_F=\kappa^2B^F_{1,2}+\tau^2$ and
 $q_F=n-\mathrm{df}^F_{2,2}$. The same derivative calculation yields
@@ -1105,12 +1105,12 @@ D_{DE}-N_{DE}
 \operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
 \label{eq:appendix-feature-d-minus-n}
 \end{equation}
-Setting this to zero proves Eq.~\eqref{eq:feature-control-optimal}
+Setting this to zero proves Eq.~\ref{eq:feature-control-optimal}
 when its trace is positive. Unlike the pixel case, the first two terms
 need not have a sign that guarantees an admissible root. For $F=I_d$,
 $\bstar^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2
 =\kappa B_{1,2}$ and the trace equals $\mathrm{df}_{1,2}$,
-recovering Eq.~\eqref{eq:acc_optim_reg_cond1}.
+recovering Eq.~\ref{eq:acc_optim_reg_cond1}.
 \endgroup
 
 % \end{document}
@@ -2524,7 +2524,7 @@ Replacing the constant linear Jacobian $F$ by $J_\phi(x)$ motivates
 Here $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the input gradient
 of feature PC $k$.  Unlike the linear case, generally
 $s_k\neq\nabla_x[v_k^\top\phi(x)]^\top\Sigma
-\nabla_x[v_k^\top\phi(x)]$; therefore Eq.~\eqref{eq:nonlinear-local-fragility}
+\nabla_x[v_k^\top\phi(x)]$; therefore Eq.~\ref{eq:nonlinear-local-fragility}
 is a diagnostic motivated by the linear theory, not a deterministic
 equivalent for nonlinear regression.
 
