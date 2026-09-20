@@ -294,6 +294,14 @@ the iso-prediction error $E_{gen}$ surface is an ellipsoid, with radius $\sqrt{E
 the iso-control error surface for $z$ and consequently all accentuation metrics is a hyper-sphere spanned by $0$ and $(1+z)\bstar$ as diameter; 
 the iso-peer review error surface is a hyperplane anchored at $(1+z)\bstar$, orthogonal to $\bprime$. 
 \end{prop}
+\red{More explicitly, fixing $z_{acc}=D/N-1=z$ gives
+$\|\bhat-(1+z)\bstar/2\|^2=(1+z)^2\|\bstar\|^2/4$.
+Thus prediction and control interrogate fundamentally different geometries:
+prediction permits long excursions along low-$s_k$ axes of its ellipsoid,
+whereas calibrated accentuation confines $\bhat$ to a Euclidean sphere.
+Peer review selects yet another object---a hyperplane normal to the peer's
+generation direction.  The derivation and singular cases are collected in
+Appendix~\ref{sec:app-iso-error-geometry}.}
 % \begin{figure}
 %     \centering
 %     \includegraphics[width=0.5\linewidth]{}
@@ -660,9 +668,76 @@ affects the accentuation error.
 
 Note that when the population data is white $\Sigma=I$, then in Corollary \ref{cor:feature-summary-statistics}, the sufficient statistics for accentuation and prediction fall back to be the same, further the Gauge invariance group in Prop.~\ref{prop:feature-gauge-family} will become degenerate i.e. leaving both prediction and control error unchanged. 
 
-\todo{Exactly Answer the question from the title: when is control esp. bad? discuss it}
+\begingroup\color{red}
+\subsection{A gradient-geometric diagnostic extends to nonlinear models}
+\label{sec:nonlinear-control-diagnostic}
 
-\todo{Answer given a teacher what kind of feature map is the most dangerous?}
+The feature-space variance term identifies a response-independent fragility
+factor
+\begin{align}
+T_F(\kappa)
+&:=\operatorname{tr}\!\left[FF^\top(\Sigma_F+\kappa I)^{-2}\Sigma_F\right]\notag\\
+&=\sum_{k:s_k>0}\left(\frac{s_k}{s_k+\kappa}\right)^2
+\frac{\|g_k\|^2}{g_k^\top\Sigma g_k},
+\qquad g_k:=F^\top v_k,
+\label{eq:main-feature-fragility}
+\end{align}
+where $(s_k,v_k)$ are eigenpairs of $\Sigma_F$.  The ratio in
+Eq.~\eqref{eq:main-feature-fragility} compares the Euclidean energy of the
+backpropagated gradient with its energy under the natural-image covariance.
+It becomes large when feature PCs that survive ridge shrinkage backpropagate
+predominantly into low-variance input directions.  This supplies a concrete
+answer to when control is fragile despite good prediction: the learned readout
+is noisy, and the feature map converts its well-resolved feature directions
+into large, weakly natural pixel gradients.  The derivation is given in
+Appendix~\ref{sec:app-feature-fragility}.
+
+For a nonlinear feature map $\phi$, let $J_\phi(x)$ be its input Jacobian and
+$\Sigma_\phi=\sum_k s_kv_kv_k^\top$ its feature covariance.  The linear result
+motivates the local diagnostic
+\begin{equation}
+T_\phi(x,\kappa)
+:=\sum_k\frac{s_k}{(s_k+\kappa)^2}
+\|J_\phi(x)^\top v_k\|^2,
+\qquad
+V_\phi:=\frac{E_{val}}{n}\,\mathbb E_x[T_\phi(x,\kappa)].
+\label{eq:main-nonlinear-fragility}
+\end{equation}
+Equation~\eqref{eq:main-nonlinear-fragility} is a nonlinear diagnostic rather
+than a proved nonlinear DE: global feature variance and local Jacobian energy
+need not obey the identity used in the linear proof.  We therefore evaluate
+exact-local, finite-difference, and neighborhood-smoothed versions separately.
+
+Across the neuronal control data (25 sites and ten encoding models), these
+diagnostics recover model-to-model variation in biological control that is
+largely absent from held-out prediction error (Fig.~\ref{fig:nonlinear-biological-validation}).
+After removing site means, among the nine trained models the exact-local
+$V_\phi$ has direction-aligned Pearson correlations $r=0.616$ with control
+slope and $r=0.442$ with direct control MSE; held-out generalization MSE gives
+$r=0.034$ and $r=-0.069$, respectively.  Neighborhood versions preserve this
+ordering and can improve the slope association.  These are descriptive
+model-comparison statistics with repeated models within sites, not an
+identified prediction of absolute neural response or independent-sample
+significance.  Appendix~\ref{sec:app-nonlinear-feature-diagnostic} gives the
+estimators and qualifications.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/nonlinear_control_biological_validation.pdf}
+  \caption{\textcolor{red}{\textbf{Nonlinear gradient geometry predicts biological control across encoding models.}
+  Each marker is a site-residual Pearson association between a candidate
+  control-error predictor and biological control slope (left, sign reversed so
+  larger means better error prediction) or direct control MSE (right).  Filled
+  markers use the nine trained models ($n=225$ site--model pairs); open markers
+  retain seven conventionally trained models ($n=175$).  Held-out natural-image
+  error carries little model-order information in the nine-model comparison,
+  whereas the exact trace, local $V_\phi$, and finite-neighborhood diagnostics
+  recover substantial ordering.  Stars denote the figure's exploratory raw
+  Pearson threshold; dependence across models and sites requires the qualified
+  interpretation in the text.}}
+  \label{fig:nonlinear-biological-validation}
+\end{figure}
+\endgroup
 
 \subsection{Summary of the Cause}
 \label{sec:diagnostics}
