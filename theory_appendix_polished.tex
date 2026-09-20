@@ -1189,429 +1189,453 @@ diagnostic of Section~\ref{sec:app-nonlinear-diagnostic} the per-PC gradient
 energies $\|g_k\|^2$ are replaced by local Jacobian energies.
 \end{remark}
 
-\section{Corrections for ratios of random quadratic forms}
+\section{Ratios of random quadratic forms, and peer review}
 \label{sec:app-ratio-approximations}
 \label{sec:app-ratio-corrections}
 
-\begingroup\color{red}
-\begin{proposition}[Second-order expansion for the random ratio]
-\label{prop:app-ratio-delta}
-Let $N=\mu_N+\delta_N$ and $D=\mu_D+\delta_D$, with nonzero means and
-fluctuations small enough for a second-order Taylor expansion. Then
-\begin{align}
-\mathbb E\!\left[\frac ND\right]
-&\approx\frac{\mu_N}{\mu_D}
-\left(1-\frac{\operatorname{Cov}(N,D)}{\mu_N\mu_D}
-+\frac{\operatorname{Var}(D)}{\mu_D^2}\right),\\
-\mathbb E\!\left[\left(\frac ND\right)^2\right]
-&\approx\frac{\mu_N^2}{\mu_D^2}
-\left(1+\frac{\operatorname{Var}(N)}{\mu_N^2}
--4\frac{\operatorname{Cov}(N,D)}{\mu_N\mu_D}
-+3\frac{\operatorname{Var}(D)}{\mu_D^2}\right).
-\end{align}
-The ratio-of-DE approximation retains only the leading mean ratio.  The
-second-order terms become consequential when the leading calibration bias is
-small or the denominator has appreciable relative variance.
-\end{proposition}
-\endgroup
+Random-matrix theory controls $N$ and $D$ separately more cleanly than it
+controls their ratio, and every accentuation metric is a nonlinear function
+of $N/D$.  The main text uses the leading approximation
+$\E[N/D]\approx\mu_N/\mu_D$.  This section quantifies its error, gives the
+response-noise contribution to the variance of the ratio, describes a
+distributional surrogate, and then uses the same tools for peer review, where
+the ratio involves two independent fits.
 
-\subsection{Approximating the expectation of a ratio}
-
-RMT gives cleaner control of $N$ and $D$ separately than of their ratio.
-The leading approximation replaces the expectation of a ratio by the ratio
-of deterministic equivalents. To quantify the resulting error, write
-$\mathbb{E}[N]=\mu_N$, $\mathbb{E}[D]=\mu_D$ and expand around the two means:
-\begin{align*}
-\frac{N}{D} & =\frac{\mu_{N}+\delta_{N}}{\mu_{D}+\delta_{D}}\\
- & =\frac{\mu_{N}+\delta_{N}}{\mu_{D}+\delta_{D}}-\frac{\mu_{N}}{\mu_{D}}+\frac{\mu_{N}}{\mu_{D}}\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}\mu_{D}(\frac{\mu_{D}+\delta_{D}}{\mu_{D}})}\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}(1+\frac{\delta_{D}}{\mu_{D}})^{-1}\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}(1-\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+...)
-\end{align*}
-
-Note the first non-trivial order is the 2nd order in $\delta$, which
-gives
-\begin{align*}
-\frac{N}{D} & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}-\frac{\delta_{D}}{\mu_{D}}\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}}{\mu_{D}}-\frac{\delta_{D}\mu_{N}}{\mu_{D}^{2}}-\frac{\delta_{D}\delta_{N}}{\mu_{D}^{2}}+\frac{\delta_{D}^{2}\mu_{N}}{\mu_{D}^{3}}+o((\frac{\delta}{\mu})^{3})
-\end{align*}
-
-When taking expectation the first two orders gives
-\[
-\mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}-\frac{\mathrm{Cov}(D,N)}{\mu_{D}^{2}}+\frac{\mathrm{Var}(D)\mu_{N}}{\mu_{D}^{3}}+\mathbb{E}\big[o((\frac{\delta}{\mu})^{3})\big]
-\]
-
-Similarly let's consider the other useful terms, i.e. the squared
-ratio, and their expansion.
-\begin{align*}
-(\frac{N}{D})^{2} & =\frac{(\mu_{N}+\delta_{N})^{2}}{(\mu_{D}+\delta_{D})^{2}}\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}+2\mu_{D}\delta_{D}+\delta_{D}^{2}}\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(\frac{\mu_{D}^{2}+2\mu_{D}\delta_{D}+\delta_{D}^{2}}{\mu_{D}^{2}})^{-1}\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(1-(2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})+(2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})^{2}+o((2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})^{3}))\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+3\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+o((\frac{\delta_{D}}{\mu_{D}})^{3}))\\
- & =\frac{\mu_{N}^{2}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+3\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+o((\frac{\delta_{D}}{\mu_{D}})^{3}))+\frac{2\mu_{N}\delta_{N}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+o((\frac{\delta_{D}}{\mu_{D}})^{2}))+\frac{\delta_{N}^{2}}{\mu_{D}^{2}}(1+o((\frac{\delta_{D}}{\mu_{D}})))\\
- & =\frac{\mu_{N}^{2}}{\mu_{D}^{2}}-2\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\delta_{D}}{\mu_{D}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+\frac{2\mu_{N}\delta_{N}}{\mu_{D}^{2}}-4\frac{\mu_{N}\delta_{N}}{\mu_{D}^{2}}\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{N}^{2}}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})
-\end{align*}
-
-\begin{align*}
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathbb{E}[\delta_{D}^{2}]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}^{2}}\frac{\mathbb{E}[\delta_{N}\delta_{D}]}{\mu_{D}}+\frac{\mathbb{E}[\delta_{N}^{2}]}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})\\
- & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}}\frac{\mathrm{Cov}[N,D]}{\mu_{D}^{2}}+\frac{\mathrm{Var}[N]}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})
-\end{align*}
-
-\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
-In summary the leading order correction to the fraction and power
-are
-\begin{align*}
-\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}-\frac{\mathrm{Cov}(D,N)}{\mu_{D}^{2}}+\frac{\mathrm{Var}(D)\mu_{N}}{\mu_{D}^{3}}\\
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}}\frac{\mathrm{Cov}[N,D]}{\mu_{D}^{2}}+\frac{\mathrm{Var}[N]}{\mu_{D}^{2}}
-\end{align*}
-
-It can be written in more normalized (dimensionless) forms
-\begin{align*}
-\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)\\
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\Big(1+3\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mathrm{Cov}[N,D]}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}[N]}{\mu_{N}^{2}}\Big)
-\end{align*}
-%
-\end{minipage}}
-
-Thus, for the 0th order term we need to compute $\mu_{N}$,$\mu_{D}$;
-
-For the 1st order correction, we need to compute $\mathrm{Var}[D]$,
-$\mathrm{Cov}[N,D]$, $\mathrm{Var}[N]$ normalized by the corresponding
-mean.
-
-
-
-\subsection{Second-order delta expansion}
+\subsection{Second-order expansion of a ratio}
 \label{sec:app-ratio-delta}
 
-The leading correction follows by retaining second-order terms.
-\begin{align*}
-\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)\\
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\Big(1+3\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mathrm{Cov}[N,D]}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}[N]}{\mu_{N}^{2}}\Big)
-\end{align*}
+\begin{prop}[Restatement of Proposition~\ref{prop:mr-ratio-delta}, first part]
+\label{prop:app-ratio-delta}
+Let $N=\mu_N+\delta_N$, $D=\mu_D+\delta_D$ with $\mu_N,\mu_D\ne0$ and
+fluctuations small enough for a second-order expansion.  Then
+\begin{align}
+\E\Big[\frac ND\Big]&\approx\frac{\mu_N}{\mu_D}
+\Big(1-\frac{\Cov(N,D)}{\mu_N\mu_D}+\frac{\Var(D)}{\mu_D^2}\Big),
+\label{eq:app-ratio-mean}\\
+\E\Big[\Big(\frac ND\Big)^2\Big]&\approx\frac{\mu_N^2}{\mu_D^2}
+\Big(1+\frac{\Var(N)}{\mu_N^2}-4\frac{\Cov(N,D)}{\mu_N\mu_D}+3\frac{\Var(D)}{\mu_D^2}\Big).
+\label{eq:app-ratio-second-moment}
+\end{align}
+\end{prop}
+\begin{proof}
+Expand $(\mu_D+\delta_D)^{-1}=\mu_D^{-1}(1-\delta_D/\mu_D+\delta_D^2/\mu_D^2-\dots)$.
+For the ratio,
+\[
+\frac ND=\frac{\mu_N}{\mu_D}+\frac{\delta_N}{\mu_D}-\frac{\mu_N\delta_D}{\mu_D^2}
+-\frac{\delta_N\delta_D}{\mu_D^2}+\frac{\mu_N\delta_D^2}{\mu_D^3}+O(\delta^3),
+\]
+and taking expectations, the first-order terms vanish and the second-order
+terms give Eq.~\eqref{eq:app-ratio-mean}.  For the square,
+\[
+\Big(\frac ND\Big)^2=\frac{\mu_N^2+2\mu_N\delta_N+\delta_N^2}{\mu_D^2}
+\Big(1-2\frac{\delta_D}{\mu_D}+3\frac{\delta_D^2}{\mu_D^2}+O(\delta^3)\Big),
+\]
+whose expectation retains
+$\mu_N^2/\mu_D^2+3\mu_N^2\Var(D)/\mu_D^4-4\mu_N\Cov(N,D)/\mu_D^3+\Var(N)/\mu_D^2$,
+which is Eq.~\eqref{eq:app-ratio-second-moment}.
+\end{proof}
 
+The leading term needs $\mu_N,\mu_D$ only; the correction needs
+$\Var(N)$, $\Var(D)$ and $\Cov(N,D)$ relative to the means.  The expansion
+fails when the distribution of $N$ puts appreciable mass near zero, in which
+case moments of $D/N$ may not exist and medians and quantiles should be
+compared instead.
 
-\subsection{Gaussian distributional approximation: ``Gaussian distributional
-DE'' }
+\subsection{Response-noise contribution to the variance of the ratio}
+
+The quantity that matters for the accentuation error is the second moment:
+by the bias--variance identity
+\begin{equation}
+\frac{E_{acc}}{S}=\E\Big[\Big(1-\frac ND\Big)^2\Big]
+=\Big(1-\E\Big[\frac ND\Big]\Big)^2+\Var\Big(\frac ND\Big).
+\label{eq:app-acc-bias-variance}
+\end{equation}
+The leading DE predicts the first term; near a control optimum it is
+small and the second term dominates.
+
+\begin{prop}[Restatement of Proposition~\ref{prop:mr-ratio-delta}, second part]
+Let $R:=\mu_N/\mu_D$.  Retaining response-noise fluctuations only,
+\begin{equation}
+\Var\Big(\frac ND\Big)\approx\frac1{\mu_D^2}\Big[
+\frac{\sigma^2}{n}\sum_k\frac{s_kb_k^2}{(s_k+\kappa)^2}\Big(1-\frac{2Rs_k}{s_k+\kappa}\Big)^2
++\frac{2R^2\sigma^4}{n^2}\sum_k\frac{s_k^2}{(s_k+\kappa)^4}\Big].
+\label{eq:app-var-ratio-noise}
+\end{equation}
+\end{prop}
+\begin{proof}[Proof sketch]
+To first order, $N/D-R\approx(N-RD)/\mu_D$, so
+$\Var(N/D)\approx\Var(N-RD)/\mu_D^2$.  Write $\bhat=g+h$ with the design part
+$g=(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\bstar$ and the noise part
+$h=\sigma(\hat\Sigma+\lambda I)^{-1}\frac1nX^\top\eta$, which conditionally on
+$X$ is Gaussian with covariance $\frac{\sigma^2}{n}(\hat\Sigma+\lambda I)^{-1}\hat\Sigma(\hat\Sigma+\lambda I)^{-1}$.
+Replace $g$ and this covariance by their leading equivalents, which are
+diagonal in the eigenbasis of $\Sigma$: $g_k=s_kb_k/(s_k+\kappa)$ and
+$v_k=\sigma^2s_k/(n(s_k+\kappa)^2)$.  Then
+\[
+N-RD=\big(g^\top\bstar-Rg^\top g\big)+h^\top(\bstar-2Rg)-R\,h^\top h ,
+\]
+and for a centered Gaussian $h$ with independent coordinates of variance
+$v_k$, $\Var[h^\top a]=\sum_kv_ka_k^2$, $\Var[h^\top h]=2\sum_kv_k^2$, and
+the two are uncorrelated (odd moments vanish).  With
+$a_k=b_k-2Rg_k=b_k(1-2Rs_k/(s_k+\kappa))$ this gives
+Eq.~\eqref{eq:app-var-ratio-noise}.
+\end{proof}
+
+\begin{remark}[What the correction captures and what it misses]
+Eq.~\eqref{eq:app-var-ratio-noise} has the right order and the right growth
+in $\sigma$, and it uses $1/n$ rather than $1/(n-\mathrm{df}_2)$ because it
+neglects the fluctuations of the random design $X$ itself, both in $g$ and
+in the conditional noise covariance.  Near ridgeless operating points the
+design fluctuations dominate and the formula under-estimates the variance.
+In the natural-image experiments the ratio $\Var(N/D)/(1-\E[N/D])^2$ grows
+from below $10^{-2}$ at low noise to above $10^2$ at high noise along the
+prediction-optimal path: the leading DE locates the control optimum and
+predicts the crossing of prediction and control error accurately, but not
+the value of $E_{acc}$ at the optimum, which is fluctuation-dominated.
+\end{remark}
+
+\subsection{Gaussian distributional surrogate}
 \label{sec:app-ratio-gaussian}
 
-Another way to estimate this ratio is to say $\bhat$ is a Gaussian
-random variable, then express its expectation and covariance -- note
-that the expectation and covariance both concentrates via DE, we can
-denote as $m_{DE},V_{DE}$, then they won't depend on $X$ realization
-explicitly.
+A third approximation treats the fitted weight itself as Gaussian,
+$\bhat\,\dot\sim\,\mathcal N(m_{DE},V_{DE})$, with the DE mean
+$m_{DE}=\Sigma(\Sigma+\kappa I)^{-1}\bstar$ and a covariance that is diagonal in
+the eigenbasis of $\Sigma$ with the per-mode variances of
+Eq.~\eqref{eq:app-per-pc} (signal and noise fluctuation terms), and evaluates
+any metric by Monte Carlo over this surrogate:
+$\E_{\bhat\sim\mathcal N(m_{DE},V_{DE})}[\,{\bhat}^\top\bstar/{\bhat}^\top\bhat\,]$
+and likewise for $R^2_{acc}$ and the slope.  It yields medians, quantiles
+and the probability of sign changes of $N$, which the moment expansions
+cannot.  It is a surrogate rather than a proved distributional deterministic
+equivalent: matching per-coordinate second moments does not match the joint
+fluctuations of quadratic forms; it omits off-diagonal, design-induced
+covariance; and it does not enforce the exact ridgeless identity $N=D$ that
+holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a
+projector, so $N=D$ for every design).  In practice it agrees with the
+leading DE where the latter is accurate and inherits its failures near
+$\lambda\to0$.
 
-So we can sample $\bhat$ from this surrogate Gaussian distribution
-then evaluate
-\[
-\mathbb{E}_{\bhat\sim\mathcal{N}(m_{DE},V_{DE})}\big[\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\big]
-\]
+\subsection{Peer review between independent fits}
+\label{sec:app-peer-review}
 
-with bootstrap averaging.
+Peer review evaluates $\bhat$ on the path generated by another model
+$\bprime$.  Its metrics (Eq.~\ref{eq:app-peer-metrics}) involve the two
+cross products ${\bhat}^\top\bprime$ and ${\bstar}^\top\bprime$.  When the
+two models are independent ridge fits, both have simple leading
+equivalents.
 
-\subsection{Theory of peer review error}
+\begin{prop}[Restatement of Proposition~\ref{prop:mr-peer}]
+\label{prop:app-peer}
+Let $\bhat$ and $\bprime$ be ridge fits from independent samples with
+effective penalties $\kappa$ and $\kappa'$.  Then
+\begin{equation}
+{\bhat}^\top\bprime\asymp\sum_k\frac{s_k^2\,b_k^2}{(s_k+\kappa)(s_k+\kappa')},\qquad
+{\bstar}^\top\bprime\asymp B_{1,1}(\kappa'),
+\end{equation}
+so that for equal penalties
+\begin{equation}
+G_{peer}:=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],
+\qquad
+R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1],
+\qquad
+\mathrm{slope}^{(0)}_{peer}=\frac{B_{1,1}}{B_{2,2}}\ge1 .
+\label{eq:app-peer-de}
+\end{equation}
+\end{prop}
+\begin{proof}
+Write $\bhat=g+h$ and $\bprime=g'+h'$ as in the previous subsection.  By
+independence of the two samples and $\E[h\,|\,X]=\E[h'\,|\,X']=0$, the cross
+products $g^\top h'$, $h^\top g'$, $h^\top h'$ have zero mean, and their
+fluctuations are of lower order, so ${\bhat}^\top\bprime\asymp g^\top g'$.
+By the one-point DE, $g\asymp\Sigma(\Sigma+\kappa I)^{-1}\bstar$ in the sense
+of quadratic forms, giving
+$g^\top g'\asymp{\bstar}^\top\Sigma(\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa'I)^{-1}\bstar$,
+which is the stated sum; similarly ${\bstar}^\top\bprime\asymp{\bstar}^\top\Sigma(\Sigma+\kappa'I)^{-1}\bstar=B_{1,1}(\kappa')$.
+For $\kappa=\kappa'$ the first is $B_{2,2}$, and $0<B_{2,2}\le B_{1,1}$ since
+$s_k/(s_k+\kappa)\le1$.
+\end{proof}
 
-We next characterize what peer-review error measures. Recall the
-evaluation metrics of peer review, where the generating model has
-weight $\bprime$, and the predicting model has weight $\bhat$
-\begin{align*}
-\mathrm{MSE}_{\text{peer rev}}= & \mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}\\
-R_{\text{peer rev}}^{2}= & 1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}\\
-\mathrm{slope}_{\text{peer rev}}= & \frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}
-\end{align*}
+\begin{remark}[Why peer review is benign and self-review is not]
+The Euclidean noise energy $h^\top h$ that inflates the self-denominator
+$D$ is absent from ${\bhat}^\top\bprime$ because independent noise
+realizations are uncorrelated.  Peer review therefore measures only the
+shared shrinkage bias: at leading order $R^2_{peer}$ is never negative,
+degrades gracefully with noise (through $\kappa$), and is symmetric between
+the two fits.  Self-review contains the estimator's own noise energy and
+$R^2_{acc}=1-z_{acc}^2$ is unbounded below.  This is the linear form of
+``recognition without generation''.  With observation noise on the measured
+responses, a path that barely modulates the true response (small
+${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator,
+which is why the peer scores of a weak generator's images are also low in
+the data; and two models with different feature maps have different noise
+energies, which breaks the symmetry.
+\end{remark}
 
-\begin{table}
-\begin{centering}
-\begin{tabular}{|c|c|c|c|}
-\hline
- & Peer Review & Peer Review on Perfect Accentuator & Accentuation\tabularnewline
-\hline
-\hline
-MSE & $\mathrm{Var}[\alpha]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\bstar}^{\top}(\bhat-\bstar)\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}$\tabularnewline
-\hline
-R2 & $1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}$ & $1-\big(\frac{{\bstar}^{\top}\bhat}{{\bstar}^{\top}\bstar}-1\big)^{2}$ & $1-\big(\frac{{\bhat}^{\top}\bhat}{{\bhat}^{\top}\bstar}-1\big)^{2}$\tabularnewline
-\hline
-slope & $\frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}$ & $\frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}$ & $\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}$\tabularnewline
-\hline
-\end{tabular}
-\par\end{centering}
-\caption{Comparison of evaluation metrics when evaluating on perfect evaluating
-model $\bprime=\bstar$.}
-\end{table}
-
-
-\paragraph{Perfect peer direction.}
-
-Consider the idealized case in which the generating model is aligned with the
-ground truth, $\bprime=\bstar$.
-
-The generation--evaluation asymmetry is then explicit in the two slope ratios:
-\begin{align*}
-\mathrm{slope}_{acc}= & \frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat} & \mathrm{slope}_{\text{peer rev}}= & \frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}
-\end{align*}
-
-Conditionally on a realized $\bhat$, the peer-review slope is
-$\|\bstar\|^2/({\bstar}^\top\bhat)$. Its expectation is again an expectation
-of a random ratio and must be handled by the approximations developed above;
-it is not generally the ratio obtained by replacing the denominator with its
-mean.
-
-
-
+\begin{remark}[Perfect peer, and second-order corrections]
+If the generator is the teacher itself, $\bprime=\bstar$, then
+$E_{peer}=\Var[\alpha]({\bstar}^\top(\bhat-\bstar))^2$,
+$R^2_{peer}=1-({\bstar}^\top\bhat/\|\bstar\|^2-1)^2$ and
+$\mathrm{slope}_{peer}=\|\bstar\|^2/{\bstar}^\top\bhat$, to be compared with
+the self-review slope ${\bhat}^\top\bstar/{\bhat}^\top\bhat$: the generation
+side divides by the student's own norm, the evaluation side by the teacher's.
+The peer slope is again an expectation of a random ratio and is handled by
+Proposition~\ref{prop:app-ratio-delta}.  For two independent fits, writing
+$m_k=s_kb_k/(s_k+\kappa)$ and $v_k$ for the per-mode fluctuation variance of
+Eq.~\eqref{eq:app-per-pc}, the delta method with $U={\bhat}^\top\bprime$,
+$V={\bstar}^\top\bprime$ uses $\Var(U)=2\sum_km_k^2v_k+\sum_kv_k^2$,
+$\Var(V)=\sum_kb_k^2v_k$, $\Cov(U,V)=\sum_km_kb_kv_k$; the resulting
+corrections to $R^2_{peer}$ are small (maximum gap below $0.005$ in the
+validation experiments), consistent with the benign character of the peer
+ratio.
+\end{remark}
 
 \section{Nonlinear gradient diagnostic}
 \label{sec:app-nonlinear-diagnostic}
 \label{sec:app-nonlinear-feature-diagnostic}
 
-The linear-feature DE does not directly become a theorem for a nonlinear
-map $\phi:\mathbb R^d\to\mathbb R^p$.  It nevertheless suggests a local
-diagnostic.  Let
+The linear-feature theory does not become a theorem for a nonlinear map
+$\phi:\R^d\to\R^p$, but its variance term suggests a local diagnostic.  Let
 \begin{equation}
-  J_\phi(x):=\frac{\partial\phi(x)}{\partial x}\in\mathbb R^{p\times d},
-  \qquad
-  \Sigma_\phi:=\operatorname{Cov}_{x\sim P_x}[\phi(x)]
-  =\sum_k s_kv_kv_k^\top.
+J_\phi(x):=\frac{\partial\phi(x)}{\partial x}\in\R^{p\times d},\qquad
+\Sigma_\phi:=\Cov_{x\sim P_x}[\phi(x)]=\sum_ks_kv_kv_k^\top .
 \end{equation}
-Replacing the constant linear Jacobian $F$ by $J_\phi(x)$ motivates
+Replacing the constant Jacobian $F$ by $J_\phi(x)$ in
+Eq.~\eqref{eq:feature-fragility-spectrum} gives
 \begin{equation}
-  T_\phi(x,\kappa)
-  :=\sum_k\frac{s_k}{(s_k+\kappa)^2}
-       \|J_\phi(x)^\top v_k\|^2.
-  \label{eq:nonlinear-local-fragility}
+T_\phi(x,\kappa):=\sum_k\frac{s_k}{(s_k+\kappa)^2}\|J_\phi(x)^\top v_k\|^2,
+\qquad
+V_\phi:=\frac{E_{val}}{n}\,\E_x[T_\phi(x,\kappa)],
+\label{eq:nonlinear-local-fragility}
 \end{equation}
-Here $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the input gradient
-of feature PC $k$.  Unlike the linear case, generally
-$s_k\neq\nabla_x[v_k^\top\phi(x)]^\top\Sigma
-\nabla_x[v_k^\top\phi(x)]$; therefore Eq.~\eqref{eq:nonlinear-local-fragility}
-is a diagnostic motivated by the linear theory, not a deterministic
-equivalent for nonlinear regression.
+where $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the input gradient of
+feature PC $k$ and $E_{val}$ is the held-out prediction error.  Two remarks
+fix its status.  First, for any differentiable $\phi$ and any evaluation
+distribution $Q$ over inputs, the trace identity
+$\operatorname{Tr}[G_Q(\Sigma_\phi+\kappa I)^{-2}\Sigma_\phi]=\sum_kq_k\,s_k/(s_k+\kappa)^2$
+with $G_Q:=\E_Q[J_\phi J_\phi^\top]$ and $q_k:=\E_Q\|\nabla_x(v_k^\top\phi)\|^2$
+is exact, so $\E_Q[T_\phi]$ can be computed from one backward pass per PC
+without materializing the Jacobian, averaging \emph{squared} gradients.
+Second, unlike the linear case, $s_k\ne\nabla_x[v_k^\top\phi]^\top\Sigma\nabla_x[v_k^\top\phi]$
+in general, so Eq.~\eqref{eq:nonlinear-local-fragility} is a diagnostic
+motivated by the theory, not a deterministic equivalent for nonlinear
+regression: it compares a local gradient energy with a global response
+variance.
 
 \paragraph{Finite-neighborhood versions.}
-An exact Jacobian at the seed may be too local for a long accentuation path.
-For $z\sim\mathcal N(0,I_d)$ and neighborhood scale $\tau$, useful
-PC-wise quantities include
+An exact Jacobian at the seed may be too local for an accentuation path
+that travels far from it.  For $z\sim\mathcal N(0,I_d)$ and a neighborhood
+scale $\tau$, natural PC-wise energies are
 \begin{align}
-M_{smooth,k}
-  &:=\left\|\mathbb E_z[J_\phi(x_0+\tau z)^\top v_k]\right\|^2,\\
-M_{neighbor,k}
-  &:=\mathbb E_z\left[\|J_\phi(x_0+\tau z)^\top v_k\|^2\right],\\
-M_{var,k}
-  &:=\tau^{-2}\operatorname{Var}_z[v_k^\top\phi(x_0+\tau z)],\\
-M_{step,k}
-  &:=\tau^{-2}\mathbb E_z\left[
-       (v_k^\top\phi(x_0+\tau z)-v_k^\top\phi(x_0))^2\right].
+M_{smooth,k}&:=\big\|\E_z[J_\phi(x_0+\tau z)^\top v_k]\big\|^2,&
+M_{neighbor,k}&:=\E_z\big[\|J_\phi(x_0+\tau z)^\top v_k\|^2\big],\notag\\
+M_{var,k}&:=\tau^{-2}\Var_z[v_k^\top\phi(x_0+\tau z)],&
+M_{step,k}&:=\tau^{-2}\E_z\big[(v_k^\top\phi(x_0+\tau z)-v_k^\top\phi(x_0))^2\big].
 \label{eq:nonlinear-neighborhood-estimators}
 \end{align}
-These estimators agree only in the locally linear, small-$\tau$ limit and
-otherwise answer different questions: squared mean gradient, mean squared
-gradient, response variance, and finite-step sensitivity, respectively.
+They coincide in the locally linear, small-$\tau$ limit and otherwise
+answer different questions: squared mean gradient (the gradient of the
+Gaussian-smoothed function), mean squared gradient, response variance, and
+finite-step sensitivity, the last of which also contains the mean drift of
+the response.
 
 \paragraph{Stein estimator.}
-For differentiable $\phi$ with suitable integrability, Stein's identity gives
+Stein's identity gives, for differentiable $\phi$ with suitable
+integrability,
 \begin{equation}
-\mathbb E_z[J_\phi(x_0+\tau z)^\top v_k]
-=\frac{1}{\tau}\mathbb E_z[(v_k^\top\phi(x_0+\tau z))z].
+\E_z[J_\phi(x_0+\tau z)^\top v_k]=\frac1\tau\E_z\big[(v_k^\top\phi(x_0+\tau z))\,z\big],
 \label{eq:nonlinear-stein-estimator}
 \end{equation}
-Centering by $\phi(x_0)$ is a control variate, and antithetic pairs
-$x_0\pm\tau z$ replace the numerator by
-$v_k^\top[\phi(x_0+\tau z)-\phi(x_0-\tau z)]/2$.  These changes preserve
-the population identity while reducing Monte Carlo variance.  Empirical
-validation should report the neighborhood scale, number of probes, and
-estimator variance rather than treating a noisy Jacobian estimate as exact.
+a forward-only estimator of the smoothed gradient.  Centering by $\phi(x_0)$
+is a control variate and antithetic pairs $x_0\pm\tau z$ replace the response
+by $v_k^\top[\phi(x_0+\tau z)-\phi(x_0-\tau z)]/2$; both preserve the
+population identity and reduce Monte Carlo variance.  The one-sided form is
+unstable in $10^5$ input dimensions (its finite-sample off-diagonal
+U-statistic is often negative), whereas the antithetic form with several
+hundred directions is positive on every site--model pair and agrees with the
+smoothed-Jacobian energy to within a few percent.  Empirical use should
+report the neighborhood scale, the number of probes and the estimator
+variance rather than treat a noisy Jacobian estimate as exact.
 
 \subsection{Empirical validation against neuronal control}
 \label{sec:app-nonlinear-biological-validation}
+
 We evaluated the diagnostic on 25 neuronal sites crossed with ten encoding
-models. Each feature geometry used the fitted RidgeCV penalty and held-out
-natural-image error in the same response units. A single cross-session affine
-calibration was fitted per site on natural-image anchors and then shared
-across all models. To isolate model ordering from site-level difficulty, both
-the log diagnostic and biological endpoint were centered within site.
+models (250 site--model pairs).  For each pair, $\kappa$ was computed from
+the model's cross-validated ridge penalty and its empirical feature spectrum
+(750 PCs), $\E_x$ was taken over the ten experimental seed images, and
+$E_{val}$ was the held-out natural-image error measured in the control
+session, with one cross-session affine calibration per site fitted on
+natural-image anchors and shared across models.  Because sites differ
+greatly in how controllable they are at all, the log diagnostic and the
+biological endpoint were both centered within site, so that each predictor is
+judged on ordering the ten models within a site.
 
-Among the nine trained models ($225$ site--model pairs), exact-local
-$V_\phi$ achieved direction-aligned Pearson correlations $r=0.616$ with
-control slope and $r=0.442$ with direct control MSE. The corresponding
-held-out generalization-MSE correlations were $0.034$ and $-0.069$.
-Neighborhood smoothing retained strong ordering and, for slope, reached
-$r=0.605$ at noise scale $16/255$. Restricting to seven conventionally
-trained models attenuated the exact-local slope association to $r=0.189$;
-thus part of the full ordering is carried by the robust-model contrast.
-These values are descriptive repeated-measures associations, not an estimate
-of absolute control response and not an independent-observation significance
-test. Figure~\ref{fig:nonlinear-biological-validation} reports the complete
-paper-facing comparison.
-\endgroup
-
-
-
+Among the nine trained models (225 pairs), exact-local $V_\phi$ achieved
+direction-aligned Pearson correlations $r=0.616$ with control slope and
+$r=0.442$ with direct control error; the trace $T_\phi$ alone did nearly as
+well, so the ordering comes from gradient geometry rather than from the
+prediction-error prefactor.  The corresponding correlations of held-out
+generalization error were $0.034$ and $-0.069$.  Neighborhood smoothing
+retained the ordering and, for slope, reached $r=0.605$ at noise scale
+$16/255$.  Restricting to the seven conventionally trained models attenuated
+the exact-local slope association to $r=0.189$, so part of the full ordering
+is carried by the contrast with the two adversarially trained models, which
+are the strongest controllers and have by far the smallest $T_\phi$.  These
+are descriptive repeated-measures associations with models nested within
+sites, not independent-observation significance tests, and they concern
+model ordering rather than absolute control error, for which the
+teacher-dependent terms of Eq.~\eqref{eq:app-feature-D-summary} would also be
+needed.  Figure~\ref{fig:nonlinear-biological-validation} reports the full
+comparison of estimators.
 
 \section{Random-matrix toolkit}
 \label{sec:app-rmt-toolkit}
 \label{sec:app-de-toolkit}
 
-\subsection{Deterministic equivalence relationships}
+This section records the deterministic equivalents and the spectral-sum
+identities used in the proofs.  The design is $X\in\R^{n\times d}$ with
+i.i.d. rows $\x_i\sim\mathcal N(0,\Sigma)$, $\hat\Sigma=X^\top X/n$, and
+$\gamma=d/n$; all statements hold in the proportional limit and $\asymp$
+denotes almost-sure asymptotic equivalence of the two sides.  For
+feature-space regression the same statements apply to the design $Z=XF^\top$
+with $(\Sigma,d)$ replaced by $(C,p)$.
+
+\subsection{Fixed point and deterministic equivalents}
 \label{sec:app-de-identities}
 
-Denote $1/\varphi(-z)=\kappa(z)$
+\paragraph{Effective penalty.}
+For $\lambda>0$ let $\kappa=\kappa(\lambda)$ be the unique positive solution
+of
+\begin{equation}
+\kappa-\lambda=\gamma\,\kappa\,\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-1}\big]
+=\frac{\kappa}{n}\,\mathrm{df}_1(\kappa)
+\quad\Longleftrightarrow\quad
+n\lambda=\kappa\big(n-\mathrm{df}_1(\kappa)\big),
+\label{eq:app-kappa-fixed-point}
+\end{equation}
+where $\operatorname{tr}=\operatorname{Tr}/d$ is the normalized trace.  This
+is the Silverstein equation in the parametrization
+$\kappa(z)=1/\varphi(-z)$ with $\varphi(z)=\operatorname{tr}[(XX^\top-nzI)^{-1}]$;
+in terms of the spectral measure $\mu$ of $\Sigma$,
+\begin{equation}
+\kappa(\lambda)-\lambda=\gamma\,\kappa(\lambda)\int_0^\infty\frac{s\,d\mu(s)}{\kappa(\lambda)+s}.
+\label{eq:silverstein_self_consistent}
+\end{equation}
+$\kappa$ is increasing in $\lambda$, $\kappa\ge\lambda$, and $\kappa\to\kappa_0>0$
+as $\lambda\to0$ when $\gamma>1$ (or when $\Sigma$ has rank exceeding $n$),
+which is the ridgeless limit.
 
-Then we have the equivalence and flip the sign of $z$
+\paragraph{One-point equivalent.}
+For deterministic $A$ of bounded norm,
+\begin{equation}
+\operatorname{tr}\big[A(\hat\Sigma+\lambda I)^{-1}\big]\asymp\frac{\kappa}{\lambda}\operatorname{tr}\big[A(\Sigma+\kappa I)^{-1}\big],
+\qquad\text{equivalently}\qquad
+\operatorname{tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big]\asymp\operatorname{tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}\big].
+\label{eq:app-one-point-de}
+\end{equation}
+The two forms are equivalent by $\hat\Sigma(\hat\Sigma+\lambda I)^{-1}=I-\lambda(\hat\Sigma+\lambda I)^{-1}$
+and $I-\kappa(\Sigma+\kappa I)^{-1}=\Sigma(\Sigma+\kappa I)^{-1}$.  We use
+them also for rank-one $A=\bstar{\bstar}^\top$ (quadratic forms), for which
+the same equivalence holds without normalization.
+
+\paragraph{Two-point equivalent.}
+For deterministic $A,B$,
+\begin{align}
+\operatorname{Tr}\big[A(\hat\Sigma+\lambda I)^{-1}B(\hat\Sigma+\lambda I)^{-1}\big]
+&\asymp\frac{\kappa^2}{\lambda^2}\Big\{
+\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-1}B(\Sigma+\kappa I)^{-1}\big]
++\frac{\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)}
+\Big\},
+\label{eq:app-two-point-de}\\
+\operatorname{Tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}B\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big]
+&\asymp\operatorname{Tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}B\Sigma(\Sigma+\kappa I)^{-1}\big]
++\frac{\kappa^2\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)} .
+\label{eq:app-two-point-de-weighted}
+\end{align}
+The second term is the finite-sample correction that couples the two
+resolvents; it is what produces the $n/(n-\mathrm{df}_2)$ factors and the
+finite-sample signal-variance terms in the proofs.  For two different
+penalties $\lambda,\lambda'$ the same form holds with
+$T_\Sigma=\Sigma(\Sigma+\kappa I)^{-1}$, $T'_\Sigma=\Sigma(\Sigma+\kappa'I)^{-1}$,
+$G_\Sigma=(\Sigma+\kappa I)^{-1}$, $G'_\Sigma=(\Sigma+\kappa'I)^{-1}$:
 \[
-\mbox{tr}\bigl[A\,(\widehat{\Sigma}+zI)^{-1}\bigr]\sim\frac{\kappa(z)}{z}\mbox{tr}\bigl[A\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\bigr]
+\operatorname{Tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}B\hat\Sigma(\hat\Sigma+\lambda'I)^{-1}\big]
+\asymp\operatorname{Tr}[AT_\Sigma BT'_\Sigma]
++\frac{\kappa\kappa'}{n-\mathrm{df}_2(\kappa,\kappa')}\operatorname{Tr}[AG_\Sigma\Sigma G'_\Sigma]\operatorname{Tr}[G'_\Sigma\Sigma G_\Sigma B],
+\qquad
+\mathrm{df}_2(\kappa,\kappa'):=\operatorname{Tr}[\Sigma^2G_\Sigma G'_\Sigma].
 \]
-\begin{align*}
-\mbox{tr}\bigl[A(\widehat{\Sigma}+zI)^{-1}B(\widehat{\Sigma}+zI)^{-1}\bigr] & \sim\frac{\kappa(z)^{2}}{z^{2}\,}\mbox{tr}\bigl[A\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\,B\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\bigr]\\
- & \quad+\frac{\kappa(z)^{2}}{z^{2}}\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa(z)\bigr)}\mbox{tr}\bigl[A\,\bigl(\Sigma+\kappa(z)I\bigr)^{-2}\Sigma\bigr]\mbox{tr}\bigl[B\,\bigl(\Sigma+\kappa(z)I\bigr)^{-2}\Sigma\bigr]
-\end{align*}
+These are the standard anisotropic ridge equivalents
+\citep{dobriban2018high,hastie2022surprises}; the two-point form in the
+normalization used here follows the deterministic-equivalent calculus for
+products of resolvents.
 
-Using equivalent form
+\paragraph{Derivative of the effective penalty.}
+Differentiating Eq.~\eqref{eq:app-kappa-fixed-point} in the form
+$\lambda=\kappa-\gamma\kappa\operatorname{tr}[\Sigma(\Sigma+\kappa I)^{-1}]$,
 \[
-\mbox{tr}\bigl[A\widehat{\Sigma}(\widehat{\Sigma}+zI)^{-1}\bigr]\sim\mbox{tr}\bigl[A\,\Sigma\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\bigr]
+\frac{d\lambda}{d\kappa}=1-\gamma\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-1}\big]+\gamma\kappa\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-2}\big]
+=1-\gamma\operatorname{tr}\big[\Sigma^2(\Sigma+\kappa I)^{-2}\big]=1-\frac{\mathrm{df}_2(\kappa)}{n},
 \]
-\begin{align*}
-\mbox{tr}\bigl[A\,\widehat{\Sigma}\,(\widehat{\Sigma}+zI)^{-1}\,B\,\widehat{\Sigma}\,(\widehat{\Sigma}+zI)^{-1}\bigr] & \sim\mbox{tr}\bigl[A\,\Sigma\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\,B\,\Sigma\,\bigl(\Sigma+\kappa(z)I\bigr)^{-1}\bigr]\\
- & \quad+\frac{\kappa^{2}(z)}{n-\mathrm{df}_{2}\bigl(\kappa(z)\bigr)}\mbox{tr}\bigl[A\,\bigl(\Sigma+\kappa(z)I\bigr)^{-2}\Sigma\bigr]\mbox{tr}\bigl[B\,\bigl(\Sigma+\kappa(z)I\bigr)^{-2}\Sigma\bigr]
-\end{align*}
+so that
+\begin{equation}
+\frac{d\kappa}{d\lambda}=\frac{n}{n-\mathrm{df}_2(\kappa)}>0 .
+\label{eq:app-dkappa-dlambda}
+\end{equation}
+Combined with the one-point equivalent this gives the trace identities used
+for the noise terms:
+$\operatorname{Tr}[\Sigma(\hat\Sigma+\lambda I)^{-2}\hat\Sigma]\asymp\frac{n}{n-\mathrm{df}_2}\mathrm{df}_2$
+and
+$\operatorname{Tr}[(\hat\Sigma+\lambda I)^{-2}\hat\Sigma]\asymp\frac{n}{n-\mathrm{df}_2}\mathrm{df}_{1,2}$,
+both obtained by writing the left side as $-\frac{d}{d\lambda}$ of a
+one-point trace.
 
-where $\kappa(z)$ can be solved from self consistent equation
+\subsection{Spectral sums}
 
-The self consistent variable is defined via $\varphi(z):=\mbox{tr}[(XX^{\top}-nzI)^{-1}]$,
-then the self consistent equation for $\kappa(z):=\frac{1}{\varphi(-z)}$
-is, where $\mu(s)$ is the spectral measure of covariance $\Sigma$
+\paragraph{Definitions and interpretation.}
+With $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$ and $b_k=\uvec_k^\top\bstar$,
+\begin{equation}
+B_{p,q}(\kappa):=\sum_{k=1}^d\frac{s_k^p}{(s_k+\kappa)^q}b_k^2
+={\bstar}^\top\Sigma^p(\Sigma+\kappa I)^{-q}\bstar,\qquad
+\mathrm{df}_{p,q}(\kappa):=\sum_{k=1}^d\frac{s_k^p}{(s_k+\kappa)^q}
+=\operatorname{Tr}\big[\Sigma^p(\Sigma+\kappa I)^{-q}\big],
+\end{equation}
+with the classical shorthands $\mathrm{df}_1=\mathrm{df}_{1,1}$,
+$\mathrm{df}_2=\mathrm{df}_{2,2}$, and the endpoints $\mathrm{df}_{0,0}=d$,
+$B_{0,0}=\|\bstar\|^2$.  For $p=q$ the weight $(s_k/(s_k+\kappa))^p\in(0,1)$
+and $\mathrm{df}_{p,p}$ is a soft count of the modes above the resolution
+$\kappa$; $B_{p,p}$ is the teacher power in those modes.  The off-diagonal
+sums are band-limited counts: $s_k/(s_k+\kappa)^2$ peaks at $s_k=\kappa$ and
+$s_k^2/(s_k+\kappa)^3$ at $s_k=2\kappa$, each with constant width on a
+logarithmic axis.
+
+\paragraph{Inequalities.}
+Since $s_k/(s_k+\kappa)<1$,
 \[
-\frac{1}{\varphi(z)}+z=\gamma\int_{0}^{\infty}\frac{s\ d\mu(s)}{1+s\varphi(z)}
+B_{p,q}\ge B_{p+1,q+1},\qquad \mathrm{df}_{p,q}\ge\mathrm{df}_{p+1,q+1},
 \]
-\begin{align*}
-\frac{1}{\varphi(-z)}-z & =\gamma\int_{0}^{\infty}\frac{s\ d\mu(s)}{1+s\varphi(-z)}\\
-\kappa(z)-z & =\gamma\int_{0}^{\infty}\frac{s\ d\mu(s)}{1+s\frac{1}{\kappa(z)}}\\
-\kappa(z)-z & =\gamma\int_{0}^{\infty}\frac{\kappa(z)\ sd\mu(s)}{\kappa(z)+s}\\
-\kappa(z)-z & =\gamma\kappa(z)\int_{0}^{\infty}\frac{sd\mu(s)}{\kappa(z)+s}\\
-z & =\kappa(z)\Big[1-\gamma\int_{0}^{\infty}\frac{\ sd\mu(s)}{\kappa(z)+s}\Big]
-\end{align*}
+which contains $d\ge\mathrm{df}_1\ge\mathrm{df}_2$ and
+$\mathrm{df}_{0,1}\ge\mathrm{df}_{1,2}\ge\mathrm{df}_{2,3}$ as special cases;
+also $\min(n,d)>\mathrm{df}_2$.
 
-in matrix form
-\[
-\kappa(\lambda)-\lambda=\gamma\kappa(\lambda)\!\mathrm{tr}[\Sigma(\Sigma+\kappa(\lambda))^{-1}]
-\]
+\paragraph{Recursion.}
+From $s_k=(s_k+\kappa)-\kappa$,
+\begin{equation}
+\mathrm{df}_{p,q}=\mathrm{df}_{p+1,q+1}+\kappa\,\mathrm{df}_{p,q+1},\qquad
+B_{p,q}=B_{p+1,q+1}+\kappa\,B_{p,q+1},
+\label{eq:app-spectral-recursion}
+\end{equation}
+in particular $\mathrm{df}_1-\mathrm{df}_2=\kappa\,\mathrm{df}_{1,2}$ and
+$B_{1,1}-B_{2,2}=\kappa\,B_{1,2}$.
 
-
-\paragraph{Useful quantities and identities}
-
-\begin{align*}
-\mathrm{df}_{1}(\lambda) & :=\mbox{Tr}[\Sigma(\Sigma+\lambda I)^{-1}]\\
-\mathrm{df}_{2}(\lambda) & :=\mbox{Tr}[\Sigma^{2}(\Sigma+\lambda I)^{-2}]
-\end{align*}
-
-With identities
-\begin{align*}
-\mathrm{df}_{2}(\kappa)-\mathrm{df}_{1}(\kappa) & =\mbox{Tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]-\mbox{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]\\
- & =\mbox{Tr}[\big(\Sigma(\Sigma+\kappa I)^{-1}-I\big)\Sigma(\Sigma+\kappa I)^{-1}]\\
- & =\kappa\mbox{Tr}[\Sigma(\Sigma+\kappa I)^{-2}]
-\end{align*}
-
-We have relationship
-\[
-\min(n,p)>\mathrm{df}_{2}(\kappa)>\mathrm{df}_{1}(\kappa)
-\]
-
-
-\paragraph{Two point equivalence}
-
-As an immediate outcome, set $A=\Sigma$, $B=\frac{1}{n}XX^{T}$ as
-white Wishart, then $A*B=\hat{\Sigma}$. Thus,
-\[
-\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}M\hat{\Sigma}(\lambda^{\prime}+\hat{\Sigma})^{-1}\simeq T_{\Sigma}MT_{\Sigma}^{\prime}+\kappa\kappa'G_{\Sigma}\Sigma G_{\Sigma}^{\prime}\frac{\mbox{Tr}\left[G_{\Sigma}^{\prime}\Sigma G_{\Sigma}M\right]}{n-\mathrm{df}_{2}(\kappa,\kappa')}
-\]
-
-in trace form we can write
-\[
-\mbox{Tr}\Big[A\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}B\hat{\Sigma}(\lambda^{\prime}+\hat{\Sigma})^{-1}\Big]\simeq\mbox{Tr}\big[AT_{\Sigma}BT_{\Sigma}^{\prime}\big]+\frac{\kappa\kappa'}{n-\mathrm{df}_{2}(\kappa,\kappa')}\mbox{Tr}\big[AG_{\Sigma}\Sigma G_{\Sigma}^{\prime}\big]\mbox{Tr}\big[G_{\Sigma}^{\prime}\Sigma G_{\Sigma}B\big]
-\]
-where $T_{A}:=A(A+\kappa)^{-1},T_{A}^{\prime}:=A(A+\kappa^{\prime})^{-1}$,
-$G_{A}:=(A+\kappa)^{-1},G_{A}^{\prime}:=(A+\kappa^{\prime})^{-1}$.
-and $\mathrm{df}_{2}(\kappa,\kappa'):=\mathrm{tr}[A^{2}G_{A}G_{A}^{\prime}]$,
-$q=N/P$ and $A\in\mathbb{R}^{N\times N}$.
-
-\subsection{General algebraic quantity}
-
-In the derivation, we will heavily rely on the two family of quantities
-\begin{align*}
-B_{p,q}(\kappa) & =\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}b_{k}^{2}\\
-\mathrm{df}_{p,q}(\kappa) & =\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}
-\end{align*}
-
-where the classic short hand are special cases of these.
-\begin{align*}
-\mathrm{df}_{1}(\kappa) & \equiv\mathrm{df}_{1,1}(\kappa)\\
-\mathrm{df}_{2}(\kappa) & \equiv\mathrm{df}_{2,2}(\kappa)
-\end{align*}
-
-The recursion starts from the meaningful quantities
-\begin{align*}
-\mathrm{df}_{0,0}(\kappa) & =d\\
-B_{0,0}(\kappa) & =\|\bstar\|^{2}=\sum b_{k}^{2}
-\end{align*}
-
-They can be interpreted as following
-\begin{itemize}
-\item $\mathrm{df}_{p,q}(\kappa)$ is a weighted \textbf{count} of spectral
-modes, where the weighting function is $\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}$.
-In classic cases $p=q$ and these weighting functions range from $(0,1)$
-so it's exactly counting the modes from 0,1.
-\end{itemize}
-
-\subsubsection{Inequalities}
-
-Since $\kappa>0$,
-\[
-\frac{s_{k}}{(s_{k}+\kappa)}<1
-\]
-
-thus in general
-\begin{align*}
-B_{p,q}(\kappa) & \geq B_{p+1,q+1}(\kappa)\\
-\mathrm{df}_{p,q}(\kappa) & \geq\mathrm{df}_{p+1,q+1}(\kappa)
-\end{align*}
-
-The classic inequality of
-\[
-d\geq\mathrm{df}_{1}(\kappa)\geq\mathrm{df}_{2}(\kappa)
-\]
-
-can be seen as a special case of
-\[
-\mathrm{df}_{0,0}(\kappa)\geq\mathrm{df}_{1,1}(\kappa)\geq\mathrm{df}_{2,2}(\kappa)
-\]
-
-Here we have the more general case
-\[
-\mathrm{df}_{0,1}(\kappa)\geq\mathrm{df}_{1,2}(\kappa)\geq\mathrm{df}_{2,3}(\kappa)
-\]
-
-
-\subsubsection{Recursion and Differential Identities}
-
-They admits following recursion identities,
-\[
-\mathrm{df}_{p,q}(\kappa)=\mathrm{df}_{p+1,q+1}(\kappa)+\kappa\mathrm{df}_{p,q+1}(\kappa)
-\]
-
-Equivalently
-\begin{align*}
-\mathrm{df}_{p+1,q+1}(\kappa)-\mathrm{df}_{p,q}(\kappa) & =-\kappa\mathrm{df}_{p,q+1}(\kappa)\\
-B_{p+1,q+1}(\kappa)-B_{p,q}(\kappa) & =-\kappa B_{p,q+1}(\kappa)
-\end{align*}
-\begin{align*}
-\partial_{\kappa}\mathrm{df}_{p,q}(\kappa) & =-q\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q+1}}\\
- & =-q\mathrm{df}_{p,q+1}(\kappa)
-\end{align*}
-\begin{align*}
-\partial_{\kappa}\big(\kappa^{r}\mathrm{df}_{p,q}(\kappa)\big) & =r\kappa^{r-1}\mathrm{df}_{p,q}(\kappa)-q\kappa^{r}\mathrm{df}_{p,q+1}(\kappa)\\
- & =r\kappa^{r-1}\sum_{k=1}^{d}\frac{s_{k}^{p}(s_{k}+\kappa)}{(s_{k}+\kappa)^{q+1}}-q\kappa^{r}\mathrm{df}_{p,q+1}(\kappa)\\
- & =r\kappa^{r-1}\sum_{k=1}^{d}\frac{s_{k}^{p+1}}{(s_{k}+\kappa)^{q+1}}+r\kappa^{r}\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q+1}}-q\kappa^{r}\mathrm{df}_{p,q+1}(\kappa)\\
- & =r\kappa^{r-1}\mathrm{df}_{p+1,q+1}(\kappa)+(r-q)\kappa^{r}\mathrm{df}_{p,q+1}(\kappa)
-\end{align*}
-
-
-\begingroup\color{red}
+\paragraph{Derivatives.}
+\begin{equation}
+\partial_\kappa\mathrm{df}_{p,q}=-q\,\mathrm{df}_{p,q+1},\qquad
+\partial_\kappa\big(\kappa^r\mathrm{df}_{p,q}\big)
+=r\kappa^{r-1}\mathrm{df}_{p+1,q+1}+(r-q)\kappa^r\mathrm{df}_{p,q+1},
+\label{eq:app-spectral-derivative}
+\end{equation}
+and identically for $B_{p,q}$.  The second identity follows from the first
+and the recursion.  The cases used in the tuning proofs are
+$\partial_\kappa(\kappa^2B_{1,2})=2\kappa B_{2,3}$ and
+$\partial_\kappa\mathrm{df}_2=-2\,\mathrm{df}_{2,3}$.
