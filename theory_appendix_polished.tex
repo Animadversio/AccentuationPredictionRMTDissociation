@@ -1,855 +1,589 @@
 \section{Theory results roadmap}
 \label{sec:app-theory-roadmap}
-\begingroup\color{red}
-This opening list is deliberately more comprehensive than the main text.  It
-serves as an index of the theoretical claims currently supported by the
-appendix; the final paper may promote only a subset of them to the main body.
-All statements concern the linear teacher--student model unless explicitly
-marked as a nonlinear diagnostic.
+
+The appendix is organized in two layers.  Section~\ref{sec:app-main-results}
+states every theoretical result of the paper once, in the order in which it is
+derived, so that it can be read as a self-contained summary.  The sections
+that follow contain the proofs, arranged by topic; each begins with a short
+motivation, restates the result it proves, gives the proof in numbered steps,
+and closes with remarks on interpretation.  Readers who want the statements
+only can stop at Section~\ref{sec:app-main-results}; readers who want a
+specific derivation can jump to it by the pointers given there.  Unless stated
+otherwise, every result concerns the linear teacher--student model with
+Gaussian inputs; the nonlinear diagnostic of
+Section~\ref{sec:app-nonlinear-diagnostic} is the only exception, and it is a
+diagnostic rather than a theorem.
 
 \begin{enumerate}
-\item \textbf{Evaluation geometry.} Generalization, self-accentuation, and
-peer review are evaluations under different input covariances. Their equal-error
-sets are, respectively, covariance ellipsoids, Euclidean spheres, and
-peer-normal hyperplanes (Section~\ref{sec:app-evaluation-geometry}).
-
-\item \textbf{Pixel-ridge prediction DE.} For anisotropic Gaussian design,
-the generalization risk separates into ridge bias and finite-sample variance,
-with the random sample covariance summarized by the effective penalty
-$\kappa$ (Section~\ref{sec:app-pixel-ridge}).
-
-\item \textbf{Pixel-ridge control DE.} The accentuation metrics reduce to two
-quadratic forms $N=\bhat^\top\bstar$ and $D=\bhat^\top\bhat$.  Their leading
-DEs expose a Euclidean variance term that is not determined by prediction risk.
-
-\item \textbf{Prediction- versus control-optimal tuning.} An interior
-prediction optimum and a zero-leading-bias control optimum equate different
-spectral averages.  Prediction-optimal CV therefore leaves a residual
-accentuation bias except in special symmetric cases
-(Section~\ref{sec:app-optimal-regularization}).
-
-\item \textbf{Feature-space projection.} The population-optimal realizable
-coefficient is $w^\star=\Sigma_F^\dagger F\Sigma\bstar$, with irreducible
-error $S_\perp$.  Feature-space ridge inherits the pixel-space prediction DE
-with effective noise $S_\perp+\sigma^2$, but pixel-space control additionally
-depends on $FF^\top$ and $F\bstar$
-(Section~\ref{sec:app-feature-regression}).
-
-\item \textbf{Prediction gauge.} Transformations preserving
-$F\Sigma F^\top$ and $F\Sigma\bstar$ preserve the leading prediction risk and
-DE-based CV choice while allowing control to vary.  For $\Sigma\succ0$, a
-constructive family is $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ with
-$Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$
-(Section~\ref{sec:app-gauge-fragility}).
-
-\item \textbf{Low-variance gradient fragility.} The control variance factor
-$T_F(\kappa)$ is a ridge-weighted sum of
-$\|g_k\|^2/(g_k^\top\Sigma g_k)$.  Control is fragile when feature PCs that
-survive regularization backpropagate into low-variance input directions.
-
-\item \textbf{Ratio corrections.} Ratio-of-DE, second-order delta, and
-Gaussian distributional approximations answer different finite-sample
-questions.  The corrections matter when the mean calibration error is small
-but the variance of $N/D$ is not (Section~\ref{sec:app-ratio-corrections}).
-
-\item \textbf{Nonlinear diagnostic.} Replacing $F$ locally by the Jacobian of
-a nonlinear feature map yields exact-local and neighborhood diagnostics. This
-is not a nonlinear RMT theorem, but it predicts model ordering in the neuronal
-control data (Section~\ref{sec:app-nonlinear-diagnostic}).
-
-\item \textbf{RMT identities.} The final section records the one- and
-two-resolvent deterministic equivalents, fixed-point relation, and spectral
-recursion identities used in the proofs
-(Section~\ref{sec:app-rmt-toolkit}).
+\item \textbf{Evaluation geometry} (Section~\ref{sec:app-evaluation-geometry}).
+Generalization, self-accentuation and peer review are evaluations of one
+fitted weight under three input covariances.  Their equal-error sets are
+covariance ellipsoids, Euclidean spheres and peer-normal hyperplanes.
+\item \textbf{Pixel-space ridge} (Section~\ref{sec:app-pixel-ridge}).
+Deterministic equivalents for the generalization risk, for the two
+accentuation forms $N={\bhat}^\top\bstar$ and $D={\bhat}^\top\bhat$, and for
+the per-eigenmode weight error.  The Euclidean estimation-noise term in $D$
+is what prediction does not see.
+\item \textbf{Prediction- versus control-optimal tuning}
+(Section~\ref{sec:app-optimal-regularization}).  The two optima equate the
+noisy prediction risk to different teacher-weighted spectral averages;
+prediction-optimal cross-validation leaves a computable residual control
+error.
+\item \textbf{Feature-space regression} (Section~\ref{sec:app-feature-regression}).
+Ridge on a fixed linear feature map inherits the pixel-space prediction
+theory with effective noise $\sigma^2+S_\perp$, while pixel-space control
+additionally depends on $FF^\top$ and $F\bstar$.
+\item \textbf{Gauge invariance and gradient fragility}
+(Section~\ref{sec:app-gauge-fragility}).  Transformations preserving
+$F\Sigma F^\top$ and $F\Sigma\bstar$ preserve prediction and its
+cross-validated optimum but not control; the fragility factor $T_F$ is a
+ridge-weighted ratio of Euclidean to natural gradient energy.
+\item \textbf{Ratios of random quadratic forms and peer review}
+(Section~\ref{sec:app-ratio-corrections}).  Second-order and distributional
+refinements of the ratio-of-DE approximation, and the deterministic
+equivalent of peer review between independent fits.
+\item \textbf{Nonlinear diagnostic} (Section~\ref{sec:app-nonlinear-diagnostic}).
+Replacing $F$ by a local Jacobian, with its estimators and its empirical
+association with neuronal control.
+\item \textbf{Random-matrix toolkit} (Section~\ref{sec:app-rmt-toolkit}).
+The fixed-point equation, the one- and two-resolvent deterministic
+equivalents, and the identities for the spectral sums $B_{p,q}$ and
+$\mathrm{df}_{p,q}$ used throughout.
 \end{enumerate}
-\endgroup
 
 % Full statements of every result, in derivation order (separate file so
 % that concurrent edits to the proofs below do not conflict).
 \input{theory_appendix_main_results.tex}
 
-\section{Evaluation geometry}
+\section{Evaluation geometry: setting, metrics and equal-error sets}
 \label{sec:app-evaluation-geometry}
 
-\subsection{General set up}
+This section fixes the model, derives the closed forms of the evaluation
+metrics on an arbitrary input distribution, specializes them to the three
+distributions that matter for prediction and control, and proves the
+geometric description of their equal-error sets.  Nothing here involves
+random-matrix theory: all statements are exact for a fixed fitted weight
+$\bhat$.
 
-\paragraph{Noisy linear teacher student setting.}
+\subsection{Setting}
 
-Assuming training data comes from a noisy teacher (i.e. a noisy neuron
-that has a ground truth weight vector w.r.t. input), with white Gaussian
-noise.
-\[
-y={\bstar}^{\top}\mathbf{x}+\sigma\epsilon,\quad\epsilon\sim\mathcal{N}(0,I)
-\]
-
-the input comes from a structured distribution $\mathbf{x}\sim\mathcal{N}(0,\Sigma)$.
-
-Our student (i.e. neuron predictive model) is
-\[
-\hat{y}={\bhat}^{\top}\mathbf{x}
-\]
-
-We consider the effect of varying sample number $n$ and noise level
+\paragraph{Teacher, data and student.}
+Inputs are drawn from a centered Gaussian with a structured covariance,
+$\x\sim\mathcal N(0,\Sigma)$, and responses come from a noisy linear
+teacher, the idealization of a neuron with ground-truth weight $\bstar$,
+\begin{equation}
+y={\bstar}^\top\x+\sigma\epsilon,\qquad\epsilon\sim\mathcal N(0,1).
+\end{equation}
+The student, the idealization of a neuron predictive model, is the bias-free
+linear predictor $\hat y={\bhat}^\top\x$.  The $n$ training inputs are
+stacked as rows of $X\in\R^{n\times d}$ and the realized unit-variance noise as
+$\eta\in\R^n$, so that $\mathbf y=X\bstar+\sigma\eta$ and
+$\hat\Sigma=X^\top X/n$.  Data are centered and biases are ignored
+throughout; we study the effect of the sample size $n$ and the noise level
 $\sigma$.
 
-The realized data points $\mathbf{x}$ got combined into data matrix
-$X$,
-\[
-X=[\mathbf{x}^{(1)}|\mathbf{x}^{(2)}|...|\mathbf{x}^{(n)}]^{\top}\in\mathbb{R}^{n\times d}
-\]
-
-$\eta$ denote the realized noise with unit variance, with $\eta^{(i)}\sim\mathcal{N}(0,1)$
-\[
-\eta=[\eta^{(1)}|\eta^{(2)}|...|\eta^{(n)}]^{\top}\in\mathbb{R}^{n}
-\]
-
-Here data is centered and we also ignore the bias in the teacher,
-student.
-
-\paragraph{Ridge regression learner}
-
-Consider ridge regression learner with regularization level $\lambda$,
-trying to estimate the weight vector $\bhat$.
-
-The ridge solution reads,
-\[
-\bhat=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
-\]
-
-{\bfseries{}%
-\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
-\textbf{Derivation}
-
-\begin{align*}
-\bhat & =(X^{\top}X+n\lambda I_{d})^{-1}X^{\top}\mathbf{y}\\
- & =(X^{\top}X+n\lambda I_{d})^{-1}X^{\top}(X\bstar+\sigma\eta)\\
- & =(X^{\top}X+n\lambda I_{d})^{-1}X^{\top}X\bstar+\sigma(X^{\top}X+n\lambda I_{d})^{-1}X^{\top}\eta\\
- & =(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
-\end{align*}
-%
-\end{minipage}}}
-
-\paragraph{Idealized feature accentuation for control}
-
-Now consider what feature accentuation and control means in this setting.
-
-In our case the linear model is the neuron predictive model, $f(\mathbf{x})={\bhat}^{\top}\mathbf{x}$,
-$f(\mathbf{x})$ is the predicted response, $\bhat$ is the
-weight vector, and $\mathbf{x}$ is the input image.
-
-Consider a simplified gradient based feature accentuation approach:
-from a seed image $\mathbf{x}_{0}$, iteratively move it along the
-gradient direction
-\[
-\mathbf{x}\gets\mathbf{x}+\alpha\nabla f=\mathbf{x}+\alpha\mathbf{\bhat}
-\]
- until $f(x)=y^{*}$.
-
-In this simplified case, the accentuated images have closed form solution
-(see derivation)
-\[
-\mathbf{x}^{*}=\mathbf{x}_{0}+\frac{y^{*}-{\bhat}^{\top}\mathbf{x}_{0}}{\|\mathbf{\bhat}\|^{2}}\bhat
-\]
-
-In a simplified notation we can write
-\[
-\mathbf{x}^{*}=\mathbf{x}_{0}+\alpha\mathbf{\bhat}
-\]
-
-where the choice of $\alpha$ is part of experimenter's design --
-\emph{which levels to target and probe}.
-
-This tells us the images are updated in the \emph{gradient direction}
-of the predictive model $\nabla_{\mathbf{x}}f(\mathbf{x})$, and in
-the linear case specifically, along the \emph{estimated} weight vector
-$\mathbf{\bhat}$.
-
-Remarks
-\begin{itemize}
-\item When the seed image $\mathbf{x}_{0}=0$, the accentuation path lies
-on the direction of the estimated weight, with a scaling coefficient,
-$\mathbf{x}=\alpha\bhat$ with $\alpha\sim p_{\alpha}$.
-\item Consider we select a set of levels $y^{*}$ such that the predicted
-variance of response matches the observed variance of the natural
-distribution.
-\end{itemize}
-
-
-\subsection{Evaluation metrics on arbitrary distribution (with noiseless target)}
-
-In a sense, the difference of prediction and control comes down to
-\emph{evaluating the estimated model on different distributions}.
-Importantly, some of the evaluation distributions are generated by
-the model itself.
-
-The following lemmae provide the analytical formulae of the metrics,
-when writing down the errors for an arbitrary evaluating distribution
-$p$ with mean and covariance $\mu_{p},\Sigma_{p}$.
-\begin{lem}
-\label{lem:pred_error}The prediction mean squared error (MSE) of
-the linear model above over a dataset (distribution) $p$ can be written
-as, where $\mu_{p},\Sigma_{p}$ are mean and covariance of the evaluating
-distribution.
-\begin{align*}
-\mathrm{MSE}[p] & =\mathbb{E}_{\mathbf{x}\sim p}[\big(\hat{y}(\mathbf{x})-y^{\star}(\mathbf{x})\big)^{2}]\\
- & =\mathbb{E}_{\mathbf{x}\sim p}[\big((\bhat-\bstar)^{\top}\mathbf{x}\big)^{2}]\\
- & =(\bhat-\bstar)^{\top}\mathbb{E}_{\mathbf{x}\sim p}[\mathbf{x}\mathbf{x}^{\top}](\bhat-\bstar)\\
- & =(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)
-\end{align*}
+\begin{lem}[Ridge estimator as shrunken signal plus noise]
+\label{lem:app-ridge-decomposition}
+The ridge estimator with penalty $\lambda$,
+$\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\|^2+\lambda\|\beta\|^2$, equals
+\begin{equation}
+\bhat=\underbrace{(\hat\Sigma+\lambda I_d)^{-1}\hat\Sigma\bstar}_{\text{signal}}
++\underbrace{\sigma(\hat\Sigma+\lambda I_d)^{-1}\tfrac1nX^\top\eta}_{\text{noise}},
+\qquad
+\bhat-\bstar=-\lambda(\hat\Sigma+\lambda I_d)^{-1}\bstar
++\sigma(\hat\Sigma+\lambda I_d)^{-1}\tfrac1nX^\top\eta .
+\label{eq:app-ridge-decomposition}
+\end{equation}
 \end{lem}
-Finally, each of these error has their corresponding R2, Pearson r
-and slope, which are commonly used and reported in papers.
-\begin{lem}
-\label{lem:R2_pred_obs}The direct $R^{2}$ of the model prediction
-$\hat{y}$ with the ground truth $y^{\star}$on this distribution
-$p$ is
-\begin{align*}
-R^{2} & =1-\frac{\mathbb{E}[(\hat{y}-y^{\star})^{2}]}{\mathrm{Var}[y^{\star}]}\\
- & =1-\frac{\mathbb{E}_{\mathbf{x}\sim p}[\big((\bhat-\bstar)^{\top}\mathbf{x}\big)^{2}]}{\mathrm{Var}[{\bstar}^{\top}\mathbf{x}]}\\
- & =1-\frac{(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)}{{\bstar}^{\top}\Sigma_{p}\bstar}\\
- & =1-\frac{\mathrm{MSE}[p]}{{\bstar}^{\top}\Sigma_{p}\bstar}
-\end{align*}
-\end{lem}
-%
-\begin{lem}
-\label{lem:Pearson-r_pred_obs}The Pearson r between prediction and
-the noiseless ground truth is
-\begin{align*}
-r & =\frac{\mathbb{E}[(\hat{y}-\bar{\hat{y}})(y^{\star}-\bar{y^{\star}})]}{\sqrt{\mathrm{Var}[\hat{y}]\mathrm{Var}[y^{\star}]}}\\
- & =\frac{\mathbb{E}[({\bhat}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))({\bstar}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))]}{\sqrt{\mathrm{Var}[\hat{y}]\mathrm{Var}[y^{\star}]}}\\
- & =\frac{{\bhat}^{\top}\Sigma_{p}\bstar}{\sqrt{({\bhat}^{\top}\Sigma_{p}\bhat)({\bstar}^{\top}\Sigma_{p}\bstar)}}
-\end{align*}
-\end{lem}
-%
-\begin{lem}
-\label{lem:linear_slope}The slope when fitting a linear model (with
-intercept) between prediction and actual response, the slope reads
-\begin{align*}
-\mathrm{slope}_{y^{\star}\gets\hat{y}} & =\frac{\mathrm{Cov}[\hat{y},y^{\star}]}{\mathrm{Var}[\hat{y}]}\\
- & =\frac{\mathbb{E}[({\bhat}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))({\bstar}^{\top}(\mathbf{x}-\bar{\mathbf{x}}))]}{{\bhat}^{\top}\Sigma_{p}\bhat}\\
- & =\frac{{\bhat}^{\top}\Sigma_{p}\bstar}{{\bhat}^{\top}\Sigma_{p}\bhat}
-\end{align*}
-\end{lem}
-Remarks
-\begin{itemize}
-\item Note that among the four metrics, the direct MSE and $R^{2}$ depends
-on the center of the distribution $\mu_{p}$; while Pearson r and
-slope do not.
-\item Note that when $\Sigma_{p}$is rank-1, i.e. $\Sigma_{p}=\mathbf{v}\mathbf{v}^{\top}$
-then Pearson $r=1$, as long as ${\bhat}^{\top}\mathbf{v}\neq0$
-and ${\bstar}^{\top}\mathbf{v}\neq0$. So in a sense, when
-our evaluation distribution is a single linear path this metric is
-pointless for noiseless target.
-\item So Pearson correlation is only meaningful when there is observation
-noise, or multiple seed images for accentuation experiments.
-\end{itemize}
+\begin{proof}
+The normal equations give $\bhat=(X^\top X+n\lambda I_d)^{-1}X^\top\mathbf y$.
+Substituting $\mathbf y=X\bstar+\sigma\eta$ and dividing numerator and
+denominator by $n$ gives the first identity.  The second follows from
+$(\hat\Sigma+\lambda I)^{-1}\hat\Sigma-I=-\lambda(\hat\Sigma+\lambda I)^{-1}$.
+\end{proof}
 
-\subsection{Generalization, Accentuation and Peer-review distribution and error. }
+\paragraph{Idealized feature accentuation.}
+Feature accentuation moves a seed image $\x_0$ along the input gradient of
+the predictive model until the prediction reaches a target level $y^\star$.
+For a linear student the gradient is constant, $\nabla_\x f=\bhat$, so the
+iteration $\x\gets\x+\alpha\nabla_\x f$ stays on a line and the target is
+reached at
+\begin{equation}
+\x^\star=\x_0+\frac{y^\star-{\bhat}^\top\x_0}{\|\bhat\|^2}\,\bhat ,
+\label{eq:app-accentuation-closed-form}
+\end{equation}
+the minimum-norm change of $\x_0$ that attains $f(\x^\star)=y^\star$.
+We therefore write accentuated inputs as $\x^\star=\x_0+\alpha\bhat$, where
+the distribution of the step $\alpha$ encodes the experimenter's choice of
+target levels.  Two features of this idealization are used repeatedly:
+the path direction is the \emph{estimated} weight, not the true one; and for
+a null seed, $\x_0=0$, the path is the one-dimensional ray $\alpha\bhat$.
+
+\subsection{Metrics on an arbitrary evaluation distribution}
+
+Prediction and control differ in \emph{where} the same predictor is
+evaluated, and some of the evaluation distributions are generated by the
+predictor itself.  It is therefore convenient to have the metrics for an
+arbitrary evaluation distribution $p$ with mean $\mu_p$ and covariance
+$\Sigma_p$, against the noiseless teacher response $y^\star={\bstar}^\top\x$.
+
+\begin{lem}[Mean squared error]
+\label{lem:pred_error}
+$\displaystyle
+\mathrm{MSE}[p]=\E_{\x\sim p}\big[(\hat y-y^\star)^2\big]
+=(\bhat-\bstar)^\top(\mu_p\mu_p^\top+\Sigma_p)(\bhat-\bstar).$
+\end{lem}
+\begin{lem}[Direct $R^2$]
+\label{lem:R2_pred_obs}
+$\displaystyle
+R^2[p]=1-\frac{\E[(\hat y-y^\star)^2]}{\Var[y^\star]}
+=1-\frac{(\bhat-\bstar)^\top(\mu_p\mu_p^\top+\Sigma_p)(\bhat-\bstar)}{{\bstar}^\top\Sigma_p\bstar}
+=1-\frac{\mathrm{MSE}[p]}{{\bstar}^\top\Sigma_p\bstar}.$
+\end{lem}
+\begin{lem}[Pearson correlation]
+\label{lem:Pearson-r_pred_obs}
+$\displaystyle
+r[p]=\frac{\Cov[\hat y,y^\star]}{\sqrt{\Var[\hat y]\Var[y^\star]}}
+=\frac{{\bhat}^\top\Sigma_p\bstar}
+{\sqrt{({\bhat}^\top\Sigma_p\bhat)({\bstar}^\top\Sigma_p\bstar)}}.$
+\end{lem}
+\begin{lem}[Slope of true on predicted]
+\label{lem:linear_slope}
+The slope of the least-squares line (with intercept) of $y^\star$ on
+$\hat y$ is
+$\displaystyle
+\mathrm{slope}_{y^\star\gets\hat y}[p]=\frac{\Cov[\hat y,y^\star]}{\Var[\hat y]}
+=\frac{{\bhat}^\top\Sigma_p\bstar}{{\bhat}^\top\Sigma_p\bhat}.$
+\end{lem}
+\begin{proof}
+All four follow from $\hat y-y^\star=(\bhat-\bstar)^\top\x$, from
+$\E_p[\x\x^\top]=\mu_p\mu_p^\top+\Sigma_p$, and from
+$\Cov[a^\top\x,b^\top\x]=a^\top\Sigma_pb$ for fixed vectors $a,b$.
+\end{proof}
+
+\begin{remark}[Which metrics see the center, and the rank-one degeneracy]
+\label{rem:app-metrics}
+MSE and direct $R^2$ depend on the center $\mu_p$ of the evaluation
+distribution; Pearson $r$ and the slope do not.  When $\Sigma_p$ has rank
+one, $\Sigma_p=\mathbf v\mathbf v^\top$, the Pearson correlation equals
+$\pm1$ whenever ${\bhat}^\top\mathbf v\ne0$ and ${\bstar}^\top\mathbf v\ne0$,
+and is undefined otherwise.  On a single noiseless accentuation path the
+correlation therefore carries no calibration information; it becomes
+informative only with observation noise or with several seed images.
+\end{remark}
+
+\subsection{Generalization, accentuation and peer review}
 \label{sec:app-evaluation-distributions}
 
-We can consider three types of errors. The key difference is where
-do we evaluate our predictions. Notably, for some cases (e.g. accentuation),
-the evaluation distribution is generated by the predictor itself,
-thus introducing interesting nested structures. These errors can be
-calculated by the Lemma \ref{lem:pred_error} above.
+Three evaluation distributions are of interest.  The key difference is who
+chooses the inputs: nature, the model itself, or another model.
 \begin{enumerate}
-\item \textbf{Held out samples from the }true\textbf{ distribution}. This
-is the classic population error or risk.
-\[
-E_{gen}=(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)
-\]
-\item \textbf{Accentuation path of your own}. We idealize the accentuation
-procedure as above $\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha\bhat$
-(starting at $\mathbf{x}_{0}$, then move along $\bhat$ with
-coefficient $\alpha$ with variance $\mathrm{Var}[\alpha]$, and $\mathbb{E}[\alpha]=0$)
-\[
-E_{acc}=(\bhat-\bstar)^{\top}(\mathbf{x}_{0}\mathbf{x}_{0}^{\top}+\mathrm{Var}[\alpha]\bhat{\bhat}^{\top})(\bhat-\bstar)
-\]
-\item \textbf{Accentuation path of other models}. Similarly if we let one
-model evaluate on the accentuation path of another model, the error
-reads
-\[
-E_{peer\ rev}=(\bhat-\bstar)^{\top}(\mathbf{x}_{0}\mathbf{x}_{0}^{\top}+\mathrm{Var}[\alpha]\bprime{\bprime}^{\top})(\bhat-\bstar)
-\]
+\item \emph{Generalization}: fresh samples from the natural distribution,
+$\mu_p=0$, $\Sigma_p=\Sigma$, giving the classical population risk
+$E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)$.
+\item \emph{Self-accentuation}: inputs $\x_0+\alpha\bhat$ with $\E[\alpha]=0$,
+so $\mu_p=\x_0$ and $\Sigma_p=\Var[\alpha]\,\bhat{\bhat}^\top$, giving
+$E_{acc}=(\bhat-\bstar)^\top(\x_0\x_0^\top+\Var[\alpha]\bhat{\bhat}^\top)(\bhat-\bstar)$.
+\item \emph{Peer review}: inputs $\x_0+\alpha'\bprime$ generated by another
+model $\bprime$, giving
+$E_{peer}=(\bhat-\bstar)^\top(\x_0\x_0^\top+\Var[\alpha']\bprime{\bprime}^\top)(\bhat-\bstar)$.
 \end{enumerate}
 
-\paragraph{Simplifying assumption about seed image $\mathbf{x}_{0}=0$}
+\paragraph{Null seed.}
+In the main text the seed is null, $\x_0=0$, corresponding to a gray
+initialization.  The three errors then read
+\begin{equation}
+E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar),\qquad
+E_{acc}=\Var[\alpha]\big({\bhat}^\top(\bhat-\bstar)\big)^2,\qquad
+E_{peer}=\Var[\alpha']\big({\bprime}^\top(\bhat-\bstar)\big)^2 .
+\label{eq:app-three-errors}
+\end{equation}
+For a natural seed $\x_0\ne0$ the MSE and $R^2$ acquire the additional
+rank-one term $(\x_0^\top(\bhat-\bstar))^2$, which is the prediction error at
+the seed itself, while the slope and Pearson $r$ are unchanged
+(Remark~\ref{rem:app-metrics}); averaging over natural seeds
+$\x_0\sim\mathcal N(0,\Sigma)$ adds $E_{gen}$ to the path error.  Multiple
+seeds also make the Pearson correlation informative.  We do not pursue these
+extensions here.
 
-For simplicity, let's first assume the seed image of the accentuation
-path is null, i.e.$\mathbf{x}_{0}=0$. In reality, this corresponds
-to initializing the pixels to be gray or null.
+\paragraph{Variance-matched control range.}
+The accentuation MSE depends on how far the target is driven, through
+$\Var[\alpha]$, whereas $R^2$, slope and $r$ do not.  To make errors
+comparable across models we fix the target levels so that the
+\emph{predicted} response variance along the path equals the natural
+response variance of the teacher:
+\begin{equation}
+\Var_{\x=\x_0+\alpha\bhat}[{\bhat}^\top\x]=\Var_{\x\sim\mathcal N(0,\Sigma)}[{\bstar}^\top\x]
+\quad\Longleftrightarrow\quad
+\Var[\alpha]\,({\bhat}^\top\bhat)^2=S:={\bstar}^\top\Sigma\bstar ,
+\label{eq:app-variance-matching}
+\end{equation}
+and analogously $\Var[\alpha']({\bprime}^\top\bprime)^2=S$ for the peer.
 
-Later we can consider the case where we sample $\mathbf{x}_{0}$ from
-a natural distribution, which is taking expectation over $\mathbf{x}_{0}$.
-
-Then the three types of errors becomes
-\begin{align*}
-E_{gen} & =(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)\\
-E_{acc} & =\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}\\
-E_{peer\ rev} & =\mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}
-\end{align*}
-
-\begin{table}
-\begin{centering}
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
- & $\mu_{p}$ & $\Sigma_{p}$ & MSE & R2 & Slope & Pearson r\tabularnewline
-\hline
-\hline
-General & $\mu_{p}$ & $\Sigma_{p}$ & $(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)$ & $1-\frac{(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)}{{\bstar}^{\top}\Sigma_{p}\bstar}$ & $\frac{{\bhat}^{\top}\Sigma_{p}\bstar}{{\bhat}^{\top}\Sigma_{p}\bhat}$ & $\frac{{\bhat}^{\top}\Sigma_{p}\bstar}{\sqrt{({\bhat}^{\top}\Sigma_{p}\bhat)({\bstar}^{\top}\Sigma_{p}\bstar)}}$\tabularnewline
-\hline
-Generalization & $0$ & $\Sigma$ & $(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)$ & $1-\frac{(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)}{{\bstar}^{\top}\Sigma\bstar}$ & $\frac{{\bhat}^{\top}\Sigma\bstar}{{\bhat}^{\top}\Sigma\bhat}$ & $\frac{{\bhat}^{\top}\Sigma\bstar}{\sqrt{({\bhat}^{\top}\Sigma\bhat)({\bstar}^{\top}\Sigma\bstar)}}$\tabularnewline
-\hline
-Accentuation & $0$ & $\mathrm{Var}[\alpha]\bhat{\bhat}^{\top}$ & $\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}$ & $1-\big(\frac{{\bhat}^{\top}\bhat}{{\bhat}^{\top}\bstar}-1\big)^{2}$ & $\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}$ & $1$ or $nan$\tabularnewline
-\hline
-Peer review & $0$ & $\mathrm{Var}[\alpha]\bprime{\bprime}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}$ & $1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}$ & $\frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}$ & $1$ or $nan$\tabularnewline
-\hline
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+ & $\mu_p$ & $\Sigma_p$ & MSE & $R^2$ & Slope \\
+\midrule
+General & $\mu_p$ & $\Sigma_p$
+ & $\Delta^\top(\mu_p\mu_p^\top+\Sigma_p)\Delta$
+ & $1-\dfrac{\Delta^\top(\mu_p\mu_p^\top+\Sigma_p)\Delta}{{\bstar}^\top\Sigma_p\bstar}$
+ & $\dfrac{{\bhat}^\top\Sigma_p\bstar}{{\bhat}^\top\Sigma_p\bhat}$ \\[1.2ex]
+Generalization & $0$ & $\Sigma$
+ & $\Delta^\top\Sigma\Delta$
+ & $1-\dfrac{\Delta^\top\Sigma\Delta}{S}$
+ & $\dfrac{{\bhat}^\top\Sigma\bstar}{{\bhat}^\top\Sigma\bhat}$ \\[1.2ex]
+Accentuation & $0$ & $\Var[\alpha]\bhat{\bhat}^\top$
+ & $\Var[\alpha]\big({\bhat}^\top\Delta\big)^2$
+ & $1-\Big(\dfrac{{\bhat}^\top\bhat}{{\bhat}^\top\bstar}-1\Big)^2$
+ & $\dfrac{{\bhat}^\top\bstar}{{\bhat}^\top\bhat}$ \\[1.2ex]
+Peer review & $0$ & $\Var[\alpha']\bprime{\bprime}^\top$
+ & $\Var[\alpha']\big({\bprime}^\top\Delta\big)^2$
+ & $1-\Big(\dfrac{{\bprime}^\top\bhat}{{\bprime}^\top\bstar}-1\Big)^2$
+ & $\dfrac{{\bprime}^\top\bstar}{{\bprime}^\top\bhat}$ \\
+\bottomrule
 \end{tabular}
-\par\end{centering}
-\caption{\textbf{Evaluation metric for generalization, accentuation and peer
-review}, assuming seed initialization $\mathbf{x}_{0}=0$. Note that
-for Pearson, nan happens when ${\bhat}^{\top}\bstar=0$
-for accentuation; when ${\bhat}^{\top}\bprime=0$ or ${\bprime}^{\top}\bhat=0$
-for peer review, otherwise it's always $1$ due to rank-1 covariance. }\label{tab:theory-Evaluation-metrics}
+\caption{\textbf{Evaluation metrics for generalization, accentuation and
+peer review} with null seed $\x_0=0$ and $\Delta:=\bhat-\bstar$.  The Pearson
+correlation is omitted: on the rank-one accentuation and peer paths it equals
+$\pm1$ (undefined when ${\bhat}^\top\bstar=0$, respectively
+${\bhat}^\top\bprime=0$ or ${\bprime}^\top\bstar=0$).}
+\label{tab:theory-Evaluation-metrics}
 \end{table}
 
-
-\paragraph{Assumption about accentuation and control range $\alpha$}
-
-One thing to note is that for accentuation, the MSE error depends
-on how much you control the target (i.e. neuronal activity), which
-translates to $\mathrm{Var}[\alpha]$, though R2, Pearson r and slope
-do not explicitly depend on $\mathrm{Var}[\alpha]$.
-
-One choice is to set the levels or the distribution of $\alpha$ such
-that the predicted variation of the unit will match the observed variation
-of the real target -- in that case the error will the comparable.
-
-This means the scaling factor reads
-\begin{align*}
-\operatorname{Var}_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha\bhat}[\hat{y}(\mathbf{x})] & =\operatorname{Var}_{x\sim\mathcal{N}(0,\Sigma)}[y^{\star}]\\
-\operatorname{Var}_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha\bhat}[{\bhat}^{\top}\mathbf{x}^{\prime}] & =\operatorname{Var}_{x\sim\mathcal{N}(0,\Sigma)}[{\bstar}^{\top}\mathbf{x}]\\
-\mathrm{Var}[\alpha]({\bhat}^{\top}\bhat)^{2} & ={\bstar}^{\top}\Sigma\bstar\\
-\mathrm{Var}[\alpha] & =\frac{{\bstar}^{\top}\Sigma\bstar}{({\bhat}^{\top}\bhat)^{2}}
-\end{align*}
-
-
-\subsection{Detailed Calculation notes of different metrics }
-
-\subsubsection{Accentuation error}
-
-Thus, the accentuation error can be written as
-\begin{align*}
-E_{acc} & =\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}\\
- & =\frac{{\bstar}^{\top}\Sigma\bstar}{({\bhat}^{\top}\bhat)^{2}}\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}\\
- & =({\bstar}^{\top}\Sigma\bstar)\big(1-\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\big)^{2}
-\end{align*}
-
-Note the variance of the true model on the accentuation path will
-be
+\begin{cor}[Accentuation and peer-review metrics; restatement of
+Corollary~\ref{cor:mr-three-evaluations}]
+\label{cor:app-three-evaluations}
+With the null seed and variance matching, and $N:={\bhat}^\top\bstar$,
+$D:={\bhat}^\top\bhat$, the metrics of Table~\ref{tab:theory-Evaluation-metrics}
+reduce to
+\begin{equation}
+\frac{E_{acc}}{S}=\Big(1-\frac ND\Big)^2,\qquad
+R^2_{acc}=1-\Big(\frac DN-1\Big)^2,\qquad
+\mathrm{slope}_{acc}=\frac ND,
+\label{eq:app-acc-metrics-ND}
+\end{equation}
+and, for a peer path,
+\begin{equation}
+\frac{E_{peer}}{S}=\Big(\frac{{\bprime}^\top\bhat}{{\bprime}^\top\bprime}-\frac{{\bprime}^\top\bstar}{{\bprime}^\top\bprime}\Big)^2,\qquad
+R^2_{peer}=1-\Big(1-\frac{{\bprime}^\top\bhat}{{\bprime}^\top\bstar}\Big)^2,\qquad
+\mathrm{slope}_{peer}=\frac{{\bprime}^\top\bstar}{{\bprime}^\top\bhat}.
+\label{eq:app-peer-metrics}
+\end{equation}
+In particular every accentuation metric is a function of the single scalar
+$z_{acc}:=D/N-1$:
+\begin{equation}
+R^2_{acc}=1-z_{acc}^2,\qquad
+\mathrm{slope}_{acc}=\frac1{1+z_{acc}},\qquad
+\frac{E_{acc}}{S}=\Big(\frac{z_{acc}}{1+z_{acc}}\Big)^2 .
+\label{eq:app-acc-metrics-z}
+\end{equation}
+\end{cor}
+\begin{proof}
+\emph{Accentuation.}  Substituting Eq.~\eqref{eq:app-variance-matching} into
+Eq.~\eqref{eq:app-three-errors},
 \[
-\operatorname{Var}_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha\bhat}[{\bstar}^{\top}\mathbf{x}^{\prime}]=({\bstar}^{\top}\bhat)^{2}\mathrm{Var}[\alpha]
+E_{acc}=\frac{S}{({\bhat}^\top\bhat)^2}\big({\bhat}^\top(\bhat-\bstar)\big)^2
+=S\Big(1-\frac{{\bhat}^\top\bstar}{{\bhat}^\top\bhat}\Big)^2 .
 \]
-\begin{align*}
-R_{acc}^{2} & =1-\frac{E_{acc}}{\mathrm{Var}[{\bstar}^{\top}\mathbf{x}^{\prime}]}\\
- & =1-\frac{\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}}{\mathrm{Var}[\alpha]({\bstar}^{\top}\bhat)^{2}}\\
- & =1-\frac{\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}}{({\bstar}^{\top}\bhat)^{2}}\\
- & =1-\Big(1-\frac{{\bhat}^{\top}\bhat}{{\bstar}^{\top}\bhat}\Big)^{2}
-\end{align*}
-
-The slope between true activation and predicted activation will be
-(noiseless case)
-\begin{align*}
- & \mathrm{slope}_{x^{\prime}=\mathbf{x}_{0}+\alpha\bhat}({\bstar}^{\top}\mathbf{x}^{\prime},{\bhat}^{\top}\mathbf{x}^{\prime})\\
-= & \mathrm{slope}({\bstar}^{\top}(\mathbf{x}_{0}+\alpha\bhat),{\bhat}^{\top}(\mathbf{x}_{0}+\alpha\bhat))\\
-= & \mathrm{slope}({\bstar}^{\top}\bhat,{\bhat}^{\top}\bhat)\\
-= & \frac{{\bstar}^{\top}\bhat}{{\bhat}^{\top}\bhat}
-\end{align*}
-
-
-\subsubsection{Peer review error}
-
-Similarly
-\begin{align*}
-E_{peer\ rev} & =\mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}\\
- & =\frac{{\bstar}^{\top}\Sigma\bstar}{({\bprime}^{\top}\bprime)^{2}}\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}\\
- & ={\bstar}^{\top}\Sigma\bstar\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bprime}-\frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bprime}\big)^{2}
-\end{align*}
-
-The true neural variance is
+The true response variance along the path is
+$\Var[{\bstar}^\top(\alpha\bhat)]=({\bstar}^\top\bhat)^2\Var[\alpha]$, so
 \[
-\operatorname{Var}_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha^{\prime}\bprime}[{\bstar}^{\top}\mathbf{x}^{\prime}]=({\bstar}^{\top}\bprime)^{2}\mathrm{Var}[\alpha^{\prime}]
+R^2_{acc}=1-\frac{\Var[\alpha]({\bhat}^\top(\bhat-\bstar))^2}{\Var[\alpha]({\bstar}^\top\bhat)^2}
+=1-\Big(\frac{{\bhat}^\top\bhat}{{\bstar}^\top\bhat}-1\Big)^2 ,
 \]
+and the slope of ${\bstar}^\top(\alpha\bhat)$ on ${\bhat}^\top(\alpha\bhat)$ is
+${\bstar}^\top\bhat/{\bhat}^\top\bhat$ because both are proportional to
+$\alpha$.
+\emph{Peer review.}  The same three steps with $\bhat$ replaced by $\bprime$
+in the path and $\Var[\alpha']=S/({\bprime}^\top\bprime)^2$ give
+Eq.~\eqref{eq:app-peer-metrics}.
+\emph{Reduction to $z$.}  Write $N/D=1/(1+z)$ and $D/N=1+z$ in
+Eq.~\eqref{eq:app-acc-metrics-ND}.
+\end{proof}
 
-the corresponding peer reviewed R2 is
-\begin{align*}
-R_{peer\ review}^{2}= & 1-\frac{E_{peer\ rev}}{\operatorname{Var}_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha^{\prime}\bprime}[{\bstar}^{\top}\mathbf{x}^{\prime}]}\\
-= & 1-\frac{\mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}}{\mathrm{Var}[\alpha^{\prime}]({\bstar}^{\top}\bprime)^{2}}\\
-= & 1-\Big(\frac{{\bprime}^{\top}(\bstar-\bhat)}{{\bstar}^{\top}\bprime}\Big)^{2}\\
-= & 1-\Big(1-\frac{{\bhat}^{\top}\bprime}{{\bstar}^{\top}\bprime}\Big)^{2}
-\end{align*}
+\begin{remark}[The two singularities of accentuation]
+The normalized error $E_{acc}/S$ diverges only as $D\to0$, i.e. when the
+student has no weight at all; the score $R^2_{acc}$ instead becomes very
+negative when the \emph{true} gain $N\to0$ while $D$ stays finite.  Very
+negative accentuation $R^2$ therefore need not mean unbounded raw error: as
+$N\to0$, $R^2_{acc}\to-\infty$ while $E_{acc}/S\to1$.  This is why $R^2$ is
+the more sensitive diagnostic of control failure.
+\end{remark}
 
-The slope reads between the model predicted and true neural response
-reads,
-\begin{align*}
- & \mathrm{slope}_{\mathbf{x}^{\prime}=\mathbf{x}_{0}+\alpha^{\prime}\bprime}({\bstar}^{\top}\mathbf{x}^{\prime},{\bhat}^{\top}\mathbf{x}^{\prime})\\
-= & \mathrm{slope}({\bstar}^{\top}(\mathbf{x}_{0}+\alpha^{\prime}\bprime),{\bhat}^{\top}(\mathbf{x}_{0}+\alpha^{\prime}\bprime))\\
-= & \mathrm{slope}({\bstar}^{\top}\bprime,{\bhat}^{\top}\bprime)\\
-= & \frac{{\bstar}^{\top}\bprime}{{\bhat}^{\top}\bprime}
-\end{align*}
-
-For comparison, on a general centered evaluation distribution with covariance
-$\Sigma_p$, Pearson correlation is
-\begin{align*}
-\operatorname{corr}(y_{true},y_{pred})
-&=\operatorname{corr}({\bstar}^{\top}x,{\bhat}^{\top}x)\\
-&=\frac{{\bhat}^{\top}\Sigma_p\bstar}
-{\sqrt{{\bhat}^{\top}\Sigma_p\bhat}\sqrt{{\bstar}^{\top}\Sigma_p\bstar}}.
-\end{align*}
-On a noiseless single peer-review path, $\Sigma_p$ has rank one, so the
-correlation is $+1$, $-1$, or undefined and carries no calibration information.
-
-
-\begingroup\color{red}
 \subsection{Geometry of equal-error sets}
 \label{sec:app-iso-error-geometry}
 
-The three evaluation distributions induce qualitatively different
-geometries in coefficient space.  For a fixed positive-definite $\Sigma$,
-an equal-generalization-error set is the ellipsoid
+The three evaluations induce different geometries in the space of student
+weights.  Fixing the level of each metric and asking which $\bhat$ attain it
+gives the following picture.
+
+\begin{prop}[Restatement of Proposition~\ref{prop:mr-iso-geometry}]
+Let $\Sigma\succ0$ and fix $\bstar$.
+\begin{enumerate}
+\item The equal-$E_{gen}$ sets are the ellipsoids
 \begin{equation}
-  (\bhat-\bstar)^\top\Sigma(\bhat-\bstar)=c.
-  \label{eq:iso-generalization-ellipsoid}
+(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)=c ,
+\label{eq:iso-generalization-ellipsoid}
 \end{equation}
-Its semiaxis along a population eigenvector with eigenvalue $s_k$ is
-proportional to $s_k^{-1/2}$.  Prediction therefore tolerates much larger
-Euclidean coefficient errors in low-variance directions.
-
-Accentuation depends instead on
+centered at $\bstar$ with semiaxis $\sqrt{c/s_k}$ along the population
+eigenvector $\uvec_k$.
+\item The equal-$z_{acc}$ sets are the spheres
 \begin{equation}
-  z_{acc}=\frac{\bhat^\top\bhat}{\bhat^\top\bstar}-1.
+\Big\|\bhat-\frac{a}{2}\bstar\Big\|^2=\frac{a^2}{4}\|\bstar\|^2,
+\qquad a:=1+z_{acc},
+\label{eq:iso-accentuation-sphere}
 \end{equation}
-For a fixed finite value $z$ with $\bhat^\top\bstar\neq0$, let $a=1+z$.
-Completing the square in
-$\bhat^\top\bhat=a\bhat^\top\bstar$ gives
+whose diameter joins $0$ and $a\bstar$; in particular perfect calibration
+$z_{acc}=0$ is the sphere with diameter $[0,\bstar]$, not the point $\bstar$.
+\item For a fixed peer $\bprime$, the equal-peer-error sets are the
+hyperplanes
 \begin{equation}
-  \left\|\bhat-\frac{a}{2}\bstar\right\|^2
-  =\frac{a^2}{4}\|\bstar\|^2.
-  \label{eq:iso-accentuation-sphere}
+{\bprime}^\top(\bhat-a_{peer}\bstar)=0,\qquad
+a_{peer}:=\frac{{\bprime}^\top\bhat}{{\bprime}^\top\bstar},
+\label{eq:iso-peer-hyperplane}
 \end{equation}
-Thus each equal-$z_{acc}$ set is a sphere whose diameter has endpoints
-$0$ and $a\bstar$ (apart from points where the defining ratio is singular).
-In particular, perfect leading-order calibration, $z_{acc}=0$, does not
-require $\bhat=\bstar$: it is the sphere with diameter $[0,\bstar]$.
+normal to $\bprime$.
+\end{enumerate}
+\end{prop}
+\begin{proof}
+(i) is the definition of $E_{gen}$ in the eigenbasis of $\Sigma$.
+(ii) For a finite level $z$ with ${\bhat}^\top\bstar\ne0$, the condition
+$D/N=a$ reads ${\bhat}^\top\bhat=a\,{\bhat}^\top\bstar$; completing the
+square gives Eq.~\eqref{eq:iso-accentuation-sphere}.  Since $R^2_{acc}$,
+$\mathrm{slope}_{acc}$ and $E_{acc}/S$ are functions of $z_{acc}$ alone
+(Eq.~\ref{eq:app-acc-metrics-z}), their level sets are unions of such
+spheres.  (iii) Each peer metric in Eq.~\eqref{eq:app-peer-metrics} is a
+function of ${\bprime}^\top\bhat/{\bprime}^\top\bstar$, which is constant
+on affine hyperplanes normal to $\bprime$.
+\end{proof}
 
-For a fixed peer direction $\bprime$, equal peer-review response error
-satisfies
-\begin{equation}
-  {\bprime}^\top\!\left(\bhat-a_{peer}\bstar\right)=0,
-  \qquad
-  a_{peer}:=\frac{{\bprime}^\top\bhat}{{\bprime}^\top\bstar},
-  \label{eq:iso-peer-hyperplane}
-\end{equation}
-and is therefore a hyperplane normal to $\bprime$.  Ellipsoids, spheres,
-and peer-normal hyperplanes expose different components of the same
-coefficient error; no scalar prediction score determines the other two.
-\endgroup
+\begin{remark}[Why prediction hides what control exposes]
+The ellipsoid tolerates Euclidean weight errors of size $\sqrt{c/s_k}$ along
+the $k$th eigendirection, so errors along low-variance directions are almost
+free for prediction.  The sphere and the hyperplane are Euclidean objects and
+weight all directions equally.  Consequently a student may sit deep inside a
+small prediction ellipsoid, far from the calibration sphere, while lying
+exactly on the peer hyperplane of a good generator.  No scalar prediction
+score determines the other two geometries.
+\end{remark}
 
+\begin{example}[Proof of Example~\ref{ex:mr-dissociation}]
+With $\Sigma=\operatorname{diag}(1,\varepsilon)$, $\bstar=\bhat_1=(1,0)^\top$
+and $\bhat_2=(1,a_\varepsilon)^\top$, $a_\varepsilon=\varepsilon^{-q}$,
+$0<q<\tfrac12$: $E_{gen}(\bhat_2)=\varepsilon a_\varepsilon^2=\varepsilon^{1-2q}\to0$
+and $R^2_{gen}(\bhat_2)\to1$.  On its own path $N_2=1$ and
+$D_2=1+a_\varepsilon^2$, so $\mathrm{slope}_{acc}(\bhat_2)=(1+a_\varepsilon^2)^{-1}\to0$
+and $R^2_{acc}(\bhat_2)=1-a_\varepsilon^4\to-\infty$.  For peer review,
+${\bhat_1}^\top\bhat_2/{\bhat_1}^\top\bstar=1$ and
+${\bhat_2}^\top\bhat_1/{\bhat_2}^\top\bstar=1$, so both peer scores equal $1$.
+\end{example}
 
+\section{Pixel-space ridge: proofs}
+\label{sec:app-pixel-ridge}
 
-\section{Pixel-space ridge deterministic equivalents and proofs}\label{sec:app-pixel-ridge}
+The geometry of the previous section says where a student must \emph{not}
+be for control to succeed.  This section computes where ridge regression on
+noisy data actually puts it.  We work in the proportional limit
+$n,d\to\infty$, $d/n\to\gamma$, with Gaussian design, and use the
+deterministic equivalents (DEs) collected in Section~\ref{sec:app-rmt-toolkit}:
+the effective penalty $\kappa(\lambda)$ of Eq.~\eqref{eq:app-kappa-fixed-point},
+the one-point equivalent Eq.~\eqref{eq:app-one-point-de}, the two-point
+equivalent Eq.~\eqref{eq:app-two-point-de}, and the derivative
+$d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ of Eq.~\eqref{eq:app-dkappa-dlambda}.
+Throughout, $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$, $\bstar=\sum_kb_k\uvec_k$,
+and $B_{p,q}$, $\mathrm{df}_{p,q}$ are the spectral sums of
+Eq.~\eqref{eq:mr-spectral-sums}.
 
-\begingroup\color{red}
-\begin{proposition}[Pixel-space ridge deterministic equivalents]
+\begin{prop}[Restatement of Propositions~\ref{prop:mr-per-pc} and \ref{prop:mr-pixel-de}]
 \label{prop:app-pixel-ridge-de}
-Under the Gaussian design and proportional-limit assumptions of the main
-text, let $\kappa$ solve the ridge fixed-point equation.  Then
+For pixel ridge under Gaussian design,
 \begin{align}
-E_{gen,DE}
-&=\frac{n\bigl(\kappa^2B_{1,2}(\kappa)+\sigma^2\bigr)}
-        {n-\mathrm{df}_{2}(\kappa)}-\sigma^2,
+E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{df}_2}-\sigma^2,
 \label{eq:app-pixel-egen-summary}\\
-\mu_N
-&=B_{1,1}(\kappa),
+\mu_N&:=\E[N]\asymp B_{1,1},
 \label{eq:app-pixel-N-summary}\\
-\mu_D
-&=B_{2,2}(\kappa)
- +\frac{\mathrm{df}_{1,2}(\kappa)}{n}
-  \bigl(E_{gen,DE}+\sigma^2\bigr).
-\label{eq:app-pixel-D-summary}
+\mu_D&:=\E[D]\asymp B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big),
+\label{eq:app-pixel-D-summary}\\
+\E\big[(\uvec_k^\top(\bhat-\bstar))^2\big]&\asymp
+\frac{\kappa^2}{(s_k+\kappa)^2}b_k^2
++\frac{s_k}{(s_k+\kappa)^2}\,\frac{\kappa^2B_{1,2}+\sigma^2}{n-\mathrm{df}_2}.
+\label{eq:app-per-pc}
 \end{align}
-Consequently, the leading accentuation metrics follow by substituting
-$N\approx\mu_N$ and $D\approx\mu_D$ into
-Eq.~\eqref{eq:acc_metric_ND_depen}.  Prediction and accentuation share the
-same fitted estimator but apply different spectral weightings to its error.
-\end{proposition}
-\endgroup
+\end{prop}
 
-\subsection{Generalization risk and its deterministic equivalent}
+\subsection{Generalization risk}
 
-Here we consider the normal generalization error and how we select
-the regularization strength $\lambda$.
-\[
-E_{gen}=(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)
-\]
-
-Recall the weight form,
-\[
-\bhat=(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
-\]
-\[
-\bhat-\bstar=-\lambda(\hat{\Sigma}+\lambda I_{d})^{-1}\bstar+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
-\]
-\begin{align*}
-E_{gen} & =(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)\\
-\mathbb{E}_{\eta}[E_{gen}] & =\lambda^{2}{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\bstar\\
- & \quad+\sigma^{2}\mathbb{E}_{\eta}\Big[(\frac{1}{n}X^{\top}\eta)^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)\Big]\\
- & =\lambda^{2}{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\bstar\\
- & \quad+\sigma^{2}\mathbb{E}_{\eta}\mathrm{Tr}\Big[(\frac{1}{n^{2}}X^{\top}\eta\eta^{\top}X(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Big]\\
- & =\lambda^{2}{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\bstar\\
- & \quad+\frac{\sigma^{2}}{n}\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma\Big]
-\end{align*}
-
-Using the derivation below we have
-\begin{align}
-\mathbb{E}_{\eta}[E_{gen}] & \asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\nonumber \\
- & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\nonumber \\
- & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}(\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}-1)\label{eq:generalization_error_classic}\\
- & =\frac{n\ \big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}-\sigma^{2}\label{eq:generalization_error_classic_abbrev}
-\end{align}
-
-\noindent\begin{minipage}[t]{1\columnwidth}%
-\textbf{Derivations}
-
-Noise term in generalization error
-\begin{align*}
-\mathrm{Tr}\Big[\Sigma(\hat{\Sigma}+\lambda I_{d})^{-2}\hat{\Sigma}\Big] & =-\frac{d}{d\lambda}\mathrm{Tr}\Big[\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\Big]\\
- & \asymp-\frac{d}{d\lambda}\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa(\lambda)I_{d})^{-1}\Sigma\Big]\\
- & =\frac{d\kappa}{d\lambda}\mathrm{Tr}\Big[(\Sigma+\kappa(\lambda)I_{d})^{-2}\Sigma^{2}\Big]\\
- & =\mathrm{df}_{2}(\kappa)\frac{d\kappa}{d\lambda}
-\end{align*}
-
-Note that using the self-consistent equation (where $\ensuremath{\gamma=d/n}$)
-\begin{align*}
-\frac{d\kappa}{d\lambda} & =\frac{1}{1-\gamma\mathrm{tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]}\\
- & =\frac{n}{n-\mathrm{df}_{2}(\kappa)}
-\end{align*}
-
-Thus,
-\begin{align*}
-\frac{\sigma^{2}}{n}\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma\Big] & \asymp\frac{\sigma^{2}}{n}\mathrm{df}_{2}(\kappa)\frac{d\kappa}{d\lambda}\\
- & =\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}
-\end{align*}
-
-For the first term.
-\begin{align*}
- & {\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\bstar\\
-= & \mathrm{Tr}\Big[\bstar{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Big]
-\end{align*}
-
-For two points
-\begin{align*}
-\mbox{Tr}\bigl[A(\widehat{\Sigma}+\lambda I)^{-1}B(\widehat{\Sigma}+\lambda I)^{-1}\bigr] & \asymp\frac{\kappa(\lambda)^{2}}{\lambda^{2}\,}\mbox{Tr}\bigl[A\,\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-1}\,B\,\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-1}\bigr]\\
- & +\frac{\kappa(\lambda)^{2}}{\lambda^{2}}\mbox{Tr}\bigl[A\,\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bigr]\mbox{Tr}\bigl[B\,\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bigr]\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa(\lambda)\bigr)}
-\end{align*}
-
-We have equivalence
-\begin{align*}
-\lambda^{2}\mathrm{Tr}\Big[\bstar{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\Sigma(\hat{\Sigma}+\lambda I_{d})^{-1}\Big] & \asymp\lambda^{2}\frac{\kappa(\lambda)^{2}}{\lambda^{2}\,}\mbox{Tr}\bigl[\bstar{\bstar}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-1}\Sigma\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-1}\bigr]\\
- & +\lambda^{2}\frac{\kappa(\lambda)^{2}}{\lambda^{2}}\mbox{Tr}\bigl[\bstar{\bstar}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bigr]\mbox{Tr}\bigl[\Sigma\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bigr]\frac{1}{n-\mathrm{df}_{2}\bigl(\kappa(\lambda)\bigr)}\\
- & =\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bstar\\
- & +\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bstar\frac{\mathrm{df}_{2}\bigl(\kappa\bigr)}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\\
- & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa(\lambda)I\bigr)^{-2}\Sigma\bstar
-\end{align*}
-
-As a summary
-\[
-\mathbb{E}_{\eta}[E_{gen}]\asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}
-\]
-
-which recovers Eq. 25 from Scaling and Renormalization paper (P19).%
-\end{minipage}
-
-
-
-\subsection{Accentuation numerator and denominator}
-
-From Tab. \ref{tab:theory-Evaluation-metrics}, for accentuation and
-control error, the central quantity is a ratio, i.e. slope
-\[
-\mathrm{slope}=\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}
-\]
-
-Where the other metrics (MSE, R2) can be expressed with the slope
-\begin{align*}
-R^{2} & =1-\big(\frac{{\bhat}^{\top}\bhat}{{\bhat}^{\top}\bstar}-1\big)^{2}\\
- & =1-(\frac{1}{\mathrm{slope}}-1)^{2}
-\end{align*}
-\begin{align*}
-E_{acc} & =({\bstar}^{\top}\Sigma\bstar)\big(1-\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\big)^{2}\\
- & =({\bstar}^{\top}\Sigma\bstar)(\mathrm{slope}-1)^{2}
-\end{align*}
-
-Thus the key quantities to analyze is the numerator ${\bhat}^{\top}\bstar$
-and denominator ${\bhat}^{\top}\bhat$.
-
-Abbreviating $N:={\bhat}^{\top}\bstar$, and $D:={\bhat}^{\top}\bhat$
-\[
-\mathrm{slope}=\frac{N}{D}
-\]
-\begin{align*}
-R^{2} & =1-(\frac{D}{N}-1)^{2}\\
- & =2\frac{D}{N}-\frac{D^{2}}{N^{2}}
-\end{align*}
-\[
-E_{acc}=({\bstar}^{\top}\Sigma\bstar)(\frac{N}{D}-1)^{2}
-\]
-
-
-
-
-\subsection{Leading deterministic equivalents for $N$ and $D$}
-
-First, we'd calculate the zeroth order term, the ratio of expectations
-$\mu_{N}/\mu_{D}$.
-
-Let eigen-decomposition of population covariance and express the teacher
-weights in the eigenbasis.
-\begin{align*}
-\Sigma & =U\Lambda U^{\top}=\sum_{k=1}^{d}s_{k}\mathbf{u}_{k}\mathbf{u}_{k}^{\top}\\
-\bstar & =\sum_{k=1}^{d}b_{k}\mathbf{u}_{k}
-\end{align*}
-
-Recall that the estimated weight vector with ridge regressor reads
-\[
-\bhat=(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar+\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
-\]
-
-
-\paragraph{Numerator: inner product}
-
-Numerator is the dot-product term:
-\[
-N:={\bstar}^{\top}\bhat={\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar+\sigma{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)
-\]
-
-The expectation and the deterministic equivalence can be written
-\begin{align*}
-\mathbb{E}_{X,\eta}\Big[{\bhat}^{\top}\bstar\Big] & =\mathbb{E}_{X}\Big[{\bstar}^{\top}(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar\Big]\\
- & \asymp{\bstar}^{\top}(\Sigma+\kappa(\lambda)I_{d})^{-1}\Sigma\bstar
-\end{align*}
-
-Thus
+\begin{proof}[Proof of Eq.~\eqref{eq:app-pixel-egen-summary}]
+\emph{Step 1: conditional expectation over the noise.}  Insert the error
+decomposition Eq.~\eqref{eq:app-ridge-decomposition} into
+$E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar)$.  The cross term is linear
+in $\eta$ and averages to zero; the quadratic term uses
+$\E_\eta[\eta\eta^\top]=I_n$:
 \begin{equation}
-\mu_{N}=\mathbb{E}_{X,\eta}\Big[N\Big]\asymp{\bstar}^{\top}(\Sigma+\kappa(\lambda)I_{d})^{-1}\Sigma\bstar\label{eq:mean_numerator_dotprod}
+\E_\eta[E_{gen}]
+=\lambda^2{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\Sigma(\hat\Sigma+\lambda I)^{-1}\bstar
++\frac{\sigma^2}{n}\operatorname{Tr}\big[(\hat\Sigma+\lambda I)^{-1}\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\Sigma\big].
+\label{eq:app-egen-conditional}
 \end{equation}
 
-\textbf{Interpretations}
-\begin{itemize}
-\item The inner product expectation is non-negative $\mu_{N}\geq0$. The
-only case where it's 0, is when $\Sigma\bstar=0$, i.e. teacher
-signal is in the null space.
-\item Using the eigenbasis representation, it can be represented by the
-sum, $\mu_{N}\asymp\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}$,
-i.e. $\mu_{N}$ is the sum of teacher weight power (squared norm)
-in the PC space beyond the $\kappa$ threshold i.e. resolution.
-\end{itemize}
-
-\paragraph{Denominator: squared norm}
-
-Denominator is the squared norm term:
-\[
-D:={\bhat}^{\top}\bhat={\bstar}^{\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\bstar+2\sigma{\bstar}^{\top}\hat{\Sigma}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta)+\sigma^{2}(\frac{1}{n}X^{\top}\eta)^{\top}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta)
-\]
-
-The expectation and the deterministic equivalence can be written
+\emph{Step 2: noise term.}  Writing the trace as a $\lambda$-derivative and
+using the one-point DE,
 \begin{align*}
-\mathbb{E}_{X,\eta}\Big[{\bhat}^{\top}\bhat\Big] & =\mathbb{E}_{X}\Big[{\bstar}^{\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\bstar\Big]+\mathbb{E}_{X,\eta}\Big[\sigma^{2}(\frac{1}{n}X^{\top}\eta)^{\top}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta)\Big]\\
- & =\mathbb{E}_{X}\Big[{\bstar}^{\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\bstar\Big]+\sigma^{2}\mathbb{E}_{X,\eta}\mathrm{Tr}\Big[\frac{1}{n}(\hat{\Sigma}+\lambda I_{d})^{-2}(\frac{1}{n}X^{\top}\eta\eta^{\top}X)\Big]\\
- & =\mathbb{E}_{X}\Big[{\bstar}^{\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\bstar\Big]+\frac{\sigma^{2}}{n}\mathbb{E}_{X}\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-2}\hat{\Sigma}\Big]
+\operatorname{Tr}\big[\Sigma(\hat\Sigma+\lambda I)^{-2}\hat\Sigma\big]
+&=-\frac{d}{d\lambda}\operatorname{Tr}\big[\Sigma(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\big]
+\asymp-\frac{d}{d\lambda}\operatorname{Tr}\big[\Sigma(\Sigma+\kappa(\lambda)I)^{-1}\Sigma\big]
+=\frac{d\kappa}{d\lambda}\,\mathrm{df}_2(\kappa),
+\end{align*}
+so that with Eq.~\eqref{eq:app-dkappa-dlambda} the noise term equals
+$\sigma^2\mathrm{df}_2/(n-\mathrm{df}_2)$.
+
+\emph{Step 3: bias term.}  Apply the two-point DE
+Eq.~\eqref{eq:app-two-point-de} with $A=\bstar{\bstar}^\top$ and $B=\Sigma$:
+\begin{align*}
+\lambda^2\operatorname{Tr}\big[\bstar{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\Sigma(\hat\Sigma+\lambda I)^{-1}\big]
+&\asymp\kappa^2{\bstar}^\top(\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa I)^{-1}\bstar
++\kappa^2\,\frac{{\bstar}^\top(\Sigma+\kappa I)^{-2}\Sigma\bstar\;\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-2}\Sigma]}{n-\mathrm{df}_2}\\
+&=\frac{n}{n-\mathrm{df}_2}\,\kappa^2B_{1,2}(\kappa).
 \end{align*}
 
-The DE relationship are
-\begin{align*}
-\mathbb{E}_{X,\eta}\Big[D\Big] & =\mathbb{E}_{X}\Big[{\bstar}^{\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\bstar\Big]+\frac{\sigma^{2}}{n}\mathbb{E}_{X}\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-2}\hat{\Sigma}\Big]\\
- & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\kappa^{2}\mbox{Tr}\big[\Sigma(\Sigma+\kappa I_{d})^{-2}\big]}{n-\mathrm{df}_{2}(\kappa)}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\\
- & \quad+\frac{\sigma^{2}}{n}\frac{n}{n-\mathrm{df}_{2}(\kappa)}\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]\\
- & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)
-\end{align*}
-
-Thus
+\emph{Step 4: assemble.}  Adding the two terms,
 \begin{equation}
-\mu_{D}\asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)\label{eq:mean_denom_sqnorm}
+\E_\eta[E_{gen}]\asymp\frac{n}{n-\mathrm{df}_2}\kappa^2B_{1,2}+\sigma^2\frac{\mathrm{df}_2}{n-\mathrm{df}_2}
+=\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\sigma^2 ,
+\label{eq:generalization_error_classic}
+\end{equation}
+which is Eq.~\eqref{eq:app-pixel-egen-summary} and agrees with the classical
+anisotropic ridge risk \citep{dobriban2018high,hastie2022surprises}.
+\end{proof}
+
+\subsection{The accentuation forms $N$ and $D$}
+
+\begin{proof}[Proof of Eqs.~\eqref{eq:app-pixel-N-summary} and \eqref{eq:app-pixel-D-summary}]
+\emph{Numerator.}  From Eq.~\eqref{eq:app-ridge-decomposition},
+$N={\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\bstar
++\sigma{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\frac1nX^\top\eta$.  The noise
+part has zero mean, and the one-point DE gives
+\begin{equation}
+\mu_N=\E_{X,\eta}[N]\asymp{\bstar}^\top(\Sigma+\kappa I)^{-1}\Sigma\bstar=B_{1,1}(\kappa).
+\label{eq:mean_numerator_dotprod}
 \end{equation}
 
-\textbf{Remarks}
-\begin{itemize}
-\item $\mu_{D}\geq0$ because ${\bhat}^{\top}\bhat\geq0$.
-\item There is a tight connection between $\mu_{D}$ and $E_{gen}$ on the
-DE level
-\begin{align*}
-\mu_{D} & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)\\
- & ={\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{1}{n}\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]\big(E_{gen}+\sigma^{2}\big)
-\end{align*}
-\end{itemize}
-\noindent\begin{minipage}[t]{1\columnwidth}%
-\textbf{Derivations}
-
-\begin{align*}
-\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-2}\hat{\Sigma}\Big] & =-\frac{d}{d\lambda}\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\Big]\\
- & \asymp-\frac{d}{d\lambda}\mathrm{Tr}\Big[(\Sigma+\kappa(\lambda)I_{d})^{-1}\Sigma\Big]\\
- & =\frac{d\kappa}{d\lambda}\mathrm{Tr}\Big[(\Sigma+\kappa(\lambda)I_{d})^{-2}\Sigma\Big]
-\end{align*}
-
-Note that using the self-consistent equation
-\begin{align}
-\kappa(\lambda)-\lambda & =\gamma\kappa(\lambda)\int_{0}^{\infty}\frac{sd\nu(s)}{\kappa(\lambda)+s}\label{eq:silverstein_self_consistent}\nonumber \\
- & =\gamma\kappa(\lambda)\mathrm{tr}[\Sigma(\Sigma+\kappa(\lambda)I)^{-1}],
-\end{align}
-
-\begin{align*}
-\frac{d\lambda}{d\kappa} & =\frac{d}{d\kappa}\Big(\kappa-\gamma\kappa\mathrm{tr}[\Sigma(\Sigma+\kappa I)^{-1}]\Big)\\
- & =\Big(1-\gamma\mathrm{tr}[\Sigma(\Sigma+\kappa I)^{-1}]+\gamma\kappa\mathrm{tr}[\Sigma(\Sigma+\kappa I)^{-2}]\Big)\\
- & =\Big(1+\gamma\mathrm{tr}[\kappa\Sigma(\Sigma+\kappa I)^{-2}-\Sigma(\Sigma+\kappa I)^{-1}]\Big)\\
- & =1+\gamma\mathrm{tr}[\Sigma(\Sigma+\kappa I)^{-2}\kappa I-\Sigma(\Sigma+\kappa I)^{-2}(\Sigma+\kappa I)]\\
- & =1-\gamma\mathrm{tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]\\
- & =1-\frac{1}{n}\mathrm{Tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]
-\end{align*}
-
-where $\ensuremath{\gamma=d/n}$
+\emph{Denominator.}  Expanding $D={\bhat}^\top\bhat$ and averaging over
+$\eta$ kills the cross term:
 \[
-\frac{d\kappa}{d\lambda}=\frac{1}{1-\gamma\mathrm{tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]}
+\E_\eta[D]={\bstar}^\top\hat\Sigma^2(\hat\Sigma+\lambda I)^{-2}\bstar
++\frac{\sigma^2}{n}\operatorname{Tr}\big[(\hat\Sigma+\lambda I)^{-2}\hat\Sigma\big].
 \]
-
-Thus
-
-\begin{align*}
-\mathrm{Tr}\Big[(\hat{\Sigma}+\lambda I_{d})^{-2}\hat{\Sigma}\Big] & \asymp\frac{d\kappa}{d\lambda}\mathrm{Tr}\Big[(\Sigma+\kappa(\lambda)I_{d})^{-2}\Sigma\Big]\\
- & =\frac{1}{1-\gamma\mathrm{tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]}\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]\\
- & =\frac{1}{1-\frac{d}{n}\mathrm{tr}[\Sigma^{2}(\Sigma+\kappa I)^{-2}]}\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]\\
- & =\frac{n}{n-\mathrm{df}_{2}(\kappa)}\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]
-\end{align*}
-
-For two points
-
+The noise trace is handled as in Step 2 above,
+$\operatorname{Tr}[(\hat\Sigma+\lambda I)^{-2}\hat\Sigma]\asymp
+\frac{d\kappa}{d\lambda}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-2}]
+=\frac{n}{n-\mathrm{df}_2}\mathrm{df}_{1,2}$.  The signal term is the
+two-point DE with $A=\bstar{\bstar}^\top$, $B=I$:
 \[
-\mbox{Tr}\Big[A\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}B\hat{\Sigma}(\lambda^{\prime}+\hat{\Sigma})^{-1}\Big]\simeq\mbox{Tr}\big[AT_{\Sigma}BT_{\Sigma}^{\prime}\big]+\frac{\kappa\kappa'}{n-\mathrm{df}_{2}(\kappa,\kappa')}\mbox{Tr}\big[AG_{\Sigma}\Sigma G_{\Sigma}^{\prime}\big]\mbox{Tr}\big[G_{\Sigma}^{\prime}\Sigma G_{\Sigma}B\big]
+{\bstar}^\top\hat\Sigma^2(\hat\Sigma+\lambda I)^{-2}\bstar
+\asymp{\bstar}^\top(\Sigma+\kappa I)^{-2}\Sigma^2\bstar
++\frac{\kappa^2\,\mathrm{df}_{1,2}}{n-\mathrm{df}_2}\,{\bstar}^\top(\Sigma+\kappa I)^{-2}\Sigma\bstar .
 \]
+Collecting,
+\begin{equation}
+\mu_D\asymp B_{2,2}+\frac{\mathrm{df}_{1,2}}{n-\mathrm{df}_2}\big(\sigma^2+\kappa^2B_{1,2}\big)
+=B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big),
+\label{eq:mean_denom_sqnorm}
+\end{equation}
+where the last equality uses Eq.~\eqref{eq:app-pixel-egen-summary}.
+\end{proof}
 
-\begin{align*}
-\mbox{Tr}\Big[A\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}\hat{\Sigma}(\lambda+\hat{\Sigma})^{-1}\Big] & \simeq\mbox{Tr}\big[AT_{\Sigma}T_{\Sigma}\big]+\frac{\kappa^{2}}{n-\mathrm{df}_{2}(\kappa)}\mbox{Tr}\big[AG_{\Sigma}\Sigma G_{\Sigma}\big]\mbox{Tr}\big[G_{\Sigma}\Sigma G_{\Sigma}\big]\\
- & =\mbox{Tr}\big[AT_{\Sigma}^{2}\big]+\frac{\kappa^{2}}{n-\mathrm{df}_{2}(\kappa)}\mbox{Tr}\big[A\Sigma G_{\Sigma}^{2}\big]\mbox{Tr}\big[\Sigma G_{\Sigma}^{2}\big]\\
- & =\mbox{Tr}\big[A(\Sigma+\kappa(\lambda)I_{d})^{-2}\Sigma^{2}\big]+\frac{\kappa^{2}}{n-\mathrm{df}_{2}(\kappa)}\mbox{Tr}\big[A\Sigma(\Sigma+\kappa(\lambda)I_{d})^{-2}\big]\mbox{Tr}\big[\Sigma(\Sigma+\kappa(\lambda)I_{d})^{-2}\big]
-\end{align*}
-
-Thus
-
+\begin{proof}[Proof of Eq.~\eqref{eq:app-per-pc}]
+Project Eq.~\eqref{eq:app-ridge-decomposition} onto $\uvec_k$ and average
+over $\eta$:
 \[
-{\bstar}^{\top}\hat{\Sigma}^{2}(\hat{\Sigma}+\lambda I_{d})^{-2}\bstar\asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\kappa^{2}\mbox{Tr}\big[\Sigma(\Sigma+\kappa I_{d})^{-2}\big]}{n-\mathrm{df}_{2}(\kappa)}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar
+\E_\eta\big[(\uvec_k^\top(\bhat-\bstar))^2\big]
+=\lambda^2\operatorname{Tr}\big[\uvec_k\uvec_k^\top(\hat\Sigma+\lambda I)^{-1}\bstar{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\big]
++\frac{\sigma^2}{n}\operatorname{Tr}\big[\uvec_k\uvec_k^\top(\hat\Sigma+\lambda I)^{-1}\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big].
 \]
-%
-\end{minipage}
+The two-point DE with $A=\uvec_k\uvec_k^\top$, $B=\bstar{\bstar}^\top$ gives
+for the first term
+$\kappa^2\big[b_k^2/(s_k+\kappa)^2+\frac{s_k}{(s_k+\kappa)^2}\frac{B_{1,2}}{n-\mathrm{df}_2}\big]$,
+and the derivative argument of Step 2 gives for the second
+$\frac{\sigma^2}{n}\frac{n}{n-\mathrm{df}_2}\frac{s_k}{(s_k+\kappa)^2}$.
+Summing yields Eq.~\eqref{eq:app-per-pc}.  Weighting by $s_k$ and summing
+over $k$ recovers Eq.~\eqref{eq:app-pixel-egen-summary}; summing without
+weights and adding the squared mean $\sum_k(s_kb_k/(s_k+\kappa))^2=B_{2,2}$
+recovers Eq.~\eqref{eq:app-pixel-D-summary}.
+\end{proof}
 
-\paragraph{Combined ratio and simplification}
+\begin{remark}[Reading the three quantities]
+\begin{enumerate}
+\item $\mu_N=\sum_k\frac{s_k}{s_k+\kappa}b_k^2\ge0$ is the teacher power in
+the modes that ridge resolves, i.e. those with $s_k\gtrsim\kappa$; it
+vanishes only if $\Sigma\bstar=0$.
+\item $\mu_D$ is the squared norm of the shrunken mean weight, $B_{2,2}$, plus
+the \emph{Euclidean} energy of estimation noise: $(E_{gen,DE}+\sigma^2)/n$
+per effective sample, multiplied by $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$,
+a count of modes in a bell-shaped band around $s_k\approx\kappa$ (the weight
+$4\kappa s_k/(s_k+\kappa)^2$ peaks at $1$ for $s_k=\kappa$ with constant
+width on a logarithmic axis).  Prediction weights this same noise by $s_k$;
+control does not.
+\item The per-mode error Eq.~\eqref{eq:app-per-pc} is largest, relative to the
+mode's own variance $s_k$, for low-variance modes: the variance term divided
+by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
+\end{enumerate}
+\end{remark}
 
-The leading order estimate of the ratio reads
+\subsection{The leading control error $z_{acc}$}
+
+Substituting $N\approx\mu_N$, $D\approx\mu_D$ into Eq.~\eqref{eq:app-acc-metrics-z}
+gives the leading (ratio-of-DE) accentuation metrics.  The central quantity
+admits a compact form.
+
+\begin{lem}[Leading $z_{acc}$ in closed form]
+\label{lem:app-z-closed-form}
+\begin{equation}
+z^{(0)}_{acc}:=\frac{\mu_D}{\mu_N}-1
+=\frac{\sigma^2\,\mathrm{df}_{1,2}(\kappa)-n\lambda\,B_{1,2}(\kappa)}{(n-\mathrm{df}_2(\kappa))\,B_{1,1}(\kappa)}
+=\frac{B_{2,2}-B_{1,1}}{B_{1,1}}+\frac{\mathrm{df}_{1,2}(E_{gen,DE}+\sigma^2)}{n\,B_{1,1}} .
+\label{eq:z_simplify_identity}
+\end{equation}
+\end{lem}
+\begin{proof}
+From Eqs.~\eqref{eq:mean_numerator_dotprod} and \eqref{eq:mean_denom_sqnorm},
 \[
-\mathbb{E}[\mathrm{slope}_{acc}]=\mathbb{E}\Big[\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\Big]\approx\frac{\mu_{N}}{\mu_{D}}=\frac{{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\bstar}{{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)}
+\mu_D-\mu_N=B_{2,2}-B_{1,1}+\frac{\mathrm{df}_{1,2}}{n-\mathrm{df}_2}(\sigma^2+\kappa^2B_{1,2})
+=-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n-\mathrm{df}_2}(\sigma^2+\kappa^2B_{1,2}),
 \]
-
-While the R2 is another nonlinear function of this slope
+using the recursion $B_{1,1}-B_{2,2}=\kappa B_{1,2}$ of
+Eq.~\eqref{eq:app-spectral-recursion}.  The coefficient of $B_{1,2}$ is
 \[
-R_{acc}^{2}=1-(\frac{\mu_{D}}{\mu_{N}}-1)^{2}
+\frac{\kappa^2\mathrm{df}_{1,2}}{n-\mathrm{df}_2}-\kappa
+=\frac{\kappa\,(\kappa\mathrm{df}_{1,2}+\mathrm{df}_2-n)}{n-\mathrm{df}_2}
+=\frac{\kappa\,(\mathrm{df}_1-n)}{n-\mathrm{df}_2}
+=-\frac{n\lambda}{n-\mathrm{df}_2},
 \]
+by $\mathrm{df}_1=\mathrm{df}_2+\kappa\mathrm{df}_{1,2}$ and the fixed-point
+relation $n\lambda=\kappa(n-\mathrm{df}_1)$.  Dividing by $\mu_N=B_{1,1}$
+gives the first form; the second is
+Eq.~\eqref{eq:app-pixel-D-summary} divided by $B_{1,1}$.
+\end{proof}
 
-The slope can be written in a component by component form,
-\begin{align*}
-\frac{\mu_{N}}{\mu_{D}} & =\frac{{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\bstar}{{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)}\\
- & =\frac{\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}{\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}\Big)}
-\end{align*}
-
-For R2, the key quantity is the following,
-\begin{align*}
-\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\mu_{D}-\mu_{N}}{\mu_{N}}\\
- & =\frac{\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}\Big)-\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}{\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}\\
- & =\frac{-\kappa\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}\Big)}{\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}\\
- & =\frac{\sigma^{2}\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}+\Big(\kappa^{2}\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}-\kappa\Big)\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}}{\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}
-\end{align*}
-
-This can be dramatically simplified using the following facts
-\begin{align*}
- & \kappa^{2}\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}-\kappa\\
-= & \frac{\kappa}{n-\mathrm{df}_{2}(\kappa)}\Big(\sum_{k=1}^{d}\frac{\kappa s_{k}}{(s_{k}+\kappa)^{2}}-n+\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{2}}\Big)\\
-= & \frac{\kappa}{n-\mathrm{df}_{2}(\kappa)}\Big(\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}-n\Big)\\
-= & -\frac{n}{n-\mathrm{df}_{2}(\kappa)}\kappa\Big(1-\frac{1}{n}\mathrm{df}_{1}(\kappa)\Big)
-\end{align*}
-
-Using the fixed-point equation,
-\begin{align*}
-\kappa(\lambda)-\lambda & =\frac{1}{n}\kappa(\lambda)\mathrm{Tr}[\Sigma(\Sigma+\kappa(\lambda)I)^{-1}]\\
-\kappa-\lambda & =\frac{1}{n}\kappa\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}\\
-\lambda & =\kappa\big(1-\frac{1}{n}\mathrm{df}_{1}(\kappa)\big)
-\end{align*}
-
-Thus we can simply write
+\begin{remark}[Two competing terms, and when $R^2_{acc}$ turns negative]
+The two forms of Eq.~\eqref{eq:z_simplify_identity} expose the competition.
+The ridge term $-n\lambda B_{1,2}$ (equivalently $B_{2,2}-B_{1,1}<0$) is
+shrinkage: the student under-shoots along its own path, $z<0$, slope $>1$.
+The noise term $\sigma^2\mathrm{df}_{1,2}$ is Euclidean noise energy: the
+student over-shoots, $z>0$, slope $<1$.  Since $\mu_N,\mu_D>0$, always
+$z>-1$, and $R^2_{acc}=1-z^2$ crosses zero at $z=1$.  Writing the condition
+$z\ge1$ as
 \[
-\kappa^{2}\frac{\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}}{n-\mathrm{df}_{2}(\kappa)}-\kappa=-\frac{n\lambda}{n-\mathrm{df}_{2}(\kappa)}
+\sigma^2\,\mathrm{df}_{1,2}\;\ge\;n\lambda\,B_{1,2}+(n-\mathrm{df}_2)\,B_{1,1},
 \]
-
-Thus
-\begin{align}
-\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\frac{1}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}-n\lambda\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}\Big)}{\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}\label{eq:z_simplify_identity}\\
- & =\frac{\sigma^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}-n\lambda\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}}{(n-\mathrm{df}_{2}(\kappa))\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}}\\
- & =\frac{\sigma^{2}\mathrm{df}_{1,2}(\kappa)-n\lambda B_{1,2}(\kappa)}{(n-\mathrm{df}_{2}(\kappa))B_{1,1}(\kappa)}
-\end{align}
-
-If we let this quantity $z:=\frac{\mu_{D}}{\mu_{N}}-1$, then other
-metrics can be expressed
-\begin{align*}
-R_{acc}^{2} & =1-z^{2}\\
-\mathrm{slope}_{acc} & =\frac{1}{1+z}\\
-\mathrm{MSE}_{acc} & =({\bstar}^{\top}\Sigma\bstar)\big(\frac{z}{z+1}\big)^{2}
-\end{align*}
-
-
-\paragraph{Interpretation:}
-
-The preceding identity also gives a threshold for catastrophic accentuation
-$R^2$.
-
-Note that since realistic $\mu_{D}>0$, $\mu_{N}>0$, then $z>-1$.
-
-Thus $R_{acc}^{2}=0$, implies $z=1$. So we can search what makes
-$z=1$.
-
-If $z\geq1$, then
-\begin{align*}
-\frac{1}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}-n\lambda\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}\Big) & \geq\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}\\
-\sigma^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}-n\lambda\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2} & \geq(n-\mathrm{df}_{2}(\kappa))\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}\\
-n\lambda\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+(n-\mathrm{df}_{2}(\kappa))\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2} & \leq\sigma^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}
-\end{align*}
-
-\begin{itemize}
-\item When we fix the $\lambda,\kappa$ values, increasing the $\sigma^{2}$
-values can arbitrarily increase the right hand side, i.e. making $z\geq1$
-or any finite values, driving $R^{2}$ to any negative value.
-\item $\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}<\|\bstar\|^{2}$
-this term is bounded by the norm of teacher weight norm.
-\item $\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}$ this term
-is a weighted selection of $b_{k}^{2}$ power, with the peak around
-$s_{k}\sim\kappa$ and the peak value $1/4\kappa$, with constant
-half width. We could normalize the inequality so the function $g(s_{k})=\frac{4\kappa s_{k}}{(s_{k}+\kappa)^{2}}$
-only has maximal value always 1, it's a nice bellshape weighing function
-on the semilogx scale.
-\[
-\frac{n\lambda}{4\kappa}\sum_{k=1}^{d}\frac{4\kappa s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+(n-\mathrm{df}_{2}(\kappa))\sum_{k=1}^{d}\frac{s_{k}}{s_{k}+\kappa}b_{k}^{2}\leq\frac{\sigma^{2}}{4\kappa}\sum_{k=1}^{d}\frac{4\kappa s_{k}}{(s_{k}+\kappa)^{2}}
-\]
-\item $\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}$ this term is very
-similar, the unweighted count of the number of eigenmodes in the bell-shape
-weighting band of $\kappa$.
-\end{itemize}
-
-
+one sees that at fixed $\lambda$ (hence fixed $\kappa$) the right-hand side is
+bounded, $B_{1,1}\le\|\bstar\|^2$, while the left-hand side grows without
+bound in $\sigma^2$: for any fixed regularization, enough response noise
+drives $R^2_{acc}$ to any negative value.  Whether tuning $\lambda$ with the
+noise can prevent this is the subject of the next section.
+\end{remark}
 
 \section{Cross-validation versus control-optimal regularization}\label{sec:app-optimal-regularization}
 
