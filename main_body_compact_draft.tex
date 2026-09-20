@@ -93,17 +93,6 @@ z_{acc}:=\frac DN-1=\frac{{\bhat}^\top(\bhat-\bstar)}{{\bhat}^\top\bstar},
 \end{equation}
 which weights $\Delta$ by $\bhat$ itself, with no covariance in sight. Geometrically (App.~\ref{prop:mr-iso-geometry}), the equal-$E_{gen}$ sets are ellipsoids around $\bstar$ elongated along low-variance axes, whereas the equal-$z_{acc}$ sets are Euclidean spheres with diameter from $0$ to $(1+z)\bstar$, and the equal-peer-error sets are hyperplanes normal to $\bprime$. A student can sit deep inside the prediction ellipsoid, far from the control sphere, and still lie on the peer hyperplane of a good generator: this is exactly the configuration of Fig.~\ref{fig:phenomena} (bottom), and it can be made arbitrarily extreme by adding weight along a direction with $s_k\to0$ (App.~\ref{ex:mr-dissociation}).
 
-\begin{wrapfigure}{r}{0.5\linewidth}
-    \vspace{-8pt}
-    \centering
-    \includegraphics[width=\linewidth]{figures/draft_ridge_paths_iso_error_geometry.png}
-    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control calibration is the sphere through $0$ and $\bstar$ (orange). The fitted weight is scattered around the ridge path (purple) with a spread elongated along the low-variance axis. Cross-validation picks the tangency of the path with an ellipsoid; control calibration is its crossing with the sphere. (Placeholder from the validation repository; to be polished.)}
-    \label{fig:geometry}
-    \vspace{-6pt}
-\end{wrapfigure}
-\paragraph{Learning as a path through these landscapes.}
-Learning now has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, the ridge estimator traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around this path, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. The deterministic equivalents of the next two sections compute where the center of this cloud sits and how much Euclidean spread it carries. Cross-validation then selects the point of the path that is tangent to the smallest reachable prediction ellipsoid, whereas control calibration asks where the path crosses the sphere $D=N$. The two points coincide only in special cases (isotropic data is one, Sec.~\ref{sec:pixel}); in general the noise cloud pushes the path off the sphere in precisely the directions the ellipsoid does not see.
-
 The remaining question is therefore not whether the dissociation is possible but when \emph{learning} produces it. Three ingredients are in play: finite-sample regression on noisy responses, the choice of regularization, and the feature map through which the gradient reaches the pixels. We take them in turn.
 
 \section{Pixel-space ridge: noise, spectrum and the choice of regularization}
@@ -117,6 +106,18 @@ Ridge regression in pixel space, $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\
 \label{eq:ridge}
 \end{equation}
 Since ridge penalizes weight in low-variance directions, one might expect it to remove the hidden Euclidean error. We ask whether the error survives, and whether the cross-validated penalty removes it.
+
+\begin{wrapfigure}{r}{0.5\linewidth}
+    \vspace{-8pt}
+    \centering
+    \includegraphics[width=\linewidth]{figures/draft_ridge_paths_iso_error_geometry.png}
+    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control calibration is the sphere through $0$ and $\bstar$ (orange). The fitted weight is scattered around the ridge path (purple) with a spread elongated along the low-variance axis. Cross-validation picks the tangency of the path with an ellipsoid; control calibration is its crossing with the sphere. (Placeholder from the validation repository; to be polished.)}
+    \label{fig:geometry}
+    \vspace{-6pt}
+\end{wrapfigure}
+\paragraph{The ridge path through the two landscapes.}
+The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, Eq.~\eqref{eq:ridge} traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around this path, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. Cross-validation selects the point of the path that is tangent to the smallest reachable prediction ellipsoid, whereas control calibration asks where the path crosses the sphere $D=N$; the two coincide only if the noise cloud has not pushed the path off the sphere in the directions the ellipsoid does not see. The deterministic equivalents below compute where the center of this cloud sits, how much Euclidean spread it carries, and hence the distance between the two points.
+
 
 \paragraph{Toolkit.}
 We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. Finite-sample randomness enters through the effective penalty $\kappa(\lambda)$, the positive root of $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$, and the results are expressed through the teacher-weighted and unweighted spectral sums
@@ -155,7 +156,7 @@ z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 \label{eq:pixel-zacc-cv}
 \end{equation}
 \end{prop}
-Both conditions equate the noisy prediction risk to $n\kappa$ times a teacher-weighted spectral average, but they average with different powers of $s_k/(s_k+\kappa)$. For isotropic data the two averages coincide and cross-validation calibrates control for free. For an anisotropic spectrum they differ whenever the teacher's energy is not uniformly distributed over modes, and the gap is multiplied by $\kappa\,\mathrm{df}_{1,2}$, i.e. by the number of modes near the regularization edge. This answers the question in the title for pixel regression: \emph{control is bad, despite prediction-optimal tuning, when the response is noisy, the spectrum is anisotropic, and many modes sit near $\kappa$}, which is the natural-image regime.
+Both conditions equate the noisy prediction risk to $n\kappa$ times a teacher-weighted spectral average, but they average with different powers of $s_k/(s_k+\kappa)$. For isotropic data the two averages coincide and cross-validation calibrates control for free. For an anisotropic spectrum they differ whenever the teacher's energy is not uniformly distributed over modes, and the gap is multiplied by $\kappa\,\mathrm{df}_{1,2}$, i.e. by the number of modes near the regularization edge. In Fig.~\ref{fig:geometry}, Eq.~\eqref{eq:pixel-zacc-cv} is the distance along the path between its tangency with the prediction ellipsoid and its crossing of the control sphere. This answers the question in the title for pixel regression: \emph{control is bad, despite prediction-optimal tuning, when the response is noisy, the spectrum is anisotropic, and many modes sit near $\kappa$}, which is the natural-image regime.
 
 \begin{figure}[t]
     \centering
@@ -211,6 +212,16 @@ T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k
 \end{equation}
 with $(s_k,v_k)$ the eigenpairs of $C$. It averages, over the feature PCs that survive ridge shrinkage, the ratio between the Euclidean energy of the backpropagated PC gradient and its energy under the natural-image covariance. A map is fragile when its well-resolved feature directions backpropagate into low-variance, high-spatial-frequency pixel directions. This is the linear counterpart of the third observation of Sec.~\ref{sec:phenomena}, and it can be computed from the map and the image statistics alone.
 
+\begin{center}
+\fbox{\parbox{0.96\linewidth}{\small
+\textbf{When is control fragile although prediction is fine?}
+Holding the prediction error fixed, the leading control error (Eqs.~\ref{eq:pixel-de}, \ref{eq:pixel-zacc-cv}, \ref{eq:feature-de}) grows with three separable factors:
+\textbf{(i) noise} $(E_{gen}+\sigma^2)/n$, the estimation-noise level, which is the only factor visible from held-out accuracy;
+\textbf{(ii) spectrum} the mismatch between prediction-optimal and control-optimal penalties, Eq.~\eqref{eq:pixel-zacc-cv}, which is zero for white data and grows with anisotropy and with teacher energy in low-variance modes;
+\textbf{(iii) map} $T_F$, the ridge-weighted ratio of Euclidean to natural-covariance gradient energy, a property of the feature map alone.
+Natural images make (ii) large for every model; the feature map decides (iii), and equally predictive maps can differ in it without bound.}}
+\end{center}
+
 \subsection{From the linear factor to a diagnostic for deep networks and neurons}
 \label{sec:nonlinear}
 For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian in Eq.~\eqref{eq:TF} gives
@@ -238,7 +249,7 @@ We computed these quantities for all 250 site--model pairs of the neuronal exper
 
 \section{Discussion}
 \label{sec:discussion}
-A single mechanism accounts for the three neuronal phenomena: prediction measures weight error in the covariance metric, control measures it along the model's own gradient. In the linear theory the control error at fixed prediction error is governed by three separable factors, of which only the first is visible from held-out accuracy: the estimation-noise level $(E_{gen}+\sigma^2)/n$; the spectral mismatch between prediction-optimal and control-optimal penalties, Eq.~\eqref{eq:pixel-zacc-cv}, which vanishes for white data and grows with anisotropy; and the gradient-geometry factor $T_F$, which is a property of the feature map alone. The practical implication is that selecting encoding models or penalties by held-out prediction cannot certify gradient-based control; validation must constrain the gradient, for instance through $T_\phi$, or test generated stimuli directly. The high-frequency artifacts of failed accentuations are not a cosmetic defect but the expected signature of low-variance directions that natural images never constrained.
+A single mechanism accounts for the three neuronal phenomena: prediction measures weight error in the covariance metric, control measures it along the model's own gradient. In the linear theory the control error at fixed prediction error is governed by the three factors of the box in Sec.~\ref{sec:feature}: noise, spectrum, and map, of which only the first is visible from held-out accuracy. The practical implication is that selecting encoding models or penalties by held-out prediction cannot certify gradient-based control; validation must constrain the gradient, for instance through $T_\phi$, or test generated stimuli directly. The high-frequency artifacts of failed accentuations are not a cosmetic defect but the expected signature of low-variance directions that natural images never constrained.
 
 \paragraph{Limitations.}
 The theory assumes Gaussian inputs, a linear teacher, a fixed linear feature map and a one-dimensional accentuation path from a centered seed; the leading DEs predict typical fits and the location of the control optimum but not the fluctuation-dominated error at that optimum (App.~\ref{sec:app-ratio-corrections}). The nonlinear diagnostic is not a theorem, and its biological validation is descriptive. Extending the deterministic equivalents to learned nonlinear features and to curved accentuation trajectories is the natural next step.
