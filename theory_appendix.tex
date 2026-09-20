@@ -1,430 +1,72 @@
-% %% LyX 2.4.1 created this file.  For more info, see https://www.lyx.org/.
-% %% Do not edit unless you really know what you are doing.
-% \documentclass[onecolumn,english,american,compsoc]{IEEEtran}
-% \usepackage[T1]{fontenc}
-% \usepackage[utf8]{inputenc}
-% \usepackage{geometry}
-% \geometry{verbose,tmargin=1cm,bmargin=1cm,lmargin=1cm,rmargin=1cm}
-% \usepackage{float}
-% \usepackage{calc}
-% \usepackage{amsmath}
-% \usepackage{amsthm}
-% \usepackage{amssymb}
-% \usepackage{cancel}
-% \usepackage{graphicx}
-
-% \makeatletter
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
-% %% Because html converters don't know tabularnewline
-% \providecommand{\tabularnewline}{\\}
-% \floatstyle{ruled}
-% \newfloat{algorithm}{tbp}{loa}
-% \providecommand{\algorithmname}{Algorithm}
-% \floatname{algorithm}{\protect\algorithmname}
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
-% \newcommand{\lyxaddress}[1]{
-% 	\par {\raggedright #1
-% 	\vspace{1.4em}
-% 	\noindent\par}
-% }
-% % \theoremstyle{plain}
-% % \newtheorem{thm}{\protect\theoremname}
-% % \theoremstyle{plain}
-% % \newtheorem{prop}[thm]{\protect\propositionname}
-% % \theoremstyle{plain}
-% % \newtheorem{lem}[thm]{\protect\lemmaname}
-% % \theoremstyle{plain}
-% % \newtheorem{cor}[thm]{\protect\corollaryname}
-% % \theoremstyle{definition}
-% % \newtheorem{example}[thm]{\protect\examplename}
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
-% \usepackage{amsmath,amssymb,bm}
-% \usepackage{tikz}
-% \usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
-% \pagestyle{empty}
-
-% \definecolor{inputgray}{RGB}{76,84,92}
-% \definecolor{predblue}{RGB}{42,104,145}
-% \definecolor{predgreen}{RGB}{42,124,91}
-% \definecolor{controlred}{RGB}{181,74,58}
-% \definecolor{controlorange}{RGB}{196,116,42}
-% \definecolor{fitpurple}{RGB}{102,75,145}
-% \usepackage{adjustbox}
-
-% \makeatother
-
-% \usepackage{babel}
-% \addto\captionsamerican{\renewcommand{\corollaryname}{Corollary}}
-% \addto\captionsamerican{\renewcommand{\examplename}{Example}}
-% \addto\captionsamerican{\renewcommand{\lemmaname}{Lemma}}
-% \addto\captionsamerican{\renewcommand{\propositionname}{Proposition}}
-% \addto\captionsamerican{\renewcommand{\theoremname}{Theorem}}
-% \addto\captionsenglish{\renewcommand{\algorithmname}{Algorithm}}
-% \addto\captionsenglish{\renewcommand{\corollaryname}{Corollary}}
-% \addto\captionsenglish{\renewcommand{\examplename}{Example}}
-% \addto\captionsenglish{\renewcommand{\lemmaname}{Lemma}}
-% \addto\captionsenglish{\renewcommand{\propositionname}{Proposition}}
-% \addto\captionsenglish{\renewcommand{\theoremname}{Theorem}}
-% \providecommand{\corollaryname}{Corollary}
-% \providecommand{\examplename}{Example}
-% \providecommand{\lemmaname}{Lemma}
-% \providecommand{\propositionname}{Proposition}
-% \providecommand{\theoremname}{Theorem}
-
-% \begin{document}
-% \title{Dissociation of prediction and control in visual neuron}
-% \author{Binxu Wang}
-% \maketitle
-
-% \lyxaddress{Kempner Institute, Harvard University}
-
-\subsection{Motivation}
-
-Linear regression on top of DNN features have been a classic way of
-predicting visual and sensory neurons.
-
-Regression on many SOTA models yields very similar held out prediction
-accuracy.
-
-Recent works found that though many models do have similar held-out
-prediction accuracy, their ability to ``control'' neurons differs
-dramatically.
-
-Here control refers to the following experiment, one let the model
-$f(\mathbf{x})$ synthesize new inputs $\mathbf{x}^{*}$ to drive
-the predicted response to a certain level $r^{*}$, and then test
-whether the real neuron respond to $\mathbf{x}^{*}$ in the predicted
-way in terms of Pearson r, R2, slope, etc.
-
-The experiment has following surprising findings
-\begin{itemize}
-\item Models with similar heldout predicitivity exhibit largely different
-control capability and very different image generation.
-\item Models that failed to control can still nicely predict the success
-of other models.
-\item Models that failed to control usually synthesize more high frequency
-patterns.
-\end{itemize}
-In this paper, we are motivated to shine light on these phenomena
-with a minimal linear model.
-
-We are going to show, these phenomena are not necessarily deep network
-phenomena but could be recapitulated in a linear setting.
-
-Further the divergence of held-out prediction and control are there
-in a Ridge regression setting.
-
-\section{Main results}
-
-\subsection{Set up: Linear noisy teacher student and feature accentuation}
-
-On a natural data distribution $(0,\Sigma)$ . The teacher weights
-are $\bstar$, with Gaussian i.i.d. noise level $\sigma$
-\[
-y=\mathbf{x}^{\top}\bstar+\sigma\epsilon
-\]
-
-A student model is bias-free linear model with weight $\bhat$,
-(or effective weight in linear feature case.)
-\[
-f(\mathbf{x})=\mathbf{x}^{\top}\bhat
-\]
-
-For classic generalization, one sample new samples from basically
-the population data distribution, and evaluate on it, thus the distribution
-is
-\[
-\mathcal{N}(0,\Sigma)
-\]
-
-For accentuation and control, one create self generated path and then
-evaluate the prediction on it.
-\[
-\mathbf{x}_{0}+\alpha\bhat
-\]
-
-In the main paper, we assume a single seed image which is $\mathbf{x}_{0}=0$,
-and $\alpha$ is sampled from a distribution to make the \emph{predicted
-model variance} matched with a target variance. e.g.
-\[
-\mathrm{Var}[\alpha]({\bhat}^{\top}\bhat)^2={\bstar}^{\top}\Sigma\bstar
-\]
-
-In supplementary, we will discuss the generalization to multi seed
-images and non-centered seed image case.
-
-For peer review, model is evaluated on the accentuation path created
-by other models with weight $\bprime$, with similar structure
-\[
-\mathbf{x}_{0}+\alpha\bprime
-\]
-
-
-\subsection{Intuition about the geometry}
-
-With these structure we can already construct various cases where
-two students $\bhat_{1},\bhat_{2}$ result in the same
-prediction and accuracy, but with diverse control scores.
-
-As long as the weight difference is along some low var dimension of
-data $\Sigma$, then prediction will be not sensitive to it while
-control will be very sensitive to it.
-
-\subsection{Structure of the generalization and accentuation error}
-
-Using the Lemma \ref{lem:pred_error}\ref{lem:R2_pred_obs}\ref{lem:Pearson-r_pred_obs}\ref{lem:linear_slope},
-we can write down various form of evaluation metrics, MSE, R2, slope,
-Pearson r, given the mean and covariance of a evaluation distribution.
-
-The difference between classic generalization, accentuation and peer
-review can be seen via the (mean and) covariance of their evaluation
-distribution.
-
-Using these difference we can write down the following table.
-
-We note that Pearson correlation is a degenerate metric when evaluating
-on a single linear path, noiseless evaluation setting, so we focus
-on other metrics, MSE, R2, slope.
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
- & $\mu_{p}$ & $\Sigma_{p}$ & MSE & R2 & Slope & Pearson r\tabularnewline
-\hline
-\hline
-General & $\mu_{p}$ & $\Sigma_{p}$ & $(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)$ & $1-\frac{(\bhat-\bstar)^{\top}\big(\mu_{p}\mu_{p}^{\top}+\Sigma_{p}\big)(\bhat-\bstar)}{{\bstar}^{\top}\Sigma_{p}\bstar}$ & $\frac{{\bhat}^{\top}\Sigma_{p}\bstar}{{\bhat}^{\top}\Sigma_{p}\bhat}$ & $\frac{{\bhat}^{\top}\Sigma_{p}\bstar}{\sqrt{({\bhat}^{\top}\Sigma_{p}\bhat)({\bstar}^{\top}\Sigma_{p}\bstar)}}$\tabularnewline
-\hline
-Generalization & $0$ & $\Sigma$ & $(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)$ & $1-\frac{(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)}{{\bstar}^{\top}\Sigma\bstar}$ & $\frac{{\bhat}^{\top}\Sigma\bstar}{{\bhat}^{\top}\Sigma\bhat}$ & $\frac{{\bhat}^{\top}\Sigma\bstar}{\sqrt{({\bhat}^{\top}\Sigma\bhat)({\bstar}^{\top}\Sigma\bstar)}}$\tabularnewline
-\hline
-Accentuation & $0$ & $\mathrm{Var}[\alpha]\bhat{\bhat}^{\top}$ & $\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}$ & $1-\big(\frac{{\bhat}^{\top}\bhat}{{\bhat}^{\top}\bstar}-1\big)^{2}$ & $\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}$ & $1$ or $nan$\tabularnewline
-\hline
-Peer review & $0$ & $\mathrm{Var}[\alpha]\bprime{\bprime}^{\top}$ & $\mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}$ & $1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}$ & $\frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}$ & $1$ or $nan$\tabularnewline
-\hline
-\end{tabular}
-\par\end{center}
-
-\subsection{Estimation of ratio of random variables}
-\label{sec:app-ratio-approximations}
-
-One key structural observations is,
-\begin{prop}
-All three metrics (MSE,R2,Slope) of accentuation and control error
-are controlled by a scalar summary statistics, a ratio between two
-inner product scalars
-\[
-\frac{N}{D}=\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}
-\]
-\end{prop}
-Thus so for accentuation, the central goal is to estimation of this
-ratio.
-
-Note that $\bhat$ itself is a random variable, depending on
-the noise realization $\eta$ and the data realization $X$. So this
-ratio is a ratio of two random variables, and other metrics are also
-nonlinear functions of this ratio. We will estimate this ratio via
-2-3 ways
-\begin{enumerate}
-\item \textbf{0th order ratio of DE:} In most\textbf{ }part of the paper,
-as analytical tractability is needed, we will approximate expectation
-of ratio via ratio of expectation
-\[
-\mathbb{E}\Big[\frac{N}{D}\Big]\approx\frac{\mu_{N}}{\mu_{D}}
-\]
-This can be justified via concentration, when both N,D concentrates,
-and Var and Cov are small w.r.t. the mean it's a viable choice.
-\item \textbf{DE of 2nd order correction}: Rarely we will incorporate 2nd
-order correction to this estimate
-\[
-\mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)
-\]
-\item \textbf{DE-Gaussian approximation}: Use DE to determine mean and cov
-of $\bhat$, then approximate the distribution of $\bhat\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})$
-then evaluate all the ratio and nonlinear functions via this monte
-carlo averaging.
-\[
-\mathbb{E}\Big[\frac{N}{D}\Big]\approx\mathbb{E}_{\bhat\dot{\sim}\mathcal{N}(m_{\beta,DE},V_{\beta,DE})}\Big[\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\Big]
-\]
+\section{Theory results roadmap}
+\label{sec:app-theory-roadmap}
+\begingroup\color{red}
+This opening list is deliberately more comprehensive than the main text.  It
+serves as an index of the theoretical claims currently supported by the
+appendix; the final paper may promote only a subset of them to the main body.
+All statements concern the linear teacher--student model unless explicitly
+marked as a nonlinear diagnostic.
 
 \begin{enumerate}
-\item Take n to 0 raise to power $(n-1)$
+\item \textbf{Evaluation geometry.} Generalization, self-accentuation, and
+peer review are evaluations under different input covariances. Their equal-error
+sets are, respectively, covariance ellipsoids, Euclidean spheres, and
+peer-normal hyperplanes (Section~\ref{sec:app-evaluation-geometry}).
+
+\item \textbf{Pixel-ridge prediction DE.} For anisotropic Gaussian design,
+the generalization risk separates into ridge bias and finite-sample variance,
+with the random sample covariance summarized by the effective penalty
+$\kappa$ (Section~\ref{sec:app-pixel-ridge}).
+
+\item \textbf{Pixel-ridge control DE.} The accentuation metrics reduce to two
+quadratic forms $N=\bhat^\top\bstar$ and $D=\bhat^\top\bhat$.  Their leading
+DEs expose a Euclidean variance term that is not determined by prediction risk.
+
+\item \textbf{Prediction- versus control-optimal tuning.} An interior
+prediction optimum and a zero-leading-bias control optimum equate different
+spectral averages.  Prediction-optimal CV therefore leaves a residual
+accentuation bias except in special symmetric cases
+(Section~\ref{sec:app-optimal-regularization}).
+
+\item \textbf{Feature-space projection.} The population-optimal realizable
+coefficient is $w^\star=\Sigma_F^\dagger F\Sigma\bstar$, with irreducible
+error $S_\perp$.  Feature-space ridge inherits the pixel-space prediction DE
+with effective noise $S_\perp+\sigma^2$, but pixel-space control additionally
+depends on $FF^\top$ and $F\bstar$
+(Section~\ref{sec:app-feature-regression}).
+
+\item \textbf{Prediction gauge.} Transformations preserving
+$F\Sigma F^\top$ and $F\Sigma\bstar$ preserve the leading prediction risk and
+DE-based CV choice while allowing control to vary.  For $\Sigma\succ0$, a
+constructive family is $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ with
+$Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$
+(Section~\ref{sec:app-gauge-fragility}).
+
+\item \textbf{Low-variance gradient fragility.} The control variance factor
+$T_F(\kappa)$ is a ridge-weighted sum of
+$\|g_k\|^2/(g_k^\top\Sigma g_k)$.  Control is fragile when feature PCs that
+survive regularization backpropagate into low-variance input directions.
+
+\item \textbf{Ratio corrections.} Ratio-of-DE, second-order delta, and
+Gaussian distributional approximations answer different finite-sample
+questions.  The corrections matter when the mean calibration error is small
+but the variance of $N/D$ is not (Section~\ref{sec:app-ratio-corrections}).
+
+\item \textbf{Nonlinear diagnostic.} Replacing $F$ locally by the Jacobian of
+a nonlinear feature map yields exact-local and neighborhood diagnostics. This
+is not a nonlinear RMT theorem, but it predicts model ordering in the neuronal
+control data (Section~\ref{sec:app-nonlinear-diagnostic}).
+
+\item \textbf{RMT identities.} The final section records the one- and
+two-resolvent deterministic equivalents, fixed-point relation, and spectral
+recursion identities used in the proofs
+(Section~\ref{sec:app-rmt-toolkit}).
 \end{enumerate}
-\end{enumerate}
+\endgroup
 
-\subsection{Ridge regression}
 
-Next we consider how the learning algorithm / estimator and noise
-shapes this dissociation.
-
-We first consider ridge in the input space -- since intuitively ridge
-regularization will penalize the non-aligned weights which alleviate
-this problem.
-\begin{lem}
-The ridge estimated solution reads
-\[
-\bhat=\underbrace{(\hat{\Sigma}+\lambda I_{d})^{-1}\hat{\Sigma}\bstar}_{\text{Signal}}+\underbrace{\sigma(\hat{\Sigma}+\lambda I_{d})^{-1}(\frac{1}{n}X^{\top}\eta)}_{\text{noise}}
-\]
-\end{lem}
-\begin{prop}
-Classic generalization (mean squared) error, has the following DE
-\begin{align*}
-E_{gen} & =(\bhat-\bstar)^{\top}\Sigma(\bhat-\bstar)\\
- & \asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\kappa^{2}{\bstar}^{\top}\bigl(\Sigma+\kappa I_{d}\bigr)^{-2}\Sigma\bstar+\sigma^{2}\frac{\mathrm{df}_{2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\\
- & =\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)-\sigma^{2}
-\end{align*}
-which we will define as $E_{gen,DE}$.
-\end{prop}
-This is different from the accentuation error
-\begin{prop}
-Accentuation and control error is characterized by the following ratio
-$\frac{N}{D}$, where numerator and denominator each admits a deterministic
-equivalence.
-\begin{align*}
-\mu_{N}=\mathbb{E}_{X,\eta}\Big[N\Big] & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-1}\Sigma\bstar\\
- & =B_{1,1}(\kappa)\\
-\mu_{D}=\mathbb{E}_{X,\eta}\Big[D\Big] & \asymp{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma^{2}\bstar+\frac{\mathrm{Tr}\Big[\Sigma(\Sigma+\kappa I_{d})^{-2}\Big]}{n-\mathrm{df}_{2}(\kappa)}\Big(\sigma^{2}+\kappa^{2}{\bstar}^{\top}(\Sigma+\kappa I_{d})^{-2}\Sigma\bstar\Big)\\
- & =B_{2,2}(\kappa)+\frac{\mathrm{df}_{1,2}(\kappa)}{n-\mathrm{df}_{2}(\kappa)}\Big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\Big)\\
- & =B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})
-\end{align*}
-So on the leading order it can be approximated by the ratio of the
-two DE.
-\[
-\frac{N}{D}\approx\frac{\mu_{N}}{\mu_{D}}
-\]
-\end{prop}
-This can be central quantity represented in various forms
-\begin{cor}
-equivalent forms of the accentuation error
-\begin{align*}
-z_{acc}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{B_{2,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}-1\\
- & =\frac{-\kappa B_{1,2}(\kappa)+\frac{1}{n}\mathrm{df}_{1,2}(\kappa)(E_{gen,DE}+\sigma^{2})}{B_{1,1}(\kappa)}\\
- & =\frac{\sigma^{2}\mathrm{df}_{1,2}(\kappa)-n\lambda B_{1,2}(\kappa)}{(n-\mathrm{df}_{2}(\kappa))B_{1,1}(\kappa)}
-\end{align*}
-\end{cor}
-%
-We can see non-optimal regularization strength with noisy setting
-can easily lead to catastrophic failure in control. But what if the
-ridge parameter is optimized -- in reality people often do cross
-validated selection in RidgeCV?
-\begin{lem}
-The ridge parameter selection based on DE of generalization loss needs
-to satisfy the first order condition
-\[
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)
-\]
-which can also be written through the generalization error at DE level.
-\[
-\kappa\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}=\frac{1}{n}(E_{gen,DE}+\sigma^{2})
-\]
-\end{lem}
-Further even if we select the best ridge parameter, the accentuation
-error can still be written as
-\begin{prop}
-When we select regularization parameter by minimizing generalization
-error (RidgeCV), at this stationary point, accentuation error has
-additional structure. and can be written as
-\begin{align*}
-z_{acc,CV}\approx\frac{\mu_{D}}{\mu_{N}}-1 & =\frac{\kappa\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{B_{2,3}(\kappa)}{\mathrm{df}_{2,3}(\kappa)}-\frac{B_{1,2}(\kappa)}{\mathrm{df}_{1,2}(\kappa)}\Big)\\
-\end{align*}
-\end{prop}
-
-\subsection{Ridge Regression on Linear Feature }
-
-When we consider feature space $F$ i.e. teacher remain the same,
-while student is a linear function on a feature space
-\[
-f(\mathbf{x})=w^{\top}F\mathbf{x}
-\]
-
-the effective weights is
-\[
-\bhat=F^{\top}w
-\]
-
-With a feature space, the original teacher signal may not be representable.
-So first we need to define a sense of optimal ``realizable'' weight
-and its associated irreducible error.
-\begin{lem}
-In a feature space, there are two sense of ``optimal'' weight, the
-weight minimizing population prediction loss is
-\[
-w^{\star}=(F\Sigma F^{\top})^{\dagger}F\Sigma\bstar=\Sigma_{F}^{\dagger}F\Sigma\bstar
-\]
-The population level error of this weight predicting noiseless teacher
-is $S_{\perp}$, i.e. irreducible non-representable error of this
-feature space.
-\[
-S_{\perp}:=\mathbb{E}_{\mathbf{x}}[(\mathbf{x}^{\top}\bstar-\mathbf{x}^{\top}F^{\top}w^{\star})^{2}]={\bstar}^{\top}\Sigma\bstar-{w^\star}^{\top}\Sigma_{F}w^{\star}
-\]
-
-While the weight minimizing the reconstruction error of teacher weight
-is
-\[
-w^{P}=(FF^{\top})^{-1}F\bstar
-\]
-and these two senses in general do not coincide.
-\end{lem}
-\begin{prop}
-Classic generalization mean squared error,
-\[
-E_{gen}\asymp\frac{n}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\Big(\kappa^{2}{w^\star}^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}w^{\star}+S_{\perp}+\sigma^{2}\Big)-\sigma^{2}
-\]
-where $w^{\star}:=\Sigma_{F}^{\dagger}F\Sigma\bstar$ and $S_{\perp}={\bstar}^{\top}\Sigma\bstar-{w^\star}^{\top}\Sigma_{F}w^{\star}$.
-and $\kappa$ is computed via self-consistent equation on spectrum
-of $\Sigma_{F}$.
-\end{prop}
-In contrast, the accentuation and control error is
-\begin{prop}
-Accentuation and control error is characterized by the ratio $D/N$
-where numerator and denominator has their own DE,
-\begin{align*}
-D & \asymp\|\tilde{\beta}_{\kappa}\|^{2}+\frac{1}{n}(E_{gen,DE}+\sigma^{2})\mbox{Tr}\bigl[FF^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-2}\Sigma_{F}\bigr]\\
-N & \asymp{\bstar}^{\top}\tilde{\beta}_{\kappa}
-\end{align*}
-and $\tilde{\beta}_{\kappa}:=F^{\top}\Sigma_{F}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}w^{\star}=F^{\top}\bigl(\Sigma_{F}+\kappa I_{p}\bigr)^{-1}F\Sigma\bstar$,
-can be understood as optimal shrinkaged effective weight.
-\[
-z_{acc}=\frac{D}{N}-1
-\]
-\end{prop}
-One salient observation,
-\begin{prop}
-On the leading DE level, generalization error $E_{gen,DE}$ has summary
-statistics $\Sigma_{F},F\Sigma\bstar,{\bstar}^{\top}\Sigma\bstar,\kappa$,
-while it does not explicitly depend on $\Sigma,F,\bstar$condition
-on these summary stats.
-
-In contrast, control and accentuation error depend on the stats above
-while having additional dependency on summary statistics $FF^{\top}$
-and $F\bstar$
-\end{prop}
-As a construction, We can explicitly characterize the prediction-gauge
-invariance group of $F$ that leaves generalization error and CV selection
-unchanged, while accentuation error changes.
-\begin{prop}
-The transformation of $F$ that leaves prediction $E_{gen}$ and $E_{gen}$
-based cross validation unchanged is the Gauge transformation group
-that leaves $F\Sigma F^{\top},F\Sigma\bstar$ unchanged.
-\[
-F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}
-\]
-where $Q\in\mathcal{G}_{b}$ is an orthogonal transform, in the subgroup
-of orthogonal group dim $d$.
-\[
-\mathcal{G}_{b}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar\big\}
-\]
-
-One can define a even further more invariant subgroup which leave
-$F\Sigma F^{\top},F\Sigma\bstar,F\bstar$ unchanged.
-\[
-\mathcal{G}_{b,c}=\big\{ Q\in O(d)\mid Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar,Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar\big\}
-\]
-In that case, $FF^{\top}$will be the only summary statistics that
-affects the accentuation error.
-\end{prop}
-
-\section{Linear teacher student on the input space}
+\section{Evaluation geometry}
+\label{sec:app-evaluation-geometry}
 
 \subsection{General set up}
 
@@ -753,16 +395,16 @@ reads,
 = & \frac{{\bstar}^{\top}\bprime}{{\bhat}^{\top}\bprime}
 \end{align*}
 
-Note that when we compute
-
-Can we compute the correlation
-
+For comparison, on a general centered evaluation distribution with covariance
+$\Sigma_p$, Pearson correlation is
 \begin{align*}
- & corr(y_{true},y_{pred})\\
-= & corr({\bhat}^{\top}x,{\bstar}^{\top}x)\\
-= & \frac{{\bhat}^{\top}\Sigma\bstar}
-{\sqrt{{\bhat}^{\top}\Sigma\bhat}\sqrt{{\bstar}^{\top}\Sigma\bstar}}.
+\operatorname{corr}(y_{true},y_{pred})
+&=\operatorname{corr}({\bstar}^{\top}x,{\bhat}^{\top}x)\\
+&=\frac{{\bhat}^{\top}\Sigma_p\bstar}
+{\sqrt{{\bhat}^{\top}\Sigma_p\bhat}\sqrt{{\bstar}^{\top}\Sigma_p\bstar}}.
 \end{align*}
+On a noiseless single peer-review path, $\Sigma_p$ has rank one, so the
+correlation is $+1$, $-1$, or undefined and carries no calibration information.
 
 
 \begingroup\color{red}
@@ -810,7 +452,37 @@ and peer-normal hyperplanes expose different components of the same
 coefficient error; no scalar prediction score determines the other two.
 \endgroup
 
-\subsection{Classic generalization error and cross validation}
+
+
+\section{Pixel-space ridge deterministic equivalents and proofs}\label{sec:app-pixel-ridge}
+
+\begingroup\color{red}
+\begin{proposition}[Pixel-space ridge deterministic equivalents]
+\label{prop:app-pixel-ridge-de}
+Under the Gaussian design and proportional-limit assumptions of the main
+text, let $\kappa$ solve the ridge fixed-point equation.  Then
+\begin{align}
+E_{gen,DE}
+&=\frac{n\bigl(\kappa^2B_{1,2}(\kappa)+\sigma^2\bigr)}
+        {n-\mathrm{df}_{2}(\kappa)}-\sigma^2,
+\label{eq:app-pixel-egen-summary}\\
+\mu_N
+&=B_{1,1}(\kappa),
+\label{eq:app-pixel-N-summary}\\
+\mu_D
+&=B_{2,2}(\kappa)
+ +\frac{\mathrm{df}_{1,2}(\kappa)}{n}
+  \bigl(E_{gen,DE}+\sigma^2\bigr).
+\label{eq:app-pixel-D-summary}
+\end{align}
+Consequently, the leading accentuation metrics follow by substituting
+$N\approx\mu_N$ and $D\approx\mu_D$ into
+Eq.~\eqref{eq:acc_metric_ND_depen}.  Prediction and accentuation share the
+same fitted estimator but apply different spectral weightings to its error.
+\end{proposition}
+\endgroup
+
+\subsection{Generalization risk and its deterministic equivalent}
 
 Here we consider the normal generalization error and how we select
 the regularization strength $\lambda$.
@@ -895,74 +567,9 @@ As a summary
 which recovers Eq. 25 from Scaling and Renormalization paper (P19).%
 \end{minipage}
 
-\subsubsection{First order analysis of optimal CV regularization selection}
 
-Now consider the selection of $\lambda$, i.e. regrularization parameter.
-Since $d\kappa/d\lambda>0$, it's a monotonic function, it amounts
-to select for $\kappa$ instead of selecting for $\lambda$ directly.
 
-Assume we select for minimal $\kappa$,
-\[
-\kappa^{*}=\arg\min_{\kappa}\mathbb{E}_{X,\eta}[E_{gen}]
-\]
-
-Cross validation selection based on held out data and noisy label
-will be a noisy version of this $\kappa$ minimization (due to label
-noise)
-
-The optimal $\kappa$ selected by CV should minimize the generalization
-error, which needs (necessary condition) the first order optimal condition.
-\begin{align*}
-\frac{\partial}{\partial\kappa}\mathbb{E}_{X,\eta}[E_{gen}] & =0\\
-\frac{\partial}{\partial\kappa}\Big[\frac{n\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+n\sigma^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}-\sigma^{2}\Big] & =0\\
-\frac{\partial}{\partial\kappa}\Big[\frac{\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\Big] & =0\\
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\frac{\partial}{\partial\kappa}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)-\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)\frac{\partial}{\partial\kappa}(n-\mathrm{df}_{2}\bigl(\kappa\bigr)) & =0\\
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\frac{\partial}{\partial\kappa}\sum_{k=1}^{d}\frac{\kappa^{2}s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)\frac{\partial}{\partial\kappa}\mathrm{df}_{2}\bigl(\kappa\bigr) & =0
-\end{align*}
-
-Using the derivative results,
-\begin{align*}
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))2\sum_{k=1}^{d}\frac{\kappa s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2}-2\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big) & =0\\
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\sum_{k=1}^{d}\frac{\kappa s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2} & =\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)
-\end{align*}
-
-\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
-Thus one necessary condition for the selected $\kappa$ is the following
-first order condition.
-\begin{equation}
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2}=\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)\label{eq:optimal_CV_E_gen_condition}
-\end{equation}
-
-In abbreviation, we can write
-\begin{equation}
-(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)\label{eq:optimal_CV_E_gen_condition_abbrev}
-\end{equation}
-
-where
-\begin{align*}
-B_{p,q}(\kappa) & =\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}b_{k}^{2}\\
-\mathrm{df}_{p,q}(\kappa) & =\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}
-\end{align*}
-%
-\end{minipage}}
-
-\noindent\begin{minipage}[t]{1\columnwidth}%
-\textbf{Derivations}
-
-\begin{align*}
-\frac{\partial}{\partial\kappa}\sum_{k=1}^{d}\frac{\kappa^{2}s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2} & =\sum_{k=1}^{d}\frac{\big(2\kappa(s_{k}+\kappa)^{2}-2(s_{k}+\kappa)\kappa^{2}\big)s_{k}}{(s_{k}+\kappa)^{4}}b_{k}^{2}\\
- & =2\sum_{k=1}^{d}\frac{\big((s_{k}+\kappa)-\kappa^ {}\big)\kappa(s_{k}+\kappa)s_{k}}{(s_{k}+\kappa)^{4}}b_{k}^{2}\\
- & =2\sum_{k=1}^{d}\frac{\kappa s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2}
-\end{align*}
-
-\begin{align*}
-\frac{\partial}{\partial\kappa}\mathrm{df}_{2}\bigl(\kappa\bigr) & =\frac{\partial}{\partial\kappa}\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{2}}\\
- & =-2\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}
-\end{align*}
-%
-\end{minipage}
-
-\subsection{Random matrix calculation for Accentuation and control error}
+\subsection{Accentuation numerator and denominator}
 
 From Tab. \ref{tab:theory-Evaluation-metrics}, for accentuation and
 control error, the central quantity is a ratio, i.e. slope
@@ -996,80 +603,9 @@ E_{acc}=({\bstar}^{\top}\Sigma\bstar)(\frac{N}{D}-1)^{2}
 \]
 
 
-\subsubsection{General analysis of expectation of fraction}
 
-Since the ratio itself is harder to analyze via RMT, we have nicer
-control of their numerator and denominator separately. Both numerator
-and denominator concentrates in high dim limits, so we'd be not too
-wrong in replacing the expectation of ratio by ratio of expectation.
-But how much error is there?
 
-We are motivated to see how much error it is if we replace the ratio
-by the ratio or expectation of $N,D$.
-
-Let's first analyze the error of replacing the expectation of fraction
-by fraction of expectation. Let $\mathbb{E}[N]=\mu_{N}$ and $\mathbb{E}[D]=\mu_{D}$
-\begin{align*}
-\frac{N}{D} & =\frac{\mu_{N}+\delta_{N}}{\mu_{D}+\delta_{D}}\\
- & =\frac{\mu_{N}+\delta_{N}}{\mu_{D}+\delta_{D}}-\frac{\mu_{N}}{\mu_{D}}+\frac{\mu_{N}}{\mu_{D}}\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}\mu_{D}(\frac{\mu_{D}+\delta_{D}}{\mu_{D}})}\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}(1+\frac{\delta_{D}}{\mu_{D}})^{-1}\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}(1-\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+...)
-\end{align*}
-
-Note the first non-trivial order is the 2nd order in $\delta$, which
-gives
-\begin{align*}
-\frac{N}{D} & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}-\frac{\delta_{D}}{\mu_{D}}\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})\\
- & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}}{\mu_{D}}-\frac{\delta_{D}\mu_{N}}{\mu_{D}^{2}}-\frac{\delta_{D}\delta_{N}}{\mu_{D}^{2}}+\frac{\delta_{D}^{2}\mu_{N}}{\mu_{D}^{3}}+o((\frac{\delta}{\mu})^{3})
-\end{align*}
-
-When taking expectation the first two orders gives
-\[
-\mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}-\frac{\mathrm{Cov}(D,N)}{\mu_{D}^{2}}+\frac{\mathrm{Var}(D)\mu_{N}}{\mu_{D}^{3}}+\mathbb{E}\big[o((\frac{\delta}{\mu})^{3})\big]
-\]
-
-Similarly let's consider the other useful terms, i.e. the squared
-ratio, and their expansion.
-\begin{align*}
-(\frac{N}{D})^{2} & =\frac{(\mu_{N}+\delta_{N})^{2}}{(\mu_{D}+\delta_{D})^{2}}\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}+2\mu_{D}\delta_{D}+\delta_{D}^{2}}\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(\frac{\mu_{D}^{2}+2\mu_{D}\delta_{D}+\delta_{D}^{2}}{\mu_{D}^{2}})^{-1}\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(1-(2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})+(2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})^{2}+o((2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})^{3}))\\
- & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+3\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+o((\frac{\delta_{D}}{\mu_{D}})^{3}))\\
- & =\frac{\mu_{N}^{2}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+3\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+o((\frac{\delta_{D}}{\mu_{D}})^{3}))+\frac{2\mu_{N}\delta_{N}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+o((\frac{\delta_{D}}{\mu_{D}})^{2}))+\frac{\delta_{N}^{2}}{\mu_{D}^{2}}(1+o((\frac{\delta_{D}}{\mu_{D}})))\\
- & =\frac{\mu_{N}^{2}}{\mu_{D}^{2}}-2\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\delta_{D}}{\mu_{D}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+\frac{2\mu_{N}\delta_{N}}{\mu_{D}^{2}}-4\frac{\mu_{N}\delta_{N}}{\mu_{D}^{2}}\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{N}^{2}}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})
-\end{align*}
-
-\begin{align*}
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathbb{E}[\delta_{D}^{2}]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}^{2}}\frac{\mathbb{E}[\delta_{N}\delta_{D}]}{\mu_{D}}+\frac{\mathbb{E}[\delta_{N}^{2}]}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})\\
- & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}}\frac{\mathrm{Cov}[N,D]}{\mu_{D}^{2}}+\frac{\mathrm{Var}[N]}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})
-\end{align*}
-
-\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
-In summary the leading order correction to the fraction and power
-are
-\begin{align*}
-\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}-\frac{\mathrm{Cov}(D,N)}{\mu_{D}^{2}}+\frac{\mathrm{Var}(D)\mu_{N}}{\mu_{D}^{3}}\\
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}}\frac{\mathrm{Cov}[N,D]}{\mu_{D}^{2}}+\frac{\mathrm{Var}[N]}{\mu_{D}^{2}}
-\end{align*}
-
-It can be written in more normalized (dimensionless) forms
-\begin{align*}
-\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)\\
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\Big(1+3\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mathrm{Cov}[N,D]}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}[N]}{\mu_{N}^{2}}\Big)
-\end{align*}
-%
-\end{minipage}}
-
-Thus, for the 0th order term we need to compute $\mu_{N}$,$\mu_{D}$;
-
-For the 1st order correction, we need to compute $\mathrm{Var}[D]$,
-$\mathrm{Cov}[N,D]$, $\mathrm{Var}[N]$ normalized by the corresponding
-mean.
-
-\subsubsection{Zero-th order random matrix calculation: expectation of numerator
-and denominator}
+\subsection{Leading deterministic equivalents for $N$ and $D$}
 
 First, we'd calculate the zeroth order term, the ratio of expectations
 $\mu_{N}/\mu_{D}$.
@@ -1275,7 +811,8 @@ R_{acc}^{2} & =1-z^{2}\\
 
 \paragraph{Interpretation:}
 
-So when does the accentuation exhibit catastrophic low $R^{2}$?
+The preceding identity also gives a threshold for catastrophic accentuation
+$R^2$.
 
 Note that since realistic $\mu_{D}>0$, $\mu_{N}>0$, then $z>-1$.
 
@@ -1309,7 +846,110 @@ similar, the unweighted count of the number of eigenmodes in the bell-shape
 weighting band of $\kappa$.
 \end{itemize}
 
-\subsubsection{Zero-th order estimate considering noiseless RidgeCV selection. }
+
+
+\section{Cross-validation versus control-optimal regularization}\label{sec:app-optimal-regularization}
+
+\begingroup\color{red}
+\begin{proposition}[Different spectral conditions select prediction and control penalties]
+\label{prop:app-prediction-control-optima}
+If $E_{gen,DE}$ has an interior differentiable minimum at
+$\kappa_{gen}^\star$, then
+\begin{equation}
+E_{gen,DE}+\sigma^2
+=n\kappa\frac{B_{2,3}}{\mathrm{df}_{2,3}}
+\quad\text{at }\kappa=\kappa_{gen}^\star.
+\end{equation}
+A point with $\mu_N>0$ has zero leading ratio-of-DE accentuation error if
+and only if
+\begin{equation}
+E_{gen,DE}+\sigma^2
+=n\kappa\frac{B_{1,2}}{\mathrm{df}_{1,2}}.
+\end{equation}
+Therefore, at an interior prediction optimum,
+\begin{equation}
+z_{acc,CV}^{(0)}
+=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
+\left(\frac{B_{2,3}}{\mathrm{df}_{2,3}}
+-\frac{B_{1,2}}{\mathrm{df}_{1,2}}\right).
+\label{eq:app-zacc-cv-summary}
+\end{equation}
+Existence and uniqueness of an admissible root are separate questions; the
+zero-error claim concerns the leading ratio-of-DE approximation, not the full
+finite-sample expectation.
+\end{proposition}
+\endgroup
+
+\subsection{Prediction-optimal stationarity}
+
+Now consider the selection of $\lambda$, i.e. regrularization parameter.
+Since $d\kappa/d\lambda>0$, it's a monotonic function, it amounts
+to select for $\kappa$ instead of selecting for $\lambda$ directly.
+
+Assume we select for minimal $\kappa$,
+\[
+\kappa^{*}=\arg\min_{\kappa}\mathbb{E}_{X,\eta}[E_{gen}]
+\]
+
+Cross validation selection based on held out data and noisy label
+will be a noisy version of this $\kappa$ minimization (due to label
+noise)
+
+The optimal $\kappa$ selected by CV should minimize the generalization
+error, which needs (necessary condition) the first order optimal condition.
+\begin{align*}
+\frac{\partial}{\partial\kappa}\mathbb{E}_{X,\eta}[E_{gen}] & =0\\
+\frac{\partial}{\partial\kappa}\Big[\frac{n\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+n\sigma^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}-\sigma^{2}\Big] & =0\\
+\frac{\partial}{\partial\kappa}\Big[\frac{\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}}{n-\mathrm{df}_{2}\bigl(\kappa\bigr)}\Big] & =0\\
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\frac{\partial}{\partial\kappa}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)-\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)\frac{\partial}{\partial\kappa}(n-\mathrm{df}_{2}\bigl(\kappa\bigr)) & =0\\
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\frac{\partial}{\partial\kappa}\sum_{k=1}^{d}\frac{\kappa^{2}s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)\frac{\partial}{\partial\kappa}\mathrm{df}_{2}\bigl(\kappa\bigr) & =0
+\end{align*}
+
+Using the derivative results,
+\begin{align*}
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))2\sum_{k=1}^{d}\frac{\kappa s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2}-2\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big) & =0\\
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\sum_{k=1}^{d}\frac{\kappa s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2} & =\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)
+\end{align*}
+
+\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
+Thus one necessary condition for the selected $\kappa$ is the following
+first order condition.
+\begin{equation}
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2}=\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}\Big(\kappa^{2}\sum_{k=1}^{d}\frac{s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2}+\sigma^{2}\Big)\label{eq:optimal_CV_E_gen_condition}
+\end{equation}
+
+In abbreviation, we can write
+\begin{equation}
+(n-\mathrm{df}_{2}\bigl(\kappa\bigr))\kappa B_{2,3}(\kappa)=\mathrm{df}_{2,3}(\kappa)\big(\kappa^{2}B_{1,2}(\kappa)+\sigma^{2}\big)\label{eq:optimal_CV_E_gen_condition_abbrev}
+\end{equation}
+
+where
+\begin{align*}
+B_{p,q}(\kappa) & =\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}b_{k}^{2}\\
+\mathrm{df}_{p,q}(\kappa) & =\sum_{k=1}^{d}\frac{s_{k}^{p}}{(s_{k}+\kappa)^{q}}
+\end{align*}
+%
+\end{minipage}}
+
+\noindent\begin{minipage}[t]{1\columnwidth}%
+\textbf{Derivations}
+
+\begin{align*}
+\frac{\partial}{\partial\kappa}\sum_{k=1}^{d}\frac{\kappa^{2}s_{k}}{(s_{k}+\kappa)^{2}}b_{k}^{2} & =\sum_{k=1}^{d}\frac{\big(2\kappa(s_{k}+\kappa)^{2}-2(s_{k}+\kappa)\kappa^{2}\big)s_{k}}{(s_{k}+\kappa)^{4}}b_{k}^{2}\\
+ & =2\sum_{k=1}^{d}\frac{\big((s_{k}+\kappa)-\kappa^ {}\big)\kappa(s_{k}+\kappa)s_{k}}{(s_{k}+\kappa)^{4}}b_{k}^{2}\\
+ & =2\sum_{k=1}^{d}\frac{\kappa s_{k}^{2}}{(s_{k}+\kappa)^{3}}b_{k}^{2}
+\end{align*}
+
+\begin{align*}
+\frac{\partial}{\partial\kappa}\mathrm{df}_{2}\bigl(\kappa\bigr) & =\frac{\partial}{\partial\kappa}\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{2}}\\
+ & =-2\sum_{k=1}^{d}\frac{s_{k}^{2}}{(s_{k}+\kappa)^{3}}
+\end{align*}
+%
+\end{minipage}
+
+
+
+\subsection{Residual accentuation error after prediction-optimal tuning}
 
 Let's consider the $z$ for
 \begin{align*}
@@ -1380,84 +1020,132 @@ z_{acc,CV} & =\kappa\frac{\mathrm{df}_{1,2}(\kappa)}{B_{1,1}(\kappa)}\Big(\frac{
 
 This formula is validated empirically with numerical RidgeCV.
 
-\subsubsection{2nd order expansion random matrix calculation: Variance and covariance
-of numerator and denominator}
-\label{sec:app-ratio-corrections}
-
-Next we can compute the leading order term.
-\begin{align*}
-\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)\\
-\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\Big(1+3\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mathrm{Cov}[N,D]}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}[N]}{\mu_{N}^{2}}\Big)
-\end{align*}
 
 
-\subsubsection{Alternative way to evaluate this ratio ``Gaussian distributional
-DE'' }
-\label{sec:app-ratio-gaussian}
+\begingroup\color{red}
+\subsection{Full derivation of the optimality conditions}
+\label{app:regularization-derivations}
 
-Another way to estimate this ratio is to say $\bhat$ is a Gaussian
-random variable, then express its expectation and covariance -- note
-that the expectation and covariance both concentrates via DE, we can
-denote as $m_{DE},V_{DE}$, then they won't depend on $X$ realization
-explicitly.
+We derive the tuning conditions used in the main text. The calculations concern
+the deterministic-equivalent risk along the admissible ridge path
+$\lambda\geq0$; a stationary condition alone does not establish that the
+stationary point is a global minimum. Throughout, the spectral ratios are
+used only when their denominators are nonzero.
 
-So we can sample $\bhat$ from this surrogate Gaussian distribution
-then evaluate
-\[
-\mathbb{E}_{\bhat\sim\mathcal{N}(m_{DE},V_{DE})}\big[\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\big]
-\]
+\paragraph{Pixel-space prediction optimum.}
+Set $H(\kappa)=\kappa^2B_{1,2}(\kappa)+\sigma^2$ and
+$q(\kappa)=n-\mathrm{df}_{2}(\kappa)$. The spectral identities give
+$H'=2\kappa B_{2,3}$ and $q'=2\mathrm{df}_{2,3}$. Hence an interior
+stationary point of $E_{gen,DE}+\sigma^2=nH/q$ obeys
+\begin{equation}
+q\kappa B_{2,3}=H\,\mathrm{df}_{2,3}
+\quad\Longleftrightarrow\quad
+E_{gen,DE}+\sigma^2=n\kappa\frac{B_{2,3}}{\mathrm{df}_{2,3}}.
+\label{eq:appendix-pixel-prediction-stationary}
+\end{equation}
 
-with bootstrap averaging.
+\paragraph{Pixel-space accentuation optimum.}
+The identity $B_{1,1}-B_{2,2}=\kappa B_{1,2}$ yields
+\begin{equation}
+\mu_D-\mu_N
+=-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n}
+(E_{gen,DE}+\sigma^2).
+\label{eq:appendix-pixel-d-minus-n}
+\end{equation}
+Equating this expression to zero proves Eq.~\eqref{eq:acc_optim_reg_cond1}.
+Substituting $E_{gen,DE}+\sigma^2=nH/q$, and using
+$\mathrm{df}_{1}=\mathrm{df}_{2}+\kappa\mathrm{df}_{1,2}$ and
+$n\lambda=\kappa(n-\mathrm{df}_{1})$, gives the equivalent condition
+\begin{equation}
+\sigma^2
+=\kappa(n-\mathrm{df}_{1})\frac{B_{1,2}}{\mathrm{df}_{1,2}}
+=n\lambda\frac{B_{1,2}}{\mathrm{df}_{1,2}}.
+\label{eq:appendix-pixel-control-noise}
+\end{equation}
+At a root with $\lambda>0$ and $\sigma^2>0$, dividing the two equivalent
+conditions gives
+$(E_{gen,DE}+\sigma^2)/\sigma^2=\kappa/\lambda$, and therefore
+\begin{equation}
+E_{gen,DE}=\sigma^2\frac{\mathrm{df}_{1}}{n-\mathrm{df}_{1}}.
+\label{eq:appendix-pixel-risk-at-control}
+\end{equation}
+The value is not independent of the teacher across different problems:
+the teacher changes the root $\kappa_{acc}^{\star}$. At an interior
+prediction optimum, inserting Eq.~\eqref{eq:appendix-pixel-prediction-stationary}
+into Eq.~\eqref{eq:appendix-pixel-d-minus-n} gives
+Eq.~\eqref{eq:pixel-zacc-cv}.
 
-\subsection{Theory of peer review error}
+\paragraph{Feature-space prediction optimum.}
+Let $C=F\Sigma F^\top$, $G=FF^\top$,
+$\tau^2=S_\perp+\sigma^2$, and use the shorthand in
+Eq.~\eqref{eq:feature-spectral-shorthand}. Here
+$E_{gen,DE}+\sigma^2=nH_F/q_F$, with
+$H_F=\kappa^2B^F_{1,2}+\tau^2$ and
+$q_F=n-\mathrm{df}^F_{2,2}$. The same derivative calculation yields
+\begin{equation}
+q_F\kappa B^F_{2,3}=H_F\,\mathrm{df}^F_{2,3}
+\quad\Longleftrightarrow\quad
+E_{gen,DE}+\sigma^2=n\kappa\frac{B^F_{2,3}}{\mathrm{df}^F_{2,3}}.
+\label{eq:appendix-feature-prediction-stationary}
+\end{equation}
+The irreducible error $S_\perp$ enters the location of the optimum
+through $H_F$ even though it is absorbed into $E_{gen,DE}+\sigma^2$
+in the compact form on the right.
 
-Next we consider what does error of peer review reflects. Recall the
-evaluation metrics of peer review, where the generating model has
-weight $\bprime$, and the predicting model has weight $\bhat$
-\begin{align*}
-\mathrm{MSE}_{\text{peer rev}}= & \mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}\\
-R_{\text{peer rev}}^{2}= & 1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}\\
-\mathrm{slope}_{\text{peer rev}}= & \frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}
-\end{align*}
+\paragraph{Feature-space accentuation optimum.}
+Writing $\tilde\beta_\kappa=F^\top(C+\kappa I)^{-1}F\Sigma\bstar$,
+the DEs in Proposition~\ref{prop:linfeat_acc_ND} imply
+\begin{equation}
+D_{DE}-N_{DE}
+=\|\tilde\beta_\kappa\|^2-\bstar^\top\tilde\beta_\kappa
++\frac{E_{gen,DE}+\sigma^2}{n}
+\operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
+\label{eq:appendix-feature-d-minus-n}
+\end{equation}
+Setting this to zero proves Eq.~\eqref{eq:feature-control-optimal}
+when its trace is positive. Unlike the pixel case, the first two terms
+need not have a sign that guarantees an admissible root. For $F=I_d$,
+$\bstar^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2
+=\kappa B_{1,2}$ and the trace equals $\mathrm{df}_{1,2}$,
+recovering Eq.~\eqref{eq:acc_optim_reg_cond1}.
+\endgroup
 
-\begin{table}
-\begin{centering}
-\begin{tabular}{|c|c|c|c|}
-\hline
- & Peer Review & Peer Review on Perfect Accentuator & Accentuation\tabularnewline
-\hline
-\hline
-MSE & $\mathrm{Var}[\alpha]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\bstar}^{\top}(\bhat-\bstar)\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}$\tabularnewline
-\hline
-R2 & $1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}$ & $1-\big(\frac{{\bstar}^{\top}\bhat}{{\bstar}^{\top}\bstar}-1\big)^{2}$ & $1-\big(\frac{{\bhat}^{\top}\bhat}{{\bhat}^{\top}\bstar}-1\big)^{2}$\tabularnewline
-\hline
-slope & $\frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}$ & $\frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}$ & $\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}$\tabularnewline
-\hline
-\end{tabular}
-\par\end{centering}
-\caption{Comparison of evaluation metrics when evaluating on perfect evaluating
-model $\bprime=\bstar$.}
-\end{table}
-
-
-\paragraph{What if the peer is perfect? }
-
-Let's imagine an ideal scenario, where the generating model is perfectly
-aligned with the ground truth $\bprime=\bstar$.
-
-Then we can see the key asymmetry, for the model evaluated on its
-own generation the key slope ratio reads
-\begin{align*}
-\mathrm{slope}_{acc}= & \frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat} & \mathrm{slope}_{\text{peer rev}}= & \frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}
-\end{align*}
-
-So we can reuse the numerator expectation from above
-\[
-\mathbb{E}\big[\mathrm{slope}_{\text{peer rev}}\big]=\frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}
-\]
+% \end{document}
 
 
-\section{Linear Feature Space Regression }
+\section{Feature-space regression}
+\label{sec:app-feature-regression}
+
+\begingroup\color{red}
+\begin{proposition}[Feature-space prediction and pixel-space accentuation]
+\label{prop:app-feature-de}
+Let $C:=F\Sigma F^\top$, $G:=FF^\top$,
+$w^\star:=C^\dagger F\Sigma\bstar$, and
+$S_\perp:={\bstar}^\top\Sigma\bstar-{w^\star}^\top Cw^\star$.
+Then the leading feature-ridge prediction error is
+\begin{equation}
+E_{gen,DE}
+=\frac{n}{n-\mathrm{df}_{2}(\kappa)}
+\left[\kappa^2{w^\star}^\top(C+\kappa I)^{-2}Cw^\star
++S_\perp+\sigma^2\right]-\sigma^2,
+\label{eq:app-feature-egen-summary}
+\end{equation}
+where all degrees of freedom in this proposition use the spectrum of $C$.
+With
+$\tilde\beta_\kappa:=F^\top(C+\kappa I)^{-1}F\Sigma\bstar$, the two
+accentuation forms obey
+\begin{align}
+N_{DE}&={\bstar}^\top\tilde\beta_\kappa,\\
+D_{DE}&=\|\tilde\beta_\kappa\|^2
++\frac{E_{gen,DE}+\sigma^2}{n}
+\operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
+\label{eq:app-feature-D-summary}
+\end{align}
+Thus prediction depends on $(C,F\Sigma\bstar,{\bstar}^\top\Sigma\bstar)$,
+whereas control additionally depends on Euclidean gradient geometry through
+$G$ and $F\bstar$.
+\end{proposition}
+\endgroup
 
 \subsection{General set up}
 
@@ -2076,7 +1764,26 @@ predictor, when the sample moves on the back-propagation gradient
 direction $F^{\top}\hat{w}$.
 \end{itemize}
 
-\subsection{Summary Thesis: Dissociation of Prediction and Control. }
+
+
+\section{Gauge invariance and gradient fragility}\label{sec:app-gauge-fragility}
+
+\begingroup\color{red}
+\begin{proposition}[Prediction-preserving gauge family]
+\label{prop:app-feature-gauge}
+Assume $\Sigma\succ0$ and let $Q\in O(d)$ fix the whitened teacher,
+$Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$.  Then
+\begin{equation}
+F_Q:=F\Sigma^{1/2}Q\Sigma^{-1/2}
+\end{equation}
+satisfies $F_Q\Sigma F_Q^\top=F\Sigma F^\top$ and
+$F_Q\Sigma\bstar=F\Sigma\bstar$.  It therefore preserves the leading
+prediction DE and its population DE-based CV choice, but need not preserve
+$F_QF_Q^\top$, $F_Q\bstar$, or accentuation performance.
+\end{proposition}
+\endgroup
+
+\subsection{Distinct sufficient statistics for prediction and control}
 
 On the deterministic equivalent level, for prediction, the classic
 generalization error reads
@@ -2373,20 +2080,21 @@ F\Sigma F^{\top} & =\Sigma_{F}
 
 \paragraph{The trivial null space and degeneracy}
 
-Obviously applying a orthogonal transformation $O_{p}$ on the left
-side of $F\mapsto O_{p}F$ will not change any loss. just $w$ will
-counter rotate. $w\mapsto O_{p}w$. But this is not useful.
+A left orthogonal change of feature coordinates, $F\mapsto O_pF$, leaves the
+effective input-space predictor unchanged after counter-rotating
+$w\mapsto O_pw$. This coordinate degeneracy does not generate distinct
+control behavior.
 
 Because of this, without loss of generality, we can assume $F=\Lambda_{F}V^{\top}$,
 where $\Lambda_{F}\in\mathbb{R}^{p\times p}$ is diagonal matrix that
 scales each feature, while $V\in\mathbb{R}^{d\times p}$ are the feature
 columns.
 
-While $\Sigma=U\Lambda U^{\top}$
+Write the input covariance as $\Sigma=U\Lambda U^{\top}$.
 
 \paragraph{The non-trivial null space and degeneracy}
 
-The two slutions will satisify
+Two prediction-equivalent feature maps satisfy
 \begin{align*}
 F\Sigma\bstar-F^{\prime}\Sigma\bstar & =0\\
 F\Sigma F^{\top}-F^{\prime}\Sigma {F^\prime}^{\top} & =0
@@ -2400,13 +2108,12 @@ Thus the first constraint is
 the rows of $\Delta F=F-F^{\prime}$ will be orthogonal to the weighted
 teacher vector $\Sigma\bstar$.
 
-Spectrum weighted space
+It is more transparent to work in whitened coordinates. Define
+$A=F\Sigma^{1/2}$, $A'=F'\Sigma^{1/2}$, and
+$b=\Sigma^{1/2}\bstar$, with $A\in\mathbb R^{p\times d}$ and
+$b\in\mathbb R^d$.
 
-Another way to design is to study $F\Sigma^{1/2}=A$, and $F^{\prime}\Sigma^{1/2}=A^{\prime}$.
-$\Sigma^{1/2}\bstar=b$. $A\in\mathbb{R}^{p\times d}$ and
-$b\in\mathbb{R}^{d}$.
-
-Then the constrains simplifies
+The constraints simplify to
 \begin{align*}
 Ab-A^{\prime}b & =0\\
 AA^{\top}-A^{\prime}{A^\prime}^{\top} & =0
@@ -2437,11 +2144,7 @@ F(\theta)=A(\theta)\Sigma^{-1/2}
 We can consider also the high dimensional general case inspired by
 this two dimensional case
 \begin{example}[Higher dim orthogonal group case]
-For higher dimensional case, let's construct a family of feature
-spaces.
-\[
-A_{\phi}=\frac{hb^{\top}}{\|b\|^{2}}-KQ_{\phi}(I_{d}-\frac{bb^{\top}}{\|b\|^{2}})
-\]
+In higher dimensions, consider the family
 \[
 A_{\phi}=\frac{hb^{\top}}{\|b\|^{2}}+KQ_{\phi}
 \]
@@ -2498,13 +2201,13 @@ group.
 O_{\phi}=\frac{bb^{\top}}{\|b\|^{2}}+WR_{\phi}W^{\top}
 \]
 
-Features is basically spectral weighted, rotate in the space and then
-whiten it back.
+Thus the feature map is transformed to whitened coordinates, rotated in the
+subspace orthogonal to the whitened teacher, and mapped back:
 \[
 F_{\phi}=A_{\phi}\Sigma^{-1/2}=F\Sigma^{1/2}O_{\phi}\Sigma^{-1/2}
 \]
 
-Just to make sure
+Indeed,
 \[
 O_{\phi}\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar
 \]
@@ -2576,6 +2279,8 @@ error.
 
 
 \begingroup\color{red}
+
+
 \subsection{A spectral diagnostic for fragile feature maps}
 \label{sec:app-feature-fragility}
 
@@ -2620,7 +2325,181 @@ directions.  This term can vary while the prediction summaries and
 $E_{gen,DE}$ remain fixed.
 \end{remark}
 
-\section{Heuristic extension to nonlinear feature maps}
+
+
+\section{Corrections for ratios of random quadratic forms}
+\label{sec:app-ratio-approximations}
+\label{sec:app-ratio-corrections}
+
+\begingroup\color{red}
+\begin{proposition}[Second-order expansion for the random ratio]
+\label{prop:app-ratio-delta}
+Let $N=\mu_N+\delta_N$ and $D=\mu_D+\delta_D$, with nonzero means and
+fluctuations small enough for a second-order Taylor expansion. Then
+\begin{align}
+\mathbb E\!\left[\frac ND\right]
+&\approx\frac{\mu_N}{\mu_D}
+\left(1-\frac{\operatorname{Cov}(N,D)}{\mu_N\mu_D}
++\frac{\operatorname{Var}(D)}{\mu_D^2}\right),\\
+\mathbb E\!\left[\left(\frac ND\right)^2\right]
+&\approx\frac{\mu_N^2}{\mu_D^2}
+\left(1+\frac{\operatorname{Var}(N)}{\mu_N^2}
+-4\frac{\operatorname{Cov}(N,D)}{\mu_N\mu_D}
++3\frac{\operatorname{Var}(D)}{\mu_D^2}\right).
+\end{align}
+The ratio-of-DE approximation retains only the leading mean ratio.  The
+second-order terms become consequential when the leading calibration bias is
+small or the denominator has appreciable relative variance.
+\end{proposition}
+\endgroup
+
+\subsection{Approximating the expectation of a ratio}
+
+RMT gives cleaner control of $N$ and $D$ separately than of their ratio.
+The leading approximation replaces the expectation of a ratio by the ratio
+of deterministic equivalents. To quantify the resulting error, write
+$\mathbb{E}[N]=\mu_N$, $\mathbb{E}[D]=\mu_D$ and expand around the two means:
+\begin{align*}
+\frac{N}{D} & =\frac{\mu_{N}+\delta_{N}}{\mu_{D}+\delta_{D}}\\
+ & =\frac{\mu_{N}+\delta_{N}}{\mu_{D}+\delta_{D}}-\frac{\mu_{N}}{\mu_{D}}+\frac{\mu_{N}}{\mu_{D}}\\
+ & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}\mu_{D}(\frac{\mu_{D}+\delta_{D}}{\mu_{D}})}\\
+ & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}(1+\frac{\delta_{D}}{\mu_{D}})^{-1}\\
+ & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}(1-\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+...)
+\end{align*}
+
+Note the first non-trivial order is the 2nd order in $\delta$, which
+gives
+\begin{align*}
+\frac{N}{D} & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}-\frac{\delta_{D}}{\mu_{D}}\frac{\delta_{N}\mu_{D}-\delta_{D}\mu_{N}}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})\\
+ & =\frac{\mu_{N}}{\mu_{D}}+\frac{\delta_{N}}{\mu_{D}}-\frac{\delta_{D}\mu_{N}}{\mu_{D}^{2}}-\frac{\delta_{D}\delta_{N}}{\mu_{D}^{2}}+\frac{\delta_{D}^{2}\mu_{N}}{\mu_{D}^{3}}+o((\frac{\delta}{\mu})^{3})
+\end{align*}
+
+When taking expectation the first two orders gives
+\[
+\mathbb{E}\big[\frac{N}{D}\big]\approx\frac{\mu_{N}}{\mu_{D}}-\frac{\mathrm{Cov}(D,N)}{\mu_{D}^{2}}+\frac{\mathrm{Var}(D)\mu_{N}}{\mu_{D}^{3}}+\mathbb{E}\big[o((\frac{\delta}{\mu})^{3})\big]
+\]
+
+Similarly let's consider the other useful terms, i.e. the squared
+ratio, and their expansion.
+\begin{align*}
+(\frac{N}{D})^{2} & =\frac{(\mu_{N}+\delta_{N})^{2}}{(\mu_{D}+\delta_{D})^{2}}\\
+ & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}+2\mu_{D}\delta_{D}+\delta_{D}^{2}}\\
+ & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(\frac{\mu_{D}^{2}+2\mu_{D}\delta_{D}+\delta_{D}^{2}}{\mu_{D}^{2}})^{-1}\\
+ & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(1-(2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})+(2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})^{2}+o((2\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{D}^{2}}{\mu_{D}^{2}})^{3}))\\
+ & =\frac{\mu_{N}^{2}+2\mu_{N}\delta_{N}+\delta_{N}^{2}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+3\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+o((\frac{\delta_{D}}{\mu_{D}})^{3}))\\
+ & =\frac{\mu_{N}^{2}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+3\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+o((\frac{\delta_{D}}{\mu_{D}})^{3}))+\frac{2\mu_{N}\delta_{N}}{\mu_{D}^{2}}(1-2\frac{\delta_{D}}{\mu_{D}}+o((\frac{\delta_{D}}{\mu_{D}})^{2}))+\frac{\delta_{N}^{2}}{\mu_{D}^{2}}(1+o((\frac{\delta_{D}}{\mu_{D}})))\\
+ & =\frac{\mu_{N}^{2}}{\mu_{D}^{2}}-2\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\delta_{D}}{\mu_{D}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\delta_{D}^{2}}{\mu_{D}^{2}}+\frac{2\mu_{N}\delta_{N}}{\mu_{D}^{2}}-4\frac{\mu_{N}\delta_{N}}{\mu_{D}^{2}}\frac{\delta_{D}}{\mu_{D}}+\frac{\delta_{N}^{2}}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})
+\end{align*}
+
+\begin{align*}
+\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathbb{E}[\delta_{D}^{2}]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}^{2}}\frac{\mathbb{E}[\delta_{N}\delta_{D}]}{\mu_{D}}+\frac{\mathbb{E}[\delta_{N}^{2}]}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})\\
+ & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}}\frac{\mathrm{Cov}[N,D]}{\mu_{D}^{2}}+\frac{\mathrm{Var}[N]}{\mu_{D}^{2}}+o((\frac{\delta}{\mu})^{3})
+\end{align*}
+
+\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
+In summary the leading order correction to the fraction and power
+are
+\begin{align*}
+\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}-\frac{\mathrm{Cov}(D,N)}{\mu_{D}^{2}}+\frac{\mathrm{Var}(D)\mu_{N}}{\mu_{D}^{3}}\\
+\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}+3\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mu_{N}}{\mu_{D}}\frac{\mathrm{Cov}[N,D]}{\mu_{D}^{2}}+\frac{\mathrm{Var}[N]}{\mu_{D}^{2}}
+\end{align*}
+
+It can be written in more normalized (dimensionless) forms
+\begin{align*}
+\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)\\
+\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\Big(1+3\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mathrm{Cov}[N,D]}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}[N]}{\mu_{N}^{2}}\Big)
+\end{align*}
+%
+\end{minipage}}
+
+Thus, for the 0th order term we need to compute $\mu_{N}$,$\mu_{D}$;
+
+For the 1st order correction, we need to compute $\mathrm{Var}[D]$,
+$\mathrm{Cov}[N,D]$, $\mathrm{Var}[N]$ normalized by the corresponding
+mean.
+
+
+
+\subsection{Second-order delta expansion}
+\label{sec:app-ratio-delta}
+
+The leading correction follows by retaining second-order terms.
+\begin{align*}
+\mathbb{E}\big[\frac{N}{D}\big] & \approx\frac{\mu_{N}}{\mu_{D}}\Big(1-\frac{\mathrm{Cov}(D,N)}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}(D)}{\mu_{D}^{2}}\Big)\\
+\mathbb{E}[(\frac{N}{D})^{2}] & \approx\frac{\mu_{N}^{2}}{\mu_{D}^{2}}\Big(1+3\frac{\mathrm{Var}[D]}{\mu_{D}^{2}}-4\frac{\mathrm{Cov}[N,D]}{\mu_{N}\mu_{D}}+\frac{\mathrm{Var}[N]}{\mu_{N}^{2}}\Big)
+\end{align*}
+
+
+\subsection{Gaussian distributional approximation: ``Gaussian distributional
+DE'' }
+\label{sec:app-ratio-gaussian}
+
+Another way to estimate this ratio is to say $\bhat$ is a Gaussian
+random variable, then express its expectation and covariance -- note
+that the expectation and covariance both concentrates via DE, we can
+denote as $m_{DE},V_{DE}$, then they won't depend on $X$ realization
+explicitly.
+
+So we can sample $\bhat$ from this surrogate Gaussian distribution
+then evaluate
+\[
+\mathbb{E}_{\bhat\sim\mathcal{N}(m_{DE},V_{DE})}\big[\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}\big]
+\]
+
+with bootstrap averaging.
+
+\subsection{Theory of peer review error}
+
+We next characterize what peer-review error measures. Recall the
+evaluation metrics of peer review, where the generating model has
+weight $\bprime$, and the predicting model has weight $\bhat$
+\begin{align*}
+\mathrm{MSE}_{\text{peer rev}}= & \mathrm{Var}[\alpha^{\prime}]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}\\
+R_{\text{peer rev}}^{2}= & 1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}\\
+\mathrm{slope}_{\text{peer rev}}= & \frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}
+\end{align*}
+
+\begin{table}
+\begin{centering}
+\begin{tabular}{|c|c|c|c|}
+\hline
+ & Peer Review & Peer Review on Perfect Accentuator & Accentuation\tabularnewline
+\hline
+\hline
+MSE & $\mathrm{Var}[\alpha]\big({\bprime}^{\top}(\bhat-\bstar)\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\bstar}^{\top}(\bhat-\bstar)\big)^{2}$ & $\mathrm{Var}[\alpha]\big({\bhat}^{\top}(\bhat-\bstar)\big)^{2}$\tabularnewline
+\hline
+R2 & $1-\big(\frac{{\bprime}^{\top}\bhat}{{\bprime}^{\top}\bstar}-1\big)^{2}$ & $1-\big(\frac{{\bstar}^{\top}\bhat}{{\bstar}^{\top}\bstar}-1\big)^{2}$ & $1-\big(\frac{{\bhat}^{\top}\bhat}{{\bhat}^{\top}\bstar}-1\big)^{2}$\tabularnewline
+\hline
+slope & $\frac{{\bprime}^{\top}\bstar}{{\bprime}^{\top}\bhat}$ & $\frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}$ & $\frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat}$\tabularnewline
+\hline
+\end{tabular}
+\par\end{centering}
+\caption{Comparison of evaluation metrics when evaluating on perfect evaluating
+model $\bprime=\bstar$.}
+\end{table}
+
+
+\paragraph{Perfect peer direction.}
+
+Consider the idealized case in which the generating model is aligned with the
+ground truth, $\bprime=\bstar$.
+
+The generation--evaluation asymmetry is then explicit in the two slope ratios:
+\begin{align*}
+\mathrm{slope}_{acc}= & \frac{{\bhat}^{\top}\bstar}{{\bhat}^{\top}\bhat} & \mathrm{slope}_{\text{peer rev}}= & \frac{{\bstar}^{\top}\bstar}{{\bstar}^{\top}\bhat}
+\end{align*}
+
+Conditionally on a realized $\bhat$, the peer-review slope is
+$\|\bstar\|^2/({\bstar}^\top\bhat)$. Its expectation is again an expectation
+of a random ratio and must be handled by the approximations developed above;
+it is not generally the ratio obtained by replacing the denominator with its
+mean.
+
+
+
+
+\section{Nonlinear gradient diagnostic}
+\label{sec:app-nonlinear-diagnostic}
 \label{sec:app-nonlinear-feature-diagnostic}
 
 The linear-feature DE does not directly become a theorem for a nonlinear
@@ -2679,10 +2558,35 @@ $v_k^\top[\phi(x_0+\tau z)-\phi(x_0-\tau z)]/2$.  These changes preserve
 the population identity while reducing Monte Carlo variance.  Empirical
 validation should report the neighborhood scale, number of probes, and
 estimator variance rather than treating a noisy Jacobian estimate as exact.
+
+\subsection{Empirical validation against neuronal control}
+\label{sec:app-nonlinear-biological-validation}
+We evaluated the diagnostic on 25 neuronal sites crossed with ten encoding
+models. Each feature geometry used the fitted RidgeCV penalty and held-out
+natural-image error in the same response units. A single cross-session affine
+calibration was fitted per site on natural-image anchors and then shared
+across all models. To isolate model ordering from site-level difficulty, both
+the log diagnostic and biological endpoint were centered within site.
+
+Among the nine trained models ($225$ site--model pairs), exact-local
+$V_\phi$ achieved direction-aligned Pearson correlations $r=0.616$ with
+control slope and $r=0.442$ with direct control MSE. The corresponding
+held-out generalization-MSE correlations were $0.034$ and $-0.069$.
+Neighborhood smoothing retained strong ordering and, for slope, reached
+$r=0.605$ at noise scale $16/255$. Restricting to seven conventionally
+trained models attenuated the exact-local slope association to $r=0.189$;
+thus part of the full ordering is carried by the robust-model contrast.
+These values are descriptive repeated-measures associations, not an estimate
+of absolute control response and not an independent-observation significance
+test. Figure~\ref{fig:nonlinear-biological-validation} reports the complete
+paper-facing comparison.
 \endgroup
 
 
-\section{Appendix for deterministic equivalence and RMT}
+
+
+\section{Random-matrix toolkit}
+\label{sec:app-rmt-toolkit}
 \label{sec:app-de-toolkit}
 
 \subsection{Deterministic equivalence relationships}
@@ -2781,7 +2685,7 @@ where the classic short hand are special cases of these.
 \mathrm{df}_{2}(\kappa) & \equiv\mathrm{df}_{2,2}(\kappa)
 \end{align*}
 
-The start of the recurssion is meaningful
+The recursion starts from the meaningful quantities
 \begin{align*}
 \mathrm{df}_{0,0}(\kappa) & =d\\
 B_{0,0}(\kappa) & =\|\bstar\|^{2}=\sum b_{k}^{2}
@@ -2849,91 +2753,3 @@ B_{p+1,q+1}(\kappa)-B_{p,q}(\kappa) & =-\kappa B_{p,q+1}(\kappa)
 
 
 \begingroup\color{red}
-\section{Prediction- and accentuation-optimal ridge penalties}
-\label{app:regularization-derivations}
-
-We derive the tuning conditions used in the main text. The calculations concern
-the deterministic-equivalent risk along the admissible ridge path
-$\lambda\geq0$; a stationary condition alone does not establish that the
-stationary point is a global minimum. Throughout, the spectral ratios are
-used only when their denominators are nonzero.
-
-\paragraph{Pixel-space prediction optimum.}
-Set $H(\kappa)=\kappa^2B_{1,2}(\kappa)+\sigma^2$ and
-$q(\kappa)=n-\mathrm{df}_{2}(\kappa)$. The spectral identities give
-$H'=2\kappa B_{2,3}$ and $q'=2\mathrm{df}_{2,3}$. Hence an interior
-stationary point of $E_{gen,DE}+\sigma^2=nH/q$ obeys
-\begin{equation}
-q\kappa B_{2,3}=H\,\mathrm{df}_{2,3}
-\quad\Longleftrightarrow\quad
-E_{gen,DE}+\sigma^2=n\kappa\frac{B_{2,3}}{\mathrm{df}_{2,3}}.
-\label{eq:appendix-pixel-prediction-stationary}
-\end{equation}
-
-\paragraph{Pixel-space accentuation optimum.}
-The identity $B_{1,1}-B_{2,2}=\kappa B_{1,2}$ yields
-\begin{equation}
-\mu_D-\mu_N
-=-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n}
-(E_{gen,DE}+\sigma^2).
-\label{eq:appendix-pixel-d-minus-n}
-\end{equation}
-Equating this expression to zero proves Eq.~\eqref{eq:acc_optim_reg_cond1}.
-Substituting $E_{gen,DE}+\sigma^2=nH/q$, and using
-$\mathrm{df}_{1}=\mathrm{df}_{2}+\kappa\mathrm{df}_{1,2}$ and
-$n\lambda=\kappa(n-\mathrm{df}_{1})$, gives the equivalent condition
-\begin{equation}
-\sigma^2
-=\kappa(n-\mathrm{df}_{1})\frac{B_{1,2}}{\mathrm{df}_{1,2}}
-=n\lambda\frac{B_{1,2}}{\mathrm{df}_{1,2}}.
-\label{eq:appendix-pixel-control-noise}
-\end{equation}
-At a root with $\lambda>0$ and $\sigma^2>0$, dividing the two equivalent
-conditions gives
-$(E_{gen,DE}+\sigma^2)/\sigma^2=\kappa/\lambda$, and therefore
-\begin{equation}
-E_{gen,DE}=\sigma^2\frac{\mathrm{df}_{1}}{n-\mathrm{df}_{1}}.
-\label{eq:appendix-pixel-risk-at-control}
-\end{equation}
-The value is not independent of the teacher across different problems:
-the teacher changes the root $\kappa_{acc}^{\star}$. At an interior
-prediction optimum, inserting Eq.~\eqref{eq:appendix-pixel-prediction-stationary}
-into Eq.~\eqref{eq:appendix-pixel-d-minus-n} gives
-Eq.~\eqref{eq:pixel-zacc-cv}.
-
-\paragraph{Feature-space prediction optimum.}
-Let $C=F\Sigma F^\top$, $G=FF^\top$,
-$\tau^2=S_\perp+\sigma^2$, and use the shorthand in
-Eq.~\eqref{eq:feature-spectral-shorthand}. Here
-$E_{gen,DE}+\sigma^2=nH_F/q_F$, with
-$H_F=\kappa^2B^F_{1,2}+\tau^2$ and
-$q_F=n-\mathrm{df}^F_{2,2}$. The same derivative calculation yields
-\begin{equation}
-q_F\kappa B^F_{2,3}=H_F\,\mathrm{df}^F_{2,3}
-\quad\Longleftrightarrow\quad
-E_{gen,DE}+\sigma^2=n\kappa\frac{B^F_{2,3}}{\mathrm{df}^F_{2,3}}.
-\label{eq:appendix-feature-prediction-stationary}
-\end{equation}
-The irreducible error $S_\perp$ enters the location of the optimum
-through $H_F$ even though it is absorbed into $E_{gen,DE}+\sigma^2$
-in the compact form on the right.
-
-\paragraph{Feature-space accentuation optimum.}
-Writing $\tilde\beta_\kappa=F^\top(C+\kappa I)^{-1}F\Sigma\bstar$,
-the DEs in Proposition~\ref{prop:linfeat_acc_ND} imply
-\begin{equation}
-D_{DE}-N_{DE}
-=\|\tilde\beta_\kappa\|^2-\bstar^\top\tilde\beta_\kappa
-+\frac{E_{gen,DE}+\sigma^2}{n}
-\operatorname{tr}\!\left[G(C+\kappa I)^{-2}C\right].
-\label{eq:appendix-feature-d-minus-n}
-\end{equation}
-Setting this to zero proves Eq.~\eqref{eq:feature-control-optimal}
-when its trace is positive. Unlike the pixel case, the first two terms
-need not have a sign that guarantees an admissible root. For $F=I_d$,
-$\bstar^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2
-=\kappa B_{1,2}$ and the trace equals $\mathrm{df}_{1,2}$,
-recovering Eq.~\eqref{eq:acc_optim_reg_cond1}.
-\endgroup
-
-% \end{document}
