@@ -61,6 +61,13 @@
 
 
 
+
+% "Prince, Wang, et al." citation form for the companion experimental paper
+% (natbib alias; keeps hyperlink and bibliography entry).
+\defcitealias{prince2026parametric}{Prince, Wang, et~al., 2026}
+\newcommand{\citetPW}{Prince, Wang, et~al.\ \citeyearpar{prince2026parametric}}
+\newcommand{\citepPW}{\citepalias{prince2026parametric}}
+
 %\iclrfinalcopy
 \begin{document}
 \maketitle
@@ -103,7 +110,7 @@ Previous works have showed success in control neural activities in model free an
 In model free fashion, ...
 In model based fashion, an explicit predictive model of neural activity was built, and then the researcher "plan" against the predictive model, and create stimuli that drive the system to a target state.
 
-One simplest version is instantiated in the recent study by Prince, Wang et al.
+One simplest version is instantiated in the recent study by \citetPW.
 One striking finding is that even though many models are basically equally good at predict the brain, they are not as effective in control or modulate the brain.
 
 % Recent works show that despite similar prediction accuracy on held out samples, the models have dramatically different performance in controlling the neurons and proposing the samples.
@@ -121,7 +128,7 @@ We precisely characterized the scaling of accentuation and held-out prediction e
 \end{figure}
 
 \section{Key phenomena from neuronal control experiments}
-We summarize and reproduce the results from the data of the closed-loop experiments of \citet{prince2026parametric}, which motivate the distinction between prediction and control (Fig.~\ref{fig:Setup_NeuroControl_Results}). 
+We summarize and reproduce the results from the data of the closed-loop experiments of \citetPW, which motivate the distinction between prediction and control (Fig.~\ref{fig:Setup_NeuroControl_Results}). 
 
 \paragraph{Experimental setup.}
 The experiments have four phases (Fig.~\ref{fig:Setup_NeuroControl_Results} A): 
