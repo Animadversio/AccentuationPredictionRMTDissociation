@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{iclr2026_conference,times}
+
+\input{math_commands.tex}
+
+\usepackage{xcolor}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\todo}[1]{\textcolor{magenta}{\textbf{[TODO: #1]}}}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\pagestyle{empty}
+\definecolor{inputgray}{RGB}{76,84,92}
+\definecolor{predblue}{RGB}{42,104,145}
+\definecolor{predgreen}{RGB}{42,124,91}
+\definecolor{controlred}{RGB}{181,74,58}
+\definecolor{controlorange}{RGB}{196,116,42}
+\definecolor{fitpurple}{RGB}{102,75,145}
+
+\usepackage{adjustbox}
+\usepackage{algorithm}
+\usepackage{cancel}
+\usepackage{url}
+\usepackage{hyperref}
+
+
+% \newcommand{\Sigma}{\mathbf{\Sigma}}
+% \newcommand{\R}{\mathbb{R}}
+% \title{When Test Error Hides Directional Failure: Random Matrix Theory for Accentuation in Ridge Regression}
+% \title{Why a good predictor can be a bad controller: \\A Random Matrix Analysis for Dissociation of Neural Prediction and Control}
+\title{When Good Brain Predictors Make Bad Brain Controllers: A Regression Theory of Prediction–Control Dissociation}
+
+% Keep anonymous for ICLR submission.
+\author{Anonymous Authors}
+
+% Compatibility layer for theorem environments imported from LyX.
+% Define localized names before amsthm binds them to environment headings.
+\providecommand{\theoremname}{Theorem}
+\providecommand{\propositionname}{Proposition}
+\providecommand{\lemmaname}{Lemma}
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\examplename}{Example}
+\providecommand{\remarkname}{Remark}
+
+\theoremstyle{plain}
+\newtheorem{thm}{\theoremname}
+\newtheorem{theorem}[thm]{\theoremname}
+\newtheorem{proposition}[thm]{\propositionname}
+\newtheorem{prop}[thm]{\propositionname}
+\newtheorem{lemma}[thm]{\lemmaname}
+\newtheorem{lem}[thm]{\lemmaname}
+\newtheorem{corollary}[thm]{\corollaryname}
+\newtheorem{cor}[thm]{\corollaryname}
+\theoremstyle{definition}
+\newtheorem{example}[thm]{\examplename}
+\theoremstyle{remark}
+\newtheorem{remark}{\remarkname}
+
+
+
+%\iclrfinalcopy
+\begin{document}
+\maketitle
+\input{main_body_compact_draft.tex}
+
+\section{Reproducibility Statement}
+The theory assumptions, derivations, and deterministic equivalents are stated in the main text, with full derivations in the appendix. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here.
+
+\section{Ethics Statement}
+This work is theoretical and uses synthetic simulations, natural-image covariance spectra, and previously published neuronal recordings for validation. It does not introduce a deployed model, collect human-subject data, or release a dataset with personal information.
+
+\bibliography{iclr2026/accentuation_rmt_iclr2026}
+\bibliographystyle{iclr2026/iclr2026_conference}
+
+\clearpage
+\appendix
+\tableofcontents{}
+\input{theory_appendix.tex}
+\end{document}
