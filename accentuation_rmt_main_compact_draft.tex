@@ -72,8 +72,9 @@
 %\iclrfinalcopy
 \begin{document}
 \maketitle
-\input{main_body_compact_draft.tex}
-
+% \input{main_body_compact_draft.tex}
+\input{main_body_compact.tex}
+\clearpage
 \section{Reproducibility Statement}
 The theory assumptions, derivations, and deterministic equivalents are stated in the main text, with full derivations in the appendix. The accompanying validation repository contains the core RMT library, CPU and GPU Monte Carlo scripts, notebooks recreating the figures, and saved outputs for the experiments shown here.
 
@@ -86,5 +87,6 @@ This work is theoretical and uses synthetic simulations, natural-image covarianc
 \clearpage
 \appendix
 \tableofcontents{}
-\input{theory_appendix.tex}
+% \input{theory_appendix.tex}
+\input{theory_appendix_polished}
 \end{document}
