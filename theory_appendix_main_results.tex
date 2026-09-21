@@ -417,6 +417,35 @@ PCs backpropagate into low-variance (high spatial frequency) input
 directions.  Proof: Section~\ref{sec:app-feature-fragility}.
 \end{prop}
 
+\begin{prop}[Peer review on shared data across feature maps]
+\label{prop:mr-peer-shared}
+Let two students with maps $F_1,F_2$ and penalties $\lambda_1,\lambda_2$ be
+fitted to the same $(X,\eta)$, and write
+$M_i:=F_i^\top(F_i\hat\Sigma F_i^\top+\lambda_iI)^{-1}F_i$, so that
+$\bhat_i=M_i\hat\Sigma\bstar+\frac{\sigma}{n}M_iX^\top\eta=:g_i+\varepsilon_i$.
+Conditionally on $X$,
+\begin{equation}
+\E_\eta\big[{\bhat_1}^\top\bhat_2\big]=g_1^\top g_2+\Omega_{12},\qquad
+\Omega_{12}:=\frac{\sigma^2}{n}\operatorname{Tr}\big[M_1\hat\Sigma M_2\big],\qquad
+|\Omega_{12}|\le\sqrt{\Omega_{11}\Omega_{22}},
+\label{eq:mr-peer-shared}
+\end{equation}
+while $\E_\eta[{\bstar}^\top\bhat_2]={\bstar}^\top g_2$.  The peer gain of
+student~1 on student~2's path is therefore, at the level of conditional
+means, $G_{1\leftarrow2}\approx(g_1^\top g_2+\Omega_{12})/{\bstar}^\top g_2$,
+to be compared with the self gain
+$G_{2\leftarrow2}\approx(\|g_2\|^2+\Omega_{22})/{\bstar}^\top g_2$.  The
+shared-noise overlap $\Omega_{12}$ is the inner product of the two models'
+noise-driven pixel weights: it equals the self noise energy $\Omega_{22}$
+for identical students, vanishes for fits on independent data (recovering
+Proposition~\ref{prop:mr-peer}, generalized to different maps by
+$g_i\asymp\tilde\beta_i$), and is small whenever the two maps route
+estimation noise into different pixel directions.  All terms are explicit
+functions of the empirical design; their population deterministic
+equivalents for two different feature maps on shared data are left open.
+Proof: Section~\ref{sec:app-peer-shared}.
+\end{prop}
+
 \begin{remark}[When is control fragile although prediction is fine]
 \label{rem:mr-when}
 Combining Propositions~\ref{prop:mr-feature-de}, \ref{prop:mr-feature-tuning}
