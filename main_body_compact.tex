@@ -200,8 +200,8 @@ Both conditions equate the noisy prediction risk to $n\kappa$ times a teacher-we
     \caption{\textbf{Pixel-space ridge separates prediction- and control-optimal regularization on natural images.}
     Disk teacher on van~Hateren images ($d=10^4$, $n=10^3$).
     \textbf{A--C}~The landscapes of prediction error $E_{gen}$, accentuation error $E_{acc}$, and accentuation $R^2$ over normalized noise scale $\sigma^2/S$ and effective regularization $\kappa$, calculated by DE (Eq.\ref{eq:pixel-de}). The prediction-optimal and median empirical RidgeCV paths track each other but differ from the control-optimal path; the black contour marks $R^2_{acc}=0$. 
-    This picture is validated by the numerical MC estimated landscapes in Fig.~\ref{}. 
-    \textbf{D,E}~Slices at four noise levels expose displaced prediction and control valleys (peaks for $R^2$); markers and bands show the mean and 10--90\% range over 100 natural-image trials at the highlighted noise $\sigma^2/S=1$.
+    This picture is validated by the numerical MC estimated landscapes in \red{Fig.~\ref{}}. 
+    \textbf{D,E}~Slices at four noise levels expose displaced prediction and control valleys (or peaks for $R^2$); markers and bands show the mean and 10--90\% range over 100 natural-image trials at the highlighted noise $\sigma^2/S=1$.
     \textbf{F}~Along the prediction-optimal path, $R^2_{gen}$ remains high while $R^2_{acc}$ becomes strongly negative; empirical RidgeCV exhibits the same dissociation.}
     \vspace{-15pt}
     \label{fig:pixel}
@@ -218,6 +218,20 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1]
 \label{eq:peer-de}
 \end{equation}
 (Prop.~\ref{prop:mr-peer}). Peer review measures only the shared shrinkage bias: at leading order it is never negative, degrades gracefully with noise, and is symmetric between the two fits. Self-evaluation instead carries the estimator's own Euclidean noise energy through Eq.~\ref{eq:pixel-de}, so $z_{acc}$ grows without bound with $\sigma^2/n$ and $R^2_{acc}$ becomes arbitrarily negative. A student can therefore track a peer's path while failing on its own, which is the linear form of Fig.~\ref{fig:phenomena}C. The asymmetry between a strong and a weak generator in the data arises when the two differ in noise energy, i.e. in their feature maps (Sec.~\ref{sec:feature}); and measured responses along a barely modulated path add trial noise that no evaluator can explain, which is why even the peer scores of a weak generator's images are poor.
+
+\begin{figure}[t]
+    \centering
+    \vspace{-15pt}
+    \includegraphics[width=0.55\linewidth,height=0.22\textheight,keepaspectratio]{figures/feature_summary_statistics_flow.pdf}%\hfill
+    \includegraphics[width=0.45\linewidth,height=0.2\textheight,keepaspectratio]{figures/VanHateren_Top500PC_prediction_null_feature_rotation.png}
+    % \includegraphics[width=0.44\linewidth,height=0.22\textheight,keepaspectratio]{figures/nonlinear_control_biological_validation.pdf}\\[2pt]
+    \vspace{-15pt}
+    \caption{\textbf{Feature geometry decides control.}
+    \textbf{A}~Dependency graph: $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$ fix generalization and the cross-validated penalty; control additionally needs $\GramDef$ and $F\bstar$ (draft: to be simplified to $\sim$8 boxes).
+    \textbf{B}~Rotating a top-500-PC projector of van Hateren images into the prediction-null spectral tail: $E_{gen}$ and $R^2_{gen}$ are invariant while $R^2_{acc}$ and the slope collapse; DE (lines) matches finite-$n$ Monte Carlo (markers). }
+    %\textbf{C}~Neuronal data: site-demeaned association of each candidate predictor with biological control slope (left) and control error (right) across nine trained (filled) and seven conventionally trained (open) models. Held-out error carries no model-order information; the exact trace, $V_\phi$ and its neighborhood versions do. (Draft: keep 5 rows.)}
+    \label{fig:feature}%\label{fig:nonlinear-biological-validation}
+\end{figure}
 
 \section{Linear feature ridge: the map decides what reaches the gradient}
 \label{sec:feature}
@@ -262,6 +276,22 @@ Visual neuronal responses are known to be highly noisy \red{\cite{?}} meeting (i
 Natural images make (ii) large for every model; the feature map decides (iii), and equally predictive maps can differ in it without bound.}}
 \end{center}
 
+
+\begin{figure}[t]
+    \centering
+    \vspace{-10pt}
+    \includegraphics[width=\linewidth]{figures/Figure_nonlinear_neuro_diagnostic.png}
+    \vspace{-15pt}
+    \caption{\textbf{Nonlinear gradient-feature geometry predicts biological control across encoding models.}
+% We evaluated ten encoding models at 25 neural recording sites from five subjects. Control-session predictions use a frozen site-specific affine map fitted only on natural-image anchors shared across sessions.
+We reproduced the results using published data from \citetPW. 
+\textbf{A}~MSE on held-out natural images during the control session, analogous to $E_{\mathrm{val}}\approx E_{gen}+\sigma^2$.
+\textbf{B}~Biological control slope of measured over predicted responses for model-generated stimuli. In \textbf{A,B}, bars are mean of 25 neural sites (dots), \red{and error bars denote $\pm2$ subject-level SE}.
+\textbf{C}~After removing each site's mean across-model, the factor $V_{\phi}=(E_{\mathrm{val}}/n)T_{\phi}(\kappa)$ computed using Jacobian with neighborhood of scale $16/255$ (\red{cf.Eq.\ref{x}}) is strongly anticorrelated with control slope (Pearson $r=-0.61$). % across 250 site--model pairs 
+\textbf{D}~Pearson $-r$ between residual control slope and some predictive factors (held-out MSE, exact trace, exact local $V_{\phi}$, or neighborhood $V_{\phi}$ at four scales); our factor $V,T$ outperforms held-out MSE in predicting control slope; \red{larger values indicate stronger association in the predicted direction}. Markers denote: 10 - all, 9 - exclude Untrained, 8 - exclude adversarial trained (RN50-Robust and CLIPAG), 7 - exclude all three. Stars denote raw two-sided Pearson $p<0.05$.} %Site means are fixed from all ten models.  without multiple-comparison correction
+    \label{fig:nonlinear-biological-validation}
+\end{figure}
+
 \section{Nonlinear feature ridge: a generalized diagnostic for deep networks}
 \label{sec:nonlinear}
 For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian in Eq.~\ref{eq:TF} gives
@@ -275,17 +305,6 @@ where $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the pixel gradient of fe
 
 We computed these quantities for all 250 site--model pairs of the neuronal experiment, using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:feature}C). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\ref{eq:feature-de} would also be needed.
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.55\linewidth,height=0.22\textheight,keepaspectratio]{figures/feature_summary_statistics_flow.pdf}\hfill
-    \includegraphics[width=0.44\linewidth,height=0.22\textheight,keepaspectratio]{figures/nonlinear_control_biological_validation.pdf}\\[2pt]
-    \includegraphics[width=\linewidth,height=0.2\textheight,keepaspectratio]{figures/VanHateren_Top500PC_prediction_null_feature_rotation.png}
-    \caption{\textbf{Feature geometry decides control.}
-    \textbf{A}~Dependency graph: $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$ fix generalization and the cross-validated penalty; control additionally needs $\GramDef$ and $F\bstar$ (draft: to be simplified to $\sim$8 boxes).
-    \textbf{B}~Rotating a top-500-PC projector of van Hateren images into the prediction-null spectral tail: $E_{gen}$ and $R^2_{gen}$ are invariant while $R^2_{acc}$ and the slope collapse; DE (lines) matches finite-$n$ Monte Carlo (markers). (Draft: keep 3 of 6 panels.)
-    \textbf{C}~Neuronal data: site-demeaned association of each candidate predictor with biological control slope (left) and control error (right) across nine trained (filled) and seven conventionally trained (open) models. Held-out error carries no model-order information; the exact trace, $V_\phi$ and its neighborhood versions do. (Draft: keep 5 rows.)}
-    \label{fig:feature}\label{fig:nonlinear-biological-validation}
-\end{figure}
 
 \section{Discussion}
 \label{sec:discussion}
