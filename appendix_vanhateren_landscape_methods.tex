@@ -1,0 +1,113 @@
+\section{Natural-image pixel-ridge landscape experiment}
+\label{sec:app-vanhateren-landscape-methods}
+
+This section describes the experiment underlying Fig.~\ref{fig:pixel}.  Its
+Monte Carlo component uses actual natural-image patches, rather than Gaussian
+designs having the same covariance.
+
+\paragraph{Images, teacher, and population reference.}
+We drew $100\times100$ patches from the van Hateren natural-image database.
+Raw 16-bit luminance $L$ was transformed as
+$\log(1+L)/\log(65536)$ and quantized to eight bits before being rescaled to
+$[0,1]$.  We used disjoint source images to construct a pool of 2,000 training
+patches (one patch per image) and an independent population pool of 20,000
+patches (ten patches per image).  The population pool was centered once and
+was used both to define the empirical covariance $\Sigma$ and to evaluate all
+fitted models.  The teacher $\bstar\in\mathbb R^{10,000}$ was the indicator of
+a centered disk of radius $0.3$ in image coordinates.  Its population signal
+variance was
+\begin{equation}
+  S=\operatorname{Var}_{\x\sim\mathcal D}
+  (\bstar^\top\x)=\bstar^\top\Sigma\bstar=1736.344965.
+\end{equation}
+
+\paragraph{Noise--regularization grid and deterministic equivalents.}
+We evaluated 114 response-noise levels, comprising zero and a logarithmic grid
+of $\sigma^2/S\in[10^{-8},10]$, and 478 ridge penalties.  We use the
+scikit-learn convention
+\begin{equation}
+ \widehat\beta_{\alpha,\sigma}
+ =X^\top(XX^\top+\alpha I_n)^{-1}\bm y_\sigma,
+ \qquad \alpha=n\lambda,
+\end{equation}
+with $\alpha\in[10^{-5},10^7]$ ($\lambda\in[10^{-8},10^4]$).  The effective
+penalty $\kappa$ shown in Fig.~\ref{fig:pixel} is the positive solution of
+$n\lambda=\kappa\{n-\mathrm{df}_1(\kappa)\}$.  At each of the 54,492 grid
+points we evaluated the deterministic equivalents using the eigenvalues of
+the empirical population covariance and the disk teacher's coordinates in
+that eigenbasis.  The prediction-optimal and control-optimal paths minimize,
+respectively, the DE prediction error and the leading-DE accentuation error
+over the finite penalty grid at each noise level.  All heatmaps and slices
+are direct evaluations on this grid; no smoothing or interpolation was used.
+
+\paragraph{Natural-image Monte Carlo.}
+We ran 100 paired trials.  On trial $t$, using seed $20260918+t$, we sampled
+$n=1,000$ patches without replacement from the 2,000-patch training pool,
+centered every pixel using that sample, and drew a centered
+$\epsilon\sim\mathcal N(0,I_n)$.  For every noise level we used the response
+\begin{equation}
+  \bm y_\sigma=X\bstar+\sigma\epsilon .
+  \label{eq:app-vh-response}
+\end{equation}
+Thus the design and unit-noise direction were shared across the entire noise
+axis within a trial.  This pairing reduces differences caused by resampling
+and makes each trial a coherent path as $\sigma$ varies.
+
+Because $n<d$, we diagonalized the $n\times n$ kernel matrix $XX^\top$ once
+per trial.  For every penalty the fitted weight is exactly affine in the
+noise scale,
+\begin{equation}
+ \widehat\beta_{\alpha,\sigma}
+ =X^\top(XX^\top+\alpha I_n)^{-1}X\bstar
+ +\sigma X^\top(XX^\top+\alpha I_n)^{-1}\epsilon
+ =w_{0,\alpha}+\sigma w_{1,\alpha}.
+ \label{eq:app-vh-affine-noise}
+\end{equation}
+We therefore cached the linear or quadratic coefficients in $\sigma$ of all
+required quadratic forms and reconstructed the complete noise axis exactly.
+This avoids refitting 54,492 models per trial and is not an interpolation.
+
+Let $P\in\mathbb R^{20,000\times d}$ be the centered population-patch matrix,
+$N=\bstar^\top\widehat\beta$, $D=\|\widehat\beta\|^2$,
+$Q=\|P\widehat\beta\|^2/20{,}000$, and
+$C=(P\bstar)^\top P\widehat\beta/20{,}000$.  We report
+\begin{align}
+ \frac{E_{gen}}S
+ &=\frac{\|P(\widehat\beta-\bstar)\|^2}{20{,}000S},
+ &R^2_{gen}&=1-\frac{E_{gen}}S,
+ &\operatorname{slope}_{gen}&=\frac CQ,\\
+ \frac{E_{acc}}S
+ &=\left(1-\frac ND\right)^2,
+ &R^2_{acc}&=1-\left(\frac DN-1\right)^2,
+ &\operatorname{slope}_{acc}&=\frac ND.
+ \label{eq:app-vh-metrics}
+\end{align}
+The fitted intercept is accounted for by sample centering and by the
+cross-validation leverage below, but it is omitted from these population
+weight-response metrics.
+
+\paragraph{Empirical RidgeCV.}
+For each trial and noise level we selected $\alpha$ by exact leave-one-out
+cross-validation over the same 478-point grid.  If $XX^\top=U\operatorname{diag}(q_j)U^\top$,
+the diagonal of the fitted-intercept ridge smoother is
+\begin{equation}
+ h_i(\alpha)=\sum_jU_{ij}^2\frac{q_j}{q_j+\alpha}+\frac1n,
+\end{equation}
+and the LOOCV loss is the mean of
+$[(y_i-\widehat y_i)/(1-h_i)]^2$.  As in
+Eq.~\ref{eq:app-vh-affine-noise}, this loss is quadratic in $\sigma$, so its
+full landscape was reconstructed from three cached coefficients.  The green
+path in Fig.~\ref{fig:pixel} is the median selected $\kappa$ across trials.
+Metrics labeled empirical RidgeCV were instead evaluated at each trial's own
+selected penalty before aggregation; they are not evaluations at the median
+penalty.  We verified the selected penalties and minimum losses against
+\texttt{sklearn.linear\_model.RidgeCV} at three noise levels.
+
+\paragraph{Aggregation and checks.}
+At every grid point we saved all 100 trial values and computed their
+arithmetic mean, standard error, median, and 10th and 90th percentiles.  Bands
+in Fig.~\ref{fig:pixel} show the 10--90\% trial range, not a confidence
+interval; markers show the arithmetic mean.  We also checked the cached
+noise-polynomial evaluation against an independent direct ridge solve for
+all reported metrics.  Computation used float64 linear algebra on a GPU, and
+plot-ready summaries were cached separately from the rendered figure.
