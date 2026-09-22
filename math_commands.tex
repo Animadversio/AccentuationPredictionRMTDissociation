@@ -522,3 +522,12 @@
 \DeclareMathOperator{\sign}{sign}
 \DeclareMathOperator{\Tr}{Tr}
 \let\ab\allowbreak
+
+% ---------------------------------------------------------------------------
+% Feature-space Gram matrix symbol toggle.  \gramsymboltrue prints G (with
+% G:=FF^\top at definitions); \gramsymbolfalse prints the explicit FF^\top.
+\newif\ifgramsymbol \gramsymboltrue
+\newcommand{\Gram}{\ifgramsymbol G\else FF^{\top}\fi}
+\newcommand{\Gramsub}[1]{\ifgramsymbol G_{#1}\else F_{#1}F_{#1}^{\top}\fi}
+\newcommand{\Gramt}{\ifgramsymbol G(t)\else F(t)F(t)^{\top}\fi}
+\newcommand{\GramDef}{\ifgramsymbol G:=FF^{\top}\else FF^{\top}\fi}

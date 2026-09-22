@@ -222,23 +222,23 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1]
 \section{Linear feature ridge: the map decides what reaches the gradient}
 \label{sec:feature}
 
-Pixel regression explains why one student fails; it cannot explain why ten equally predictive backbones fail differently. We idealize a backbone as a fixed linear map $F\in\R^{p\times d}$, fit $\hat w$ by ridge on features $F\x$, and accentuate along the pixel gradient $\bhat=F^\top\hat w$. Let $C:=F\Sigma F^\top$ be the feature covariance and $G:=FF^\top$ the Euclidean feature Gram. The best realizable feature weight and its irreducible error are $w^\star=C^\dagger F\Sigma\bstar$ and $S_\perp=S-{w^\star}^\top Cw^\star$ (App.~\ref{lem:mr-feature-weights}).
+Pixel regression explains why one student fails; it cannot explain why ten equally predictive backbones fail differently. We idealize a backbone as a fixed linear map $F\in\R^{p\times d}$, fit $\hat w$ by ridge on features $F\x$, and accentuate along the pixel gradient $\bhat=F^\top\hat w$. Let $\Sigma_F:=F\Sigma F^\top$ be the feature covariance and $\GramDef$ the Euclidean feature Gram. The best realizable feature weight and its irreducible error are $w^\star=\Sigma_F^\dagger F\Sigma\bstar$ and $S_\perp=S-{w^\star}^\top \Sigma_F w^\star$ (App.~\ref{lem:mr-feature-weights}).
 
 \begin{prop}[Feature ridge: prediction and control]\label{prop:feature-de}\label{prop:linfeat_acc_ND}\label{prop:linfeat_gen_err}
-With $\kappa$, $B^F$, $\mathrm{df}^F$ built from $(C,w^\star)$ and aspect ratio $p/n$,
+With $\kappa$, $B^F$, $\mathrm{df}^F$ built from $(\Sigma_F,w^\star)$ and aspect ratio $p/n$,
 \begin{equation}\small
 E_{gen,DE}=\frac{n(\kappa^2B^F_{1,2}+S_\perp+\sigma^2)}{n-\mathrm{df}^F_2}-\sigma^2,\qquad
 N_{DE}={\bstar}^\top\tilde\beta_\kappa,\qquad
 D_{DE}=\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
 \label{eq:feature-de}
 \end{equation}
-where $\tilde\beta_\kappa=F^\top(C+\kappa I)^{-1}F\Sigma\bstar$ is the mean pixel weight and
-$T_F(\kappa):=\operatorname{Tr}[G(C+\kappa I)^{-2}C]$.
+where $\tilde\beta_\kappa=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar$ is the mean pixel weight and
+$T_F(\kappa):=\operatorname{Tr}[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F]$.
 \end{prop}
-Prediction sees the feature map only through $C$ and $F\Sigma\bstar$: the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen}$, is a function of $(C,F\Sigma\bstar,S,\sigma^2,n)$. Control additionally sees $G$, through $T_F$ and $\|\tilde\beta_\kappa\|$, and $F\bstar$, through $N_{DE}$ (Fig.~\ref{fig:feature}A). This is the statistical content of the dissociation: the prediction problem does not identify the control problem.
+Prediction sees the feature map only through $\Sigma_F$ and $F\Sigma\bstar$: the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen}$, is a function of $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$. Control additionally sees $\Gram$, through $T_F$ and $\|\tilde\beta_\kappa\|$, and $F\bstar$, through $N_{DE}$ (Fig.~\ref{fig:feature}A). This is the statistical content of the dissociation: the prediction problem does not identify the control problem.
 
 \begin{prop}[Prediction-preserving gauge]\label{prop:gauge}
-For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $C$ and $F\Sigma\bstar$, hence the training law, $E_{gen,DE}(\kappa)$ and the DE cross-validated penalty, while changing $G$ and $F\bstar$ and therefore control.
+For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $\Sigma_F$ and $F\Sigma\bstar$, hence the training law, $E_{gen,DE}(\kappa)$ and the DE cross-validated penalty, while changing $\Gram$ and $F\bstar$ and therefore control.
 \end{prop}
 For white data, the accentuation error is also invariant across this gauge group, leading to no dissociation. Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. Random draws from the family span this whole range (\red{App.}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.
 
@@ -249,7 +249,7 @@ T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k
 \qquad g_k:=F^\top v_k,
 \label{eq:TF}
 \end{equation}
-with $(s_k,v_k)$ the eigenpairs of $C$. It averages, over the feature PCs that survive ridge shrinkage, the ratio between the Euclidean energy of the backpropagated PC gradient and its energy under the natural-image covariance. A map is fragile when its well-resolved feature directions backpropagate into low-variance, high-spatial-frequency pixel directions. This is the linear counterpart of the third observation of Sec.~\ref{sec:phenomena}, and it can be computed from the map and the image statistics alone.
+with $(s_k,v_k)$ the eigenpairs of $\Sigma_F$. It averages, over the feature PCs that survive ridge shrinkage, the ratio between the Euclidean energy of the backpropagated PC gradient and its energy under the natural-image covariance. A map is fragile when its well-resolved feature directions backpropagate into low-variance, high-spatial-frequency pixel directions. This is the linear counterpart of the third observation of Sec.~\ref{sec:phenomena}, and it can be computed from the map and the image statistics alone.
 
 \begin{center}
 \fbox{\parbox{0.96\linewidth}{\small
@@ -281,7 +281,7 @@ We computed these quantities for all 250 site--model pairs of the neuronal exper
     \includegraphics[width=0.44\linewidth,height=0.22\textheight,keepaspectratio]{figures/nonlinear_control_biological_validation.pdf}\\[2pt]
     \includegraphics[width=\linewidth,height=0.2\textheight,keepaspectratio]{figures/VanHateren_Top500PC_prediction_null_feature_rotation.png}
     \caption{\textbf{Feature geometry decides control.}
-    \textbf{A}~Dependency graph: $(C,F\Sigma\bstar,S,\sigma^2,n)$ fix generalization and the cross-validated penalty; control additionally needs $G=FF^\top$ and $F\bstar$ (draft: to be simplified to $\sim$8 boxes).
+    \textbf{A}~Dependency graph: $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$ fix generalization and the cross-validated penalty; control additionally needs $\GramDef$ and $F\bstar$ (draft: to be simplified to $\sim$8 boxes).
     \textbf{B}~Rotating a top-500-PC projector of van Hateren images into the prediction-null spectral tail: $E_{gen}$ and $R^2_{gen}$ are invariant while $R^2_{acc}$ and the slope collapse; DE (lines) matches finite-$n$ Monte Carlo (markers). (Draft: keep 3 of 6 panels.)
     \textbf{C}~Neuronal data: site-demeaned association of each candidate predictor with biological control slope (left) and control error (right) across nine trained (filled) and seven conventionally trained (open) models. Held-out error carries no model-order information; the exact trace, $V_\phi$ and its neighborhood versions do. (Draft: keep 5 rows.)}
     \label{fig:feature}\label{fig:nonlinear-biological-validation}

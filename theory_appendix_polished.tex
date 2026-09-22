@@ -738,7 +738,7 @@ Pixel regression explains why a single student fails.  To explain why
 equally predictive backbones fail differently, we let the student read out
 from a fixed linear feature map and accentuate through it.  The structure of
 the results is that prediction only sees the feature map through
-$C=F\Sigma F^\top$ and $F\Sigma\bstar$, while control also sees $G=FF^\top$
+$\Sigma_F=F\Sigma F^\top$ and $F\Sigma\bstar$, while control also sees $\GramDef$
 and $F\bstar$.
 
 \subsection{Setting and estimator}
@@ -776,7 +776,7 @@ difference between them is the first sign of the dissociation.
 The population prediction risk $\E_\x[({\bstar}^\top\x-w^\top F\x)^2]$ is
 minimized by
 \begin{equation}
-w^\star=(F\Sigma F^\top)^\dagger F\Sigma\bstar=C^\dagger F\Sigma\bstar,
+w^\star=(F\Sigma F^\top)^\dagger F\Sigma\bstar=\Sigma_F^\dagger F\Sigma\bstar,
 \label{eq:feat_regr_optim_weight}
 \end{equation}
 characterized by the orthogonality condition
@@ -791,11 +791,11 @@ $F$.  The two coincide when $\Sigma$ acts as a multiple of the identity on
 the row space of $F$, in particular for white data, and differ otherwise.
 \end{lem}
 \begin{proof}
-Expanding, the risk equals $S-2w^\top F\Sigma\bstar+w^\top Cw$, whose
-gradient vanishes at $Cw=F\Sigma\bstar$; the minimum-norm solution is
-Eq.~\ref{eq:feat_regr_optim_weight}, and $Cw^\star=F\Sigma\bstar$ is
+Expanding, the risk equals $S-2w^\top F\Sigma\bstar+w^\top \Sigma_F w$, whose
+gradient vanishes at $\Sigma_F w=F\Sigma\bstar$; the minimum-norm solution is
+Eq.~\ref{eq:feat_regr_optim_weight}, and $\Sigma_F w^\star=F\Sigma\bstar$ is
 Eq.~\ref{eq:feat_regr_optim_weight_condition} since $F\Sigma\bstar$ lies in
-the range of $C$.  The reconstruction problem is the same computation with
+the range of $\Sigma_F$.  The reconstruction problem is the same computation with
 $\Sigma$ replaced by $I$.
 \end{proof}
 
@@ -804,7 +804,7 @@ $\Sigma$ replaced by $I$.
 Let $r:=X(\bstar-F^\top w^\star)\in\R^n$ be the per-sample residual of the
 realizable teacher.  Then
 \begin{equation}
-\hat w=\underbrace{(\hat\Sigma_F+\lambda I_p)^{-1}\hat\Sigma_Fw^\star}_{\text{shrinkage of the realizable weight}}
+\hat w=\underbrace{(\hat\Sigma_F+\lambda I_p)^{-1}\hat\Sigma_F w^\star}_{\text{shrinkage of the realizable weight}}
 +\underbrace{\frac1n(\hat\Sigma_F+\lambda I_p)^{-1}Z^\top(r+\sigma\eta)}_{\text{noise and unrealizable residual}},
 \label{eq:feat-regr-non-repr-as-noise-decomp}
 \end{equation}
@@ -812,15 +812,15 @@ and under Gaussian inputs the residuals $r_i$ are independent of the
 features $Z$, mutually uncorrelated, with variance
 \begin{equation}
 S_\perp:=\Var[r_i]=(\bstar-F^\top w^\star)^\top\Sigma(\bstar-F^\top w^\star)
-=S-{w^\star}^\top Cw^\star
-=\Sigma_{yy}-\Sigma_{Fy}^\top C^\dagger\Sigma_{Fy},
+=S-{w^\star}^\top \Sigma_F w^\star
+=\Sigma_{yy}-\Sigma_{Fy}^\top \Sigma_F^\dagger\Sigma_{Fy},
 \label{eq:non_reducible_var_def}
 \end{equation}
 where $\Sigma_{Fy}=F\Sigma\bstar=\Cov(F\x,{\bstar}^\top\x)$ and
 $\Sigma_{yy}=S$.
 \end{lem}
 \begin{proof}
-Writing $X\bstar=Zw^\star+r$ gives $F\hat\Sigma\bstar=\hat\Sigma_Fw^\star+\frac1nZ^\top r$,
+Writing $X\bstar=Zw^\star+r$ gives $F\hat\Sigma\bstar=\hat\Sigma_F w^\star+\frac1nZ^\top r$,
 and substituting into Eq.~\ref{eq:app-feature-estimator} gives
 Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp}.  For a single sample,
 $\mathbf z_i=F\x_i$ and $r_i=\x_i^\top(\bstar-F^\top w^\star)$ are jointly
@@ -842,19 +842,19 @@ not a function of $\sigma$, $\lambda$ or $n$.
 
 \begin{prop}[Restatement of Proposition~\ref{prop:mr-feature-de}]
 \label{prop:app-feature-de}
-Let $\kappa$ solve the fixed-point equation on the spectrum of $C$ with
+Let $\kappa$ solve the fixed-point equation on the spectrum of $\Sigma_F$ with
 aspect ratio $p/n$, and let $B^F_{a,b}$, $\mathrm{df}^F_{a,b}$ be the spectral
-sums built from $(C,w^\star)$.  Then
+sums built from $(\Sigma_F,w^\star)$.  Then
 \begin{align}
 E_{gen}&\asymp E_{gen,DE}=\frac{n}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\Big)-\sigma^2,
 \label{eq:app-feature-egen-summary}\\
 \mu_N&\asymp{\bstar}^\top\tilde\beta_\kappa,\qquad
-\tilde\beta_\kappa:=F^\top(C+\kappa I_p)^{-1}F\Sigma\bstar
-=F^\top C(C+\kappa I_p)^{-1}w^\star
+\tilde\beta_\kappa:=F^\top(\Sigma_F+\kappa I_p)^{-1}F\Sigma\bstar
+=F^\top \Sigma_F(\Sigma_F+\kappa I_p)^{-1}w^\star
 =(F^\top F\Sigma+\kappa I_d)^{-1}F^\top F\Sigma\bstar,
 \label{eq:feat_regr_shrinkage_effective_weight}\\
 \mu_D&\asymp\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
-\qquad T_F(\kappa):=\operatorname{Tr}\big[G(C+\kappa I_p)^{-2}C\big].
+\qquad T_F(\kappa):=\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I_p)^{-2}\Sigma_F\big].
 \label{eq:app-feature-D-summary}
 \end{align}
 \end{prop}
@@ -864,8 +864,8 @@ E_{gen}&\asymp E_{gen,DE}=\frac{n}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\p
 $\Delta_w:=\hat w-w^\star$,
 \[
 E_{gen}=(F^\top\hat w-\bstar)^\top\Sigma(F^\top\hat w-\bstar)
-=\Delta_w^\top C\Delta_w+S_\perp+2\Delta_w^\top F\Sigma(F^\top w^\star-\bstar)
-=\Delta_w^\top C\Delta_w+S_\perp ,
+=\Delta_w^\top \Sigma_F\Delta_w+S_\perp+2\Delta_w^\top F\Sigma(F^\top w^\star-\bstar)
+=\Delta_w^\top \Sigma_F\Delta_w+S_\perp ,
 \]
 the cross term vanishing by Eq.~\ref{eq:feat_regr_optim_weight_condition}.
 
@@ -874,10 +874,10 @@ Lemma~\ref{lem:app-residual-as-noise},
 $\Delta_w=-\lambda(\hat\Sigma_F+\lambda I)^{-1}w^\star+\frac1n(\hat\Sigma_F+\lambda I)^{-1}Z^\top(r+\sigma\eta)$,
 where conditionally on $Z$ the vector $r+\sigma\eta$ has mean zero and
 covariance $(S_\perp+\sigma^2)I_n$.  This is Eq.~\ref{eq:app-ridge-decomposition}
-with $(X,\Sigma,\bstar,\sigma^2)$ replaced by $(Z,C,w^\star,S_\perp+\sigma^2)$,
+with $(X,\Sigma,\bstar,\sigma^2)$ replaced by $(Z,\Sigma_F,w^\star,S_\perp+\sigma^2)$,
 so the proof of Eq.~\ref{eq:app-pixel-egen-summary} applies verbatim:
 \[
-\E\big[\Delta_w^\top C\Delta_w\big]
+\E\big[\Delta_w^\top \Sigma_F\Delta_w\big]
 \asymp\frac{n}{n-\mathrm{df}^F_2}\kappa^2B^F_{1,2}+(S_\perp+\sigma^2)\frac{\mathrm{df}^F_2}{n-\mathrm{df}^F_2}.
 \]
 Adding $S_\perp$ and rearranging gives Eq.~\ref{eq:app-feature-egen-summary}.
@@ -887,34 +887,34 @@ Adding $S_\perp$ and rearranging gives Eq.~\ref{eq:app-feature-egen-summary}.
 \emph{Numerator.}  $N={\bstar}^\top F^\top\hat w$.  The noise part of
 Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp} has zero conditional mean
 given $Z$ (since $\E[r\,|\,Z]=0$ and $\E[\eta]=0$), and the one-point DE
-$(\hat\Sigma_F+\lambda I)^{-1}\hat\Sigma_F\asymp(C+\kappa I)^{-1}C$ gives
+$(\hat\Sigma_F+\lambda I)^{-1}\hat\Sigma_F\asymp(\Sigma_F+\kappa I)^{-1}\Sigma_F$ gives
 \begin{equation}
-\mu_N\asymp{\bstar}^\top F^\top(C+\kappa I)^{-1}Cw^\star
-={\bstar}^\top F^\top(C+\kappa I)^{-1}F\Sigma\bstar
+\mu_N\asymp{\bstar}^\top F^\top(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star
+={\bstar}^\top F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar
 ={\bstar}^\top\tilde\beta_\kappa ,
 \label{eq:feat_space_acc_N_expectation_DE}
 \end{equation}
-where $Cw^\star=CC^\dagger F\Sigma\bstar=F\Sigma\bstar$ because $F\Sigma\bstar$
-lies in the range of $C$.  The third form of $\tilde\beta_\kappa$ is the
+where $\Sigma_F w^\star=\Sigma_F\Sigma_F^\dagger F\Sigma\bstar=F\Sigma\bstar$ because $F\Sigma\bstar$
+lies in the range of $\Sigma_F$.  The third form of $\tilde\beta_\kappa$ is the
 push-through identity $F^\top(FMF^\top+\kappa I)^{-1}F=(F^\top FM+\kappa I)^{-1}F^\top F$
 with $M=\Sigma$.
 
-\emph{Denominator.}  $D=\hat w^\top G\hat w$.  Averaging over $(r,\eta)$
+\emph{Denominator.}  $D=\hat w^\top \Gram\hat w$.  Averaging over $(r,\eta)$
 kills the cross term and leaves
 \[
-\E_{r,\eta}[D]={w^\star}^\top\hat\Sigma_F(\hat\Sigma_F+\lambda I)^{-1}G(\hat\Sigma_F+\lambda I)^{-1}\hat\Sigma_Fw^\star
+\E_{r,\eta}[D]={w^\star}^\top\hat\Sigma_F(\hat\Sigma_F+\lambda I)^{-1}\Gram(\hat\Sigma_F+\lambda I)^{-1}\hat\Sigma_F w^\star
 +(S_\perp+\sigma^2)\frac1n\operatorname{Tr}\big[\hat\Sigma_F(\hat\Sigma_F+\lambda I)^{-2}G\big].
 \]
 The noise trace is the derivative argument of Section~\ref{sec:app-pixel-ridge}
 on the design $Z$:
-$\frac1n\operatorname{Tr}[\hat\Sigma_F(\hat\Sigma_F+\lambda I)^{-2}G]\asymp T_F(\kappa)/(n-\mathrm{df}^F_2)$.
+$\frac1n\operatorname{Tr}[\hat\Sigma_F(\hat\Sigma_F+\lambda I)^{-2}\Gram]\asymp T_F(\kappa)/(n-\mathrm{df}^F_2)$.
 The signal term is the two-point DE Eq.~\ref{eq:app-two-point-de} on $Z$
-with $A=w^\star{w^\star}^\top$ and $B=G$:
+with $A=w^\star{w^\star}^\top$ and $B=\Gram$:
 \[
-{w^\star}^\top C(C+\kappa I)^{-1}G(C+\kappa I)^{-1}Cw^\star
-+\frac{\kappa^2\,T_F(\kappa)}{n-\mathrm{df}^F_2}\,{w^\star}^\top(C+\kappa I)^{-2}Cw^\star .
+{w^\star}^\top \Sigma_F(\Sigma_F+\kappa I)^{-1}\Gram(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star
++\frac{\kappa^2\,T_F(\kappa)}{n-\mathrm{df}^F_2}\,{w^\star}^\top(\Sigma_F+\kappa I)^{-2}\Sigma_Fw^\star .
 \]
-The first piece is $\|F^\top(C+\kappa I)^{-1}Cw^\star\|^2=\|\tilde\beta_\kappa\|^2$,
+The first piece is $\|F^\top(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star\|^2=\|\tilde\beta_\kappa\|^2$,
 and the second combines with the noise trace into
 \begin{equation}
 \mu_D\asymp\|\tilde\beta_\kappa\|^2+\frac{T_F(\kappa)}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\Big)
@@ -927,9 +927,9 @@ by Eq.~\ref{eq:app-feature-egen-summary}.
 \begin{remark}[Reading the feature-space forms]
 \begin{enumerate}
 \item $\tilde\beta_\kappa$ is the realizable weight $w^\star$, shrunk by the
-usual ridge factor $C(C+\kappa I)^{-1}$ in feature space, and then mapped to
-pixels by $F^\top$.  Setting $F=I_d$ gives $C=\Sigma$, $w^\star=\bstar$,
-$S_\perp=0$, $G=I$, $T_F=\mathrm{df}_{1,2}$, and
+usual ridge factor $\Sigma_F(\Sigma_F+\kappa I)^{-1}$ in feature space, and then mapped to
+pixels by $F^\top$.  Setting $F=I_d$ gives $\Sigma_F=\Sigma$, $w^\star=\bstar$,
+$S_\perp=0$, $\Gram=I$, $T_F=\mathrm{df}_{1,2}$, and
 Proposition~\ref{prop:app-feature-de} reduces to
 Proposition~\ref{prop:app-pixel-ridge-de}.
 \item Prediction and control read the teacher through two different vectors:
@@ -937,7 +937,7 @@ $h:=F\Sigma\bstar=\Cov(F\x,{\bstar}^\top\x)$ enters $w^\star$, $S_\perp$ and
 $E_{gen}$, and measures how the teacher covaries with the features on the
 natural distribution; $q:=F\bstar$ enters $N=\hat w^\top q$ and measures how
 the teacher responds when inputs move along the back-propagated gradient
-$F^\top\hat w$.  Likewise $C$ is the covariance the fit sees, while $G$ is the
+$F^\top\hat w$.  Likewise $\Sigma_F$ is the covariance the fit sees, while $\Gram$ is the
 Euclidean length that back-propagation assigns to feature directions.  This
 is the origin of Corollary~\ref{cor:mr-summary-statistics}.
 \item Holding $E_{gen}$ fixed, the leading control error
@@ -955,7 +955,7 @@ ${\bstar}^\top\tilde\beta_\kappa$, and through $T_F$.
 form $E_{gen,DE}+\sigma^2=nH_F/q_F$ with $H_F=\kappa^2B^F_{1,2}+\tau^2$,
 $\tau^2:=S_\perp+\sigma^2$, and $q_F=n-\mathrm{df}^F_2$.  The computation of
 Section~\ref{sec:app-optimal-regularization} applies with the spectrum of
-$C$ and the teacher $w^\star$, giving at an interior optimum
+$\Sigma_F$ and the teacher $w^\star$, giving at an interior optimum
 \begin{equation}
 q_F\,\kappa\,B^F_{2,3}=H_F\,\mathrm{df}^F_{2,3}
 \quad\Longleftrightarrow\quad
@@ -974,15 +974,15 @@ absorbed into $E_{gen,DE}+\sigma^2$ on the right.
 which vanishes iff
 $E_{gen,DE}+\sigma^2=n\,({\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2)/T_F$
 when $T_F>0$.  To expose the geometry of the numerator, write
-$\tilde w_\kappa:=C(C+\kappa I)^{-1}w^\star=w^\star-\kappa(C+\kappa I)^{-1}w^\star$
+$\tilde w_\kappa:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star=w^\star-\kappa(\Sigma_F+\kappa I)^{-1}w^\star$
 so that $\tilde\beta_\kappa=F^\top\tilde w_\kappa$, and use
-$F\bstar=Gw^P$ (as $F\bstar$ lies in the range of $G$):
+$F\bstar=\Gram w^P$ (as $F\bstar$ lies in the range of $\Gram$):
 \begin{align*}
 {\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2
 &=(\bstar-F^\top\tilde w_\kappa)^\top F^\top\tilde w_\kappa
-=(F\bstar-G\tilde w_\kappa)^\top\tilde w_\kappa\\
-&=\big(Gw^P-Gw^\star+\kappa G(C+\kappa I)^{-1}w^\star\big)^\top\tilde w_\kappa
-=(w^P-w^\star)^\top G\tilde w_\kappa+\kappa\,{w^\star}^\top(C+\kappa I)^{-1}G\tilde w_\kappa .
+=(F\bstar-\Gram\tilde w_\kappa)^\top\tilde w_\kappa\\
+&=\big(\Gram w^P-\Gram w^\star+\kappa \Gram(\Sigma_F+\kappa I)^{-1}w^\star\big)^\top\tilde w_\kappa
+=(w^P-w^\star)^\top \Gram\tilde w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\tilde w_\kappa .
 \end{align*}
 For $F=I_d$ the first term vanishes ($w^P=w^\star=\bstar$) and the second is
 $\kappa B_{1,2}$, recovering Eq.~\ref{eq:appendix-pixel-control-noise}.
@@ -1000,15 +1000,15 @@ order.
 \begin{proof}[Proof of Corollary~\ref{cor:mr-summary-statistics}]
 By inspection of Proposition~\ref{prop:app-feature-de}.  The curve
 $E_{gen,DE}(\kappa)$ is built from $\kappa(\lambda)$, which depends on the
-spectrum of $C$ and on $p/n$; from $\mathrm{df}^F_2$, a function of the
-spectrum of $C$; from $B^F_{1,2}={w^\star}^\top C(C+\kappa I)^{-2}w^\star
-=h^\top C^\dagger C(C+\kappa I)^{-2}C^\dagger h$ with $h=F\Sigma\bstar$; and
-from $S_\perp=S-h^\top C^\dagger h$.  Hence it is a function of
-$\mathcal P=(C,h,S,\sigma^2,n)$ only, and so are its minimizer $\kappa_{CV}$
+spectrum of $\Sigma_F$ and on $p/n$; from $\mathrm{df}^F_2$, a function of the
+spectrum of $\Sigma_F$; from $B^F_{1,2}={w^\star}^\top \Sigma_F(\Sigma_F+\kappa I)^{-2}w^\star
+=h^\top \Sigma_F^\dagger \Sigma_F(\Sigma_F+\kappa I)^{-2}\Sigma_F^\dagger h$ with $h=F\Sigma\bstar$; and
+from $S_\perp=S-h^\top \Sigma_F^\dagger h$.  Hence it is a function of
+$\mathcal P=(\Sigma_F,h,S,\sigma^2,n)$ only, and so are its minimizer $\kappa_{CV}$
 and $R^2_{gen}=1-E_{gen,DE}/S$.  By contrast
-$\mu_N=q^\top(C+\kappa I)^{-1}h$ with $q=F\bstar$, and
-$\|\tilde\beta_\kappa\|^2=h^\top(C+\kappa I)^{-1}G(C+\kappa I)^{-1}h$ and
-$T_F=\operatorname{Tr}[G(C+\kappa I)^{-2}C]$ involve $G$.
+$\mu_N=q^\top(\Sigma_F+\kappa I)^{-1}h$ with $q=F\bstar$, and
+$\|\tilde\beta_\kappa\|^2=h^\top(\Sigma_F+\kappa I)^{-1}\Gram(\Sigma_F+\kappa I)^{-1}h$ and
+$T_F=\operatorname{Tr}[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F]$ involve $\Gram$.
 Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \end{proof}
 
@@ -1016,8 +1016,8 @@ Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \centering
 \includegraphics[width=1\textwidth]{figures/feature_summary_statistics_flow}
 \caption{Dependency graph of the summary statistics of feature-space
-regression.  Fixing $(C,h,S,S_\perp,\sigma^2,n)$ fixes the prediction
-branch; the accentuation branch additionally needs $G=FF^\top$ and
+regression.  Fixing $(\Sigma_F,h,S,S_\perp,\sigma^2,n)$ fixes the prediction
+branch; the accentuation branch additionally needs $\GramDef$ and
 $q=F\bstar$.  \red{(TikZ source: \texttt{figures/theory/feature\_summary\_statistics\_flow.tex}
 in the validation repository.)}}
 \label{fig:summary_stats_dep_graph}
@@ -1025,7 +1025,7 @@ in the validation repository.)}}
 
 \subsection{The prediction-preserving gauge family}
 
-Since prediction depends on $F$ only through $(C,h)$, any transformation of
+Since prediction depends on $F$ only through $(\Sigma_F,h)$, any transformation of
 $F$ that fixes these two objects leaves prediction, and hence its
 cross-validated optimum, unchanged.  We characterize such transformations and
 show that they generically change control.
@@ -1033,30 +1033,30 @@ show that they generically change control.
 \begin{prop}[Restatement of Proposition~\ref{prop:mr-gauge}]
 \label{prop:app-feature-gauge}
 Assume $\Sigma\succ0$.  For $Q\in O(d)$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$,
-the map $F_Q:=F\Sigma^{1/2}Q\Sigma^{-1/2}$ satisfies $F_Q\Sigma F_Q^\top=C$ and
+the map $F_Q:=F\Sigma^{1/2}Q\Sigma^{-1/2}$ satisfies $F_Q\Sigma F_Q^\top=\Sigma_F$ and
 $F_Q\Sigma\bstar=h$.  Consequently the joint Gaussian law of the training
 pairs $(F_Q\x,y)$, the full curve $E_{gen,DE}(\kappa)$, and the DE-based
 cross-validated penalty are the same for all $F_Q$ in the family, whereas
-$G_Q=F_QF_Q^\top$ and $q_Q=F_Q\bstar$, and with them $\mu_N$, $\mu_D$ and all
+$\Gramsub{Q}=F_QF_Q^\top$ and $q_Q=F_Q\bstar$, and with them $\mu_N$, $\mu_D$ and all
 accentuation metrics, vary in general.  If in addition
-$Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then $q_Q=q$ and only $G_Q$ varies.
+$Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then $q_Q=q$ and only $\Gramsub{Q}$ varies.
 For $\Sigma=I$ the family acts trivially on both prediction and control.
 \end{prop}
 \begin{proof}
-Direct computation: $F_Q\Sigma F_Q^\top=F\Sigma^{1/2}QQ^\top\Sigma^{1/2}F^\top=C$
+Direct computation: $F_Q\Sigma F_Q^\top=F\Sigma^{1/2}QQ^\top\Sigma^{1/2}F^\top=\Sigma_F$
 and $F_Q\Sigma\bstar=F\Sigma^{1/2}Q\Sigma^{1/2}\bstar=F\Sigma^{1/2}\Sigma^{1/2}\bstar=h$.
 The pairs $(F_Q\x,y)$ are jointly Gaussian with covariance blocks
-$\Cov(F_Q\x)=C$, $\Cov(F_Q\x,y)=h$, $\Var(y)=S+\sigma^2$, all invariant; hence
+$\Cov(F_Q\x)=\Sigma_F$, $\Cov(F_Q\x,y)=h$, $\Var(y)=S+\sigma^2$, all invariant; hence
 every functional of the training data, including the fitted $\hat w$, any
 $K$-fold or leave-one-out cross-validation score, and the population risk
-$E_{gen}=(\hat w-w^\star)^\top C(\hat w-w^\star)+S_\perp$, has the same law
+$E_{gen}=(\hat w-w^\star)^\top \Sigma_F(\hat w-w^\star)+S_\perp$, has the same law
 across the family.  (Two members need not give the same CV choice on the
 same realization of $X$, only the same distribution of choices.)  On the
-other hand $G_Q=F\Sigma^{1/2}Q\Sigma^{-1}Q^\top\Sigma^{1/2}F^\top$ and
+other hand $\Gramsub{Q}=F\Sigma^{1/2}Q\Sigma^{-1}Q^\top\Sigma^{1/2}F^\top$ and
 $q_Q=F\Sigma^{1/2}Q\Sigma^{-1/2}\bstar$ are not invariant unless $Q$ commutes
 with $\Sigma$ on the relevant subspace, respectively fixes
 $\Sigma^{-1/2}\bstar$.  For $\Sigma=I$, $F_Q=FQ$ with $Q\bstar=\bstar$, so
-$G_Q=G$ and $q_Q=q$.
+$\Gramsub{Q}=\Gram$ and $q_Q=q$.
 \end{proof}
 
 \subsection{Constructing the family}
@@ -1064,7 +1064,7 @@ $G_Q=G$ and $q_Q=q$.
 \paragraph{Whitened coordinates.}
 The constraints are transparent in whitened coordinates.  Let
 $A:=F\Sigma^{1/2}$, $b:=\Sigma^{1/2}\bstar$ and $c:=\Sigma^{-1/2}\bstar$, so
-that $C=AA^\top$, $h=Ab$, $q=Ac$ and $G=A\Sigma^{-1}A^\top$.  Two maps
+that $\Sigma_F=AA^\top$, $h=Ab$, $q=Ac$ and $\Gram=A\Sigma^{-1}A^\top$.  Two maps
 $F,F'$ are prediction-equivalent iff $A'b=Ab$ and $A'A'^\top=AA^\top$; the
 first says that the rows of $A-A'$ are orthogonal to the whitened teacher
 $b$.  A left rotation $F\mapsto O_pF$, $O_p\in O(p)$, is a change of feature
@@ -1115,8 +1115,8 @@ A(t)A(t)^\top=PP^\top+(1-t)RR^\top+tVV^\top=PP^\top+RR^\top,\qquad A(t)b=Pb,
 \]
 so $F(t)=A(t)\Sigma^{-1/2}$ lies in the family for every $t\in[0,1]$.
 Choosing $R$ supported on high-variance and $V$ on low-variance eigendirections
-of $\Sigma$ makes $G(t)=A(t)\Sigma^{-1}A(t)^\top$ acquire the factor
-$s_k^{-1}$ of the tail directions as $t\to1$, so $\operatorname{Tr}G(t)$ and
+of $\Sigma$ makes $\Gramt=A(t)\Sigma^{-1}A(t)^\top$ acquire the factor
+$s_k^{-1}$ of the tail directions as $t\to1$, so $\operatorname{Tr}\Gramt$ and
 $T_F$ grow without bound while every prediction summary is constant.
 \end{proof}
 
@@ -1127,10 +1127,10 @@ with $\bstar=(1,0,0)^\top$, the two maps
 F_1=\begin{pmatrix}1&0&0\\0&\lambda_H^{-1/2}&0\end{pmatrix},\qquad
 F_2=\begin{pmatrix}1&0&0\\0&0&\lambda_L^{-1/2}\end{pmatrix}
 \]
-have the same $C=\operatorname{diag}(\lambda_1,1)$ and the same $h$, hence the
+have the same $\Sigma_F=\operatorname{diag}(\lambda_1,1)$ and the same $h$, hence the
 same generalization error and cross-validated penalty, but
-$G_1=\operatorname{diag}(1,\lambda_H^{-1})$ versus
-$G_2=\operatorname{diag}(1,\lambda_L^{-1})$: the second feature of $F_2$ reads
+$\Gramsub{1}=\operatorname{diag}(1,\lambda_H^{-1})$ versus
+$\Gramsub{2}=\operatorname{diag}(1,\lambda_L^{-1})$: the second feature of $F_2$ reads
 a low-variance direction and back-propagates estimation noise into it with
 gain $\lambda_L^{-1}\gg\lambda_H^{-1}$.
 \end{example}
@@ -1442,7 +1442,7 @@ Eq.~\ref{eq:app-shared-cross} reduces to the self-accentuation
 denominator of Proposition~\ref{prop:app-feature-de}; for fits on
 independent data the overlap term is absent and, at leading order,
 $G_{1\leftarrow2}\asymp\tilde\beta_1^\top\tilde\beta_2/{\bstar}^\top\tilde\beta_2$
-with $\tilde\beta_i=F_i^\top(C_i+\kappa_iI)^{-1}F_i\Sigma\bstar$, which
+with $\tilde\beta_i=F_i^\top(\Sigma_{F_i}+\kappa_iI)^{-1}F_i\Sigma\bstar$, which
 generalizes Proposition~\ref{prop:app-peer} to different feature maps.
 \end{prop}
 \begin{proof}
@@ -1522,8 +1522,8 @@ where $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the input gradient of
 feature PC $k$ and $E_{val}$ is the held-out prediction error.  Two remarks
 fix its status.  First, for any differentiable $\phi$ and any evaluation
 distribution $Q$ over inputs, the trace identity
-$\operatorname{Tr}[G_Q(\Sigma_\phi+\kappa I)^{-2}\Sigma_\phi]=\sum_kq_k\,s_k/(s_k+\kappa)^2$
-with $G_Q:=\E_Q[J_\phi J_\phi^\top]$ and $q_k:=\E_Q\|\nabla_x(v_k^\top\phi)\|^2$
+$\operatorname{Tr}[\Gramsub{Q}(\Sigma_\phi+\kappa I)^{-2}\Sigma_\phi]=\sum_kq_k\,s_k/(s_k+\kappa)^2$
+with $\Gramsub{Q}:=\E_Q[J_\phi J_\phi^\top]$ and $q_k:=\E_Q\|\nabla_x(v_k^\top\phi)\|^2$
 is exact, so $\E_Q[T_\phi]$ can be computed from one backward pass per PC
 without materializing the Jacobian, averaging \emph{squared} gradients.
 Second, unlike the linear case, $s_k\ne\nabla_x[v_k^\top\phi]^\top\Sigma\nabla_x[v_k^\top\phi]$
@@ -1609,7 +1609,7 @@ i.i.d. rows $\x_i\sim\mathcal N(0,\Sigma)$, $\hat\Sigma=X^\top X/n$, and
 $\gamma=d/n$; all statements hold in the proportional limit and $\asymp$
 denotes almost-sure asymptotic equivalence of the two sides.  For
 feature-space regression the same statements apply to the design $Z=XF^\top$
-with $(\Sigma,d)$ replaced by $(C,p)$.
+with $(\Sigma,d)$ replaced by $(\Sigma_F,p)$.
 
 \subsection{Fixed point and deterministic equivalents}
 \label{sec:app-de-identities}

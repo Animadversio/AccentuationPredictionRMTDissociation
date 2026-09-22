@@ -296,12 +296,12 @@ random-design covariance.  Section~\ref{sec:app-ratio-gaussian}.
 
 \begin{lem}[Two population-optimal feature weights]
 \label{lem:mr-feature-weights}
-Let $C:=\Sigma_F=F\Sigma F^\top$ and $G:=FF^\top$.  The feature weight
+Let $\Sigma_F:=F\Sigma F^\top$ and $\GramDef$.  The feature weight
 minimizing population prediction error and its irreducible error are
 \begin{equation}
-w^\star=C^\dagger F\Sigma\bstar,\qquad
+w^\star=\Sigma_F^\dagger F\Sigma\bstar,\qquad
 S_\perp:=\E_\x\big[(\x^\top\bstar-\x^\top F^\top w^\star)^2\big]
-=S-{w^\star}^\top Cw^\star ,
+=S-{w^\star}^\top \Sigma_F w^\star ,
 \end{equation}
 whereas the feature weight whose pixel image best reconstructs the teacher is
 $w^P=G^\dagger F\bstar$.  They coincide when $\Sigma\propto I$ on the row
@@ -310,11 +310,11 @@ space of $F$ and differ otherwise.  Proof: Section~\ref{sec:app-feature-regressi
 
 \begin{prop}[Feature-ridge deterministic equivalents]
 \label{prop:mr-feature-de}
-Let $\kappa$ solve Eq.~\ref{eq:mr-kappa} on the spectrum of $C$ with
+Let $\kappa$ solve Eq.~\ref{eq:mr-kappa} on the spectrum of $\Sigma_F$ with
 aspect ratio $p/n$, and define the feature-space spectral sums
 \begin{equation}
-B^F_{a,b}(\kappa):={w^\star}^\top C^a(C+\kappa I)^{-b}w^\star,\qquad
-\mathrm{df}^F_{a,b}(\kappa):=\operatorname{Tr}\!\big[C^a(C+\kappa I)^{-b}\big].
+B^F_{a,b}(\kappa):={w^\star}^\top \Sigma_F^a(\Sigma_F+\kappa I)^{-b}w^\star,\qquad
+\mathrm{df}^F_{a,b}(\kappa):=\operatorname{Tr}\!\big[\Sigma_F^a(\Sigma_F+\kappa I)^{-b}\big].
 \label{eq:feature-spectral-shorthand}
 \end{equation}
 Then
@@ -322,12 +322,12 @@ Then
 E_{gen,DE}&=\frac{n}{n-\mathrm{df}^F_2}\big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\big)-\sigma^2,
 \label{eq:mr-feature-egen}\\
 N_{DE}&={\bstar}^\top\tilde\beta_\kappa,\qquad
-\tilde\beta_\kappa:=F^\top(C+\kappa I)^{-1}F\Sigma\bstar
-=F^\top C(C+\kappa I)^{-1}w^\star,
+\tilde\beta_\kappa:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar
+=F^\top \Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star,
 \label{eq:mr-feature-N}\\
 D_{DE}&=\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
 \qquad
-T_F(\kappa):=\operatorname{Tr}\!\big[G(C+\kappa I)^{-2}C\big].
+T_F(\kappa):=\operatorname{Tr}\!\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big].
 \label{eq:mr-feature-D}
 \end{align}
 Setting $F=I$ recovers Proposition~\ref{prop:mr-pixel-de}.  The effective
@@ -340,10 +340,10 @@ Proof: Section~\ref{sec:app-feature-regression}.
 At leading order, $E_{gen,DE}(\kappa)$ for every $\kappa$, hence the
 DE-predicted CV choice $\kappa_{CV}$ and $R^2_{gen}$, are functions of
 \begin{equation}
-\mathcal P:=\big(C,\ F\Sigma\bstar,\ S,\ \sigma^2,\ n\big)
+\mathcal P:=\big(\Sigma_F,\ F\Sigma\bstar,\ S,\ \sigma^2,\ n\big)
 \end{equation}
 only, whereas $N_{DE}$, $D_{DE}$ and every accentuation metric additionally
-depend on the Euclidean geometry $G=FF^\top$ (through $T_F$ and
+depend on the Euclidean geometry $\GramDef$ (through $T_F$ and
 $\|\tilde\beta_\kappa\|^2$) and on the teacher image $F\bstar$ (through
 $N_{DE}$).  Fixing $\mathcal P$ fixes prediction; it does not fix control
 (Figure~\ref{fig:summary_stats_dep_graph}).
@@ -358,11 +358,11 @@ $E_{gen,DE}$.  The leading accentuation error vanishes exactly when
 \begin{equation}
 E_{gen,DE}+\sigma^2
 =n\,\frac{{\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2}{T_F(\kappa)}
-=n\,\frac{(w^P-w^\star)^\top G\tilde w_\kappa+\kappa\,{w^\star}^\top(C+\kappa I)^{-1}G\tilde w_\kappa}{T_F(\kappa)},
+=n\,\frac{(w^P-w^\star)^\top \Gram\tilde w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\tilde w_\kappa}{T_F(\kappa)},
 \label{eq:feature-control-optimal}
 \end{equation}
-with $\tilde w_\kappa:=C(C+\kappa I)^{-1}w^\star$.  The first condition
-depends on $\mathcal P$ alone; the second depends on $G$ and $F\bstar$.  An
+with $\tilde w_\kappa:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star$.  The first condition
+depends on $\mathcal P$ alone; the second depends on $\Gram$ and $F\bstar$.  An
 admissible root is not guaranteed for an arbitrary $F$; in particular, when
 $w^P\ne w^\star$ the numerator can be negative for all $\kappa$, in which
 case no ridge level calibrates control.
@@ -374,12 +374,12 @@ Proof: Section~\ref{app:regularization-derivations}.
 Assume $\Sigma\succ0$ and let
 $\mathcal G_b:=\{Q\in O(d):Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar\}$.  For
 $Q\in\mathcal G_b$ the map $F\mapsto F_Q:=F\Sigma^{1/2}Q\Sigma^{-1/2}$
-preserves $C$ and $F\Sigma\bstar$, hence every element of $\mathcal P$, the
+preserves $\Sigma_F$ and $F\Sigma\bstar$, hence every element of $\mathcal P$, the
 Gaussian training law of $(F\x,y)$, the full curve $E_{gen,DE}(\kappa)$ and
-the DE-based CV choice; it changes $G$ and $F\bstar$ in general, and
+the DE-based CV choice; it changes $\Gram$ and $F\bstar$ in general, and
 therefore changes $N_{DE}$, $D_{DE}$ and all accentuation metrics.  The
 subgroup $\mathcal G_{b,c}:=\{Q\in\mathcal G_b:Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar\}$
-additionally fixes $F\bstar$, isolating $G$ as the only control-relevant
+additionally fixes $F\bstar$, isolating $\Gram$ as the only control-relevant
 statistic that varies.  When $\Sigma=I$ the family acts trivially on both
 prediction and control.  Members of the family need not give identical CV
 choices for the same finite realization of $X$.
@@ -402,7 +402,7 @@ Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 
 \begin{prop}[Spectral form of the fragility factor]
 \label{prop:mr-fragility}
-Let $C=\sum_ks_kv_kv_k^\top$ and $g_k:=F^\top v_k$ be the pixel gradient of
+Let $\Sigma_F=\sum_ks_kv_kv_k^\top$ and $g_k:=F^\top v_k$ be the pixel gradient of
 feature PC $k$.  Then
 \begin{equation}
 T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2
