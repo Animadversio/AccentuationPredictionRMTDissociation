@@ -188,15 +188,21 @@ Both conditions equate the noisy prediction risk to $n\kappa$ times a teacher-we
 
 \begin{figure}[t]
     \centering
-    \vspace{-15pt}
     % \includegraphics[width=0.48\linewidth,height=0.3\textheight,keepaspectratio]{figures/draft_landscape_error.png}\hfill
     % \includegraphics[width=0.5\linewidth,height=0.3\textheight,keepaspectratio]{figures/draft_slices_prediction_selected_r2.png}
     % \includegraphics[width=\linewidth]{figures/paper_composite_default_best_figexport.pdf}
+    % \caption{\textbf{Pixel ridge on van Hateren images ($d=10^4$, $n=10^3$, disk teacher).}
+    % \textbf{A}~Leading-DE control error $E_{acc}/S$ over noise $\sigma^2/S$ and penalty $\lambda$. The prediction-optimal path (white) and the control-calibrated path (pink) separate at all noise levels; Monte Carlo on real images (App.) reproduces the surface.
+    % \textbf{B}~Along the empirically cross-validated path, $R^2_{gen}$ stays above $0.9$ while $R^2_{acc}$ collapses once $\sigma^2/S\gtrsim0.1$; DE (lines) versus 100 natural-image trials (markers, 10--90\% band). Bottom: selected $\lambda$ and $\kappa$.}
+    \vspace{-15pt}
     \includegraphics[width=\linewidth]{figures/Figure_PixRidgeGeometry.png}
     \vspace{-15pt}
-    \caption{\textbf{Pixel ridge on van Hateren images ($d=10^4$, $n=10^3$, disk teacher).}
-    \textbf{A}~Leading-DE control error $E_{acc}/S$ over noise $\sigma^2/S$ and penalty $\lambda$. The prediction-optimal path (white) and the control-calibrated path (pink) separate at all noise levels; Monte Carlo on real images (App.) reproduces the surface.
-    \textbf{B}~Along the empirically cross-validated path, $R^2_{gen}$ stays above $0.9$ while $R^2_{acc}$ collapses once $\sigma^2/S\gtrsim0.1$; DE (lines) versus 100 natural-image trials (markers, 10--90\% band). Bottom: selected $\lambda$ and $\kappa$.}
+    \caption{\textbf{Pixel-space ridge separates prediction- and control-optimal regularization on natural images.}
+    Disk teacher on van~Hateren images ($d=10^4$, $n=10^3$).
+    \textbf{A--C}~The landscapes of prediction error $E_{gen}$, accentuation error $E_{acc}$, and accentuation $R^2$ over normalized noise scale $\sigma^2/S$ and effective regularization $\kappa$, calculated by DE (Eq.\ref{eq:pixel-de}). The prediction-optimal and median empirical RidgeCV paths track each other but differ from the control-optimal path; the black contour marks $R^2_{acc}=0$. 
+    This picture is validated by the numerical MC estimated landscapes in Fig.~\ref{}. 
+    \textbf{D,E}~Slices at four noise levels expose displaced prediction and control valleys (peaks for $R^2$); markers and bands show the mean and 10--90\% range over 100 natural-image trials at the highlighted noise $\sigma^2/S=1$.
+    \textbf{F}~Along the prediction-optimal path, $R^2_{gen}$ remains high while $R^2_{acc}$ becomes strongly negative; empirical RidgeCV exhibits the same dissociation.}
     \vspace{-15pt}
     \label{fig:pixel}
 \end{figure}
