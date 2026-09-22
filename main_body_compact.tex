@@ -96,7 +96,17 @@ z_{acc}:=\frac DN-1=\frac{{\bhat}^\top(\bhat-\bstar)}{{\bhat}^\top\bstar},
 \frac{E_{acc}}{S}=\Big(\frac{z}{1+z}\Big)^2,\quad R^2_{acc}=1-z^2,\quad \mathrm{slope}_{acc}=\frac{1}{1+z},
 \label{eq:acc_metric_ND_depen}
 \end{equation}
-Geometrically (Prop.~\ref{prop:mr-iso-geometry}), the equal-$E_{gen}$ sets are ellipsoids around $\bstar$ elongated along low-variance axes, whereas the equal-$z_{acc}$ sets are Euclidean spheres with diameter joining $0$ and $(1+z)\bstar$, and the equal-peer-error sets are hyperplanes normal to $\bprime$ (\red{Fig.X}). For control, the sphere diameter directly encodes the shifted error $1+z$, where zero-error students live on the sphere at $z=0$. A student can sit deep inside the prediction ellipsoid, spanning a huge control error sphere, and still lie on the peer hyperplane of a good generator: this is exactly the configuration of Fig.~\ref{fig:phenomena} (bottom), and it can be made arbitrarily extreme by adding weight along a direction with $s_k\to0$ (Exp.~\ref{ex:mr-dissociation}).
+\begin{wrapfigure}[24]{r}{0.5\linewidth}
+    \vspace{-8pt}
+    \centering
+    \vspace{-5pt}
+    \includegraphics[width=\linewidth]{figures/Figure_iso_err_surf_dissociation-01.png}
+    \vspace{-20pt}
+    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control levels are the spheres with diameter joining $0$ and $(1+z)\bstar$ (orange). The fitted weight traverses this plane as a function of $\lambda$ (purple), scattering around the mean Ridge path (dashed black). Cross-validation picks the tangency of the path with an ellipsoid; perfect control is its crossing with the $z=0$ sphere. }
+    \label{fig:geometry}
+\end{wrapfigure}
+Geometrically (Prop.~\ref{prop:mr-iso-geometry}), the equal-$E_{gen}$ sets are ellipsoids around $\bstar$ elongated along low-variance axes, whereas the equal-$z_{acc}$ sets are Euclidean spheres with diameter joining $0$ and $(1+z)\bstar$, and the equal-peer-error sets are hyperplanes normal to $\bprime$ (Fig.~\red{\ref{fig:geometry}}). For control, the sphere diameter directly encodes the shifted error $1+z$, where zero-error students live on the sphere at $z=0$. A student can sit deep inside the prediction ellipsoid, spanning a huge control error sphere, and still lie on the peer hyperplane of a good generator: this is exactly the configuration of Fig.~\ref{fig:phenomena} (bottom), and it can be made arbitrarily extreme by adding weight along a direction with $s_k\to0$ (Exp.~\ref{ex:mr-dissociation}).
+
 
 The remaining question is therefore not whether the dissociation is possible but when \emph{learning} produces it. We study three ingredients: finite-sample regression on noisy responses, the choice of regularization, and the feature map through which the gradient reaches the pixels. % We take them in turn.
 
@@ -105,7 +115,7 @@ The remaining question is therefore not whether the dissociation is possible but
 
 Ridge regression in pixel space, $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\|^2+\lambda\|\beta\|^2$, yields
 \begin{equation}
-\bhat=\underbrace{(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\bstar}_{\text{shrunken signal}}
+\bhat=\underbrace{(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\bstar}_{\text{mean: signal shrinkage}}
 +\underbrace{\sigma(\hat\Sigma+\lambda I)^{-1}\tfrac1nX^\top\eta}_{\text{noise}},
 \qquad \hat\Sigma=X^\top X/n,
 \quad
@@ -114,21 +124,15 @@ Ridge regression in pixel space, $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\
 \end{equation}
 Since ridge penalizes weight in low-variance directions, one might expect it to remove these control-vulnerable weight components. We ask whether such risk survives the regularization, even with cross-validated penalty.
 
-\begin{wrapfigure}{r}{0.5\linewidth}
-    \vspace{-8pt}
-    \centering
-    \includegraphics[width=\linewidth]{figures/draft_ridge_paths_iso_error_geometry.png}
-    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control calibration is the sphere through $0$ and $\bstar$ (orange). The fitted weight is scattered around the ridge path (purple) with a spread elongated along the low-variance axis. Cross-validation picks the tangency of the path with an ellipsoid; control calibration is its crossing with the sphere. (Placeholder from the validation repository; to be polished.)}
-    \label{fig:geometry}
-    \vspace{-6pt}
-\end{wrapfigure}
 \paragraph{The ridge path through the two landscapes.}
 The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, Eq.~\ref{eq:ridge} traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around its mean, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. Ideally, cross-validation selects the point where the path is tangent to the smallest reachable prediction ellipsoid; whereas minimal control error asks where the path crosses the $z=0$ sphere $D=N$; in general these two points do not coincide. The \red{math to follow} quantifies this geometric intuition. 
 %\red{the two coincide only if the noise cloud has not pushed the path off the sphere in the directions the ellipsoid does not see. The deterministic equivalents below compute where the center of this cloud sits, how much Euclidean spread it carries, and hence the distance between the two points.}
 
 
 \paragraph{Toolkit.}
-We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. Finite-sample randomness enters through the effective penalty $\kappa(\lambda)$, the positive root of $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$, and the results are expressed through the teacher-weighted and unweighted spectral sums
+We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. It allows us to replace certain functions of the empirical covariance $\hat\Sigma$ with those of population covariance $\Sigma$, e.g. $\hat\Sigma(\hat\Sigma+\kappa I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$, 
+where finite-sample randomness is absorbed by the effective penalty $\kappa(\lambda)$, the positive root of the self-consistent equation $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$. More details about DEs are deferred to App.~\ref{sec:app-de-toolkit}. 
+Our results are expressed through the teacher-weighted and unweighted spectral sums
 \begin{equation}
 B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \mathrm{df}_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q},\qquad \mathrm{df}_2:=\mathrm{df}_{2,2}.
@@ -147,7 +151,7 @@ D\asymp \mu_D=B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big).%
 \end{equation}
 \end{prop}
 \red{
-The three quantities are sums of the same per-eigenmode weight error (App.~\ref{prop:mr-per-pc}) with different weights: $E_{gen}$ weights mode $k$ by $s_k$, $D$ weights every mode equally. The last term of $\mu_D$ is the Euclidean energy of estimation noise, $\frac1n(E_{gen}+\sigma^2)$ per effective mode times $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, which counts modes near and below $\kappa$ heavily. It inflates the student's norm without helping it predict, so the student over-shoots along its own path: $z_{acc}>0$, slope $<1$. Ridge also shrinks the signal ($B_{2,2}<B_{1,1}$), which pulls in the opposite direction. Whether the two cancel is a question about $\lambda$. For natural images, whose spectrum decays as a power law over $10^4$ pixel modes, $\mathrm{df}_{1,2}$ counts thousands of weakly constrained high-spatial-frequency modes; the estimation noise that lands there is precisely the high-frequency texture of failed accentuations, and it costs almost nothing in $E_{gen}$.
+The three quantities are sums of the same per-eigenmode weight error (Prop.~\ref{prop:mr-per-pc}) with different weights: $E_{gen}$ weights mode $k$ by $s_k$, $D$ weights every mode equally. The last term of $\mu_D$ is the Euclidean energy of estimation noise, $\frac1n(E_{gen}+\sigma^2)$ per effective mode times $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, which counts modes near and below $\kappa$ heavily. It inflates the student's norm without helping it predict, so the student over-shoots along its own path: $z_{acc}>0$, slope $<1$. Ridge also shrinks the signal ($B_{2,2}<B_{1,1}$), which pulls in the opposite direction. Whether the two cancel is a question about $\lambda$. For natural images, whose spectrum decays as a power law over $10^4$ pixel modes, $\mathrm{df}_{1,2}$ counts thousands of weakly constrained high-spatial-frequency modes; the estimation noise that lands there is precisely the high-frequency texture of failed accentuations, and it costs almost nothing in $E_{gen}$.
 }
 
 \begin{prop}[Prediction-optimal and control-optimal penalties differ]\label{prop:pixel-tuning}
@@ -184,18 +188,23 @@ Both conditions equate the noisy prediction risk to $n\kappa$ times a teacher-we
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.48\linewidth,height=0.3\textheight,keepaspectratio]{figures/draft_landscape_error.png}\hfill
-    \includegraphics[width=0.5\linewidth,height=0.3\textheight,keepaspectratio]{figures/draft_slices_prediction_selected_r2.png}
+    \vspace{-15pt}
+    % \includegraphics[width=0.48\linewidth,height=0.3\textheight,keepaspectratio]{figures/draft_landscape_error.png}\hfill
+    % \includegraphics[width=0.5\linewidth,height=0.3\textheight,keepaspectratio]{figures/draft_slices_prediction_selected_r2.png}
+    % \includegraphics[width=\linewidth]{figures/paper_composite_default_best_figexport.pdf}
+    \includegraphics[width=\linewidth]{figures/Figure_PixRidgeGeometry.png}
+    \vspace{-15pt}
     \caption{\textbf{Pixel ridge on van Hateren images ($d=10^4$, $n=10^3$, disk teacher).}
     \textbf{A}~Leading-DE control error $E_{acc}/S$ over noise $\sigma^2/S$ and penalty $\lambda$. The prediction-optimal path (white) and the control-calibrated path (pink) separate at all noise levels; Monte Carlo on real images (App.) reproduces the surface.
     \textbf{B}~Along the empirically cross-validated path, $R^2_{gen}$ stays above $0.9$ while $R^2_{acc}$ collapses once $\sigma^2/S\gtrsim0.1$; DE (lines) versus 100 natural-image trials (markers, 10--90\% band). Bottom: selected $\lambda$ and $\kappa$.}
+    \vspace{-15pt}
     \label{fig:pixel}
 \end{figure}
 
 Figure~\ref{fig:pixel} confirms the picture on real natural-image regression. The DE surfaces track Monte Carlo over eight decades of noise; the prediction-optimal and control-calibrated penalties form two distinct ridges; and along the cross-validated path the student remains an excellent predictor while its accentuation $R^2$ becomes negative at moderate noise. 
 
 \paragraph{Peer review: recognition without generation.}
-Now evaluate $\bhat$ on the path of an independently fitted peer $\bprime$ at the same $\kappa$ with independent noise realization. The two noise realizations are uncorrelated, so the Euclidean noise term that inflates $D$ drops out of the cross products: ${\bhat}^\top\bprime\asymp B_{2,2}$ and ${\bstar}^\top\bprime\asymp B_{1,1}$, and the \red{peer gain} and score are
+Now evaluate $\bhat$ on the path of a peer $\bprime$ fitted at the same $\kappa$ with independent noise realization. The two noise realizations are uncorrelated, so the Euclidean noise term that inflates $D$ drops out of the cross products: ${\bhat}^\top\bprime\asymp B_{2,2}$ and ${\bstar}^\top\bprime\asymp B_{1,1}$, and the \red{peer gain} and score are
 \begin{equation}
 G_{peer}=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],
 \qquad
@@ -204,14 +213,14 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1]
 \end{equation}
 (Prop.~\ref{prop:mr-peer}). Peer review measures only the shared shrinkage bias: at leading order it is never negative, degrades gracefully with noise, and is symmetric between the two fits. Self-evaluation instead carries the estimator's own Euclidean noise energy through Eq.~\ref{eq:pixel-de}, so $z_{acc}$ grows without bound with $\sigma^2/n$ and $R^2_{acc}$ becomes arbitrarily negative. A student can therefore track a peer's path while failing on its own, which is the linear form of Fig.~\ref{fig:phenomena}C. The asymmetry between a strong and a weak generator in the data arises when the two differ in noise energy, i.e. in their feature maps (Sec.~\ref{sec:feature}); and measured responses along a barely modulated path add trial noise that no evaluator can explain, which is why even the peer scores of a weak generator's images are poor.
 
-\section{Feature-space ridge: the map decides what reaches the gradient}
+\section{Linear feature ridge: the map decides what reaches the gradient}
 \label{sec:feature}
 
 Pixel regression explains why one student fails; it cannot explain why ten equally predictive backbones fail differently. We idealize a backbone as a fixed linear map $F\in\R^{p\times d}$, fit $\hat w$ by ridge on features $F\x$, and accentuate along the pixel gradient $\bhat=F^\top\hat w$. Let $C:=F\Sigma F^\top$ be the feature covariance and $G:=FF^\top$ the Euclidean feature Gram. The best realizable feature weight and its irreducible error are $w^\star=C^\dagger F\Sigma\bstar$ and $S_\perp=S-{w^\star}^\top Cw^\star$ (App.~\ref{lem:mr-feature-weights}).
 
 \begin{prop}[Feature ridge: prediction and control]\label{prop:feature-de}\label{prop:linfeat_acc_ND}\label{prop:linfeat_gen_err}
 With $\kappa$, $B^F$, $\mathrm{df}^F$ built from $(C,w^\star)$ and aspect ratio $p/n$,
-\begin{equation}
+\begin{equation}\small
 E_{gen,DE}=\frac{n(\kappa^2B^F_{1,2}+S_\perp+\sigma^2)}{n-\mathrm{df}^F_2}-\sigma^2,\qquad
 N_{DE}={\bstar}^\top\tilde\beta_\kappa,\qquad
 D_{DE}=\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
@@ -225,10 +234,10 @@ Prediction sees the feature map only through $C$ and $F\Sigma\bstar$: the whole 
 \begin{prop}[Prediction-preserving gauge]\label{prop:gauge}
 For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $C$ and $F\Sigma\bstar$, hence the training law, $E_{gen,DE}(\kappa)$ and the DE cross-validated penalty, while changing $G$ and $F\bstar$ and therefore control.
 \end{prop}
-The gauge group is trivial for white data and grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. Random draws from the family span this whole range (App.), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.
+For white data, the accentuation error is also invariant across this gauge group, leading to no dissociation. Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. Random draws from the family span this whole range (\red{App.}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.
 
 \paragraph{What makes a map fragile.}
-The factor $T_F$ is response-independent and has the spectral form (App.~\ref{prop:mr-fragility})
+The factor $T_F$ is response-independent and has the spectral form (Prop.~\ref{prop:mr-fragility})
 \begin{equation}
 T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k^\top\Sigma g_k},
 \qquad g_k:=F^\top v_k,
@@ -243,10 +252,11 @@ Holding the prediction error fixed, the leading control error (Eqs.~\ref{eq:pixe
 \textbf{(i) noise} $(E_{gen}+\sigma^2)/n$, the estimation-noise level, which is the only factor visible from held-out accuracy;
 \textbf{(ii) spectrum} the mismatch between prediction-optimal and control-optimal penalties, Eq.~\ref{eq:pixel-zacc-cv}, which is zero for white data and grows with anisotropy and with teacher energy in low-variance modes;
 \textbf{(iii) map} $T_F$, the ridge-weighted ratio of Euclidean to natural-covariance gradient energy, a property of the feature map alone.
+Visual neuronal responses are known to be highly noisy \red{\cite{?}} meeting (i); 
 Natural images make (ii) large for every model; the feature map decides (iii), and equally predictive maps can differ in it without bound.}}
 \end{center}
 
-\subsection{From the linear factor to a diagnostic for deep networks and neurons}
+\section{Nonlinear feature ridge: a generalized diagnostic for deep networks}
 \label{sec:nonlinear}
 For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian in Eq.~\ref{eq:TF} gives
 \begin{equation}

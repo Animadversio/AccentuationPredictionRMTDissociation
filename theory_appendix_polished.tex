@@ -1016,8 +1016,8 @@ Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \caption{Dependency graph of the summary statistics of feature-space
 regression.  Fixing $(C,h,S,S_\perp,\sigma^2,n)$ fixes the prediction
 branch; the accentuation branch additionally needs $G=FF^\top$ and
-$q=F\bstar$.  (TikZ source: \texttt{figures/theory/feature\_summary\_statistics\_flow.tex}
-in the validation repository.)}
+$q=F\bstar$.  \red{(TikZ source: \texttt{figures/theory/feature\_summary\_statistics\_flow.tex}
+in the validation repository.)}}
 \label{fig:summary_stats_dep_graph}
 \end{figure}
 
@@ -1253,7 +1253,8 @@ by the bias--variance identity
 The leading DE predicts the first term; near a control optimum it is
 small and the second term dominates.
 
-\begin{prop}[Restatement of Proposition~\ref{prop:mr-ratio-delta}, second part]
+\todo{check if we need this }
+\begin{prop}[\red{Restatement of Proposition~\ref{prop:mr-ratio-delta}, second part}]
 Let $R:=\mu_N/\mu_D$.  Retaining response-noise fluctuations only,
 \begin{equation}
 \Var\Big(\frac ND\Big)\approx\frac1{\mu_D^2}\Big[
@@ -1263,6 +1264,7 @@ Let $R:=\mu_N/\mu_D$.  Retaining response-noise fluctuations only,
 \end{equation}
 \end{prop}
 \begin{proof}[Proof sketch]
+\red{
 To first order, $N/D-R\approx(N-RD)/\mu_D$, so
 $\Var(N/D)\approx\Var(N-RD)/\mu_D^2$.  Write $\bhat=g+h$ with the design part
 $g=(\hat\Sigma+\lambda I)^{-1}\hat\Sigma\bstar$ and the noise part
@@ -1279,6 +1281,7 @@ $v_k$, $\Var[h^\top a]=\sum_kv_ka_k^2$, $\Var[h^\top h]=2\sum_kv_k^2$, and
 the two are uncorrelated (odd moments vanish).  With
 $a_k=b_k-2Rg_k=b_k(1-2Rs_k/(s_k+\kappa))$ this gives
 Eq.~\ref{eq:app-var-ratio-noise}.
+}
 \end{proof}
 
 \begin{remark}[What the correction captures and what it misses]
@@ -1305,15 +1308,8 @@ Eq.~\ref{eq:app-per-pc} (signal and noise fluctuation terms), and evaluates
 any metric by Monte Carlo over this surrogate:
 $\E_{\bhat\sim\mathcal N(m_{DE},V_{DE})}[\,{\bhat}^\top\bstar/{\bhat}^\top\bhat\,]$
 and likewise for $R^2_{acc}$ and the slope.  It yields medians, quantiles
-and the probability of sign changes of $N$, which the moment expansions
-cannot.  It is a surrogate rather than a proved distributional deterministic
-equivalent: matching per-coordinate second moments does not match the joint
-fluctuations of quadratic forms; it omits off-diagonal, design-induced
-covariance; and it does not enforce the exact ridgeless identity $N=D$ that
-holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a
-projector, so $N=D$ for every design).  In practice it agrees with the
-leading DE where the latter is accurate and inherits its failures near
-$\lambda\to0$.
+and the probability of sign changes of $N$, which the moment expansions cannot. 
+\red{It is a surrogate rather than a proved distributional deterministic equivalent: matching per-coordinate second moments does not match the joint fluctuations of quadratic forms; it omits off-diagonal, design-induced covariance; and it does not enforce the exact ridgeless identity $N=D$ that holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a projector, so $N=D$ for every design).  In practice it agrees with the leading DE where the latter is accurate and inherits its failures near $\lambda\to0$.}
 
 \subsection{Peer review between independent fits}
 \label{sec:app-peer-review}
