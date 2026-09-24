@@ -1,7 +1,10 @@
 \section{Theory results roadmap}
 \label{sec:app-theory-roadmap}
 
-The appendix is organized in two layers.  Section~\ref{sec:app-main-results}
+The theory part of the appendix is organized in two layers (the extended
+results and the empirical methods precede it, in
+Sections~\ref{sec:app-extended-results} and~\ref{sec:app-methods}).
+Section~\ref{sec:app-main-results}
 states every theoretical result of the paper once, in the order in which it is
 derived, so that it can be read as a self-contained summary.  The sections
 that follow contain the proofs, arranged by topic; each begins with a short
@@ -1111,7 +1114,7 @@ constructive recipe: (i) from $(\Sigma,F,\bstar)$ form $A$, $b$, $h$;
 (ii) take the SVD of the residual $A-hb^\top/\|b\|^2$; (iii) replace its
 right singular vectors by a random orthonormal frame in $b^\perp$.  Random
 draws from this recipe generate the ``population'' of equally predictive
-feature maps used in the experiments.
+feature maps used in the experiments (Fig.~\ref{fig:supp-null-random}).
 \end{example}
 
 \begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
@@ -1144,19 +1147,11 @@ a low-variance direction and back-propagates estimation noise into it with
 gain $\lambda_L^{-1}\gg\lambda_H^{-1}$.
 \end{example}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=1\linewidth]{figures/VanHateren_Top500PC_prediction_null_feature_rotation}\\
-\includegraphics[width=1\linewidth]{figures/VanHateren_Top100PC_prediction_null_feature_rotation}
-\caption{\textbf{Continuous prediction-null rotation on van Hateren images}
-(Corollary~\ref{cor:mr-rotation}), starting from the top-500 (top) and
-top-100 (bottom) PC projectors and rotating their null part into the
-spectral tail.  Generalization error, $R^2_{gen}$ and the selected penalty are
-exactly constant in the tail loading $t$, while $\operatorname{Tr}(FF^\top)$,
-accentuation error, $R^2_{acc}$ and slope change by orders of magnitude.
-Lines: leading DE; markers: finite-$n$ Monte Carlo.}
-\label{fig:app-null-rotation}
-\end{figure}
+% Null-rotation figure moved to App.~\ref{sec:app-ext-gauge} (extended_results.tex).
+Figure~\ref{fig:app-null-rotation} (App.~\ref{sec:app-ext-gauge}) realizes this
+continuous rotation on van Hateren images, and Fig.~\ref{fig:supp-null-random}
+shows random draws from the family; the numerical construction is given in
+App.~\ref{sec:app-methods-feature}.
 
 \subsection{A spectral diagnostic for fragile feature maps}
 \label{sec:app-feature-fragility}
@@ -1581,7 +1576,9 @@ variance rather than treat a noisy Jacobian estimate as exact.
 \label{sec:app-nonlinear-biological-validation}
 
 We evaluated the diagnostic on 25 neuronal sites crossed with ten encoding
-models (250 site--model pairs).  For each pair, $\kappa$ was computed from
+models (250 site--model pairs); data, models and computation are described in
+Apps.~\ref{sec:app-methods-neural-data}--\ref{sec:app-methods-nonlinear}, and
+the full comparison of estimators is in App.~\ref{sec:app-ext-nonlinear}.  For each pair, $\kappa$ was computed from
 the model's cross-validated ridge penalty and its empirical feature spectrum
 (750 PCs), $\E_x$ was taken over the ten experimental seed images, and
 $E_{val}$ was the held-out natural-image error measured in the control

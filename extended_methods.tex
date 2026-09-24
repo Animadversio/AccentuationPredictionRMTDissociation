@@ -1,0 +1,201 @@
+% ---------------------------------------------------------------------------
+% Appendix B: Detailed methods (empirical).
+% Math lives in the theory appendix; this part gives data, settings and
+% numerics.  Plan and sources: notes/appendix_outline_plan.md.
+% ---------------------------------------------------------------------------
+
+\section{Detailed methods}
+\label{sec:app-methods}
+
+% ---------------------------------------------------------------------------
+\subsection{Natural-image data and covariance}
+\label{sec:app-methods-images}
+% Used by: Fig.~\ref{fig:phenomena} (bottom), Fig.~\ref{fig:pixel},
+% Fig.~\ref{fig:feature}, App.~\ref{sec:app-ext-pixel}, \ref{sec:app-ext-gauge}.
+% Content: van Hateren database; 100x100 patches; log(1+L)/log(65536),
+% 8-bit quantization, rescale to [0,1]; 2,000-patch training pool (one per
+% image) and 20,000-patch population pool (ten per image, disjoint source
+% images); centered population covariance Sigma and its eigendecomposition;
+% disk teacher (radius 0.3, S = 1736.34).  Currently stated inside
+% App.~\ref{sec:app-vanhateren-landscape-methods}; move the shared part here
+% and keep only the landscape-specific part there.
+% Optional small panel: spectrum s_k and teacher power b_k^2
+% (tables/vanhateren_spectral_teacher_profile.csv).
+\todo{Write: images, preprocessing, covariance, disk teacher.}
+
+% ---------------------------------------------------------------------------
+\subsection{Toy teacher--student example}
+\label{sec:app-methods-toy}
+% Used by: Fig.~\ref{fig:phenomena} (bottom row).
+% Content: teacher w* = disk; student f_1 = w*; student f_2 = w* + weight
+% along low-variance PCs; held-out van Hateren evaluation; seed image;
+% target levels r*; variance-matched step alpha; peer-review panels
+% (f_i evaluated on accentuations of f_j).
+% SOURCE CODE NOT YET LOCATED (not in AccentuationPredRMT).
+\todo{Write once the generating code/parameters are located.}
+
+% ---------------------------------------------------------------------------
+\subsection{Two-dimensional geometry illustration}
+\label{sec:app-methods-geometry}
+% Used by: Fig.~\ref{fig:geometry}, Fig.~\ref{fig:supp-ridge-path-geometry}.
+% Content: Sigma = diag(1, eps=0.04); teacher; fixed design X; exact
+% conditional Gaussian of beta_hat | X (mean path, 68% ellipses);
+% lambda = 0.05 (kappa = 0.0518) with sigma^2 on a log grid; sigma^2 = 0.5 with
+% lambda on a log grid; iso-sets of Prop.~\ref{prop:mr-iso-geometry}.
+% Source: notebooks/ridge_paths_geometry_explorer.ipynb,
+% tables/ridge_paths_iso_error_geometry.csv.
+\todo{Write: parameters and construction of the 2D panels.}
+
+% ---------------------------------------------------------------------------
+% Pixel-ridge landscape (Fig.~\ref{fig:pixel}); subsection with its own label
+% sec:app-vanhateren-landscape-methods.
+\input{appendix_vanhateren_landscape_methods}
+
+% ---------------------------------------------------------------------------
+\subsection{Linear feature maps and prediction-null rotations}
+\label{sec:app-methods-feature}
+% Used by: Fig.~\ref{fig:feature}B--D, App.~\ref{sec:app-ext-gauge}.
+% Theory of the construction: App.~\ref{sec:app-gauge-fragility}
+% (whitened coordinates, right rotations with a fixed point,
+% Cor.~\ref{cor:mr-rotation}).
+% Content: base map = top-p population-PC projector (p = 500 main, 100 alt.);
+% n = 1000; rowwise Givens rotations from high-variance to tail PCs, tail
+% loading t = sin^2 theta; random family: 300 randomized rowwise rotations and
+% pairings; noise sigma^2/S in {0.01, 0.1, 1, 10}; DE-selected alpha vs.\
+% empirical CV; MC trials; computation of T_F.
+% Sources: notebooks/README_top_pc_rotation.md, top_pc_rotation_experiment.ipynb,
+% tables/vanhateren_top500_*, tables/vanhateren_null_*.
+\todo{Write: feature maps, rotation schedule, random family, fitting and
+evaluation.}
+
+% ---------------------------------------------------------------------------
+\subsection{Neuronal data}
+\label{sec:app-methods-neural-data}
+% Used by: Fig.~\ref{fig:phenomena} (top), Sec.~\ref{sec:pixel} (peer
+% statistics), Fig.~\ref{fig:nonlinear-biological-validation},
+% App.~\ref{sec:app-ext-peer}, \ref{sec:app-ext-nonlinear}.
+% Sources: upstream jacob-prince/parametric-neural-control (branch jacob,
+% SHA 9b6fd95; local copy $STORE_DIR/Projects/AccentuationPredRMT/
+% nonlinear_control/biological_validation_v1/upstream), pnc/preproc/*.py,
+% scripts/preprocessing/run_preproc.py; downstream: AccentuationPredRMT/
+% explorations/nonlinear_control/validate_biology.py,
+% build_biological_synopsis.py.  Data NOT from BrainScore: lab storage /
+% Zenodo (record id not yet minted; CITATION.cff DOIs are placeholders).
+% Subjects/areas (Monkey: recording, area, channels):
+%   R red   chronic microwire array (64ch)          aIT  0,2,9,15,19
+%   P paul  chronic floating microelectrode (64ch)  cIT  0,8,24,40,47
+%   V venus Neuropixels (383ch)  V3/V4  9(V3),79(V4),151(V4),331(V3),355(V3)
+%   L leap  Neuropixels          STS    81,282,286,306,342
+%   T three0 Neuropixels         STS    56,74,120,168,204
+%   Sites chosen by split-half (Spearman-Brown) reliability; R,P = exact
+%   top-5; V,L,T hand-picked among reliable (rule undocumented).
+%   Unit type (MUA vs sorted) not determined from code.
+% Encoding (calibration) set: 969 images = 649 NSD shared1000 (COCO) +
+%   259 segmented objects/animals + 61 fLoc; split 774/195
+%   (encoding_stimuli_split_seed0.csv); R: 282 px @35.31 px/deg (~8 deg),
+%   167 ms on / 200 ms off, (0,2) deg; ~3k-16k trials per monkey.
+% Control sessions: 4-12 May 2025; 10 NSD seed images x 11 target levels per
+%   site-model pair (27,720 synthesized; STS monkeys saw 43%/55%);
+%   mean repeats R 3.97, P 2.29, V 4.22, L 1.22, T 1.34; calibration anchors
+%   re-shown (100; 49 L; 46 T).  Target levels: linspace(q01-0.25bw,
+%   q99+0.5bw, 11) of MEASURED z-scored encoding responses.
+% Preprocessing (upstream): peak-window average (R,P 100-400 ms; V,L,T
+%   80-250 ms); control-phase outlier rejection (|x-med|/(1.4826 MAD)>15);
+%   anchorDay z-scoring (fallback to all trials if <5 anchor trials);
+%   repeat averaging; Leap duplicate merge (pixel r>=0.90); firing floor clamp
+%   of predictions at comparison time; NSD-style noise ceiling (undefined L,T).
+% Downstream (ours, not upstream): per-site cross-session affine map fitted on
+%   encoding-train anchors, frozen and shared across models; endpoints
+%   control slope (OLS measured on predicted), control MSE (no refit), E_val
+%   (held-out anchor MSE).  Upstream metrics: control_r, control_slope
+%   (linregress), control_R2 (identity), encoding_r.
+% Feature accentuation (for completeness; cite Hamblin et al. 2024, MACO):
+%   Fourier parameterization of the seed (1024 px), 1/f^decay preconditioning,
+%   NAdam lr 12, <=6000 steps, 8 random crops + noise per step, closest-to-
+%   target stopping, (noise, decay) ladder chosen per site-model.
+\todo{Write.}
+
+% ---------------------------------------------------------------------------
+\subsection{Encoding models}
+\label{sec:app-methods-models}
+% Content: Table~\ref{tab:app-models}.  Loaders:
+% Closed-loop-visual-insilico/core/model_load_utils.py:load_model_transform.
+% Preprocessing: resize 224 + ImageNet norm (RN50, robust RN50, DINO RN50,
+% DINOv2, AlexNet); RADIO resize only; CLIP-RN50, CLIPAG, SigLIP2, RegNetY:
+% library eval transforms (NB: resnet50_clip used ImageNet norm at synthesis
+% but CLIP transform at fitting -- upstream inconsistency, footnote?).
+% Fitting: flattened layer activations -> PCA 750 (fit on 774 train images,
+% centered, not whitened) -> sklearn RidgeCV(alphas = 14 log-spaced in
+% [1e-4, 1e9], efficient LOO, alpha per channel); layer chosen per channel by
+% held-out (195-image) R^2 -- the same split later reports encoding r.
+% Candidate layers: Bottleneck blocks (ResNets, RegNet), ReLU/Conv/MaxPool
+% (AlexNet), transformer blocks (ViTs; + attention pool for SigLIP2).
+\todo{Write; fill Table~\ref{tab:app-models}.}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}p{0.2\linewidth}p{0.22\linewidth}p{0.36\linewidth}c@{}}
+\toprule
+Model & Architecture & Training & \# geometries \\
+\midrule
+AlexNet (untrained) & AlexNet (TF-slim variant) & random initialization$^\dagger$ & 11\\
+ResNet-50 & ResNet-50 & ImageNet supervised & 9\\
+Robust ResNet-50 & ResNet-50 & ImageNet adversarial, $\ell_\infty$, $\epsilon=8/255$ & 6\\
+CLIP RN50 & ResNet-50 & CLIP contrastive & 9\\
+DINO RN50 & ResNet-50 & DINO self-supervised & 6\\
+RegNetY-640 & RegNetY-640 & SEER self-supervised & 9\\
+CLIPAG ViT-B/32 & ViT-B/32 & adversarially fine-tuned CLIP & 7\\
+DINOv2 ViT-B/14-reg & ViT-B/14 + registers & DINOv2 self-supervised & 9\\
+SigLIP2 ViT-B/16 & ViT-B/16 & SigLIP2 & 10\\
+RADIO v2.5-B & ViT-B & RADIO distillation & 8\\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Encoding models.} \# geometries: distinct (layer, PCA)
+feature maps across the 25 sites (84 in total). $^\dagger$Checkpoint
+\texttt{AlexNet\_training\_seed\_01} (Brain-Score model-variability weights)
+is at its random initialization. \todo{citations; checkpoint sources of the
+robust ResNet-50 and CLIPAG}}
+\label{tab:app-models}
+\end{table}
+
+% ---------------------------------------------------------------------------
+\subsection{Computing the gradient-geometry diagnostic}
+\label{sec:app-methods-nonlinear}
+% Used by: Fig.~\ref{fig:nonlinear-biological-validation},
+% App.~\ref{sec:app-ext-nonlinear}.  Formulas and estimator definitions:
+% App.~\ref{sec:app-nonlinear-diagnostic} (Eqs.~\ref{eq:nonlinear-local-fragility},
+% \ref{eq:nonlinear-neighborhood-estimators}, \ref{eq:nonlinear-stein-estimator}).
+% Content: kappa from the CV alpha and the training PCA spectrum
+% (kappa(1 - df_1/n) = alpha/n, n = 774); one VJP per PC (750, batched);
+% 224x224 RGB grid in [0,1] units (d = 150,528); average over the 10 seeds;
+% neighborhood scales tau in {0.5, 2, 8, 16}/255, R = 64 directions,
+% L = 8 centers; debiased U-statistics; finite-difference check; antithetic
+% Stein with R = 512; E_val; V_phi = E_val T / n.  Checks: 84 unique
+% model--layer geometries, residual <= 6e-8; compute ~1.4 H100-hours.
+\todo{Write.}
+
+% ---------------------------------------------------------------------------
+\subsection{Neuronal peer-review analysis}
+\label{sec:app-methods-peer}
+% Used by: Sec.~\ref{sec:phenomena}, peer paragraph of Sec.~\ref{sec:pixel},
+% Fig.~\ref{fig:supp-neural-peer-matrix}, Fig.~\ref{fig:supp-neural-self-vs-peer}.
+% Content: 25 sites x 10 generators x 10 reviewers; reviewer prediction on
+% the generator's stimuli through the same frozen affine map; MSE, r,
+% identity R^2, slope; equal-weight site means; self (diagonal) vs.\ peer
+% tests: reviewer-label permutation, Wilcoxon over generators, subject
+% sign-flip, subject bootstrap.
+\todo{Write.}
+
+% ---------------------------------------------------------------------------
+\subsection{Statistical analysis}
+\label{sec:app-methods-stats}
+% Content: log predictors; within-site centering of predictor and outcome;
+% Pearson / Spearman / site-clustered OLS; model subsets 10/9/8/7;
+% Benjamini--Hochberg within endpoint x subset; image bootstrap;
+% leave-one-monkey-out / leave-one-model-out; repeated-measures caveat.
+\todo{Write.}
+
+% ---------------------------------------------------------------------------
+\subsection{Software and compute}
+\label{sec:app-methods-compute}
+\todo{Write (short).}

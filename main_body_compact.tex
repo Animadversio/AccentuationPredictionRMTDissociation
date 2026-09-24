@@ -44,11 +44,11 @@ High-dimensional ridge regression under anisotropic covariance is classical \cit
     \textbf{A}~Two models predict held-out natural-image responses equally well.
     \textbf{B}~Their accentuations from the same seed differ visibly, and only one modulates the neuron.
     \textbf{C}~Peer review: each model evaluated on the other's images. The weak controller tracks the strong controller's images but its own images barely modulate the neuron.
-    Bottom: two linear students of a linear teacher (a disk-shaped weight on van~Hateren images), differing only along low-variance image directions, reproduce A--C exactly. Geometry inset: prediction sees weight error through the covariance ellipse; the accentuation path exposes the hidden Euclidean difference.}
+    Bottom: two linear students of a linear teacher (a disk-shaped weight on van~Hateren images), differing only along low-variance image directions, reproduce A--C exactly. Geometry inset: prediction sees weight error through the covariance ellipse; the accentuation path exposes the hidden Euclidean difference. Details: App.~\ref{sec:app-methods-neural-data} (neurons), App.~\ref{sec:app-methods-toy} (linear model).}
     \label{fig:phenomena}
 \end{figure}
 
-Figure~\ref{fig:phenomena} (top) summarizes the closed-loop experiments of \citetPW: responses of visual cortical sites (V2--IT, 25 sites in 5 macaques) to $\sim$1000 natural images were recorded; ten deep-network encoding models were fit by ridge regression on network features with penalty and layer chosen by cross-validation; each model then synthesized, by gradient-based \emph{feature accentuation} \citep{hamblin2024feature}, images that drive its own prediction to eleven target levels from ten seed images; and the images were presented to the same sites. Three observations motivate this paper.
+Figure~\ref{fig:phenomena} (top) summarizes the closed-loop experiments of \citetPW: responses of visual cortical sites (V2--IT, 25 sites in 5 macaques) to $\sim$1000 natural images were recorded; ten deep-network encoding models were fit by ridge regression on network features with penalty and layer chosen by cross-validation; each model then synthesized, by gradient-based \emph{feature accentuation} \citep{hamblin2024feature}, images that drive its own prediction to eleven target levels from ten seed images; and the images were presented to the same sites (data and models: Apps.~\ref{sec:app-methods-neural-data},~\ref{sec:app-methods-models}). Three observations motivate this paper.
 
 \paragraph{Similar prediction, divergent control.}
 The trained models were tightly matched on held-out natural images, yet the slope and correlation between predicted and measured responses to their own accentuated images varied widely across models, with far larger spread than on natural images. Many models reached their requested \emph{predicted} response by adding texture and high-spatial-frequency structure that left the neuron largely unmoved (Fig.~\ref{fig:phenomena}\red{C}).
@@ -74,17 +74,18 @@ Generalization evaluates $f$ on fresh natural inputs, $\x\sim\mathcal N(0,\Sigma
 \footnotetext{In practice, accentuation for DNN adds gradient preconditioning and augmentation \citep{hamblin2024feature,MACO}, some supplied image priors \cite{XXX}; App.~\ref{sec:app-evaluation-distributions} treats nonzero and multiple seeds.}
 
 \begin{table}[t]
-\centering\small
-\begin{tabular}{@{}llccc@{}}
+\centering\footnotesize\setlength{\tabcolsep}{3.5pt}
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}llcccl@{}}
 \toprule
-Evaluation & Input covariance & MSE $E_{...}$ & $R^2$ & Slope \\
+Evaluation & Covariance & MSE $E$ & $R^2$ & Slope & Equal-error set \\
 \midrule
-Generalization & $\Sigma$ & $\Delta^\top\Sigma\Delta$ & $1-\Delta^\top\Sigma\Delta/S$ & ${\bhat}^\top\Sigma\bstar/{\bhat}^\top\Sigma\bhat$ \\
-Accentuation & $\Var[\alpha]\,\bhat{\bhat}^\top$ & $S\,(1-N/D)^2$ & $1-(D/N-1)^2$ & $N/D$ \\
-Peer review & $\Var[\alpha]\,\bprime{\bprime}^\top$ & $S\,({\bprime}^\top\Delta)^2/({\bprime}^\top\bprime)^2$ & $1-\big(\frac{{\bprime}^\top\bhat}{{\bprime}^\top\bstar}-1\big)^2$ & ${\bprime}^\top\bstar/{\bprime}^\top\bhat$ \\
+Generalization & $\Sigma$ & $\Delta^\top\Sigma\Delta$ & $1-\Delta^\top\Sigma\Delta/S$ & ${\bhat}^\top\Sigma\bstar/{\bhat}^\top\Sigma\bhat$ & ellipsoid about $\bstar$ \\
+Accentuation & $\Var[\alpha]\,\bhat{\bhat}^\top$ & $S\,(1-N/D)^2$ & $1-(D/N-1)^2$ & $N/D$ & sphere on $[0,(1+z)\bstar]$ \\
+Peer review & $\Var[\alpha']\,\bprime{\bprime}^\top$ & $S\,(D_{peer}-N_{peer})^2/\|\bprime\|^4$ & $1-(D_{peer}/N_{peer}-1)^2$ & $N_{peer}/D_{peer}$ & hyperplane $\perp\bprime$ \\
 \bottomrule
-\end{tabular}
-\caption{One fitted weight, three evaluation distributions. $N:={\bhat}^\top\bstar$, $D:={\bhat}^\top\bhat$, $\Delta:=\bhat-\bstar$. Pearson correlation is degenerate on a noiseless rank-one path and is omitted.}
+\end{tabular}}
+\caption{One fitted weight, three evaluation distributions, three geometries. $\Delta:=\bhat-\bstar$; on the student's own path the true and predicted gains are $N:={\bhat}^\top\bstar$, $D:={\bhat}^\top\bhat$, and on a peer's path $N_{peer}:={\bstar}^\top\bprime$, $D_{peer}:={\bhat}^\top\bprime$; $z:=D/N-1$ in each row. The last column is the level set of the metrics in the space of student weights $\bhat$ (Prop.~\ref{prop:mr-iso-geometry}). Pearson correlation is degenerate on a noiseless rank-one path and is omitted.}
 \label{tab:evaluation-metrics}
 \end{table}
 
@@ -102,10 +103,14 @@ z_{acc}:=\frac DN-1=\frac{{\bhat}^\top(\bhat-\bstar)}{{\bhat}^\top\bstar},
     \vspace{-5pt}
     \includegraphics[width=\linewidth]{figures/Figure_iso_err_surf_dissociation-01.png}
     \vspace{-20pt}
-    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control levels are the spheres with diameter joining $0$ and $(1+z)\bstar$ (orange). The fitted weight traverses this plane as a function of $\lambda$ (purple), scattering around the mean Ridge path (dashed black). Cross-validation picks the tangency of the path with an ellipsoid; perfect control is its crossing with the $z=0$ sphere. }
+    \caption{\textbf{Equal-error sets and the ridge path} in the plane of a high- and a low-variance PC. Prediction levels are ellipsoids around $\bstar$ (blue), control levels are the spheres with diameter joining $0$ and $(1+z)\bstar$ (orange). The fitted weight traverses this plane as a function of $\lambda$ (purple), scattering around the mean Ridge path (dashed black). Cross-validation picks the tangency of the path with an ellipsoid; perfect control is its crossing with the $z=0$ sphere. Exact two-dimensional construction: App.~\ref{sec:app-ext-geometry}. }
     \label{fig:geometry}
 \end{wrapfigure}
-Geometrically (Prop.~\ref{prop:mr-iso-geometry}), the equal-$E_{gen}$ sets are ellipsoids around $\bstar$ elongated along low-variance axes, whereas the equal-$z_{acc}$ sets are Euclidean spheres with diameter joining $0$ and $(1+z)\bstar$, and the equal-peer-error sets are hyperplanes normal to $\bprime$ (Fig.~\red{\ref{fig:geometry}}). For control, the sphere diameter directly encodes the shifted error $1+z$, where zero-error students live on the sphere at $z=0$. A student can sit deep inside the prediction ellipsoid, spanning a huge control error sphere, and still lie on the peer hyperplane of a good generator: this is exactly the configuration of Fig.~\ref{fig:phenomena} (bottom), and it can be made arbitrarily extreme by adding weight along a direction with $s_k\to0$ (Exp.~\ref{ex:mr-dissociation}).
+The three evaluations therefore have three geometries in the space of student weights (Table~\ref{tab:evaluation-metrics}, last column; Prop.~\ref{prop:mr-iso-geometry}; Fig.~\ref{fig:geometry}).
+\textbf{Prediction: ellipsoids.} The equal-$E_{gen}$ sets are ellipsoids centered on $\bstar$ with semi-axis $\sqrt{E_{gen}/s_k}$ along $\uvec_k$, hence elongated along low-variance axes, where large weight errors are cheap.
+\textbf{Control: spheres.} The equal-$z_{acc}$ sets are Euclidean spheres whose diameter joins $0$ and $(1+z)\bstar$; the diameter encodes the error directly, and zero-error students live on the sphere through $\bstar$ at $z=0$, not only at $\bstar$ itself.
+\textbf{Peer review: hyperplanes.} The equal-$z_{peer}$ sets are hyperplanes normal to the generator $\bprime$, so a peer reviewer is judged only on its component along the peer's path.
+A student can sit deep inside a small prediction ellipsoid, lie on a huge control sphere, and still lie on the zero-error hyperplane of a good generator: this is exactly the configuration of Fig.~\ref{fig:phenomena} (bottom), and it can be made arbitrarily extreme by adding weight along a direction with $s_k\to0$ (Ex.~\ref{ex:mr-dissociation}).
 
 
 The remaining question is therefore not whether the dissociation is possible but when \emph{learning} produces it. We study three ingredients: finite-sample regression on noisy responses, the choice of regularization, and the feature map through which the gradient reaches the pixels. % We take them in turn.
@@ -153,9 +158,9 @@ For the ratio $N/D$ we use the leading approximation $\mu_N/\mu_D$ from the DEs 
     \caption{\textbf{Pixel-space ridge separates prediction- and control-optimal regularization on natural images.}
     Disk teacher on van~Hateren images ($d=10^4$, $n=10^3$).
     \textbf{A--C}~The landscapes of prediction error $E_{gen}$, accentuation error $E_{acc}$, and accentuation $R^2$ over normalized noise scale $\sigma^2/S$ and effective regularization $\kappa$, calculated by DE (Eq.\ref{eq:pixel-de}). The prediction-optimal and median empirical RidgeCV paths track each other but differ from the control-optimal path; the black contour marks $R^2_{acc}=0$. 
-    This picture is validated by the numerical MC estimated landscapes in \red{Fig.~\ref{}}. 
+    This picture is validated by the numerical MC estimated landscapes in \red{Fig.~\ref{fig:supp-pixel-de-mc}}. 
     \textbf{D,E}~Slices at four noise levels expose displaced prediction and control valleys (or peaks for $R^2$); markers and bands show the mean and 10--90\% range over 100 natural-image trials at the highlighted noise $\sigma^2/S=1$.
-    \textbf{F}~Along the prediction-optimal path, $R^2_{gen}$ remains high while $R^2_{acc}$ becomes strongly negative; empirical RidgeCV exhibits the same dissociation.}
+    \textbf{F}~Along the prediction-optimal path, $R^2_{gen}$ remains high while $R^2_{acc}$ becomes strongly negative; empirical RidgeCV exhibits the same dissociation. Methods: App.~\ref{sec:app-vanhateren-landscape-methods}; further views: App.~\ref{sec:app-ext-pixel}.}
     \vspace{-15pt}
     \label{fig:pixel}
 \end{figure}
@@ -223,7 +228,7 @@ For \textit{an anisotropic spectrum and a structured teacher} the two averages d
 %The gap is multiplied by $\kappa\,\mathrm{df}_{1,2}$, i.e. by the number of modes near the regularization edge. 
 
 We visualize the landscape of prediction and control error over the noise-regularization plane ($\sigma^2,\kappa$), for regression on natural images (Fig.~\ref{fig:pixel}A-C). 
-Our DE formula generally well tracks the Monte Carlo estimate of the error (Fig.\ref{suppfig:pixl-MC}), where deviation from leading DE occurs only at very low noise or low regularization cases. 
+Our DE formula generally well tracks the Monte Carlo estimate of the error (Fig.~\ref{fig:supp-pixel-de-mc}), where deviation from leading DE occurs only at very low noise or low regularization cases. 
 The prediction-optimal and control-optimal penalties form two distinct valleys, where the $E_{acc}$ valley is a cusp and much sharper than $E_{gen}$. 
 At lower noise, prediction-optimal $\kappa^\star_{\rm gen}$ is also benign to control; however, at higher noise, $\kappa^\star_{\rm gen}$ gradually approaches and crosses the cliff of $R^2_{acc}=0$ , and control error fails catastrophically. 
 
@@ -235,7 +240,7 @@ This answers the question in the title for pixel regression: \emph{control is ba
 
 
 \paragraph{Peer review: recognition without generation.}
-Peer review evaluates $\bhat$ on the path of a peer $\bprime$, so the roles of $N$ and $D$ are played by the true and predicted gains along the peer's path, $N_{peer}:={\bstar}^\top\bprime$ and $D_{peer}:={\bhat}^\top\bprime$ (Table~\ref{tab:evaluation-metrics}). Take the peer to be a ridge fit at the same $\kappa$ on independent data. Both fits then concentrate around the same mean weight $\bar\beta_\kappa$ while their noise parts are uncorrelated, so the norm inflation drops out of the cross product: $D_{peer}\asymp\|\bar\beta_\kappa\|^2=B_{2,2}$ and $N_{peer}\asymp\bstar^\top\bar\beta_\kappa=B_{1,1}$ (Prop.~\ref{prop:mr-peer}). The peer slope and score are therefore
+Peer review evaluates $\bhat$ on the path of a peer $\bprime$, so the roles of $N$ and $D$ are played by the true and predicted gains along the peer's path, $N_{peer}={\bstar}^\top\bprime$ and $D_{peer}={\bhat}^\top\bprime$ of Table~\ref{tab:evaluation-metrics}. Take the peer to be a ridge fit at the same $\kappa$ on independent data. Both fits then concentrate around the same mean weight $\bar\beta_\kappa$ while their noise parts are uncorrelated, so the norm inflation drops out of the cross product: $D_{peer}\asymp\|\bar\beta_\kappa\|^2=B_{2,2}$ and $N_{peer}\asymp\bstar^\top\bar\beta_\kappa=B_{1,1}$ (Prop.~\ref{prop:mr-peer}). The peer slope and score are therefore
 \begin{equation}
 \mathrm{slope}_{peer}=\frac{N_{peer}}{D_{peer}}\asymp\frac{B_{1,1}}{B_{2,2}}\in[1,\infty),
 \qquad
@@ -245,7 +250,7 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1],
 using $B_{1,1}\ge B_{2,2}$ (Eq.~\ref{eq:app-spectral-inequalities}). Note, on the leading order, the peer slope is never below one, i.e. the \textit{student under-predicts the teacher on its peer's path}, and the peer $R^2$ is non-negative and degrades gracefully with noise through the selected $\kappa$. In contrast, on the self-generated path the norm inflation $V_{\rm pix}$ of Eq.~\ref{eq:pixel-de} adds to $D$ but not to $N$: 
 %in terms of $z=D/N-1$, $z_{acc}\asymp z_{peer}+V_{\rm pix}/B_{1,1}$ with $z_{peer}=B_{2,2}/B_{1,1}-1\le0$, 
 so the student over-predicts the teacher ($\mathrm{slope}_{acc}=N/D<1$), and $z_{acc}$ can grow without bound, driving $R^2_{acc}$ negative.
-The sign differences in neural data confirm this leading order picture: in \citetPW, the peer review score between pairs of models, have $R^2=0.04,[-0.06,0.10]$, $slope=1.35,[1.14,1.59]$ (median, [IQR], $n=90$); while accentuation score (eval on self generated path) have $R^2=-4.17,[-4.59,-3.51]$, $slope=0.38,[0.33,0.42]$ ($n=10$). % stats test between the two \todo
+The sign differences in neural data confirm this leading order picture: in \citetPW, the peer review score between pairs of models, have $R^2=0.04,[-0.06,0.10]$, $slope=1.35,[1.14,1.59]$ (median, [IQR], $n=90$); while accentuation score (eval on self generated path) have $R^2=-4.17,[-4.59,-3.51]$, $slope=0.38,[0.33,0.42]$ ($n=10$; App.~\ref{sec:app-ext-peer}, analysis in App.~\ref{sec:app-methods-peer}). % stats test between the two \todo
 Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric between models ($A\leftarrow B$ or $B\leftarrow A$). In practice the students are fitted to the same recordings through different feature maps; the review score then becomes asymmetric, and the evaluator can recognize its own noise in the generator's path only to the extent that the two maps route noise into the same pixel directions (Sec.~\ref{sec:feature}; App.~\ref{sec:app-peer-shared}). 
 % Peer review measures only the shared shrinkage bias: at leading order it is never negative, degrades gracefully with noise, and is symmetric between the two fits. Self-evaluation instead carries the estimator's own Euclidean noise energy through Eq.~\ref{eq:pixel-de}, so $z_{acc}$ grows without bound with $\sigma^2/n$ and $R^2_{acc}$ becomes arbitrarily negative. A student can therefore track a peer's path while failing on its own, which is the linear form of Fig.~\ref{fig:phenomena}C. 
 % The asymmetry between a strong and a weak generator in the data arises when the two differ in their feature maps (Sec.~\ref{sec:feature}); %and measured responses along a barely modulated path add trial noise that no evaluator can explain, which is why even the peer scores of a weak generator's images are poor.
@@ -259,8 +264,8 @@ Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric b
     \includegraphics[width=\linewidth]{figures/Figure_linear_feature_gauge.png}
     \vspace{-15pt}
     \caption{\textbf{Feature geometry decides control.}
-    \textbf{A}~Dependency graph: $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$ fix generalization and the cross-validated penalty; control additionally needs $\GramDef$ and $F\bstar$. 
-    \textbf{B-D}~For van Hateren images, rotating the top-500-PC projector feature into the spectral tail: $E_{gen}$ and $R^2_{gen}$ are invariant while $R^2_{acc}$ and the slope collapse; DE (lines) matches finite-$n$ Monte Carlo (markers). }
+    \textbf{A}~Dependency graph: $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$ fix generalization and the cross-validated penalty; control additionally needs $\GramDef$ and $F\bstar$ (full graph: Fig.~\ref{fig:summary_stats_dep_graph}). 
+    \textbf{B-D}~For van Hateren images, rotating the top-500-PC projector feature into the spectral tail: $E_{gen}$ and $R^2_{gen}$ are invariant while $R^2_{acc}$ and the slope collapse; DE (lines) matches finite-$n$ Monte Carlo (markers). Construction: App.~\ref{sec:app-methods-feature}; further rotations: App.~\ref{sec:app-ext-gauge}. }
     %\textbf{C}~Neuronal data: site-demeaned association of each candidate predictor with biological control slope (left) and control error (right) across nine trained (filled) and seven conventionally trained (open) models. Held-out error carries no model-order information; the exact trace, $V_\phi$ and its neighborhood versions do. (Draft: keep 5 rows.)}
     \label{fig:feature}%\label{fig:nonlinear-biological-validation}
 \end{figure}
@@ -297,7 +302,7 @@ This extra degree of freedom can be seen clearly through the group that transfor
 For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $\Sigma_F$ and $F\Sigma\bstar$, hence the joint feature--response covariance, $E_{gen,DE}(\kappa)$ and the DE-based prediction-optimal penalty $\kappa^\star_{gen}$, while changing $\Gram$ and $F\bstar$ and therefore control (Prop.~\ref{prop:mr-gauge}; construction in App.~\ref{sec:app-gauge-fragility}).
 \end{prop}
 Note, the gauge acts nontrivially on control only when the input is anisotropic: in white data, control error is also invariant to this group. 
-Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. \red{Random draws from the \textit{rotation group} span a huge range (App.~\ref{sec:app-gauge-fragility}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.}
+Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. \red{Random draws from the \textit{rotation group} span a huge range (Fig.~\ref{fig:supp-null-random}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.}
 % For white data, the accentuation error is also invariant across this gauge group, leading to no dissociation. 
 
 \paragraph{What makes a map fragile.}
@@ -331,7 +336,7 @@ We reproduced the results using published preprocessed data from \citetPW.
 \textbf{B}~Control slope between \textit{in vivo} measured and model-predicted neural responses to accentuated stimuli. In \textbf{A,B}, bars show the mean across 25 sites, dots show individual sites, and error bars denote $\pm1$ SE across sites.
 \textbf{C}~Raw $\log_{10}V_\phi$ computed from Jacobian energy averaged over a $16/255$ neighborhood is anticorrelated with control slope after removing each site's ten-model mean (Pearson $r=-0.56$ across 250 site--model pairs).
 \textbf{D}~Pearson correlation ($-r$) between site-centered control slope and seven raw $\log_{10}$ predictors: held-out MSE, the gradient-geometry trace $T_\phi(\kappa)$, exact-local $V_\phi$, and neighborhood $V_\phi$ at four scales. 
-Control slope was mean-subtracted within site using all ten models; predictors remained raw. Markers denote 10/9/8/7-model subsets (all / no untrained AlexNet / no robust models (CLIPAG,RN50-robust) / neither), and stars indicate raw two-sided Pearson $p<0.05$.} %without multiple-comparison correction
+Control slope was mean-subtracted within site using all ten models; predictors remained raw. Markers denote 10/9/8/7-model subsets (all / no untrained AlexNet / no robust models (CLIPAG,RN50-robust) / neither), and stars indicate raw two-sided Pearson $p<0.05$. All estimators and scales: App.~\ref{sec:app-ext-nonlinear}.} %without multiple-comparison correction
     \label{fig:nonlinear-biological-validation}
 \end{figure}
 
@@ -346,7 +351,7 @@ V_\phi:=\frac{E_{val}}{n}\,\E_x\big[T_\phi(x,\kappa)\big],
 \end{equation}
 where $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the pixel gradient of feature PC $k$, obtainable by one backward pass per PC, and $V_\phi$ mirrors the norm inflation $V_F$ of Eq.~\ref{eq:feature-mean-variance} with $E_{val}\approx E_{gen}+\sigma^2$. For linear $\phi$ this is exact; for a network it is a diagnostic motivated by the theory, not a theorem, because the identity $s_k=g_k^\top\Sigma g_k$ that made $T_F$ a ratio of gradient energies no longer holds. Since an accentuation path travels far from the seed, we also evaluate smoothed versions in which the Jacobian is averaged, or the squared gradient is averaged, over a Gaussian neighborhood of the seed at pixel-noise scales from $0.5/255$ to $16/255$ (App.~\ref{sec:app-nonlinear-diagnostic}).
 
-We computed these quantities for all 250 site--model pairs of the neuronal experiment, using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:nonlinear-biological-validation}). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\ref{eq:feature-de} would also be needed.
+We computed these quantities for all 250 site--model pairs of the neuronal experiment (App.~\ref{sec:app-methods-nonlinear}), using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:nonlinear-biological-validation}). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\ref{eq:feature-de} would also be needed.
 
 
 \section{Discussion}
