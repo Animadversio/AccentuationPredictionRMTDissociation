@@ -125,14 +125,14 @@ Ridge regression in pixel space, $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\
 Since ridge penalizes weight in low-variance directions, one might expect it to remove these control-vulnerable weight components. We ask whether such risk survives the regularization, even with cross-validated penalty.
 
 \paragraph{The ridge path through the two landscapes.}
-The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, Eq.~\ref{eq:ridge} traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around its mean, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. Ideally, cross-validation selects the point where the path is tangent to the smallest reachable prediction ellipsoid; whereas minimal control error asks where the path crosses the $z=0$ sphere $D=N$; in general these two points do not coincide. The \red{math to follow} quantifies this geometric intuition. 
+The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, Eq.~\ref{eq:ridge} traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around its mean, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. Ideally, cross-validation selects the point where the path is tangent to the smallest reachable prediction ellipsoid; whereas minimal control error asks where the path crosses the $z=0$ sphere $D=N$; in general these two points do not coincide. \red{The analysis below makes this geometric picture quantitative.}
 %\red{the two coincide only if the noise cloud has not pushed the path off the sphere in the directions the ellipsoid does not see. The deterministic equivalents below compute where the center of this cloud sits, how much Euclidean spread it carries, and hence the distance between the two points.}
 
 
 \paragraph{Toolkit.}
-We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. It allows us to replace certain functions of empirical covariance $\hat\Sigma$ with those of the population covariance $\Sigma$, e.g. $\hat\Sigma(\hat\Sigma+\kappa I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$, 
+We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. \red{They replace certain functions of the empirical covariance $\hat\Sigma$ by deterministic functions of the population covariance $\Sigma$}, e.g. $\hat\Sigma(\hat\Sigma+\kappa I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$,
 where finite-sample randomness is absorbed by the effective penalty $\kappa(\lambda)$, the positive root of the self-consistent equation $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$. 
-This allows us to capture the average effect of finite data $X$, without explicitly taking expectation over random matrices. 
+\red{Thus $\kappa$ absorbs the average effect of a finite random design without requiring us to manipulate the realized matrix $X$ explicitly.}
 More details about DEs are deferred to App.~\ref{sec:app-de-toolkit}. 
 Our results are expressed through the teacher-weighted and unweighted spectral sums
 \begin{equation}
@@ -140,6 +140,15 @@ B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \mathrm{df}_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q},\qquad \mathrm{df}_2:=\mathrm{df}_{2,2}.
 \end{equation}
 For the ratio $N/D$ we use the leading approximation $\mu_N/\mu_D$ obtained from the DEs of $N$ and $D$; its second-order and distributional refinements are in App.~\ref{sec:app-ratio-corrections} and matter only where the leading calibration error is already small.
+
+\red{To expose the part of control that is invisible to prediction, define the mean effective pixel weight and the estimator-induced norm inflation}
+\begin{equation}
+\red{\bar\beta_\kappa:=\Sigma(\Sigma+\kappa I)^{-1}\bstar,
+\qquad
+V_{\rm pix}(\kappa):=\frac{\mathrm{df}_{1,2}(\kappa)}{n}\bigl(E_{gen,DE}+\sigma^2\bigr).}
+\label{eq:pixel-mean-variance}
+\end{equation}
+\red{The notation anticipates the feature-space extension: $\bar\beta$ will always denote the mean effective weight seen in pixel space, whereas $V$ will denote the excess Euclidean norm contributed by finite-sample estimation variability.}
 
 \begin{prop}[Pixel ridge: prediction and control]\label{prop:pixel-de}
 With $\kappa$, $B$ and $\mathrm{df}$ built from $\Sigma$,
@@ -151,22 +160,19 @@ With $\kappa$, $B$ and $\mathrm{df}$ built from $\Sigma$,
 % D\asymp \mu_D=B_{2,2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{V}.%
 % \label{eq:pixel-de}
 % \end{equation}
-\begin{equation}\small
-E_{gen}\asymp E_{gen,DE}=\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\sigma^2,
-\quad
-N\asymp \mu_N=\underbrace{B_{1,1}}_{\bstar^\top \bar\beta_\kappa},%\mu_N=
-\quad
-D\asymp \mu_D=\underbrace{B_{2,2}}_{\|\bar\beta_\kappa\|^2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{\text{norm inflation }  V}.%
+\begin{equation}
+\begin{aligned}
+E_{gen}&\asymp E_{gen,DE}=\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\sigma^2,\\
+N&\asymp \mu_N=\underbrace{B_{1,1}}_{\bstar^\top \bar\beta_\kappa},
+&
+D&\asymp \mu_D=\underbrace{B_{2,2}}_{\|\bar\beta_\kappa\|^2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{V_{\rm pix}(\kappa)}.
+\end{aligned}
 \label{eq:pixel-de}
 \end{equation}
 \end{prop}
-$E_{gen}$ recovers the classic in distribution generalization error  \cite{alex,surya,blake}. 
-Let $\bar\beta_\kappa=\Sigma(\Sigma+\kappa I)^{-1}\bstar$, the average student weight (DE) at given regularization. Then $N=B_{1,1}$ and the first term of $D$  are relatively benign and controlled by the teacher weights, since $\|\bstar\|^2\geq B_{1,1} \geq B_{2,2}$ (\ref{eq:}). 
-However, the 2nd term of $D$ marked as $V\geq0$ is the key issue. It summarizes how limited data $n$, higher noise ($\sigma^2$), higher generalization error $E_{gen}$ and a spectral summary $\mathrm{df}_{1,2}$ jointly inflate the student norm $D$. $\mathrm{df}_{1,2}$ counts the number of modes near the regularization threshold $\kappa$. 
-As a result, increasing $V$ will $D$ causing student to over-predict the variance it induces, leading to $\text{slope}=N/D<1$; it can also inflate $z=D/N-1$ , potentially leading to negative $R^2=1-z^2$. 
-Later we will generalize this term $V$ to predict control success of visual neuron (Sec.~\ref{sec:nonlinear}). 
+\red{$E_{gen}$ recovers the classical in-distribution generalization error \citep{alex,surya,blake}. The two control moments now have a transparent mean--variance decomposition. The numerator $N=\bstar^\top\bar\beta_\kappa=B_{1,1}$ depends only on the alignment of the teacher with the mean fitted weight. The denominator contains its squared norm, $\|\bar\beta_\kappa\|^2=B_{2,2}$, plus the nonnegative inflation $V_{\rm pix}$. Since each shrinkage factor $s_k/(s_k+\kappa)$ lies in $[0,1]$, $\|\bstar\|^2\geq B_{1,1}\geq B_{2,2}$. By contrast, $V_{\rm pix}$ collects the Euclidean energy of estimation noise: it grows with the noisy prediction risk $E_{gen}+\sigma^2$, is suppressed by sample size $n$, and is amplified by the spectral susceptibility $\mathrm{df}_{1,2}=\sum_k s_k/(s_k+\kappa)^2$, whose kernel is largest around the regularization scale and can accumulate over many weakly constrained modes. Increasing $V_{\rm pix}$ enlarges $D$ without changing $N$, pushing $\mathrm{slope}_{acc}=N/D$ below one and potentially making $R^2_{acc}=1-(D/N-1)^2$ strongly negative. In Sec.~\ref{sec:feature}, the same decomposition survives with a feature-dependent mean weight and norm inflation; in Sec.~\ref{sec:nonlinear}, its variance factor motivates a diagnostic of biological control.}
 
-Note that, $V$ is not necessarily bad for control: at a special point where,  $B_{1,1}=B_{2,2}+V$, i.e. this inflation replenishes the norm deflation caused by the shrinkage, thus $N=D$ and control is perfect at leading order (the valley in Fig.~\ref{fig:pixel}\textbf{B}). 
+\red{Importantly, norm inflation is not always harmful. At the special point $B_{1,1}=B_{2,2}+V_{\rm pix}$, it exactly compensates for the norm deflation caused by ridge shrinkage; then $N=D$ and control is perfect at leading order (the valley in Fig.~\ref{fig:pixel}\textbf{B}).}
 The condition is summarized below, and it's generally different from the condition for best generalization error which cross validation selects for. 
 % \red{
 % The three quantities are sums of the same per-eigenmode weight error (Prop.~\ref{prop:mr-per-pc}) with different weights: $E_{gen}$ weights mode $k$ by $s_k$, $D$ weights every mode equally. The last term of $\mu_D$ is the Euclidean energy of estimation noise, $\frac1n(E_{gen}+\sigma^2)$ per effective mode times $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, which counts modes near and below $\kappa$ heavily. It inflates the student's norm without helping it predict, so the student over-shoots along its own path: $z_{acc}>0$, slope $<1$. Ridge also shrinks the signal ($B_{2,2}<B_{1,1}$), which pulls in the opposite direction. Whether the two cancel is a question about $\lambda$. For natural images, whose spectrum decays as a power law over $10^4$ pixel modes, $\mathrm{df}_{1,2}$ counts thousands of weakly constrained high-spatial-frequency modes; the estimation noise that lands there is precisely the high-frequency texture of failed accentuations, and it costs almost nothing in $E_{gen}$.
@@ -203,7 +209,7 @@ z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 \end{equation}
 \end{prop}
 Geometrically, along the ridge path (Fig.~\ref{fig:geometry}),  $\kappa_{\rm gen}^{\star}$ is the tangency with the prediction ellipsoid and its crossing of the control sphere reveals $\kappa_{\rm acc}^{\star}$. 
-Both conditions equate the noisy prediction risk to $n\kappa$ times the average teacher power in a bump like spectral band $B_{i,i}/\mathrm{df}_{i,i}$, where $\mathrm{df}_{i,i}$ specifies the band of averaging. Since $\mathrm{df}_{1,2}\geq\mathrm{df}_{2,3}$, control averages at a slightly higher band. 
+\red{Both conditions equate the noisy prediction risk to $n\kappa$ times a spectrally weighted average of teacher power, but they use different kernels. The control condition weights mode $k$ by $s_k/(s_k+\kappa)^2$, whereas prediction stationarity adds the factor $s_k/(s_k+\kappa)$ and therefore emphasizes better-resolved, higher-variance modes relatively more. Control consequently remains sensitive farther into the low-variance spectral tail.}
 For isotropic data the two averages coincide and cross-validation nullifies control error for free; similarly when the teacher's energy is uniformly distributed over modes  (\red{\ref{close_condition}}). For an anisotropic spectrum and a structured teacher, they differ generally, and their difference is proportional to the control error $z$ at cross validated penalty $\kappa_{\rm gen}^{\star}$. 
  %teacher-weighted spectral average $B_{,}$, but they average with different powers of $s_k/(s_k+\kappa)$. 
 % Eq.~\ref{eq:pixel-zacc-cv} is the distance along the path between its tangency with the prediction ellipsoid and its crossing of the control sphere.
@@ -274,19 +280,30 @@ Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric b
 Pixel regression explains why one student fails; it cannot explain why ten equally predictive backbones fail differently. We idealize a backbone as a fixed linear map $F\in\R^{p\times d}$, fit $\hat w$ by ridge on features $F\x$, and accentuate along the pixel gradient $\bhat=F^\top\hat w$. Let $\Sigma_F:=F\Sigma F^\top$ be the feature covariance and $\GramDef$ the Euclidean feature Gram. The best realizable feature weight and its irreducible error are $w^\star=\Sigma_F^\dagger F\Sigma\bstar$ and $S_\perp=S-{w^\star}^\top \Sigma_F w^\star$ (App.~\ref{lem:mr-feature-weights}).
 
 \begin{prop}[Feature ridge: prediction and control]\label{prop:feature-de}\label{prop:linfeat_acc_ND}\label{prop:linfeat_gen_err}
-With $\kappa$, $B^F$, $\mathrm{df}^F$ built from $(\Sigma_F,w^\star)$ and aspect ratio $p/n$,
-\begin{equation}\small
-E_{gen,DE}=\frac{n(\kappa^2B^F_{1,2}+S_\perp+\sigma^2)}{n-\mathrm{df}^F_2}-\sigma^2,\qquad
-N_{DE}={\bstar}^\top\tilde\beta_\kappa,\qquad
-D_{DE}=\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
+\red{With $\kappa$, $B^F$, and $\mathrm{df}^F$ built from $(\Sigma_F,w^\star)$ and aspect ratio $p/n$, define}
+\begin{equation}
+\red{\begin{aligned}
+\bar\beta_{F,\kappa}&:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar,\\
+T_F(\kappa)&:=\operatorname{Tr}[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F],
+&
+V_F(\kappa)&:=\frac{E_{gen,DE}+\sigma^2}{n}T_F(\kappa).
+\end{aligned}}
+\label{eq:feature-mean-variance}
+\end{equation}
+\red{Then}
+\begin{equation}
+\begin{aligned}
+E_{gen,DE}&=\frac{n(\kappa^2B^F_{1,2}+S_\perp+\sigma^2)}{n-\mathrm{df}^F_2}-\sigma^2,\\
+N_{DE}&={\bstar}^\top\bar\beta_{F,\kappa},
+&
+D_{DE}&=\|\bar\beta_{F,\kappa}\|^2+V_F(\kappa).
+\end{aligned}
 \label{eq:feature-de}
 \end{equation}
-where $\tilde\beta_\kappa=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar$ is the mean pixel weight and
-$T_F(\kappa):=\operatorname{Tr}[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F]$.
 \end{prop}
 % A salient observation is: prediction sees the feature map only through $\Sigma_F$ and $F\Sigma\bstar$, so the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen,cv}$, is a function of the sumary statistics $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$. Control additionally sees $\Gram$, (through $T_F$ and $\|\tilde\beta_\kappa\|$), and $F\bstar$, (through $N_{DE}$) (Fig.~\ref{fig:feature}A). Thus, for feature regression, 
 %This is the statistical content of the dissociation: the prediction problem does not identify the control problem.
-A salient observation is that prediction sees the feature map only through $\Sigma_F$ and $F\Sigma\bstar$: the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen,cv}$, is a function of the summary statistics $(\Sigma_F, F\Sigma\bstar, S_\perp, \sigma^2, n)$. Control additionally depends on $\Gram$, through $T_F$ and $\|\tilde\beta_\kappa\|$, and on $F\bstar$, through $N_{DE}$ (Fig.~\ref{fig:feature}A). Thus, for feature regression, \textit{the statistics governing control generically subsume and exceed those governing prediction}; except for special cases, where the two sets coincide (e.g. $\Sigma=I$, so $\Gram=\Sigma_F$,$F\bstar=F\Sigma\bstar$; see \red{App.} for discussion). 
+\red{This is the same mean--variance structure as pixel ridge, now with a feature-dependent mean effective pixel weight $\bar\beta_{F,\kappa}$ and norm inflation $V_F$. The key difference is what determines them. Prediction sees the feature map only through $\Sigma_F$ and $F\Sigma\bstar$: the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen,cv}$, is a function of $(\Sigma_F,F\Sigma\bstar,S_\perp,\sigma^2,n)$. Control additionally depends on $\Gram$, through $T_F$ and $\|\bar\beta_{F,\kappa}\|$, and on $F\bstar$, through $N_{DE}$ (Fig.~\ref{fig:feature}A). Thus the statistics governing control generically exceed those governing prediction. They coincide only in special cases---for example, if $\Sigma=I$, then $\Gram=\Sigma_F$ and $F\bstar=F\Sigma\bstar$ (see Appendix for discussion).}
 This extra degree of freedom can be seen clearly through the group that transforms feature map without affecting prediction. 
 \begin{prop}[Prediction-preserving gauge]\label{prop:gauge}
 For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $\Sigma_F$ and $F\Sigma\bstar$, hence the joint feature–response covariance, $E_{gen,DE}(\kappa)$ and the DE-based prediction-optimal penalty $\kappa^\star_{gen}$. %, while changing $\Gram$ and $F\bstar$ and therefore control. %
@@ -296,7 +313,7 @@ Note, the gauge acts nontrivially on control only when the input is anisotropic:
 % For white data, the accentuation error is also invariant across this gauge group, leading to no dissociation. 
 
 \paragraph{What makes a map fragile.}
-The factor $T_F$ is response-independent and has the spectral form
+\red{The map-dependent part of $V_F$ is the response-independent factor $T_F$, which has the spectral form}
 \begin{equation}
 T_F(\kappa):=\operatorname{Tr}[FF^\top(\Sigma_F+\kappa I)^{-2}\Sigma_F]=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k^\top\Sigma g_k},
 \qquad g_k:=F^\top v_k,
