@@ -696,6 +696,14 @@ Eq.~\ref{eq:appendix-pixel-d-minus-n}:
 and divide by $\mu_N=B_{1,1}$.
 \end{proof}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.5\linewidth]{figures/tuning_kernels_inset}
+\caption{\textbf{The two spectral kernels of Proposition~\ref{prop:app-prediction-control-optima}.}
+Solid: the control kernel $s/(s+\kappa)^2$ (peak at $s=\kappa$, symmetric on the log axis) and the prediction kernel $s^2/(s+\kappa)^3$ (peak at $s=2\kappa$), both scaled by $\kappa$.  Dotted: the linear and squared shrinkage factors whose $\kappa$-derivatives they are.  The residual control error at the prediction optimum, Eq.~\ref{eq:app-zacc-cv-summary}, is the difference between the teacher power averaged over the blue band and over the red band.}
+\label{fig:app-tuning-kernels}
+\end{figure}
+
 \begin{remark}[Reading the residual]
 \label{rem:app-tuning-remarks}
 \begin{enumerate}
@@ -703,7 +711,7 @@ and divide by $\mu_N=B_{1,1}$.
 modes $w^{(1)}_k:=s_k^2(s_k+\kappa)^{-3}/\mathrm{df}_{2,3}$ and
 $w^{(2)}_k:=s_k(s_k+\kappa)^{-2}/\mathrm{df}_{1,2}$.  Then
 $B_{2,3}/\mathrm{df}_{2,3}-B_{1,2}/\mathrm{df}_{1,2}=\sum_k(w^{(1)}_k-w^{(2)}_k)b_k^2$,
-and $w^{(1)}_k/w^{(2)}_k\propto s_k/(s_k+\kappa)$ is increasing in $s_k$.
+and $w^{(1)}_k/w^{(2)}_k\propto s_k/(s_k+\kappa)$ is increasing in $s_k$.  On a logarithmic axis in $s$, $w^{(2)}$ is a symmetric bump centered at $s=\kappa$ (half-maximum between $0.17\kappa$ and $5.8\kappa$), while $w^{(1)}$ peaks at $s=2\kappa$ with its low-variance side suppressed by the extra factor (Figure~\ref{fig:app-tuning-kernels}); the two kernels are the $\kappa$-derivatives of the linear and of the squared shrinkage factor, $s/(s+\kappa)^2=-\partial_\kappa[s/(s+\kappa)]$ and $s^2/(s+\kappa)^3=-\tfrac12\partial_\kappa[s/(s+\kappa)]^2$.
 The residual is therefore positive (over-shoot, slope below one) when the
 teacher's power $b_k^2$ sits preferentially on higher-variance modes than the
 noise-counting weight $w^{(2)}$ does, which is the typical situation for
