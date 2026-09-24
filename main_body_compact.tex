@@ -291,11 +291,11 @@ This extra degree of freedom can be seen clearly through the group that transfor
 For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $\Sigma_F$ and $F\Sigma\bstar$, hence the joint feature--response covariance, $E_{gen,DE}(\kappa)$ and the DE-based prediction-optimal penalty $\kappa^\star_{gen}$, while changing $\Gram$ and $F\bstar$ and therefore control (Prop.~\ref{prop:mr-gauge}; construction in App.~\ref{sec:app-gauge-fragility}).
 \end{prop}
 Note, the gauge acts nontrivially on control only when the input is anisotropic: in white data, control error is also invariant to this group. 
-\red{Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. Random draws from the \textit{rotation group} span a huge range (App.~\ref{sec:app-gauge-fragility}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.}
+Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. \red{Random draws from the \textit{rotation group} span a huge range (App.~\ref{sec:app-gauge-fragility}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.}
 % For white data, the accentuation error is also invariant across this gauge group, leading to no dissociation. 
 
 \paragraph{What makes a map fragile.}
-\red{The map-dependent part of $V_F$ is the response-independent factor $T_F$, which has the spectral form}
+The response-independent part of $V_F$ is the geometric factor $T_F$, which has the spectral form
 \begin{equation}
 T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k^\top\Sigma g_k},
 \qquad g_k:=F^\top v_k,
