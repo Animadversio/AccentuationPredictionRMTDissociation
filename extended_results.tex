@@ -227,11 +227,24 @@ Methods: App.~\ref{sec:app-methods-peer}.}
 
 \begin{figure}[ht]
 \centering
-% NEW figure (not yet made); statistics in
-% CR/tables/nonlinear_control/.../PEER_REVIEW_SELF_VS_PEER_RESULTS.md
-% (script CR/explorations/nonlinear_control/analyze_peer_review_self_vs_peer.py)
-\suppfigplaceholder{NEW: self vs peer R^2 and slope distributions}
-\caption{\textbf{Self-evaluation versus peer review.} \todo{caption}}
+% Source: CR/figures/nonlinear_control/neural_peer_review/peer_review_self_vs_peer.pdf
+% Script: CR/explorations/nonlinear_control/plot_peer_review_self_vs_peer.py
+% Statistics: CR/tables/nonlinear_control/biological_validation/PEER_REVIEW_SELF_VS_PEER_RESULTS.md
+\includegraphics[width=\linewidth]{figures/supp/peer_review_self_vs_peer.pdf}
+\caption{\textbf{Self-evaluation versus peer review.}
+\textbf{A,B}~For each generator model, identity $R^2$ (symlog) and slope of
+the self cell (diamond) and of the nine peer reviewers (gray dots; bar:
+median), from the 25-site-averaged matrix of
+Fig.~\ref{fig:supp-neural-peer-matrix}.  Every self slope is below one and
+every self $R^2$ is negative; 80 of 90 peer slopes exceed one.  Over matrix
+cells, peer versus self: $R^2$ $0.04$ $[-0.06,0.10]$ versus $-4.17$
+$[-4.59,-3.51]$, slope $1.35$ $[1.14,1.59]$ versus $0.38$ $[0.33,0.42]$
+(median [IQR]).
+\textbf{C}~Paired site contrasts (mean over peer cells minus mean over self
+cells), colored by subject: all 25 sites favor peer review on both metrics.
+Reviewer-label permutation $p<5\times10^{-6}$; with five subjects the exact
+sign-flip test attains its minimum $p=0.0625$.
+Methods: App.~\ref{sec:app-methods-peer}.}
 \label{fig:supp-neural-self-vs-peer}
 \end{figure}
 
@@ -263,14 +276,25 @@ below the others.}
 
 \begin{figure}[ht]
 \centering
-% NEW figure (not yet made): per model, s_k, q_k, q_k/s_k and cumulative T
-% over PC index at df_2 = 375; data: $STORE_DIR/.../nonlinear_control/
-% mass_v1/geometry/*/summary.npz (exact_by_seed, spectrum).  Existing 4-model
-% versions: CR/figures/nonlinear_control/{robust_resnet50,standard_resnet50,
-% clipag,dinov2}_seed10/pc_geometry.pdf
-\suppfigplaceholder[0.3\textheight]{NEW: per-model s_k, q_k, q_k/s_k, cumulative T at df_2=375, one panel per model}
+% Source: CR/figures/nonlinear_control/model_pc_spectra/pc_spectra_overview.pdf
+% Per-model versions (one line per layer geometry, for later selection):
+%   CR/figures/nonlinear_control/model_pc_spectra/pc_spectra_<model>.pdf
+% Script: CR/explorations/nonlinear_control/plot_model_pc_spectra.py (--df2 375)
+% Data: $STORE_DIR/Projects/AccentuationPredRMT/nonlinear_control/mass_v1/geometry/*/summary.npz
+% Table: CR/tables/nonlinear_control/model_pc_spectra_summary.csv
+\includegraphics[width=\linewidth]{figures/supp/pc_spectra_overview.pdf}
 \caption{\textbf{PC-resolved gradient geometry of the ten encoding models.}
-\todo{caption}}
+From left: training feature variance $s_k$, exact local gradient energy
+$q_k=\|J_\phi^\top v_k\|^2$ (mean over the ten seed images), their ratio
+$q_k/s_k$, and the cumulative control trace
+$\sum_{j\le k}s_jq_j/(s_j+\kappa)^2$ at the penalty giving
+$\mathrm{df}_2=375$, against feature PC rank.  Each curve is the site-weighted
+log-mean over the layer geometries a model uses across the 25 sites (84
+geometries in total).  The adversarially trained models (dashed) have
+$q_k/s_k$ two to three orders of magnitude below the others at every rank,
+so feature-space estimation noise back-propagates to little pixel-gradient
+energy; for the other models the ratio grows toward the tail and the trace
+accumulates over hundreds of PCs.}
 \label{fig:supp-model-spectra}
 \end{figure}
 
