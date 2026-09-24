@@ -46,9 +46,14 @@ All three have enough code to write from. **B.1–B.3 were written on 2026-09-24
   20. The main Fig. 4 caption says "finite-$n$ Monte Carlo"; say "Gaussian-design" (B.5 already does).
 
 **B.2 Toy example: enough code** (`Closed-loop-visual-insilico/scripts/accentuation_theory/exp2_accentuation.py`; see #16).
-  21. Hypothesis for the Fig. 1C R² mismatch: the panels come from an earlier run with α₂ = 1000 (the docstring value) rather than the current `ALPHA2 = 100`, and/or a different R² denominator.
-      - Checking this needs a rerun: 12k-patch SVD on GPU, a few minutes.
-      - Recommendation: fix the parameters, rerun, and regenerate the Fig. 1 panels so the reported numbers are reproducible.
+  21. **Fig. 1C R² — RESOLVED (2026-09-24).**
+      - **Same run, different figure.** The Fig. 1C panels were cropped from `exp2/exp2_fstar_vs_target.png`, a second figure from the same 2026-03-31 04:25 run (α₂ = 100, 20 seeds × 13 targets). The earlier comparison was against `exp2_cross_eval.png`. Provenance: the nanoclaw `discord_accentuation_proj` session, where Binxu asked for the 6-panel y=f* figure at 02:28 and α₂ was changed 1000→100 at 02:08, before every saved run.
+      - **The two figures use different R² denominators:**
+        - `fstar_vs_target`: 1 − Var(f*−f_e)/**Var(f_e)** (model prediction) → 0.9969 and 0.0481, as printed in Fig. 1C.
+        - `cross_eval`: 1 − Var(f*−f_e)/**Var(f*)** (true response) → 0.9966 and −9.94.
+      - **The paper's R² divides by the true-response variance** (Table 1: R²_acc = 1 − (D/N−1)²; Fig. 1A also uses Var(f*)). So Fig. 1C is inconsistent with the paper: the self-accentuation panel should read ≈ −9.9 (Var-based), not 0.048. That value fits the paper's story and the neural sign (self R² = −4.17). Both definitions also ignore the offset; the identity-line SSE R² is computed by the rerun below.
+      - **Rerun from scratch:** `Closed-loop-visual-insilico/scripts/accentuation_theory/exp2_fig1_reproduce.py` (Slurm job 48118110). Outputs go to `DL_Projects/AdvExampleLinearRegr/exp2_repro/`: `fig1c_r2_candidates.csv` and `fig1_toy_reproduction_alpha2_{100,1000}.png`.
+      - Recommendation: redo the Fig. 1C labels with the paper's definition and state it in B.2.
 
 **B.3 Two-dimensional geometry: enough code.**
 - **Source:** `CR/scripts/plot_ridge_paths_in_geometry.py` (commits 0fe8c5b, 44dd89f), with iso-set helpers in `CR/scripts/plot_iso_error_geometry.py`.
