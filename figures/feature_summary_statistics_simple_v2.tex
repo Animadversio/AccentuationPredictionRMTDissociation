@@ -47,11 +47,11 @@
   {\textbf{cross-validation}\\[-1pt]$\kappa_{\rm CV}=\arg\min_\kappa E_{\rm gen}(\kappa)$};
 % ---------- control outputs
 \node[cstat,text width=4.4cm] (bt) at (9.6,0.2)
-  {\textbf{mean pixel weight}\\[-1pt]$\tilde{\bm\beta}_\kappa=F^\top(\Sigma_F+\kappa I)^{-1}\bm h$};
+  {\textbf{mean pixel weight}\\[-1pt]$\bar{\bm\beta}_{F,\kappa}=F^\top(\Sigma_F+\kappa I)^{-1}\bm h$};
 \node[cstat,text width=7.2cm] (ND) at (9.9,-2.0)
   {\textbf{own-path gains: true $N$, predicted $D$}\\[-1pt]
-   $N=\bm\beta^{\star\top}\tilde{\bm\beta}_\kappa=\bm q^\top(\Sigma_F+\kappa I)^{-1}\bm h$\\[2pt]
-   $D=\|\tilde{\bm\beta}_\kappa\|^2+\dfrac{E_{\rm gen}+\sigma^2}{n}\,\underbrace{\operatorname{tr}\!\big[G(\Sigma_F+\kappa I)^{-2}\Sigma_F\big]}_{T_F:\ \text{gradient geometry}}$};
+   $N=\bm\beta^{\star\top}\bar{\bm\beta}_{F,\kappa}=\bm q^\top(\Sigma_F+\kappa I)^{-1}\bm h$\\[2pt]
+   $D=\|\bar{\bm\beta}_{F,\kappa}\|^2+\dfrac{E_{\rm gen}+\sigma^2}{n}\,\underbrace{\operatorname{tr}\!\big[G(\Sigma_F+\kappa I)^{-2}\Sigma_F\big]}_{T_F:\ \text{gradient geometry}}$};
 \node[cout] (z) at (15.4,-1.3)
   {\textbf{control error}\\[4pt]$z_{\rm acc}=\dfrac{D}{N}-1$\\[2pt]$R^2_{\rm acc}=1-z_{\rm acc}^2$};
 % ---------- groups and arrows

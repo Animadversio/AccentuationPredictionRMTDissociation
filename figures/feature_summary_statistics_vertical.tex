@@ -42,11 +42,11 @@
 % ---------- control column (right)
 \node[cstat] (G)  at (7.0,-2.2) {\textbf{feature Gram}\\[-1pt]$G=FF^\top$};
 \node[cstat] (q)  at (7.0,-3.7) {\textbf{teacher overlap}\\[-1pt]$\bm q=F\bm\beta^\star$};
-\node[cstat,text width=4.4cm] (bt) at (7.0,-5.5) {\textbf{mean pixel weight}\\[-1pt]$\tilde{\bm\beta}_\kappa=F^\top(\Sigma_F+\kappa I)^{-1}\bm h$};
+\node[cstat,text width=4.4cm] (bt) at (7.0,-5.5) {\textbf{mean pixel weight}\\[-1pt]$\bar{\bm\beta}_{F,\kappa}=F^\top(\Sigma_F+\kappa I)^{-1}\bm h$};
 \node[cstat,text width=7.8cm] (ND) at (7.8,-8.3)
   {\textbf{own-path gains: true $N$, predicted $D$}\\[-1pt]
-   $N=\bm\beta^{\star\top}\tilde{\bm\beta}_\kappa=\bm q^\top(\Sigma_F+\kappa I)^{-1}\bm h$\\[2pt]
-   $D=\|\tilde{\bm\beta}_\kappa\|^2+\dfrac{E_{\rm gen}+\sigma^2}{n}\,\underbrace{\operatorname{tr}\!\big[G(\Sigma_F+\kappa I)^{-2}\Sigma_F\big]}_{T_F:\ \text{gradient geometry}}$};
+   $N=\bm\beta^{\star\top}\bar{\bm\beta}_{F,\kappa}=\bm q^\top(\Sigma_F+\kappa I)^{-1}\bm h$\\[2pt]
+   $D=\|\bar{\bm\beta}_{F,\kappa}\|^2+\dfrac{E_{\rm gen}+\sigma^2}{n}\,\underbrace{\operatorname{tr}\!\big[G(\Sigma_F+\kappa I)^{-2}\Sigma_F\big]}_{T_F:\ \text{gradient geometry}}$};
 \node[cout,text width=7.8cm] (z) at (7.8,-10.6)
   {\textbf{control error}\\[2pt]$z_{\rm acc}=\dfrac{D}{N}-1$,\qquad $R^2_{\rm acc}=1-z_{\rm acc}^2$};
 % ---------- groups and arrows

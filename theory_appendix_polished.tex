@@ -406,7 +406,8 @@ E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{
 \label{eq:app-pixel-egen-summary}\\
 \mu_N&:=\E[N]\asymp B_{1,1},
 \label{eq:app-pixel-N-summary}\\
-\mu_D&:=\E[D]\asymp B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big),
+\mu_D&:=\E[D]\asymp B_{2,2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{V_{\rm pix}(\kappa)}
+=\|\bar\beta_\kappa\|^2+V_{\rm pix}(\kappa),\qquad \bar\beta_\kappa:=\Sigma(\Sigma+\kappa I)^{-1}\bstar,
 \label{eq:app-pixel-D-summary}\\
 \E\big[(\uvec_k^\top(\bhat-\bstar))^2\big]&\asymp
 \frac{\kappa^2}{(s_k+\kappa)^2}b_k^2
@@ -848,12 +849,12 @@ sums built from $(\Sigma_F,w^\star)$.  Then
 \begin{align}
 E_{gen}&\asymp E_{gen,DE}=\frac{n}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\Big)-\sigma^2,
 \label{eq:app-feature-egen-summary}\\
-\mu_N&\asymp{\bstar}^\top\tilde\beta_\kappa,\qquad
-\tilde\beta_\kappa:=F^\top(\Sigma_F+\kappa I_p)^{-1}F\Sigma\bstar
+\mu_N&\asymp{\bstar}^\top\bar\beta_{F,\kappa},\qquad
+\bar\beta_{F,\kappa}:=F^\top(\Sigma_F+\kappa I_p)^{-1}F\Sigma\bstar
 =F^\top \Sigma_F(\Sigma_F+\kappa I_p)^{-1}w^\star
 =(F^\top F\Sigma+\kappa I_d)^{-1}F^\top F\Sigma\bstar,
 \label{eq:feat_regr_shrinkage_effective_weight}\\
-\mu_D&\asymp\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
+\mu_D&\asymp\|\bar\beta_{F,\kappa}\|^2+\underbrace{\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa)}_{V_F(\kappa)},
 \qquad T_F(\kappa):=\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I_p)^{-2}\Sigma_F\big].
 \label{eq:app-feature-D-summary}
 \end{align}
@@ -891,11 +892,11 @@ $(\hat\Sigma_F+\lambda I)^{-1}\hat\Sigma_F\asymp(\Sigma_F+\kappa I)^{-1}\Sigma_F
 \begin{equation}
 \mu_N\asymp{\bstar}^\top F^\top(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star
 ={\bstar}^\top F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar
-={\bstar}^\top\tilde\beta_\kappa ,
+={\bstar}^\top\bar\beta_{F,\kappa} ,
 \label{eq:feat_space_acc_N_expectation_DE}
 \end{equation}
 where $\Sigma_F w^\star=\Sigma_F\Sigma_F^\dagger F\Sigma\bstar=F\Sigma\bstar$ because $F\Sigma\bstar$
-lies in the range of $\Sigma_F$.  The third form of $\tilde\beta_\kappa$ is the
+lies in the range of $\Sigma_F$.  The third form of $\bar\beta_{F,\kappa}$ is the
 push-through identity $F^\top(FMF^\top+\kappa I)^{-1}F=(F^\top FM+\kappa I)^{-1}F^\top F$
 with $M=\Sigma$.
 
@@ -914,11 +915,11 @@ with $A=w^\star{w^\star}^\top$ and $B=\Gram$:
 {w^\star}^\top \Sigma_F(\Sigma_F+\kappa I)^{-1}\Gram(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star
 +\frac{\kappa^2\,T_F(\kappa)}{n-\mathrm{df}^F_2}\,{w^\star}^\top(\Sigma_F+\kappa I)^{-2}\Sigma_Fw^\star .
 \]
-The first piece is $\|F^\top(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star\|^2=\|\tilde\beta_\kappa\|^2$,
+The first piece is $\|F^\top(\Sigma_F+\kappa I)^{-1}\Sigma_Fw^\star\|^2=\|\bar\beta_{F,\kappa}\|^2$,
 and the second combines with the noise trace into
 \begin{equation}
-\mu_D\asymp\|\tilde\beta_\kappa\|^2+\frac{T_F(\kappa)}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\Big)
-=\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
+\mu_D\asymp\|\bar\beta_{F,\kappa}\|^2+\frac{T_F(\kappa)}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\Big)
+=\|\bar\beta_{F,\kappa}\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
 \label{eq:feat_space_acc_D_expectation_DE}
 \end{equation}
 by Eq.~\ref{eq:app-feature-egen-summary}.
@@ -926,7 +927,7 @@ by Eq.~\ref{eq:app-feature-egen-summary}.
 
 \begin{remark}[Reading the feature-space forms]
 \begin{enumerate}
-\item $\tilde\beta_\kappa$ is the realizable weight $w^\star$, shrunk by the
+\item $\bar\beta_{F,\kappa}$ is the realizable weight $w^\star$, shrunk by the
 usual ridge factor $\Sigma_F(\Sigma_F+\kappa I)^{-1}$ in feature space, and then mapped to
 pixels by $F^\top$.  Setting $F=I_d$ gives $\Sigma_F=\Sigma$, $w^\star=\bstar$,
 $S_\perp=0$, $\Gram=I$, $T_F=\mathrm{df}_{1,2}$, and
@@ -942,8 +943,8 @@ Euclidean length that back-propagation assigns to feature directions.  This
 is the origin of Corollary~\ref{cor:mr-summary-statistics}.
 \item Holding $E_{gen}$ fixed, the leading control error
 $z_{acc}=\mu_D/\mu_N-1$ can still change through $\sigma^2$ (at fixed
-$E_{gen}$, i.e. through $n$), through $\|\tilde\beta_\kappa\|^2$ and
-${\bstar}^\top\tilde\beta_\kappa$, and through $T_F$.
+$E_{gen}$, i.e. through $n$), through $\|\bar\beta_{F,\kappa}\|^2$ and
+${\bstar}^\top\bar\beta_{F,\kappa}$, and through $T_F$.
 \end{enumerate}
 \end{remark}
 
@@ -967,22 +968,22 @@ absorbed into $E_{gen,DE}+\sigma^2$ on the right.
 
 \emph{Control optimum.}  From Proposition~\ref{prop:app-feature-de},
 \begin{equation}
-\mu_D-\mu_N=\|\tilde\beta_\kappa\|^2-{\bstar}^\top\tilde\beta_\kappa
+\mu_D-\mu_N=\|\bar\beta_{F,\kappa}\|^2-{\bstar}^\top\bar\beta_{F,\kappa}
 +\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
 \label{eq:appendix-feature-d-minus-n}
 \end{equation}
 which vanishes iff
-$E_{gen,DE}+\sigma^2=n\,({\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2)/T_F$
+$E_{gen,DE}+\sigma^2=n\,({\bstar}^\top\bar\beta_{F,\kappa}-\|\bar\beta_{F,\kappa}\|^2)/T_F$
 when $T_F>0$.  To expose the geometry of the numerator, write
-$\tilde w_\kappa:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star=w^\star-\kappa(\Sigma_F+\kappa I)^{-1}w^\star$
-so that $\tilde\beta_\kappa=F^\top\tilde w_\kappa$, and use
+$\bar w_\kappa:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star=w^\star-\kappa(\Sigma_F+\kappa I)^{-1}w^\star$
+so that $\bar\beta_{F,\kappa}=F^\top\bar w_\kappa$, and use
 $F\bstar=\Gram w^P$ (as $F\bstar$ lies in the range of $\Gram$):
 \begin{align*}
-{\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2
-&=(\bstar-F^\top\tilde w_\kappa)^\top F^\top\tilde w_\kappa
-=(F\bstar-\Gram\tilde w_\kappa)^\top\tilde w_\kappa\\
-&=\big(\Gram w^P-\Gram w^\star+\kappa \Gram(\Sigma_F+\kappa I)^{-1}w^\star\big)^\top\tilde w_\kappa
-=(w^P-w^\star)^\top \Gram\tilde w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\tilde w_\kappa .
+{\bstar}^\top\bar\beta_{F,\kappa}-\|\bar\beta_{F,\kappa}\|^2
+&=(\bstar-F^\top\bar w_\kappa)^\top F^\top\bar w_\kappa
+=(F\bstar-\Gram\bar w_\kappa)^\top\bar w_\kappa\\
+&=\big(\Gram w^P-\Gram w^\star+\kappa \Gram(\Sigma_F+\kappa I)^{-1}w^\star\big)^\top\bar w_\kappa
+=(w^P-w^\star)^\top \Gram\bar w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\bar w_\kappa .
 \end{align*}
 For $F=I_d$ the first term vanishes ($w^P=w^\star=\bstar$) and the second is
 $\kappa B_{1,2}$, recovering Eq.~\ref{eq:appendix-pixel-control-noise}.
@@ -1007,7 +1008,7 @@ from $S_\perp=S-h^\top \Sigma_F^\dagger h$.  Hence it is a function of
 $\mathcal P=(\Sigma_F,h,S,\sigma^2,n)$ only, and so are its minimizer $\kappa_{CV}$
 and $R^2_{gen}=1-E_{gen,DE}/S$.  By contrast
 $\mu_N=q^\top(\Sigma_F+\kappa I)^{-1}h$ with $q=F\bstar$, and
-$\|\tilde\beta_\kappa\|^2=h^\top(\Sigma_F+\kappa I)^{-1}\Gram(\Sigma_F+\kappa I)^{-1}h$ and
+$\|\bar\beta_{F,\kappa}\|^2=h^\top(\Sigma_F+\kappa I)^{-1}\Gram(\Sigma_F+\kappa I)^{-1}h$ and
 $T_F=\operatorname{Tr}[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F]$ involve $\Gram$.
 Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \end{proof}
@@ -1441,8 +1442,8 @@ Two limits are exact: for identical students ($F_1=F_2$, $\lambda_1=\lambda_2$)
 Eq.~\ref{eq:app-shared-cross} reduces to the self-accentuation
 denominator of Proposition~\ref{prop:app-feature-de}; for fits on
 independent data the overlap term is absent and, at leading order,
-$G_{1\leftarrow2}\asymp\tilde\beta_1^\top\tilde\beta_2/{\bstar}^\top\tilde\beta_2$
-with $\tilde\beta_i=F_i^\top(\Sigma_{F_i}+\kappa_iI)^{-1}F_i\Sigma\bstar$, which
+$G_{1\leftarrow2}\asymp\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$
+with $\bar\beta_i=F_i^\top(\Sigma_{F_i}+\kappa_iI)^{-1}F_i\Sigma\bstar$, which
 generalizes Proposition~\ref{prop:app-peer} to different feature maps.
 \end{prop}
 \begin{proof}
@@ -1456,7 +1457,7 @@ $\E_\eta[\varepsilon_1^\top\varepsilon_2]$.  For identical students
 $g_1=g_2$ and $\Omega_{12}=\Omega_{22}$, which is $\E_\eta[D_2]$.  For
 independent data $\varepsilon_1$ and $\varepsilon_2$ are independent with
 zero mean, $g_1$ and $g_2$ are independent, and the one-point DE gives
-$g_i\asymp\tilde\beta_i$ in quadratic forms
+$g_i\asymp\bar\beta_i$ in quadratic forms
 (Eq.~\ref{eq:feat_space_acc_N_expectation_DE}).
 \end{proof}
 
@@ -1487,7 +1488,7 @@ Eq.~\ref{eq:app-shared-cross} are explicit functions of the empirical
 $\hat\Sigma$ and of the two maps, and can be evaluated on a given dataset
 for any number of models without simulation: the conditional-on-design
 expectation is the relevant average when, as in the experiment, the same
-recordings are used for every model.  Replacing $g_i$ by $\tilde\beta_i$ and
+recordings are used for every model.  Replacing $g_i$ by $\bar\beta_i$ and
 the noise traces by population quantities requires deterministic
 equivalents for products of resolvents of two \emph{different} sample
 covariances $F_1\hat\Sigma F_1^\top$ and $F_2\hat\Sigma F_2^\top$ built from
@@ -1722,9 +1723,10 @@ logarithmic axis.
 
 \paragraph{Inequalities.}
 Since $s_k/(s_k+\kappa)<1$,
-\[
-B_{p,q}\ge B_{p+1,q+1},\qquad \mathrm{df}_{p,q}\ge\mathrm{df}_{p+1,q+1},
-\]
+\begin{equation}
+B_{p,q}\ge B_{p+1,q+1},\qquad \mathrm{df}_{p,q}\ge\mathrm{df}_{p+1,q+1},\qquad\text{in particular}\quad \|\bstar\|^2=B_{0,0}\ge B_{1,1}\ge B_{2,2},
+\label{eq:app-spectral-inequalities}
+\end{equation}
 which contains $d\ge\mathrm{df}_1\ge\mathrm{df}_2$ and
 $\mathrm{df}_{0,1}\ge\mathrm{df}_{1,2}\ge\mathrm{df}_{2,3}$ as special cases;
 also $\min(n,d)>\mathrm{df}_2$.

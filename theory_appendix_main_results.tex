@@ -180,7 +180,8 @@ E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{
 \label{eq:mr-pixel-egen}\\
 N&\asymp\mu_N:=B_{1,1},
 \label{eq:mr-pixel-N}\\
-D&\asymp\mu_D:=B_{2,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big).
+D&\asymp\mu_D:=B_{2,2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{V_{\rm pix}(\kappa)}
+=\|\bar\beta_\kappa\|^2+V_{\rm pix}(\kappa),\qquad \bar\beta_\kappa:=\Sigma(\Sigma+\kappa I)^{-1}\bstar .
 \label{eq:mr-pixel-D}
 \end{align}
 Equation~\ref{eq:mr-pixel-egen} is the sum of Eq.~\ref{eq:mr-per-pc}
@@ -321,11 +322,11 @@ Then
 \begin{align}
 E_{gen,DE}&=\frac{n}{n-\mathrm{df}^F_2}\big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\big)-\sigma^2,
 \label{eq:mr-feature-egen}\\
-N_{DE}&={\bstar}^\top\tilde\beta_\kappa,\qquad
-\tilde\beta_\kappa:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar
+N_{DE}&={\bstar}^\top\bar\beta_{F,\kappa},\qquad
+\bar\beta_{F,\kappa}:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar
 =F^\top \Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star,
 \label{eq:mr-feature-N}\\
-D_{DE}&=\|\tilde\beta_\kappa\|^2+\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
+D_{DE}&=\|\bar\beta_{F,\kappa}\|^2+\underbrace{\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa)}_{V_F(\kappa)},
 \qquad
 T_F(\kappa):=\operatorname{Tr}\!\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big].
 \label{eq:mr-feature-D}
@@ -344,7 +345,7 @@ DE-predicted CV choice $\kappa_{CV}$ and $R^2_{gen}$, are functions of
 \end{equation}
 only, whereas $N_{DE}$, $D_{DE}$ and every accentuation metric additionally
 depend on the Euclidean geometry $\GramDef$ (through $T_F$ and
-$\|\tilde\beta_\kappa\|^2$) and on the teacher image $F\bstar$ (through
+$\|\bar\beta_{F,\kappa}\|^2$) and on the teacher image $F\bstar$ (through
 $N_{DE}$).  Fixing $\mathcal P$ fixes prediction; it does not fix control
 (Figure~\ref{fig:summary_stats_dep_graph}).
 \end{cor}
@@ -357,11 +358,11 @@ Eq.~\ref{eq:mr-pred-optimal} with $\sigma^2\mapsto\sigma^2+S_\perp$ inside
 $E_{gen,DE}$.  The leading accentuation error vanishes exactly when
 \begin{equation}
 E_{gen,DE}+\sigma^2
-=n\,\frac{{\bstar}^\top\tilde\beta_\kappa-\|\tilde\beta_\kappa\|^2}{T_F(\kappa)}
-=n\,\frac{(w^P-w^\star)^\top \Gram\tilde w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\tilde w_\kappa}{T_F(\kappa)},
+=n\,\frac{{\bstar}^\top\bar\beta_{F,\kappa}-\|\bar\beta_{F,\kappa}\|^2}{T_F(\kappa)}
+=n\,\frac{(w^P-w^\star)^\top \Gram\bar w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\bar w_\kappa}{T_F(\kappa)},
 \label{eq:feature-control-optimal}
 \end{equation}
-with $\tilde w_\kappa:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star$.  The first condition
+with $\bar w_\kappa:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star$.  The first condition
 depends on $\mathcal P$ alone; the second depends on $\Gram$ and $F\bstar$.  An
 admissible root is not guaranteed for an arbitrary $F$; in particular, when
 $w^P\ne w^\star$ the numerator can be negative for all $\kappa$, in which
@@ -439,7 +440,7 @@ shared-noise overlap $\Omega_{12}$ is the inner product of the two models'
 noise-driven pixel weights: it equals the self noise energy $\Omega_{22}$
 for identical students, vanishes for fits on independent data (recovering
 Proposition~\ref{prop:mr-peer}, generalized to different maps by
-$g_i\asymp\tilde\beta_i$), and is small whenever the two maps route
+$g_i\asymp\bar\beta_i$), and is small whenever the two maps route
 estimation noise into different pixel directions.  All terms are explicit
 functions of the empirical design; their population deterministic
 equivalents for two different feature maps on shared data are left open.
