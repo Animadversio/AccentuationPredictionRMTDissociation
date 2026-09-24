@@ -125,32 +125,47 @@ Ridge regression in pixel space, $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\
 Since ridge penalizes weight in low-variance directions, one might expect it to remove these control-vulnerable weight components. We ask whether such risk survives the regularization, even with cross-validated penalty.
 
 \paragraph{The ridge path through the two landscapes.}
-The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, Eq.~\ref{eq:ridge} traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around its mean, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least. Ideally, cross-validation selects the point where the path is tangent to the smallest reachable prediction ellipsoid; whereas minimal control error asks where the path crosses the $z=0$ sphere $D=N$; in general these two points do not coincide. \red{The analysis below makes this geometric picture quantitative.}
-%\red{the two coincide only if the noise cloud has not pushed the path off the sphere in the directions the ellipsoid does not see. The deterministic equivalents below compute where the center of this cloud sits, how much Euclidean spread it carries, and hence the distance between the two points.}
+The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given training set, Eq.~\ref{eq:ridge} traces a path $\bhat(\lambda)$ in weight space from the least-squares or minimum-norm solution at $\lambda\to0$ to the origin at $\lambda\to\infty$. Response noise and the random design scatter the fitted weight in a cloud around its mean. Ideally, cross-validation selects the point where the path is tangent to the smallest reachable prediction ellipsoid; whereas minimal control error asks where the path crosses the $z=0$ sphere $D=N$; in general these two points do not coincide. The analysis below makes this geometric picture quantitative. 
+%\red{the two coincide only if the noise cloud has not pushed the path off the sphere in the directions the ellipsoid does not see. The deterministic equivalents below compute where the center of this cloud sits, how much Euclidean spread it carries, and hence the distance between the two points.}, and the cloud is elongated along the low-variance directions of $\Sigma$, because those are the directions the data constrain least
 
 
 \paragraph{Toolkit.}
-We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. They replace functions of the empirical covariance $\hat\Sigma$ by deterministic functions of the population covariance $\Sigma$, e.g. $\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$, where the finite-sample randomness is absorbed into an effective penalty $\kappa(\lambda)\ge\lambda$, the positive root of $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$ (App.~\ref{sec:app-de-toolkit}).
-Thus $\kappa$ absorbs the average effect of a finite random design without requiring us to manipulate the realized matrix $X$ explicitly.
+We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. They replace functions of the empirical covariance $\hat\Sigma$ by deterministic functions of the population covariance $\Sigma$, e.g. $\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$, where the finite-sample randomness is absorbed into an effective penalty $\kappa(\lambda)$. $\kappa$ can be found at the unique positive root of $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$, with $\kappa\ge\lambda$, and the mapping is one-to-one (App.~\ref{sec:app-de-toolkit}).
+DE allows us to study the average effect of a finite random design without requiring us to manipulate the realized matrix $X$ explicitly.
 Applied to Eq.~\ref{eq:ridge}, the DE says that the signal term concentrates around a \emph{mean fitted weight}, the teacher shrunk mode by mode,
 \begin{equation}
 \bar\beta_\kappa:=\Sigma(\Sigma+\kappa I)^{-1}\bstar=\sum_k\frac{s_k}{s_k+\kappa}\,b_k\uvec_k ,
 \label{eq:pixel-mean-weight}
 \end{equation}
-while the noise term averages to zero but carries Euclidean energy. We call this energy the \emph{norm inflation}, $V:=\E\|\bhat\|^2-\|\bar\beta\|^2\ge0$: it is the part of the fitted weight that prediction barely sees but the accentuation path fully exposes. The same two objects, a mean weight $\bar\beta$ and an inflation $V$, will organize the feature-space case (Sec.~\ref{sec:feature}) and the nonlinear diagnostic (Sec.~\ref{sec:nonlinear}). Results are written with the teacher-weighted and unweighted spectral sums
+while the noise term has zero mean, but carries Euclidean energy. We call this energy the \emph{norm inflation}, $V:=\E\|\bhat\|^2-\|\bar\beta\|^2\ge0$. As we will see, it is the part of the fitted weight that can induce severe accentuation error. The same two objects, a mean weight $\bar\beta$ and an inflation $V$, will organize the feature-space case (Sec.~\ref{sec:feature}) and the nonlinear diagnostic (Sec.~\ref{sec:nonlinear}). Results are written with the teacher-weighted and unweighted spectral sums
 \begin{equation}
 B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \mathrm{df}_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q},\qquad \mathrm{df}_2:=\mathrm{df}_{2,2},
 \end{equation}
-so that, for instance, $\bstar^\top\bar\beta_\kappa=B_{1,1}$ and $\|\bar\beta_\kappa\|^2=B_{2,2}$. For the ratio $N/D$ we use the leading approximation $\mu_N/\mu_D$ from the DEs of $N$ and $D$; second-order and distributional refinements matter only where the leading calibration error is already small (App.~\ref{sec:app-ratio-corrections}).
+so that, for instance, $\bstar^\top\bar\beta_\kappa=B_{1,1}$ and $\|\bar\beta_\kappa\|^2=B_{2,2}$. 
+For the ratio $N/D$ we use the leading approximation $\mu_N/\mu_D$ from the DEs of $N$ and $D$; second-order and distributional refinements matter only where the leading calibration error is already small (App.~\ref{sec:app-ratio-corrections}).
+
+\begin{figure}[t]
+    \centering
+    \vspace{-15pt}
+    \includegraphics[width=\linewidth]{figures/Figure_PixRidgeGeometry.png}
+    \vspace{-15pt}
+    \caption{\textbf{Pixel-space ridge separates prediction- and control-optimal regularization on natural images.}
+    Disk teacher on van~Hateren images ($d=10^4$, $n=10^3$).
+    \textbf{A--C}~The landscapes of prediction error $E_{gen}$, accentuation error $E_{acc}$, and accentuation $R^2$ over normalized noise scale $\sigma^2/S$ and effective regularization $\kappa$, calculated by DE (Eq.\ref{eq:pixel-de}). The prediction-optimal and median empirical RidgeCV paths track each other but differ from the control-optimal path; the black contour marks $R^2_{acc}=0$. 
+    This picture is validated by the numerical MC estimated landscapes in \red{Fig.~\ref{}}. 
+    \textbf{D,E}~Slices at four noise levels expose displaced prediction and control valleys (or peaks for $R^2$); markers and bands show the mean and 10--90\% range over 100 natural-image trials at the highlighted noise $\sigma^2/S=1$.
+    \textbf{F}~Along the prediction-optimal path, $R^2_{gen}$ remains high while $R^2_{acc}$ becomes strongly negative; empirical RidgeCV exhibits the same dissociation.}
+    \vspace{-15pt}
+    \label{fig:pixel}
+\end{figure}
 
 \begin{prop}[Pixel ridge: prediction and control]\label{prop:pixel-de}
 With $\kappa$, $B$ and $\mathrm{df}$ built from $\Sigma$,
 \begin{equation}
 \begin{aligned}
-E_{gen}&\asymp E_{gen,DE}=\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\sigma^2,\\
-N&\asymp \mu_N=\bstar^\top\bar\beta_\kappa=B_{1,1},
-&
+E_{gen}&\asymp E_{gen,DE}=\frac{n(\kappa^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}-\sigma^2,\qquad
+N\asymp \mu_N=\bstar^\top\bar\beta_\kappa=B_{1,1},\\
 D&\asymp \mu_D=\|\bar\beta_\kappa\|^2+V_{\rm pix}(\kappa),
 \qquad
 V_{\rm pix}(\kappa)=\frac{\mathrm{df}_{1,2}(\kappa)}{n}\big(E_{gen,DE}+\sigma^2\big).
@@ -159,9 +174,11 @@ V_{\rm pix}(\kappa)=\frac{\mathrm{df}_{1,2}(\kappa)}{n}\big(E_{gen,DE}+\sigma^2\
 \end{equation}
 (Proofs and the per-mode decomposition behind these sums: App.~\ref{sec:app-pixel-ridge}.)
 \end{prop}
-$E_{gen}$ recovers the classical in-distribution generalization error \citep{dobriban2018high,hastie2022surprises}. The two control moments have a plain reading. $N$ is the alignment of the teacher with the mean fitted weight, and the first term of $D$ is that weight's squared norm; both are set by the teacher and the shrinkage alone, and since each factor $s_k/(s_k+\kappa)$ lies in $[0,1]$ they are ordered $\|\bstar\|^2\ge B_{1,1}\ge B_{2,2}$ (App.~\ref{eq:app-spectral-inequalities}), so the mean weight by itself \emph{under}-shoots its own path ($D<N$, slope above one). The second term of $D$ is the key issue. $V_{\rm pix}$ summarizes how limited data $n$, response noise $\sigma^2$ and prediction error $E_{gen}$ jointly inflate the student norm, amplified by the spectral susceptibility $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, a count of modes near the regularization threshold $\kappa$ that, for a natural-image spectrum, accumulates over thousands of weakly constrained high-frequency modes. Inflation enlarges $D$ without changing $N$, so the student \emph{over}-shoots: $\mathrm{slope}_{acc}=N/D$ drops below one, and $z=D/N-1$ can grow until $R^2_{acc}=1-z^2$ turns negative.
+$E_{gen}$ recovers the classical in-distribution generalization error \citep{dobriban2018high,hastie2022surprises}. The two control moments have a plain reading. $N$ is the alignment of the teacher with the mean fitted weight, and the first term of $D$ is that weight's squared norm; both are set by the teacher and the shrinkage alone, and since each factor $s_k/(s_k+\kappa)$ lies in $[0,1]$ they are ordered $\|\bstar\|^2\ge B_{1,1}\ge B_{2,2}$ (Eq.~\ref{eq:app-spectral-inequalities}), so the mean weight by itself \emph{under}-shoots its own path ($D<N$, slope above one). The second term of $D$ is the key issue. $V_{\rm pix}$ summarizes how limited data $n$, response noise $\sigma^2$ and prediction error $E_{gen}$ jointly inflate the student norm, amplified by the spectral susceptibility $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$, which counts the number of modes near the regularization threshold $\kappa$. 
+Inflation enlarges $D$ without changing $N$, so the student can easily \emph{over}-predict: $\mathrm{slope}_{acc}=N/D$ drops below one, and $z=D/N-1$ can grow until $R^2_{acc}=1-z^2$ turns negative.
 Note that $V$ is not necessarily bad for control: at the special point $B_{1,1}=B_{2,2}+V_{\rm pix}$ the inflation exactly replenishes the norm lost to shrinkage, so $N=D$ and control is perfect at leading order (the valley in Fig.~\ref{fig:pixel}\textbf{B}).
 This is generally not where cross-validation lands, as the next proposition shows.
+%that, for a natural-image spectrum, accumulates over thousands of weakly constrained high-frequency modes
 
 \begin{prop}[Prediction-optimal and control-optimal penalties differ]\label{prop:pixel-tuning}
 Among admissible values of $\kappa$, let $\kappa_{\rm gen}^{\star}$ be an
@@ -194,7 +211,7 @@ z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 \end{equation}
 (Proofs: App.~\ref{sec:app-optimal-regularization}.)
 \end{prop}
-Geometrically, along the ridge path (Fig.~\ref{fig:geometry}),  $\kappa_{\rm gen}^{\star}$ is the tangency with the prediction ellipsoid and its crossing of the control sphere reveals $\kappa_{\rm acc}^{\star}$. 
+Geometrically, along the ridge path (Fig.~\ref{fig:geometry}), $\kappa_{\rm gen}^{\star}$ lands at the tangency with the prediction ellipsoid and $\kappa_{\rm acc}^{\star}$ at its crossing of the control sphere. 
 \red{Both conditions equate the noisy prediction risk to $n\kappa$ times a spectrally weighted average of teacher power, but they use different kernels. The control condition weights mode $k$ by $s_k/(s_k+\kappa)^2$, whereas prediction stationarity adds the factor $s_k/(s_k+\kappa)$ and therefore emphasizes better-resolved, higher-variance modes relatively more. Control consequently remains sensitive farther into the low-variance spectral tail.}
 For isotropic data the two averages coincide and cross-validation nullifies control error for free; similarly when the teacher's energy is uniformly distributed over modes (Rem.~\ref{rem:app-tuning-remarks}). For an anisotropic spectrum and a structured teacher, they differ generally, and their difference is proportional to the control error $z$ at cross validated penalty $\kappa_{\rm gen}^{\star}$. 
  %teacher-weighted spectral average $B_{,}$, but they average with different powers of $s_k/(s_k+\kappa)$. 
@@ -210,21 +227,6 @@ At lower noise, prediction-optimal $\kappa^\star_{\rm gen}$ is also benign to co
 
 % \red{In Fig.~\ref{fig:geometry}, Eq.~\ref{eq:pixel-zacc-cv} is the distance along the path between its tangency with the prediction ellipsoid and its crossing of the control sphere.} 
 This answers the question in the title for pixel regression: \emph{control is bad, despite prediction-optimal regularization, when the response is noisy, the spectrum is anisotropic, and many modes sit near $\kappa$}, which is exactly the noisy neuron with natural-image regime. 
-
-\begin{figure}[t]
-    \centering
-    \vspace{-15pt}
-    \includegraphics[width=\linewidth]{figures/Figure_PixRidgeGeometry.png}
-    \vspace{-15pt}
-    \caption{\textbf{Pixel-space ridge separates prediction- and control-optimal regularization on natural images.}
-    Disk teacher on van~Hateren images ($d=10^4$, $n=10^3$).
-    \textbf{A--C}~The landscapes of prediction error $E_{gen}$, accentuation error $E_{acc}$, and accentuation $R^2$ over normalized noise scale $\sigma^2/S$ and effective regularization $\kappa$, calculated by DE (Eq.\ref{eq:pixel-de}). The prediction-optimal and median empirical RidgeCV paths track each other but differ from the control-optimal path; the black contour marks $R^2_{acc}=0$. 
-    This picture is validated by the numerical MC estimated landscapes in \red{Fig.~\ref{}}. 
-    \textbf{D,E}~Slices at four noise levels expose displaced prediction and control valleys (or peaks for $R^2$); markers and bands show the mean and 10--90\% range over 100 natural-image trials at the highlighted noise $\sigma^2/S=1$.
-    \textbf{F}~Along the prediction-optimal path, $R^2_{gen}$ remains high while $R^2_{acc}$ becomes strongly negative; empirical RidgeCV exhibits the same dissociation.}
-    \vspace{-15pt}
-    \label{fig:pixel}
-\end{figure}
 
 
 
@@ -247,7 +249,7 @@ Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric b
 
 \begin{figure}[!htp]
     \centering
-    \vspace{-15pt}
+    % \vspace{-5pt}
     % \includegraphics[width=0.55\linewidth,height=0.22\textheight,keepaspectratio]{figures/feature_summary_statistics_flow.pdf}%\hfill
     % \includegraphics[width=0.44\linewidth,height=0.22\textheight,keepaspectratio]{figures/nonlinear_control_biological_validation.pdf}\\[2pt]
     % \includegraphics[width=0.45\linewidth,height=0.2\textheight,keepaspectratio]{figures/VanHateren_Top500PC_prediction_null_feature_rotation.png}
