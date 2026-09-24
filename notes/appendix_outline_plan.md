@@ -25,6 +25,46 @@
   - `session_endpoint_image_bootstrap.png` was left out: its sign (+0.1) conflicts with the neighborhood correlation figure (−0.28).
 - `\clearpage` at the end of `extended_results.tex` keeps all A floats before B. A spans pp. 14–25.
 
+## B.1–B.3 readiness check (2026-09-24)
+All three have enough code to write from. B.4–B.10 were written by a colleague agent. I checked them against the earlier facts (α grid 1e-4..1e9, the affine map as a downstream step, untrained AlexNet, robust ε = 8/255) and they are consistent. B.11 is still a TODO.
+
+**B.1 Natural-image data: enough code.**
+- **Source:** `CR/scripts/validate_vanhateren_disk_teacher.py` (`load_vanhateren_image`, `stage_vanhateren_uint8`, `compute_population_spectrum`).
+- **Images:** `VANHATEREN_DIR` = `$STORE_DIR/../Datasets/vanhateren_natural_stimuli`, 4,168 `imk*.iml` files (uncalibrated, big-endian uint16, 1024×1536).
+- **Transform:** `round(255·log1p(raw)/log 65536)/255`.
+- **Pools:** disjoint source images (`rng.choice`); uniform random 100×100 crops. The training pool is 2,000 patches (1 per image); the population pool is 20,000 (10 per image).
+- **Spectrum cache:** `CR/tables/vanhateren_disk_teacher_spectrum.npz` (eigenvalues, `beta_proj`; pools 2000/20000).
+- **Disk teacher:** `validate_ffhq_disk_teacher.create_disk_teacher`, a binary disk of radius 0.3 on a [−1,1]² grid, i.e. ≈15 px on a 100-px patch.
+- **Users of the same spectrum:**
+  - B.4 landscape: DE plus Monte Carlo on **real patches**.
+  - B.5 null rotations: DE plus **Gaussian-design** Monte Carlo with this spectrum.
+  - Fig. S4 selection vs estimation.
+- Issues:
+  17. The staging seed that produced the cached npz is not stored in it. The script default is 20260818; confirm it from logs or the run command.
+  18. B.4 says "radius 0.3 in image coordinates". Specify "on a [−1,1]² grid (≈15 px)".
+  19. There are **two van Hateren pipelines**: log-luminance (B.1/B.4/B.5) and the min–max/−0.15 pipeline of the Fig. 1 toy (B.2; see #16). Either B.1 states both, or Fig. 1 is regenerated with the log pipeline.
+  20. The main Fig. 4 caption says "finite-$n$ Monte Carlo"; say "Gaussian-design" (B.5 already does).
+
+**B.2 Toy example: enough code** (`Closed-loop-visual-insilico/scripts/accentuation_theory/exp2_accentuation.py`; see #16).
+  21. Hypothesis for the Fig. 1C R² mismatch: the panels come from an earlier run with α₂ = 1000 (the docstring value) rather than the current `ALPHA2 = 100`, and/or a different R² denominator.
+      - Checking this needs a rerun: 12k-patch SVD on GPU, a few minutes.
+      - Recommendation: fix the parameters, rerun, and regenerate the Fig. 1 panels so the reported numbers are reproducible.
+
+**B.3 Two-dimensional geometry: enough code.**
+- **Source:** `CR/scripts/plot_ridge_paths_in_geometry.py` (commits 0fe8c5b, 44dd89f), with iso-set helpers in `CR/scripts/plot_iso_error_geometry.py`.
+- **Defaults:**
+  - Σ = diag(1, ε = 0.04); β* = (1.1, 0.65); fixed Gaussian design with n = 40.
+  - Panel (a): λ = 0.05 (κ = 0.0518), σ² ∈ [1e-4, 4] (81 values).
+  - Panel (b): σ² = 0.5, λ ∈ [1e-4, 10] (101 values).
+  - 250 Monte Carlo cloud points; seed 20260918.
+- **Math:** exact β̂|X ~ N(AXβ*, σ²AAᵀ) with A = (XᵀX + nλI)⁻¹Xᵀ; 68% ellipses at Mahalanobis radius √(−2 log 0.32).
+- **Caches:** `CR/tables/ridge_paths_iso_error_geometry.csv`, `ridge_gaussian_ellipses.csv`.
+- **Main Fig. 2 is panel (b), restyled.** Numbers verified: λ_pred = 0.0177, λ_ctrl = 0.0258, S = 1.2269 (so E_gen = 0.01/0.04/0.09 ↔ R² = 0.99/0.97/0.93), and z = −1/3 ↔ R² = 0.89.
+- Issues:
+  22. The main Fig. 2 caption says "Cross-validation picks the tangency". The marked point is the E_gen minimizer (prediction-stationary) of one fixed-design realization, not a CV selection. Say "the prediction-optimal penalty".
+  23. The dashed "mean Ridge path" is the conditional mean E[β̂|X] for fixed X (noise-averaged), not the DE mean weight β̄_κ of Eq. pixel-mean-weight. Clarify in the caption or B.3.
+  24. The design has d = 2 and n = 40 (γ = 0.05), so κ ≈ λ. State this in B.3 so the λ labels in Fig. 2 are not read as κ.
+
 ## Structure status (2026-09-24)
 - New `extended_results.tex` (A.1–A.5) and `extended_methods.tex` (B.1–B.11), with section labels, figure labels and placeholder boxes.
 - `appendix_vanhateren_landscape_methods.tex` was demoted to a subsection and is now B.4 (label unchanged).
