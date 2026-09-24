@@ -27,12 +27,33 @@
 \subsection{Toy teacher--student example}
 \label{sec:app-methods-toy}
 % Used by: Fig.~\ref{fig:phenomena} (bottom row).
-% Content: teacher w* = disk; student f_1 = w*; student f_2 = w* + weight
-% along low-variance PCs; held-out van Hateren evaluation; seed image;
-% target levels r*; variance-matched step alpha; peer-review panels
-% (f_i evaluated on accentuations of f_j).
-% SOURCE CODE NOT YET LOCATED (not in AccentuationPredRMT).
-\todo{Write once the generating code/parameters are located.}
+% SOURCE: Closed-loop-visual-insilico/scripts/accentuation_theory/
+%   exp2_accentuation.py (commit 09202ed; first run 2026-03-31); outputs in
+%   $STORE_DIR/DL_Projects/AdvExampleLinearRegr/exp2/ (exp2_weights,
+%   exp2_natural_scatter, exp2_accentuated_images_start*_highcontr,
+%   exp2_cross_eval).  Companion: exp1_adversarial_weight_construction.py,
+%   exp1_supp_eigenmode_gallery.py (eigenmode gallery; possible B.1 panel).
+%   Precursor notebook: notebooks/20250528_toy_model_adv_generation.ipynb
+%   (OLS/Ridge/Lasso fits of the disk teacher, mostly FFHQ).
+% Settings (verified: target values in Fig. 1B match the script output):
+%   van Hateren .iml (raw, 1024x1536), 500 images chosen with seed 42,
+%   12,000 random 100x100 patches, per-image min-max normalization, offset
+%   -0.15 (NB: differs from the log-luminance preprocessing of B.1/B.4);
+%   Sigma from SVD of the centered patch matrix.
+%   w* = disk mask, radius 0.3 on [-1,1]^2.  Students are CONSTRUCTED, not
+%   fitted: w_1 = w* + 1 x unit direction in eigen-slice (n-500 .. n-100)
+%   (mid-low variance); w_2 = w* + 100 x unit direction in the bottom-100
+%   eigenvectors (direction = projection of w* onto the slice, normalized).
+%   (Docstring says alpha=1000 for w_2; code uses ALPHA2=100.)
+%   Accentuation: closed form I = I_0 + lam w, lam = (t - w.I_0)/||w||^2
+%   (natural seed, not null seed); 13 targets linspace(mu-3 sd, mu+3 sd) of
+%   f* on natural patches; 20 seeds (seed 7), 8 shown; Fig. 1B shows every
+%   third target of the seed with f*(I_0) = -31.367.
+%   R^2 in panels: 1 - Var(f_x - f_y)/Var(f_y) (offset-free); Fig. 1C values
+%   (0.9969, 0.0481) do not match exp2_cross_eval (0.9966, -9.94): the
+%   composite likely used a variant denominator -- check before final.
+\todo{Write: data, constructed students, closed-form accentuation, targets,
+peer-review panels.}
 
 % ---------------------------------------------------------------------------
 \subsection{Two-dimensional geometry illustration}

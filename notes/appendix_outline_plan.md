@@ -4,7 +4,7 @@
 - Order: **Extended results (A) → Methods (B) → Theory (C–L)**. Wired in `accentuation_rmt_main_compact_draft.tex`.
 - The null-rotation figure (`fig:app-null-rotation`) **moved to A.3**. Theory `sec:app-gauge-fragility` now points to it.
 - The full dependency graph (`fig:summary_stats_dep_graph`) **stays in theory**. The main-text Fig. 4 caption points to it.
-- Q3 toy-model code: still being located.
+- Q3 toy-model code: **found** — `Closed-loop-visual-insilico/scripts/accentuation_theory/exp2_accentuation.py` (outputs in `$STORE_DIR/DL_Projects/AdvExampleLinearRegr/exp2/`). Details are in the B.2 comments of `extended_methods.tex`.
 - Q4 models: data and model definitions come from upstream `jacob-prince/parametric-neural-control` (branch jacob) and local `~/Github/Closed-loop-visual-insilico`. Binxu recalls the data came from BrainScore and that the robust model is L∞ ε = 8. **To verify**: see B.6 / B.7.
 - Q5 per-model spectra: use a common df₂ = 375 and generate the panels separately first; layout decided later.
 - Q6: decide later.
@@ -240,6 +240,12 @@ Proposed appendix order (in `accentuation_rmt_main_compact_draft.tex`):
 13. **Upstream inconsistency**: `resnet50_clip` used ImageNet normalization at synthesis but the CLIP transform at fitting. Consider a footnote.
 14. **The cross-session affine calibration is our downstream analysis choice**, not upstream (upstream uses anchorDay z-scoring only). B.6 should say so explicitly, together with the difference from the upstream metrics (control_r, control_slope, identity control_R2; there is no MSE upstream).
 15. **Citations to add**: Prince, Wang et al. bioRxiv 10.64898/2026.08.16.745063; NSD (Allen 2022); fLoc (Stigliani 2015); MACO (Fel 2023); Horama; each backbone paper (see the B.7 table).
+
+16. **Fig. 1 toy setup vs main-text wording**:
+    - The two students are *constructed* (w* + a low-variance eigen-direction), not fitted by regression.
+    - Accentuation starts from natural seeds (closed form), not from the null seed.
+    - The van Hateren preprocessing (min-max normalization, −0.15 offset) differs from the Fig. 3 pipeline (log luminance).
+    - The Fig. 1C R² values (0.9969 / 0.0481) do not match the script's cross-eval figure (0.9966 / −9.94), so they probably use a different denominator. Unify these with the paper's R² definition.
 
 ## Open questions for Binxu (answered above, 2026-09-24)
 - Q1. Order: Extended results → Methods → Theory (current plan), or Methods → Extended results → Theory?
