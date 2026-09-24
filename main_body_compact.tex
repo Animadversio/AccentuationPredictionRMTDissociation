@@ -130,9 +130,9 @@ The question has a geometric reading (Fig.~\ref{fig:geometry}). For a given trai
 
 
 \paragraph{Toolkit.}
-We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. \red{They replace certain functions of the empirical covariance $\hat\Sigma$ by deterministic functions of the population covariance $\Sigma$}, e.g. $\hat\Sigma(\hat\Sigma+\kappa I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$,
+We use deterministic equivalents (DEs) in the proportional limit $d/n\to\gamma$ \citep{dobriban2018high,hastie2022surprises}. They replace certain functions of the empirical covariance $\hat\Sigma$ by deterministic functions of the population covariance $\Sigma$, e.g. $\hat\Sigma(\hat\Sigma+\kappa I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$,
 where finite-sample randomness is absorbed by the effective penalty $\kappa(\lambda)$, the positive root of the self-consistent equation $\kappa-\lambda=\frac{\kappa}{n}\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-1}]$. 
-\red{Thus $\kappa$ absorbs the average effect of a finite random design without requiring us to manipulate the realized matrix $X$ explicitly.}
+Thus $\kappa$ absorbs the average effect of a finite random design without requiring us to manipulate the realized matrix $X$ explicitly.
 More details about DEs are deferred to App.~\ref{sec:app-de-toolkit}. 
 Our results are expressed through the teacher-weighted and unweighted spectral sums
 \begin{equation}
@@ -259,7 +259,7 @@ Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric b
 % Peer review measures only the shared shrinkage bias: at leading order it is never negative, degrades gracefully with noise, and is symmetric between the two fits. Self-evaluation instead carries the estimator's own Euclidean noise energy through Eq.~\ref{eq:pixel-de}, so $z_{acc}$ grows without bound with $\sigma^2/n$ and $R^2_{acc}$ becomes arbitrarily negative. A student can therefore track a peer's path while failing on its own, which is the linear form of Fig.~\ref{fig:phenomena}C. 
 % The asymmetry between a strong and a weak generator in the data arises when the two differ in their feature maps (Sec.~\ref{sec:feature}); %and measured responses along a barely modulated path add trial noise that no evaluator can explain, which is why even the peer scores of a weak generator's images are poor.
 
-\begin{figure}[t]
+\begin{figure}[!htp]
     \centering
     \vspace{-15pt}
     % \includegraphics[width=0.55\linewidth,height=0.22\textheight,keepaspectratio]{figures/feature_summary_statistics_flow.pdf}%\hfill
