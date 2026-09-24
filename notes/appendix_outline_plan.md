@@ -52,7 +52,18 @@ All three have enough code to write from. **B.1–B.3 were written on 2026-09-24
         - `fstar_vs_target`: 1 − Var(f*−f_e)/**Var(f_e)** (model prediction) → 0.9969 and 0.0481, as printed in Fig. 1C.
         - `cross_eval`: 1 − Var(f*−f_e)/**Var(f*)** (true response) → 0.9966 and −9.94.
       - **The paper's R² divides by the true-response variance** (Table 1: R²_acc = 1 − (D/N−1)²; Fig. 1A also uses Var(f*)). So Fig. 1C is inconsistent with the paper: the self-accentuation panel should read ≈ −9.9 (Var-based), not 0.048. That value fits the paper's story and the neural sign (self R² = −4.17). Both definitions also ignore the offset; the identity-line SSE R² is computed by the rerun below.
-      - **Rerun from scratch:** `Closed-loop-visual-insilico/scripts/accentuation_theory/exp2_fig1_reproduce.py` (Slurm job 48118110). Outputs go to `DL_Projects/AdvExampleLinearRegr/exp2_repro/`: `fig1c_r2_candidates.csv` and `fig1_toy_reproduction_alpha2_{100,1000}.png`.
+      - **Rerun from scratch — DONE:** `Closed-loop-visual-insilico/scripts/accentuation_theory/exp2_fig1_reproduce.py` (Slurm job 48118110, 2 minutes on H100). Outputs are in `DL_Projects/AdvExampleLinearRegr/exp2_repro/`: `fig1c_r2_candidates.csv`, `fig1_toy_reproduction_alpha2_{100,1000}.{png,pdf}` and `responses_*.npz`.
+        - The run is deterministic. It reproduces the targets, the Fig. 1 seed (index 3, f* = −31.367), every f* value in Fig. 1B, and both Fig. 1C numbers (0.99693 and 0.04810 under the Var(f_e) definition).
+        - Values for the Fig. 1C panels with α₂ = 100 and 20 seeds × 13 targets:
+
+          | panel (generator → evaluator) | Var(f*) [paper] | identity SSE/SS(f*) | Var(f_e) [printed] | Pearson r² |
+          |---|---|---|---|---|
+          | f₁ → f₁ | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+          | f₁ → f₂ | 0.9966 | 0.9966 | 0.9969 | 0.9997 |
+          | f₂ → f₁ | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+          | f₂ → f₂ (self) | **−9.94** | **−9.97** | 0.0481 | 0.0524 |
+
+        - With α₂ = 1000 (the original docstring value), f₂ still predicts natural images with R² = 0.99998. Peer review of f₁'s path drops to 0.66, and the self R² is −10.5.
       - Recommendation: redo the Fig. 1C labels with the paper's definition and state it in B.2.
 
 **B.3 Two-dimensional geometry: enough code.**
