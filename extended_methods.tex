@@ -86,8 +86,134 @@ peer-review panels.}
 % empirical CV; MC trials; computation of T_F.
 % Sources: notebooks/README_top_pc_rotation.md, top_pc_rotation_experiment.ipynb,
 % tables/vanhateren_top500_*, tables/vanhateren_null_*.
-\todo{Write: feature maps, rotation schedule, random family, fitting and
-evaluation.}
+All feature-map experiments used the population covariance and disk-teacher
+alignment estimated in Section~\ref{sec:app-methods-images}.  The finite-sample
+designs were Gaussian with these measured second moments: if
+$\Sigma=U\operatorname{diag}(s_1,\ldots,s_d)U^\top$, with eigenvalues in
+decreasing order, we sampled independent population-PC scores and generated
+$y={\bstar}^\top x+\sigma\epsilon$.  Thus natural images determined the
+spectrum and teacher alignment, whereas the Monte Carlo experiments tested
+the Gaussian theory under controlled finite-sample sampling.  Unless stated
+otherwise, $d=10{,}000$, $n=1000$, and
+$\sigma^2/S\in\{0.01,0.1,1,10\}$, where
+$S={\bstar}^\top\Sigma\bstar$.
+
+\paragraph{Top-PC feature map and continuous null rotation.}
+The reference map $F(0)$ returned the first $p$ population-PC coordinates,
+with $p=500$ in the main experiment and $p=100$ in the companion experiment.
+Its feature covariance and feature--teacher covariance were
+\begin{align*}
+ \Sigma_F&=F(0)\Sigma F(0)^\top
+ =\operatorname{diag}(s_1,\ldots,s_p),\\
+ F(0)\Sigma\bstar
+ &=(s_1\beta_1^\star,\ldots,s_p\beta_p^\star)^\top .
+\end{align*}
+The unrepresented teacher power was treated as the independent residual
+variance $S_\perp$.  We constructed prediction-equivalent maps in whitened
+coordinates.
+Writing $A=F\Sigma^{1/2}$,
+$b=\Sigma^{1/2}\bstar$, and $c=\Sigma^{-1/2}\bstar$, we decomposed the
+top-PC map as $A(0)=P+R$, where $P$ is its projection onto
+$\operatorname{span}(b,c)$ and $R$ is orthogonal to both constraints.  We then
+formed a row frame $V$ supported on the bottom $40\%$ of the image spectrum,
+also orthogonal to $b$ and $c$, and normalized it so that
+$VV^\top=RR^\top$ and all cross-Gram terms vanish.  The continuous path was
+\begin{equation}
+ A(t)=P+\sqrt{1-t}\,R+\sqrt{t}\,V,
+ \qquad F(t)=A(t)\Sigma^{-1/2},
+ \qquad t=\sin^2\theta\in[0,1].
+ \label{eq:app-numerical-null-rotation}
+\end{equation}
+It preserves, to numerical precision,
+\begin{equation}
+ F(t)\Sigma F(t)^\top=\operatorname{diag}(s_1,\ldots,s_p),\quad
+ F(t)\Sigma\bstar=F(0)\Sigma\bstar,\quad
+ F(t)\bstar=F(0)\bstar,
+ \label{eq:app-numerical-null-invariants}
+\end{equation}
+while changing $G(t)=F(t)F(t)^\top$.  The first two equalities fix the entire
+Gaussian prediction problem; the third additionally fixes the control
+numerator, isolating the effect of gradient geometry in the control
+denominator.  We evaluated $t=0$ and 61 logarithmically spaced values from
+$10^{-6}$ to $1$.  The tail frames and all Monte Carlo draws were generated
+from fixed seeds.  Feature-row visualizations in
+Fig.~\ref{fig:supp-null-row-spectra} display the squared coefficients of
+selected rows of $F(t)$ in the population-PC basis.
+
+\paragraph{Prediction-selected penalty and Monte Carlo.}
+For each $(p,\sigma^2/S)$, we evaluated 281 unnormalized ridge penalties
+$\alpha\in[10^{-4},10^5]$ on a logarithmic grid and selected the minimizer of
+the deterministic-equivalent leave-one-out prediction risk.  The normalized
+penalty is $\lambda=\alpha/n$, and $\kappa$ was obtained from the fixed-point
+equation on the invariant feature spectrum.  This selection uses the
+population spectrum and teacher alignment and is therefore a theoretical
+prediction-optimal benchmark, not empirical cross-validation.  The selected
+penalty was fixed across rotations and Monte Carlo trials.
+
+Finite-$n$ ridge fits were sampled exactly from the Gaussian feature design.
+Because Eq.~\ref{eq:app-numerical-null-invariants} makes the joint law of
+$(F(t)x,y)$ identical for every $t$, a trial used one ridge estimate for all
+rotations and evaluated it under each $G(t)$.  This pairing removes irrelevant
+Monte Carlo variation when comparing control geometries.  We used 300 trials
+for $p=500$ and 1000 trials for $p=100$.  Figure markers report trial means
+except for $R^2_{\rm acc}$, whose heavy lower tail motivated the trial median;
+curves are leading deterministic equivalents.  Population metrics were
+computed from the known Gaussian moments using the definitions in
+Section~\ref{sec:setup}.
+
+For every rotation and selected $\kappa$, we evaluated the control-variance
+geometry directly as
+\begin{equation}
+ T_{F(t)}(\kappa)=\operatorname{Tr}\!\left[
+ G(t)(\Sigma_F+\kappa I)^{-2}\Sigma_F\right].
+ \label{eq:app-numerical-tf}
+\end{equation}
+Because $\Sigma_F$ is fixed along the path, changes in this trace arise only
+from the pixel-gradient Gram $G(t)$.
+
+\paragraph{Held-out empirical-CV robustness experiment.}
+To verify that the result was not an artifact of DE-based penalty selection,
+we repeated the $p=500$ experiment with an explicit validation set.  Each of
+30 paired trials contained 1000 training and 500 validation examples.  The
+underlying Gaussian inputs, teacher responses, response noise, and split were
+shared across rotations, but applying $F(t)$ produced a different realized
+feature matrix at every rotation.  We therefore selected $\alpha$ separately
+for every trial, rotation, and noise level by minimizing held-out prediction
+MSE over 71 logarithmically spaced values from $10^{-2}$ to $10^5$.  No
+teacher coefficient, population risk, or control outcome entered this
+selection.  Only afterward did we use the known population moments to evaluate
+$E_{\rm gen}$, $E_{\rm acc}$, $R^2_{\rm gen}$, and $R^2_{\rm acc}$.  We report
+trial medians and 10--90\% intervals.  The selected $\alpha$ values were also
+mapped through the fixed-point equation to trial-specific $\kappa$ values for
+Eq.~\ref{eq:app-numerical-tf}.  The paired design isolates the rotation effect,
+while separate validation selection allows finite-sample Gram matrices and CV
+choices to differ across otherwise prediction-equivalent maps.
+
+\paragraph{Random maps and feature-dimension sensitivity.}
+The random-family experiment used a canonicalized $p=500$ problem with
+$\Sigma_F=I_p$ and the realizable teacher aligned to the first feature axis.
+Of the remaining 499 joint-null rows, 300 were rotated and 199 were fixed.
+Each rotatable high-variance row was a unit direction supported on three PCs
+drawn from ranks $0.002d$--$0.15d$ and orthogonal to both $b$ and $c$; its
+tail counterpart was constructed analogously from ranks $0.60d$--$d$.  Fixed
+rows drew one coordinate from each intermediate band $0.15d$--$0.30d$,
+$0.30d$--$0.45d$, and $0.45d$--$0.60d$.  For each of 300 random maps we
+sampled a global tail propensity $u\sim\operatorname{Unif}(0,1)$, independent
+row loadings $t_j\sim\operatorname{Beta}(1+12u,1+12(1-u))$, and a random
+high--tail pairing.  Every draw retained the same
+$(\Sigma_F,F\Sigma\bstar,F\bstar)$ but produced a different diagonal spectrum
+of $G$.  We evaluated the maps using 2000 shared exact Gaussian ridge trials
+at each of the four noise levels.
+
+Finally, Fig.~\ref{fig:supp-null-dimension} repeated a nested joint-null
+rotation for $p\in\{16,128,500,1000\}$ at $n=1000$ and
+$\sigma^2/S\in\{0.01,0.1\}$.  Additional rows used disjoint three-PC supports
+in the middle $15$--$60\%$ of the spectrum and were again orthogonal to $b$
+and $c$.  Each setting used 41 rotation angles, 2000 exact real-Wishart ridge
+trials, and a 100,000-draw Gaussian distributional surrogate for the nonlinear
+control ratios.  This comparison separates failure of the leading
+ratio-of-moments approximation at low effective rank from the
+prediction--control dissociation itself.
 
 % ---------------------------------------------------------------------------
 \subsection{Neuronal data}
