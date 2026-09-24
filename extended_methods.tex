@@ -134,7 +134,76 @@ evaluation.}
 %   Fourier parameterization of the seed (1024 px), 1/f^decay preconditioning,
 %   NAdam lr 12, <=6000 steps, 8 random crops + noise per step, closest-to-
 %   target stopping, (noise, decay) ladder chosen per site-model.
-\todo{Write.}
+\paragraph{Recordings and stimulus sets.}
+We reanalyzed the recordings and encoding-model outputs of \citetPW using the
+authors' released preprocessing code (commit
+\texttt{9b6fd95228d1b77146f8b279c7c228914ca34bb8}).  The analysis contains five
+selected sites from each of five macaques ($25$ sites total): anterior IT in
+Monkey Red, central IT in Monkey Paul, three V3 and two V4 sites in Monkey
+Venus, and superior temporal sulcus sites in Monkeys Leap and Three0.  Red and
+Paul were recorded with chronic 64-channel arrays; Venus, Leap, and Three0
+were recorded with Neuropixels probes.  Site selection followed the reliability
+screening of the original study.  Area and subject are consequently partly
+confounded and we do not interpret area differences in the present analysis.
+
+The encoding session contained 969 natural images: 649 images from the NSD
+shared-image set, 259 segmented object and animal images, and 61 fLoc images.
+A common fixed split assigned 774 images to model fitting and 195 to held-out
+evaluation.  Control sessions were collected on 4--12 May 2025.  For every
+site and encoding model, stimuli were synthesized from ten held-out NSD seed
+images toward as many as 11 evenly spaced target responses.  Targets spanned
+the measured encoding-response range, from the first percentile minus one
+quarter bin width to the 99th percentile plus one half bin width.  Depending
+on recording coverage, 36--110 accentuated images were available per
+site--model pair (median 102).  The control sessions also repeated natural
+images shared with the encoding session.  The held-out subset used below
+contained 50 images for Red, Paul, and Venus, 24 for Leap, and 22 for Three0;
+the complementary fitting-anchor counts were 50, 50, 50, 25, and 24.
+
+\paragraph{Neural preprocessing.}
+We used the response windows and exclusion rules of \citetPW.  Responses were
+averaged over 100--400\,ms after image onset for Red and Paul and over
+80--250\,ms for Venus, Leap, and Three0.  Within each control day, trials with
+robust deviation $|y-\operatorname{median}(y)|/(1.4826\operatorname{MAD})>15$
+were removed.  The remaining responses were standardized using that day's
+natural-image anchors; a day with fewer than five anchor trials used all of
+that day's trials.  Responses were then averaged over stimulus repetitions.
+Near-duplicate Leap stimuli were merged using the released pixel-correlation
+criterion ($r\geq0.90$).  At comparison time, predicted responses were lower
+bounded by the fitted neuron's firing floor, defined by the original pipeline.
+
+\paragraph{Cross-session response alignment.}
+The preceding day-wise anchor standardization is part of the upstream
+pipeline, but it does not place the encoding and control recordings on an
+identical affine scale.  We therefore added one downstream map per site,
+shared by all ten models.  On natural anchors belonging to the 774-image
+fitting split, we fitted
+\begin{equation}
+ y^{\rm ctrl}_{is}=a_s+b_s y^{\rm enc}_{is}+\epsilon_{is}.
+ \label{eq:app-cross-session-affine}
+\end{equation}
+The fitted $(a_s,b_s)$ was then frozen.  A model prediction $\hat y_{ism}$ was
+mapped as
+$\hat y^{\rm ctrl}_{ism}=a_s+b_s\max\{\hat y_{ism},f_s\}$, where $f_s$ is the
+site's firing floor.  No accentuated response entered this fit, and the same
+map was used for every model at a site.  Held-out natural-image MSE,
+$E_{\rm val}$, was evaluated on the disjoint control-session anchors listed
+above.  The control MSE was the mean squared difference between mapped
+predictions and measured accentuated responses, without outcome refitting.
+Control slope was the ordinary-least-squares coefficient in the regression of
+measured on mapped predicted responses, with an intercept, over all available
+accentuated stimuli for that site--model pair.  We also retained Pearson
+correlation and identity
+$R^2=1-\sum_i(y_i-\hat y_i)^2/\sum_i(y_i-\bar y)^2$.
+
+\paragraph{Stimulus synthesis.}
+Accentuation used the released Fourier-parameterized feature-visualization
+procedure \citep{hamblin2024feature}: a $1024$-pixel image parameterization
+with inverse-frequency preconditioning, random crops and injected noise was
+optimized with NAdam (learning rate 12) for at most 6000 steps.  The iterate whose post-hoc model prediction came closest to the requested
+target was retained.  A prespecified ladder of augmentation-noise and Fourier-decay
+settings was searched independently for each site--model axis, as described by
+\citetPW.
 
 % ---------------------------------------------------------------------------
 \subsection{Encoding models}
@@ -151,7 +220,27 @@ evaluation.}
 % held-out (195-image) R^2 -- the same split later reports encoding r.
 % Candidate layers: Bottleneck blocks (ResNets, RegNet), ReLU/Conv/MaxPool
 % (AlexNet), transformer blocks (ViTs; + attention pool for SigLIP2).
-\todo{Write; fill Table~\ref{tab:app-models}.}
+For each backbone and candidate layer, we flattened the layer activation and
+fitted a 750-component PCA transform on the 774 encoding-training images.  PCA
+scores were centered but not whitened.  A separate linear readout was fitted
+for every neural site using \texttt{RidgeCV} with an intercept and
+$\alpha\in\{10^{-4},10^{-3},\ldots,10^9\}$.  The implementation used efficient
+leave-one-out ridge cross-validation to select $\alpha$ independently for each
+response channel.  Candidate layers were ResNet and RegNet bottleneck blocks,
+AlexNet convolution/ReLU/max-pool stages, and transformer blocks (including
+the SigLIP2 attention pool).  For each site and backbone, the layer with the
+largest $R^2$ on the fixed 195-image split was exported.  Thus this split was
+used both for layer selection and for the reported encoding accuracy; its MSE
+is a post-selection validation measure rather than an untouched final test
+set.
+
+The ten backbones and the number of distinct selected layer--PCA geometries
+are listed in Table~\ref{tab:app-models}.  Sites that selected the same model,
+layer, PCA mean, and PCA axes shared one geometry calculation.  Hashing these
+objects reduced 250 site--model readouts to 84 unique geometries, while all
+readout-specific regularization and biological outcomes remained at the
+250-row level.  Model loading, preprocessing, and layer names were taken from
+the released experimental utilities and reproduced with the same checkpoints.
 
 \begin{table}[ht]
 \centering\small
@@ -159,7 +248,7 @@ evaluation.}
 \toprule
 Model & Architecture & Training & \# geometries \\
 \midrule
-AlexNet (untrained) & AlexNet (TF-slim variant) & random initialization$^\dagger$ & 11\\
+AlexNet (untrained) & AlexNet (TF-slim variant) & released untrained-control checkpoint$^\dagger$ & 11\\
 ResNet-50 & ResNet-50 & ImageNet supervised & 9\\
 Robust ResNet-50 & ResNet-50 & ImageNet adversarial, $\ell_\infty$, $\epsilon=8/255$ & 6\\
 CLIP RN50 & ResNet-50 & CLIP contrastive & 9\\
@@ -171,11 +260,13 @@ SigLIP2 ViT-B/16 & ViT-B/16 & SigLIP2 & 10\\
 RADIO v2.5-B & ViT-B & RADIO distillation & 8\\
 \bottomrule
 \end{tabular}
-\caption{\textbf{Encoding models.} \# geometries: distinct (layer, PCA)
-feature maps across the 25 sites (84 in total). $^\dagger$Checkpoint
-\texttt{AlexNet\_training\_seed\_01} (Brain-Score model-variability weights)
-is at its random initialization. \todo{citations; checkpoint sources of the
-robust ResNet-50 and CLIPAG}}
+\caption{\textbf{Encoding models.} The final column counts distinct selected
+layer--PCA feature maps across the 25 sites (84 in total). $^\dagger$The
+released analysis designates the Brain-Score checkpoint
+\texttt{AlexNet\_training\_seed\_01} as the untrained control.  The robust
+ResNet-50 used checkpoint \texttt{imagenet\_linf\_8\_pure.pt}; CLIPAG used
+\texttt{CLIPAG\_ViTB32.pt}.  Exact checkpoint identifiers and preprocessing
+are inherited from the released model-loading utilities.}
 \label{tab:app-models}
 \end{table}
 
@@ -193,7 +284,66 @@ robust ResNet-50 and CLIPAG}}
 % L = 8 centers; debiased U-statistics; finite-difference check; antithetic
 % Stein with R = 512; E_val; V_phi = E_val T / n.  Checks: 84 unique
 % model--layer geometries, residual <= 6e-8; compute ~1.4 H100-hours.
-\todo{Write.}
+For a model--layer geometry, let $s_k$ be the variance of PCA score $k$ on the
+774 fitting images and let $\alpha_{sm}$ be the selected scikit-learn ridge
+penalty for site $s$ and model $m$.  Because scikit-learn minimizes an
+unnormalized residual sum of squares, we set $\lambda_{sm}=\alpha_{sm}/n$ with
+$n=774$ and solved the positive fixed-point equation
+\begin{equation}
+ \kappa_{sm}\left[1-\frac{1}{n}\sum_{k=1}^{750}
+ \frac{s_k}{s_k+\kappa_{sm}}\right]=\lambda_{sm}.
+ \label{eq:app-alpha-to-kappa}
+\end{equation}
+The 750-dimensional training spectrum is used here as a plug-in approximation
+to the population spectrum.  Across the 250 readouts, the median solved
+$\kappa$ was 3.48 and the median
+$\mathrm{df}_2=\sum_k[s_k/(s_k+\kappa)]^2$ was 231.5.
+
+We defined the differentiable input at the $224\times224$ RGB grid, before
+model-specific channel normalization, so $d=150{,}528$ and derivatives are in
+RGB units on $[0,1]$.  The upstream resize from the synthesized image was not
+differentiated.  For each of the ten fixed seed images and every PCA coordinate
+$k$, reverse-mode automatic differentiation gave
+\begin{equation}
+ q_k(x)=\|J_\phi(x)^\top u_k\|_2^2,
+ \qquad
+ T_\phi(x,\kappa)=\sum_{k=1}^{750}
+ q_k(x)\frac{s_k}{(s_k+\kappa)^2}.
+ \label{eq:app-neural-trace-computation}
+\end{equation}
+The 750 vector--Jacobian products were evaluated in bounded blocks (up to 32
+PCA directions per backward pass) and averaged over seeds.  The primary
+theory-motivated proxy was
+$V_{\phi,sm}=E_{{\rm val},sm}\,\mathbb E_x[T_\phi(x,\kappa_{sm})]/n$, using the
+held-out control-session anchor MSE from
+Eq.~\ref{eq:app-cross-session-affine}.
+
+We additionally evaluated finite-neighborhood versions at per-channel Gaussian
+noise scales $\tau\in\{0.5,2,8,16\}/255$.  Perturbed RGB values were not
+clipped.  Each seed used $R=64$ Gaussian outer directions and $L=8$
+independent neighborhood centers.  The smoothed-Jacobian estimator targeted
+$\|\mathbb E_z J_\phi(x+\tau z)^\top u_k\|^2$ and removed finite-$L$ square
+bias with the off-diagonal U-statistic of
+Eq.~\ref{eq:nonlinear-neighborhood-estimators}.  The neighborhood estimator
+targeted $\mathbb E_z\|J_\phi(x+\tau z)^\top u_k\|^2$.  We also retained the
+centered response covariance, total finite response change, its odd/even
+decomposition, and a local symmetric finite-difference check.  Monte Carlo
+summaries were formed at the outer-direction level before summing over PCs, so
+cross-PC covariance was retained.  As a separate forward-only validation, an
+antithetic Stein estimator used $R=512$ common-prefix directions and replaced
+$f(x+\tau z)-f(x)$ by
+$[f(x+\tau z)-f(x-\tau z)]/2$ to cancel even-response variance.
+
+All spectral vectors were stored before $\kappa$ weighting, allowing traces to
+be recomputed without rerunning a network.  The production run covered 84/84
+unique geometries and 840 geometry--seed archives.  Exact PCA-cache
+reproduction, serial-versus-batched VJPs, and the identities ``variance plus
+drift equals total'' and ``odd plus even equals total'' were checked; the
+largest relative decomposition residual was $5.96\times10^{-8}$.  Nine
+CLIP-RN50 geometries had marginal finite-difference diagnostics, so their
+step-dependent smooth and neighborhood estimates were retained as
+sensitivities; exact VJPs and finite-response covariance do not depend on that
+step size.  Total production compute was estimated at approximately 1.4 H100 GPU-hours.
 
 % ---------------------------------------------------------------------------
 \subsection{Neuronal peer-review analysis}
@@ -205,7 +355,35 @@ robust ResNet-50 and CLIPAG}}
 % identity R^2, slope; equal-weight site means; self (diagonal) vs.\ peer
 % tests: reviewer-label permutation, Wilcoxon over generators, subject
 % sign-flip, subject bootstrap.
-\todo{Write.}
+For every site $s$ and generator model $g$, we selected the personalized
+accentuated stimuli generated for that site's recorded unit.  Each of the ten
+reviewer models $r$ predicted the identical stimulus set.  Reviewer predictions
+were firing-floor clamped and transformed using the same frozen site-level
+map $(a_s,b_s)$ as the self prediction.  This yielded
+$25\times10\times10=2500$ site--generator--reviewer cells; rows of the displayed
+matrices are generators, columns are reviewers, and diagonal cells are
+self-evaluations.  Within each cell we computed MSE, Pearson $r$, identity
+$R^2$, and the OLS slope of measured on reviewer-predicted responses.  Metrics
+were first computed within site and then averaged with equal weight over the
+25 sites; stimuli were never pooled across sites.  Available stimulus counts,
+total trials, and mean repeats were retained for every cell.
+
+For the self-versus-peer comparison, the 10 diagonal and 90 off-diagonal cells
+of the 25-site-averaged matrix were summarized by medians and interquartile
+ranges.  These cell counts are descriptive because rows and columns share
+models.  Dependence-aware inference used three complementary contrasts.  First,
+within each generator row we compared its diagonal value with the mean of its
+nine peer reviewers and applied a paired Wilcoxon test over ten generators.
+Second, we permuted the global reviewer labels 200,000 times while preserving
+the complete matrix rows and columns, testing whether the named self diagonal
+was unusually separated from a randomly matched diagonal.  Third, we formed a
+peer-minus-self contrast within each site, averaged the five sites within each
+subject, and used 100,000 equal-subject bootstrap resamples for confidence
+intervals.  With only five subjects, we also report the exact two-sided
+subject sign-flip test, whose minimum attainable $p$ value when all subjects
+agree is 0.0625.  For slope, signed deviation from one and
+$|\mathrm{slope}-1|$ were kept separate: a change from slope below one to above
+one is not by itself improved calibration.
 
 % ---------------------------------------------------------------------------
 \subsection{Statistical analysis}
@@ -214,7 +392,45 @@ robust ResNet-50 and CLIPAG}}
 % Pearson / Spearman / site-clustered OLS; model subsets 10/9/8/7;
 % Benjamini--Hochberg within endpoint x subset; image bootstrap;
 % leave-one-monkey-out / leave-one-model-out; repeated-measures caveat.
-\todo{Write.}
+The biological synopsis contains one row per site and model ($25\times10=250$).
+Positive geometry and error predictors were analyzed on a base-10 logarithmic
+scale.  For Fig.~\ref{fig:nonlinear-biological-validation}, the biological
+control slope was centered within site using the mean of all ten models,
+\begin{equation}
+ y^{\circ}_{sm}=y_{sm}-\frac{1}{10}\sum_{m'=1}^{10}y_{sm'},
+ \label{eq:app-site-centered-control}
+\end{equation}
+whereas the displayed predictors remained at their raw log scale.  Subset
+comparisons used all ten models; the nine trained models; eight models after
+removing RN50-Robust and CLIPAG; and seven models after additionally removing
+the untrained AlexNet.  The site means in
+Eq.~\ref{eq:app-site-centered-control} were estimated once from all ten models
+and held fixed before subset filtering.  Direction-aligned correlations were
+reported as $-r$ for control slope, because the theory predicts that larger
+control-error proxies accompany smaller slopes.
+
+The figure reports ordinary two-sided Pearson correlations and marks raw
+$p<0.05$ as exploratory.  The 250 site--model rows are repeated measurements,
+so these pointwise $p$ values are not treated as independent-sample
+confirmatory tests.  Companion tables report Spearman correlations and linear
+regressions with site-clustered standard errors.  A sensitivity analysis also
+removed each site's mean from the log predictor; another recomputed site means
+within each 10/9/8/7-model subset.  For the complete 28-predictor benchmark,
+Benjamini--Hochberg correction was applied within each biological endpoint and
+model subset; the paper-facing seven-predictor panel displays the unadjusted
+threshold and the full FDR view is reported separately.
+
+Finite-image uncertainty in $E_{\rm val}$ was assessed with 2000 bootstrap
+resamples.  Held-out image identities were resampled jointly for every
+site--model row within a monkey, preserving the shared-stimulus dependence;
+this procedure quantifies image-set uncertainty but not uncertainty across
+animals, neural trials, or Jacobian probes.  As an out-of-sample sensitivity,
+fixed log-linear predictors of control slope were evaluated by leave-one-model-
+out and leave-one-subject-out prediction.  Predictor standardization and all
+regression coefficients were fitted within each training fold, with no
+hyperparameter search on held-out outcomes.  Throughout, we emphasize effect
+sizes, model-subset sensitivity, and held-out comparisons because only five
+subjects contribute independent animal-level replication.
 
 % ---------------------------------------------------------------------------
 \subsection{Software and compute}
