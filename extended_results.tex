@@ -3,8 +3,9 @@
 % Order of the appendix: A extended results -> B detailed methods
 % (extended_methods.tex) -> theory (theory_appendix_polished.tex).
 % Plan and figure sources: notes/appendix_outline_plan.md.
-% Figures not yet exported to figures/ are shown as \suppfigplaceholder boxes
-% naming their source in the code repository (AccentuationPredRMT).
+% Figures copied from the code repository are in figures/supp/; each figure
+% environment names its source path (CR = ~/Github/AccentuationPredRMT).
+% Figures still to be made are \suppfigplaceholder boxes.
 % ---------------------------------------------------------------------------
 
 \providecommand{\suppfigplaceholder}[2][0.22\textheight]{%
@@ -34,9 +35,23 @@ $z=0$ crossing.}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/geometry/ridge_paths_iso_error_geometry.pdf  (fix literal "68\%" in legend, overlapping teacher label)}
+% Source: CR/figures/geometry/ridge_paths_iso_error_geometry.pdf
+% TODO(fig): legend shows literal "68\%"; teacher label overlaps; drop suptitle.
+\includegraphics[width=\linewidth]{figures/supp/ridge_paths_iso_error_geometry.pdf}
 \caption{\textbf{Exact conditional geometry of ridge estimators in two
-dimensions.} \todo{caption} Setting in App.~\ref{sec:app-methods-geometry}.}
+dimensions}, in the plane of a high-variance ($s_1=1$) and a low-variance
+($s_2=0.04$) PC for a fixed design $X$.
+\textbf{(a)}~Fixed $\lambda=0.05$ ($\kappa=0.0518$), $\sigma^2$ on a log grid:
+the conditional law of $\bhat\mid X$ keeps its mean, its 68\% ellipses grow
+with $\sigma$, and one coupled noise realization (purple) moves affinely in
+$\sigma$.
+\textbf{(b)}~Fixed $\sigma^2=0.5$, $\lambda$ on a log grid: the conditional
+mean path (dashed) shrinks toward the origin while the covariance contracts.
+Blue: prediction equal-error ellipses around $\bstar$; orange: control
+equal-error spheres (solid: $z=0$).  The prediction-stationary penalty
+($\lambda_{\rm pred}=0.0177$) and the control-calibrated penalty
+($\lambda_{\rm ctrl}=0.0258$) are distinct points on the path.
+Setting: App.~\ref{sec:app-methods-geometry}.}
 \label{fig:supp-ridge-path-geometry}
 \end{figure}
 
@@ -55,26 +70,52 @@ surrogate of App.~\ref{sec:app-ratio-gaussian} takes over.}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/vanhateren_landscape/export/composite/paper_composite_three_landscapes_de_mc_rows_figexport.pdf  (crop to the 2x3 heatmaps)}
+% Source: CR/figures/vanhateren_landscape/export/composite/paper_composite_three_landscapes_de_mc_rows_figexport.pdf
+% TODO(fig): rows G--I repeat main Fig. 3D--F; crop to the 2x3 heatmaps.
+\includegraphics[width=0.85\linewidth]{figures/supp/paper_composite_three_landscapes_de_mc_rows_figexport.pdf}
 \caption{\textbf{Deterministic equivalents versus natural-image Monte Carlo
-for the landscapes of Fig.~\ref{fig:pixel}.} \todo{caption}}
+for the landscapes of Fig.~\ref{fig:pixel}.}
+\textbf{A--C}~Leading DE of $E_{gen}/S$, $E_{acc}/S$ and $R^2_{acc}$ over
+the noise ratio $\sigma^2/S$ and effective regularization $\kappa$.
+\textbf{D--F}~The same quantities as means over 100 natural-image Monte Carlo
+trials on the same grid.  Lines: prediction optimum $\kappa^\star_{gen}$
+(blue), control optimum $\kappa^\star_{acc}$ (orange dashed), median
+empirical LOOCV penalty (green dotted); black contour: $R^2_{acc}=0$.
+\textbf{G--I}~As in Fig.~\ref{fig:pixel}D--F.
+Methods: App.~\ref{sec:app-vanhateren-landscape-methods}.}
 \label{fig:supp-pixel-de-mc}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/vanhateren_landscape/landscape_slope_kappa.pdf}
-\caption{\textbf{Slope landscapes} of generalization and accentuation, DE
-(top) and Monte Carlo (bottom). \todo{caption}}
+% Source: CR/figures/vanhateren_landscape/landscape_slope_kappa.pdf
+\includegraphics[width=0.85\linewidth]{figures/supp/landscape_slope_kappa.pdf}
+\caption{\textbf{Slope landscapes} of generalization (left) and accentuation
+(right) over the full penalty range, leading DE (top) and Monte Carlo mean
+over 100 trials (bottom).  White: prediction-optimal $\kappa$; pink dashed:
+control-optimal $\kappa$ (leading DE).  The generalization slope stays near
+one except at the highest noise and weakest regularization, whereas the
+accentuation slope falls by orders of magnitude below the prediction-optimal
+path.}
 \label{fig:supp-pixel-slope}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder[0.3\textheight]{notebooks/outputs/pixel_ridge/vanhateren_selection_estimation/selection_vs_estimation_extended_with_sklearn_cv.pdf}
+% Source: CR/notebooks/outputs/pixel_ridge/vanhateren_selection_estimation/selection_vs_estimation_extended_with_sklearn_cv.pdf
+\includegraphics[width=0.85\linewidth]{figures/supp/selection_vs_estimation_extended_with_sklearn_cv.pdf}
 \caption{\textbf{Fixed, prediction-selected and control-selected penalties
-along the noise axis.} \todo{caption; leading DE vs.\ Gaussian surrogate vs.\
-MC; empirical LOOCV}}
+along the noise axis} (van Hateren disk teacher, $d=10^4$, $n=10^3$).
+Columns: fixed regularization; penalty minimizing the DE of $E_{gen}$ (with
+empirical LOOCV in triangles); penalty minimizing $E_{acc}$ (Gaussian
+oracle).  Rows: normalized error, $R^2$ (symlog), true-on-fitted slope, and
+the selected $\kappa$ and $\lambda$.  Blue: generalization; orange:
+accentuation, leading DE (dashed), Gaussian surrogate
+(App.~\ref{sec:app-ratio-gaussian}; dash-dot) and Monte Carlo (markers: mean
+of 100 trials; bands: 10--90\% of trials).  At the prediction-selected penalty
+the accentuation $R^2$ turns negative at high noise; at the control-selected
+penalty the leading DE underestimates the accentuation error by orders of
+magnitude, and the Gaussian surrogate is needed.}
 \label{fig:supp-pixel-selection}
 \end{figure}
 
@@ -98,6 +139,7 @@ feature dimension $p$ (Fig.~\ref{fig:supp-null-dimension}).}
 
 \begin{figure}[ht]
 \centering
+% Source: figures/ (already in paper repo; moved here from theory App. gauge-fragility)
 \includegraphics[width=1\linewidth]{figures/VanHateren_Top500PC_prediction_null_feature_rotation}\\
 \includegraphics[width=1\linewidth]{figures/VanHateren_Top100PC_prediction_null_feature_rotation}
 \caption{\textbf{Continuous prediction-null rotation on van Hateren images}
@@ -112,26 +154,48 @@ Lines: leading DE; markers: finite-$n$ Monte Carlo.}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/null_rotations/vanhateren_p500_random_null_diversity.pdf}
+% Source: CR/figures/null_rotations/vanhateren_p500_random_null_diversity.pdf
+\includegraphics[width=\linewidth]{figures/supp/vanhateren_p500_random_null_diversity.pdf}
 \caption{\textbf{Random maps from the prediction-null family ($p=500$).}
-\todo{caption: identical $E_{gen}$, $R^2_{gen}$; accentuation metrics
-spread over orders of magnitude with $\operatorname{Tr}(FF^\top)$.}}
+Each map independently randomizes 300 row-wise high-to-tail rotations and
+their pairings; $\Sigma_F$, $F\Sigma\bstar$ and the teacher overlap stay
+fixed.  Top: $\operatorname{Tr}(FF^\top)$ against the mean tail loading
+(color: effective rank), and $E_{gen}/S$ and $R^2_{gen}$ at four noise levels,
+identical for all maps.  Bottom: $E_{acc}/S$, $R^2_{acc}$ and slope$_{acc}$
+spread over orders of magnitude and degrade with
+$\operatorname{Tr}(FF^\top)$.  Filled: leading DE; open: exact finite-$n$
+Monte Carlo.}
 \label{fig:supp-null-random}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/null_rotations/vanhateren_top_pc_tail_feature_spectra.pdf}
+% Source: CR/figures/null_rotations/vanhateren_top_pc_tail_feature_spectra.pdf
+\includegraphics[width=\linewidth]{figures/supp/vanhateren_top_pc_tail_feature_spectra.pdf}
 \caption{\textbf{Spectral location of individual feature rows along the
-rotation.} \todo{caption}}
+rotation}, for $p=100$ (top) and $p=500$ (bottom).  Normalized energy of three
+rows over population PC rank at the top-PC endpoint and at tail loading
+$t=10^{-4},10^{-2},1$: as $t$ grows the rows move into the spectral tail.
+Curves are normalized to show spectral location; the growth of the pixel norm
+is quantified by $\operatorname{Tr}(FF^\top)$ in
+Fig.~\ref{fig:app-null-rotation}.}
 \label{fig:supp-null-row-spectra}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/null_rotations/vanhateren_null_dimension_curves.pdf}
-\caption{\textbf{Null rotation across feature dimension $p$.} \todo{caption:
-leading DE vs.\ Gaussian distributional DE vs.\ MC.}}
+% Source: CR/figures/null_rotations/vanhateren_null_dimension_curves.pdf
+\includegraphics[width=\linewidth]{figures/supp/vanhateren_null_dimension_curves.pdf}
+\caption{\textbf{Null rotation across feature dimension}
+$p\in\{16,128,500,1000\}$ ($n=1000$, $\sigma^2/S=0.01$), against the
+low-variance fraction $\sin^2\theta$.  Top: effective rank of $FF^\top$;
+$E_{gen}/S$ and $R^2_{gen}$ are invariant.  Bottom: $E_{acc}/S$, $R^2_{acc}$
+and slope$_{acc}$.  Dotted: leading DE; solid: Gaussian distributional DE
+(App.~\ref{sec:app-ratio-gaussian}); markers: exact finite-$n$ ridge Monte
+Carlo at the fixed DE-selected penalty.  For small $p$ the fitted weight
+concentrates on few directions and the leading DE is inaccurate, while the
+Gaussian surrogate stays accurate; larger $p$ appends disjoint
+prediction-null features.}
 \label{fig:supp-null-dimension}
 \end{figure}
 
@@ -147,15 +211,26 @@ peer (off-diagonal) distributions and tests.}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/nonlinear_control/neural_peer_review/peer_review_four_metrics_jacob_order.pdf}
-\caption{\textbf{Neuronal peer review.} Rows: generating model; columns:
-reviewing model; diagonal: self-evaluation. \todo{caption}}
+% Source: CR/figures/nonlinear_control/neural_peer_review/peer_review_four_metrics_jacob_order.pdf
+\includegraphics[width=\linewidth]{figures/supp/peer_review_four_metrics_jacob_order.pdf}
+\caption{\textbf{Neuronal peer review.}  Rows: model that generated the
+accentuated images; columns: model whose predictions are compared with the
+measured responses; boxed diagonal: self-evaluation.  Each cell is the
+equal-weight mean over 25 sites of MSE, Pearson $r$, identity $R^2$ (symlog
+color scale) and the OLS slope of measured on predicted response, with
+predictions mapped to the control session by the frozen site affine map.
+Self-evaluation has slope below one and strongly negative $R^2$ for every
+model, whereas peer slopes are mostly above one (Sec.~\ref{sec:pixel}).
+Methods: App.~\ref{sec:app-methods-peer}.}
 \label{fig:supp-neural-peer-matrix}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{NEW: self vs peer R^2 and slope distributions (stats in tables/nonlinear_control/.../PEER_REVIEW_SELF_VS_PEER_RESULTS.md)}
+% NEW figure (not yet made); statistics in
+% CR/tables/nonlinear_control/.../PEER_REVIEW_SELF_VS_PEER_RESULTS.md
+% (script CR/explorations/nonlinear_control/analyze_peer_review_self_vs_peer.py)
+\suppfigplaceholder{NEW: self vs peer R^2 and slope distributions}
 \caption{\textbf{Self-evaluation versus peer review.} \todo{caption}}
 \label{fig:supp-neural-self-vs-peer}
 \end{figure}
@@ -173,30 +248,121 @@ residualization, predictor transform and session endpoint.}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder[0.3\textheight]{NEW: per-model s_k, q_k=||J^T v_k||^2, q_k/s_k, cumulative T at df_2=375, one panel per model (data: mass_v1/geometry/*/summary.npz)}
-\caption{\textbf{Gradient geometry of the ten encoding models.}
+% Source: CR/figures/nonlinear_control/scale_energy/model_exact_energy_bars.pdf
+\includegraphics[width=\linewidth]{figures/supp/model_exact_energy_bars.pdf}
+\caption{\textbf{Exact local gradient energy of the ten encoding models}:
+raw energy $\sum_kq_k$, control trace $T(\kappa)$ at matched
+$\mathrm{df}_2=375$, and unregularized trace $\sum_kq_k/s_k$, with
+$q_k=\|J_\phi^\top v_k\|^2$ in RGB $[0,1]$ coordinates.  Bars: mean of five
+subject means (each over 5 sites $\times$ 10 seed images); dots: subjects;
+error bars: $\pm2$ subject-level SE.  The two adversarially trained models
+(robust RN50, CLIPAG) have a control trace two to three orders of magnitude
+below the others.}
+\label{fig:supp-model-energy}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+% NEW figure (not yet made): per model, s_k, q_k, q_k/s_k and cumulative T
+% over PC index at df_2 = 375; data: $STORE_DIR/.../nonlinear_control/
+% mass_v1/geometry/*/summary.npz (exact_by_seed, spectrum).  Existing 4-model
+% versions: CR/figures/nonlinear_control/{robust_resnet50,standard_resnet50,
+% clipag,dinov2}_seed10/pc_geometry.pdf
+\suppfigplaceholder[0.3\textheight]{NEW: per-model s_k, q_k, q_k/s_k, cumulative T at df_2=375, one panel per model}
+\caption{\textbf{PC-resolved gradient geometry of the ten encoding models.}
 \todo{caption}}
 \label{fig:supp-model-spectra}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder[0.3\textheight]{figures/nonlinear_control/biological_validation/site_centered_predictor_benchmark_control_session_pearson_fdr.png}
-\caption{\textbf{All candidate predictors of control.} \todo{caption:
-estimators $\times$ scales $\times$ model subsets, slope and control MSE.}}
+% Source: CR/figures/nonlinear_control/biological_validation/site_centered_predictor_benchmark_control_session_pearson_fdr.png
+\includegraphics[width=0.9\linewidth]{figures/supp/site_centered_predictor_benchmark_control_session_pearson_fdr.png}
+\caption{\textbf{All candidate predictors of biological control.}  For each
+$\log_{10}$ predictor, the site-residual Pearson correlation with control
+slope (left, sign flipped) and with direct control MSE (right), so that
+positive values are in the predicted direction.  Estimators
+(App.~\ref{sec:app-nonlinear-diagnostic}): held-out MSE, exact trace, exact
+and finite-difference local $V_\phi$, and smoothed-Jacobian, neighborhood,
+response-variance, finite-step, one-sided Stein and antithetic Stein versions
+at neighborhood scales $0.5$--$16/255$.  Filled: all 10 models ($n=250$);
+open circles: without CLIPAG and robust RN50; diamonds: also without the
+untrained AlexNet.  Stars: Benjamini--Hochberg $q<0.05$ over the 28 tests;
+$n$ is annotated where fewer rows give a valid estimate.
+Statistics: App.~\ref{sec:app-methods-stats}.}
 \label{fig:supp-nonlinear-benchmark}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{figures/nonlinear_control/biological_validation/site_centered_{smooth,neighborhood}_correlations.png  and/or forward_noise/noise_geometry.pdf}
-\caption{\textbf{Dependence on the neighborhood scale $\tau$.} \todo{caption}}
+% Source: CR/figures/nonlinear_control/biological_validation/site_centered_neighborhood_correlations.png
+\includegraphics[width=0.85\linewidth]{figures/supp/site_centered_neighborhood_correlations.png}\\[4pt]
+% Source: CR/figures/nonlinear_control/forward_noise/noise_geometry.pdf
+\includegraphics[width=0.7\linewidth]{figures/supp/noise_geometry.pdf}
+\caption{\textbf{Dependence on the neighborhood scale $\tau$.}
+Top: site-centered Spearman correlation of neighborhood $V_\phi$ with control
+slope and with direct control MSE against $\tau$, for three endpoint
+definitions (control session with matched images; encoding session with
+matched or all 195 held-out images), with all models (dashed) and without the
+robust models (solid).  Bottom: neighborhood estimators of the trace relative
+to the exact local trace for four models at matched $\mathrm{df}_2=375$ (10
+seeds; error bars $\pm2$ MC SE).  For standard networks smoothing removes
+most of the local gradient energy, whereas for the robust networks it barely
+changes it.}
 \label{fig:supp-smoothing-scale}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\suppfigplaceholder{pick 2-3: residualization variants; paper_v4_raw_x / paper_v5_raw_predictors; session_endpoint_image_bootstrap.png; ..._encoding_session.png}
-\caption{\textbf{Robustness of the within-site association.} \todo{caption}}
+% Source: CR/figures/nonlinear_control/biological_validation/site_centered_predictor_benchmark_control_session_export_pearson_10v9v8v7_all10_reference_residualized.pdf
+\includegraphics[width=0.85\linewidth]{figures/supp/site_centered_predictor_benchmark_control_session_export_pearson_10v9v8v7_all10_reference_residualized.pdf}\\[4pt]
+% Source: CR/figures/nonlinear_control/biological_validation/site_centered_predictor_benchmark_encoding_session.png
+\includegraphics[width=0.85\linewidth]{figures/supp/site_centered_predictor_benchmark_encoding_session.png}
+% Candidate, NOT included: CR/figures/nonlinear_control/biological_validation/
+% session_endpoint_image_bootstrap.png -- shows control-session Spearman(V,
+% slope) ~ +0.1 for non-robust models, inconsistent in sign with
+% site_centered_neighborhood_correlations.png (-0.28); check V variant /
+% endpoint version before using.  Other candidates: neural_validation_export/
+% paper_v4_raw_x, paper_v5_raw_predictors.
+\caption{\textbf{Robustness of the within-site association.}
+Top: as Fig.~\ref{fig:supp-nonlinear-benchmark} for the main estimators, with
+every model subset (10/9/8/7 models) residualized by the fixed 10-model site
+mean instead of its own subset mean; stars: raw Pearson $p<0.05$.
+Bottom: the same benchmark with the encoding-session endpoint.
+\todo{check caption against the encoding-session figure}}
 \label{fig:supp-nonlinear-robustness}
 \end{figure}
+
+% Validation figures supporting the methods (App.~\ref{sec:app-methods-neural-data},
+% \ref{sec:app-methods-nonlinear}); placed here so all figures stay in App. A.
+\begin{figure}[ht]
+\centering
+% Source: CR/figures/nonlinear_control/biological_validation/crosssession_anchor_affine_validation.png
+\includegraphics[width=\linewidth]{figures/supp/crosssession_anchor_affine_validation.png}
+\caption{\textbf{Encoding-to-control affine calibration from natural anchors
+only.}  Left: median MSE relative to the identity map, by monkey, for a site
+map fitted on all anchors, on training anchors only (used throughout), and a
+leaky refit on the accentuated responses (lower bound).  Middle: frozen gain
+$b$ of each site against its train-anchor cross-session correlation.  Right:
+site-residual Spearman correlation of matched $V_\phi$ with the control
+outcome under the identity and the site map.
+Methods: App.~\ref{sec:app-methods-neural-data}.}
+\label{fig:supp-affine-calibration}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+% Source: CR/figures/nonlinear_control/biological_validation/stein_nested_full_validation.png
+\includegraphics[width=\linewidth]{figures/supp/stein_nested_full_validation.png}
+\caption{\textbf{Stein estimators of the smoothed trace}, nested over
+$R=64$--$512$ Gaussian directions on all 250 site--model pairs: fraction of
+positive trace estimates, median Monte Carlo SE relative to the smoothed
+trace, and median relative deviation from the smoothed-Jacobian trace, for
+the one-sided (orange) and antithetic (blue) estimators
+(Eq.~\ref{eq:nonlinear-stein-estimator}) at four neighborhood scales.
+Methods: App.~\ref{sec:app-methods-nonlinear}.}
+\label{fig:supp-stein-validation}
+\end{figure}
+
+% Keep all supplementary figures within Appendix A.
+\clearpage

@@ -11,6 +11,18 @@
 - **Structure and linking first; no plotting until the structure is settled.** Figures not yet exported show as `\suppfigplaceholder{source path}` boxes.
 - Main-text issues (bottom of this file) are archived; Binxu will fix them.
 
+## Figure status (2026-09-24, pass 1: copy existing)
+- 16 existing figures were copied to `figures/supp/` and wired into A.1–A.5 with draft captions. Each figure environment keeps its `CR/...` source path in a comment.
+- **Still NEW (placeholders):** `fig:supp-neural-self-vs-peer` (A.4) and `fig:supp-model-spectra` (A.5, per-model PC-resolved spectra at df₂ = 375).
+- Interim for the per-model figure: `fig:supp-model-energy` (the `model_exact_energy_bars` figure).
+- The methods-validation figures sit at the end of A.5: `fig:supp-affine-calibration` and `fig:supp-stein-validation`. Methods B.6 / B.8 can reference these labels.
+- **To fix:**
+  - The geometry legend shows a literal `68\%`.
+  - Crop rows G–I from the DE-vs-MC composite.
+  - Check the caption of the encoding-session benchmark.
+  - `session_endpoint_image_bootstrap.png` was left out: its sign (+0.1) conflicts with the neighborhood correlation figure (−0.28).
+- `\clearpage` at the end of `extended_results.tex` keeps all A floats before B. A spans pp. 14–25.
+
 ## Structure status (2026-09-24)
 - New `extended_results.tex` (A.1–A.5) and `extended_methods.tex` (B.1–B.11), with section labels, figure labels and placeholder boxes.
 - `appendix_vanhateren_landscape_methods.tex` was demoted to a subsection and is now B.4 (label unchanged).
