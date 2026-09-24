@@ -13,8 +13,10 @@
 
 ## Figure status (2026-09-24, pass 1: copy existing)
 - 16 existing figures were copied to `figures/supp/` and wired into A.1–A.5 with draft captions. Each figure environment keeps its `CR/...` source path in a comment.
-- **Still NEW (placeholders):** `fig:supp-neural-self-vs-peer` (A.4) and `fig:supp-model-spectra` (A.5, per-model PC-resolved spectra at df₂ = 375).
-- Interim for the per-model figure: `fig:supp-model-energy` (the `model_exact_energy_bars` figure).
+- **New figures made (pass 2):**
+  - `fig:supp-neural-self-vs-peer`: `CR/explorations/nonlinear_control/plot_peer_review_self_vs_peer.py`.
+  - `fig:supp-model-spectra`: overview from `plot_model_pc_spectra.py --df2 375`. Per-model versions are in `CR/figures/nonlinear_control/model_pc_spectra/pc_spectra_<model>.pdf`; the layout is still to be decided.
+  - No placeholders are left.
 - The methods-validation figures sit at the end of A.5: `fig:supp-affine-calibration` and `fig:supp-stein-validation`. Methods B.6 / B.8 can reference these labels.
 - **To fix:**
   - The geometry legend shows a literal `68\%`.
