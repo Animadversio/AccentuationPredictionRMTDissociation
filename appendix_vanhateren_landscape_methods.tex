@@ -7,20 +7,11 @@ Monte Carlo component uses actual natural-image patches, rather than Gaussian
 designs having the same covariance.
 
 \paragraph{Images, teacher, and population reference.}
-We drew $100\times100$ patches from the van Hateren natural-image database.
-Raw 16-bit luminance $L$ was transformed as
-$\log(1+L)/\log(65536)$ and quantized to eight bits before being rescaled to
-$[0,1]$.  We used disjoint source images to construct a pool of 2,000 training
-patches (one patch per image) and an independent population pool of 20,000
-patches (ten patches per image).  The population pool was centered once and
-was used both to define the empirical covariance $\Sigma$ and to evaluate all
-fitted models.  The teacher $\bstar\in\mathbb R^{10,000}$ was the indicator of
-a centered disk of radius $0.3$ in image coordinates.  Its population signal
-variance was
-\begin{equation}
-  S=\operatorname{Var}_{\x\sim\mathcal D}
-  (\bstar^\top\x)=\bstar^\top\Sigma\bstar=1736.344965.
-\end{equation}
+Images, pools, covariance and disk teacher are those of
+App.~\ref{sec:app-methods-images}: a 2,000-patch training pool, a disjoint
+20,000-patch population pool that defines $\Sigma$ and is used to evaluate
+every fitted model, and a disk teacher with
+$S=\bstar^\top\Sigma\bstar=1736.34$.
 
 \paragraph{Noise--regularization grid and deterministic equivalents.}
 We evaluated 114 response-noise levels, comprising zero and a logarithmic grid

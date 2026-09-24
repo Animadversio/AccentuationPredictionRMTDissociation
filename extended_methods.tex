@@ -12,16 +12,56 @@
 \label{sec:app-methods-images}
 % Used by: Fig.~\ref{fig:phenomena} (bottom), Fig.~\ref{fig:pixel},
 % Fig.~\ref{fig:feature}, App.~\ref{sec:app-ext-pixel}, \ref{sec:app-ext-gauge}.
-% Content: van Hateren database; 100x100 patches; log(1+L)/log(65536),
-% 8-bit quantization, rescale to [0,1]; 2,000-patch training pool (one per
-% image) and 20,000-patch population pool (ten per image, disjoint source
-% images); centered population covariance Sigma and its eigendecomposition;
-% disk teacher (radius 0.3, S = 1736.34).  Currently stated inside
-% App.~\ref{sec:app-vanhateren-landscape-methods}; move the shared part here
-% and keep only the landscape-specific part there.
-% Optional small panel: spectrum s_k and teacher power b_k^2
-% (tables/vanhateren_spectral_teacher_profile.csv).
-\todo{Write: images, preprocessing, covariance, disk teacher.}
+% Source: CR/scripts/validate_vanhateren_disk_teacher.py (load_vanhateren_image,
+% stage_vanhateren_uint8, compute_population_spectrum; staged 2026-08-18, log
+% CR/logs/vanhateren_*); spectrum cache CR/tables/vanhateren_disk_teacher_spectrum.npz;
+% disk teacher CR/scripts/validate_ffhq_disk_teacher.py:create_disk_teacher.
+% Numbers below recomputed from the spectrum cache.
+All pixel-space and linear-feature experiments on natural images (Figs.~\ref{fig:pixel}
+and~\ref{fig:feature}; Apps.~\ref{sec:app-ext-pixel}, \ref{sec:app-ext-gauge})
+share one image set, covariance and teacher.  The toy example of
+Fig.~\ref{fig:phenomena} uses a separate, simpler pipeline
+(App.~\ref{sec:app-methods-toy}).
+
+\paragraph{Images and patches.}
+We used the uncalibrated van Hateren natural-image database (\texttt{.iml}
+files, $1024\times1536$ pixels, 16-bit big-endian luminance $L$).  Each image
+was mapped to $\operatorname{round}\!\big(255\log(1+L)/\log 65536\big)/255\in[0,1]$,
+i.e.\ log luminance quantized to eight bits.  From 4,000 randomly chosen
+source images we drew $100\times100$ patches at uniformly random positions: a
+\emph{training pool} of 2,000 patches (one from each of 2,000 images) and a
+\emph{population pool} of 20,000 patches (ten from each of the other 2,000
+images).  The two pools share no source image, so fitted models are always
+evaluated on images from different photographs.  One crop per training image
+keeps training samples independent: with 25 crops per image, correlated
+sibling crops leaked through leave-one-out cross-validation, which then chose
+the interpolating boundary of the penalty grid in 26 of 100 trials already
+at $\sigma^2/S=0.03$.  Patches are vectorized in $\R^{d}$, $d=10^4$.
+
+\paragraph{Population covariance.}
+The population pool was centered once, and its empirical covariance
+$\Sigma=\frac1{20{,}000}P^\top P$ ($P$: centered patch matrix) was
+diagonalized on a GPU, $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$.
+% NB (issue #26): covariance and eigh are computed in float32 in
+% compute_population_spectrum; tail eigenvalues (~2e-6) are near float32
+% resolution (eps*s_1 ~ 3.7e-6).  Recompute in float64 before final.  With
+20,000 samples in $d=10^4$ dimensions all eigenvalues are positive; they span
+7.2 decades ($s_1=30.7$, $s_d=2.0\times10^{-6}$, $\operatorname{Tr}\Sigma=46.9$).
+The leading PC, essentially mean luminance, carries 65\% of the total
+variance, the top 100 PCs 89\%.  This $\Sigma$ serves both as the covariance
+entering every deterministic equivalent and as the evaluation distribution for
+$E_{gen}$.
+
+\paragraph{Disk teacher.}
+The teacher $\bstar$ is the indicator of a centered disk of radius $0.3$ on
+the $[-1,1]^2$ patch grid (radius $\approx15$ pixels; 692 pixels, so
+$\|\bstar\|^2=692$), and $b_k=\uvec_k^\top\bstar$.  Its natural response
+variance is $S=\sum_ks_kb_k^2=1736.34$.  The teacher is strongly structured
+relative to the spectrum: the first PC carries 90.7\% of $S$ but only 7.4\% of
+$\|\bstar\|^2$, and PCs beyond the 100th carry 13.8\% of $\|\bstar\|^2$ while
+contributing $0.04\%$ of $S$.  It is this Euclidean teacher energy in
+low-variance directions that prediction barely weights and accentuation
+exposes.
 
 % ---------------------------------------------------------------------------
 \subsection{Toy teacher--student example}
@@ -52,20 +92,107 @@
 %   R^2 in panels: 1 - Var(f_x - f_y)/Var(f_y) (offset-free); Fig. 1C values
 %   (0.9969, 0.0481) do not match exp2_cross_eval (0.9966, -9.94): the
 %   composite likely used a variant denominator -- check before final.
-\todo{Write: data, constructed students, closed-form accentuation, targets,
-peer-review panels.}
+The linear example is a construction rather than a fit: it isolates the
+geometry of Sec.~\ref{sec:setup} with two students that differ from the
+teacher only along low-variance directions.
+
+\paragraph{Images and covariance.}
+We drew 12,000 random $100\times100$ patches from 500 van Hateren images
+(image and patch positions fixed by seed 42).  Each source image was min--max
+normalized to $[0,1]$ and a constant $0.15$ was subtracted; unlike
+App.~\ref{sec:app-methods-images}, no log transform was applied.  The
+eigenvectors $\uvec_k$ (ordered by decreasing variance) were obtained from
+the SVD of the centered patch matrix.
+
+\paragraph{Teacher and students.}
+The teacher $\bstar$ is the same radius-$0.3$ disk as in
+App.~\ref{sec:app-methods-images}.  For an index slice $K$ of eigenvectors let
+$u_K\propto\sum_{k\in K}(\uvec_k^\top\bstar)\uvec_k$ be the unit-norm projection
+of the teacher onto their span.  The two students are
+\[
+w_1=\bstar+\alpha_1u_{K_1},\qquad w_2=\bstar+\alpha_2u_{K_2},
+\]
+with $K_1$ the eigenvectors ranked $d-500$ to $d-100$ (moderately low
+variance), $\alpha_1=1$, and $K_2$ the 100 lowest-variance eigenvectors,
+$\alpha_2=100$.  Since $\|\bstar\|\approx26$, $w_1$ is visually
+indistinguishable from the teacher while $w_2$ carries a large
+high-spatial-frequency component (Fig.~\ref{fig:phenomena}B).  Both
+perturbations are nearly invisible to prediction: on the natural patches
+$1-\Var(f_i-f^\star)/\Var(f^\star)$ equals $1.0000$ to four decimals for both
+students (Fig.~\ref{fig:phenomena}A).
+
+\paragraph{Accentuation.}
+For a linear model $f(\x)=w^\top\x$, gradient ascent to a target $t$ from a
+seed $\x_0$ has the closed-form endpoint $\x=\x_0+\lambda w$ with
+$\lambda=(t-w^\top\x_0)/\|w\|^2$, so each student reaches every target
+exactly on its own path.  Targets were 13 evenly spaced levels between
+$\mu\pm3\sigma$ of the teacher response on natural patches
+($-309.6$ to $289.8$), and seeds were 20 natural patches (seed 7); unlike
+the analysis of Sec.~\ref{sec:setup}, seeds are natural images rather than
+the null seed.  Figure~\ref{fig:phenomena}B shows every third target for
+one seed ($f^\star(\x_0)=-31.4$).
+
+\paragraph{Peer review.}
+Each student's accentuated images were evaluated by the teacher and by both
+students, giving the $2\times2$ generator--evaluator panels of
+Fig.~\ref{fig:phenomena}C.
+\todo{State the $R^2$ definition used in Fig.~\ref{fig:phenomena}C; the
+current panel values (0.9969, 0.0481) are not reproduced by the script
+output (0.9966, $-9.94$ with denominator $\Var f^\star$); see
+notes/appendix\_outline\_plan.md \#21.}
 
 % ---------------------------------------------------------------------------
 \subsection{Two-dimensional geometry illustration}
 \label{sec:app-methods-geometry}
 % Used by: Fig.~\ref{fig:geometry}, Fig.~\ref{fig:supp-ridge-path-geometry}.
-% Content: Sigma = diag(1, eps=0.04); teacher; fixed design X; exact
-% conditional Gaussian of beta_hat | X (mean path, 68% ellipses);
-% lambda = 0.05 (kappa = 0.0518) with sigma^2 on a log grid; sigma^2 = 0.5 with
-% lambda on a log grid; iso-sets of Prop.~\ref{prop:mr-iso-geometry}.
-% Source: notebooks/ridge_paths_geometry_explorer.ipynb,
-% tables/ridge_paths_iso_error_geometry.csv.
-\todo{Write: parameters and construction of the 2D panels.}
+% Source: CR/scripts/plot_ridge_paths_in_geometry.py (defaults; commits
+% 0fe8c5b, 44dd89f), iso-set helpers CR/scripts/plot_iso_error_geometry.py;
+% caches CR/tables/ridge_paths_iso_error_geometry.csv, ridge_gaussian_ellipses.csv.
+% Main Fig. 2 = panel (b) of the script figure, restyled.
+\paragraph{Setting.}
+Figures~\ref{fig:geometry} and~\ref{fig:supp-ridge-path-geometry} use $d=2$
+with $\Sigma=\operatorname{diag}(1,\varepsilon)$, $\varepsilon=0.04$, so the
+second coordinate is a low-variance direction, and teacher
+$\bstar=(1.1,0.65)^\top$, giving $S={\bstar}^\top\Sigma\bstar=1.2269$.  One
+Gaussian design $X\in\R^{40\times2}$ with rows $\mathcal N(0,\Sigma)$ is drawn
+once (seed 20260918) and held fixed.  With $n=40\gg d$ the effective penalty
+is close to the nominal one ($\kappa=0.0518$ at $\lambda=0.05$); the figures
+therefore label paths by $\lambda$ in the convention of Eq.~\ref{eq:ridge}.
+
+\paragraph{Exact conditional law.}
+For fixed $X$ and $\mathbf y=X\bstar+\sigma\eta$, the ridge estimator is exactly
+Gaussian,
+\[
+\bhat\mid X\sim\mathcal N\big(A_\lambda X\bstar,\ \sigma^2A_\lambda A_\lambda^\top\big),
+\qquad A_\lambda=(X^\top X+n\lambda I)^{-1}X^\top .
+\]
+Ellipses are its 68\% probability regions (Mahalanobis radius
+$\sqrt{-2\log0.32}$); the dashed path is the conditional mean $A_\lambda X\bstar$
+over $\lambda$, i.e.\ the noise average for this design, not the
+deterministic equivalent $\bar\beta_\kappa$ of Eq.~\ref{eq:pixel-mean-weight}.
+The purple path is one noise realization $\eta$, kept fixed along both sweeps
+so that the path is continuous; it was chosen among four draws for visible
+motion along the low-variance axis.  250 further draws verify the ellipses.
+Panel (a) fixes $\lambda=0.05$ and varies $\sigma^2$ on 81 log-spaced values in
+$[10^{-4},4]$ (clouds at $\sigma^2=0.01,0.1,1,4$); panel (b) fixes
+$\sigma^2=0.5$ and varies $\lambda$ on 101 log-spaced values in
+$[10^{-4},10]$ (clouds at $\lambda=10^{-4},10^{-2},1,10$ and at the value
+$\lambda_\times=\sqrt{\det X^\top X}/n$ where the covariance ellipse swaps its
+major axis).
+
+\paragraph{Equal-error sets and marked penalties.}
+Prediction contours are the ellipses $\Delta^\top\Sigma\Delta=E$ for
+$E=0.01,0.04,0.09$ ($R^2_{gen}=0.99,0.97,0.93$); control contours are the circles
+${\bhat}^\top\bhat-(1+z){\bhat}^\top\bstar=0$ through the origin and
+$(1+z)\bstar$ for $z=-1/3,0,1$ ($R^2_{acc}=1-z^2=0.89,1,0$)
+(Prop.~\ref{prop:mr-iso-geometry}).  For the plotted realization, the
+prediction-stationary penalty $\lambda_{\rm pred}=0.0177$ minimizes
+$E_{gen}(\bhat(\lambda))$ (golden-section search in $\log\lambda$), and the
+control-calibrated penalty $\lambda_{\rm ctrl}=0.0258$ is the root of
+${\bhat}^\top(\bhat-\bstar)=0$ ($z=0$) closest to $\lambda_{\rm pred}$
+(bisection in $\log\lambda$).  Both are oracle quantities for this draw,
+illustrating what cross-validation targets on average rather than a
+cross-validated selection.
 
 % ---------------------------------------------------------------------------
 % Pixel-ridge landscape (Fig.~\ref{fig:pixel}); subsection with its own label

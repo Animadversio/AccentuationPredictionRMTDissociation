@@ -26,7 +26,7 @@
 - `\clearpage` at the end of `extended_results.tex` keeps all A floats before B. A spans pp. 14–25.
 
 ## B.1–B.3 readiness check (2026-09-24)
-All three have enough code to write from. B.4–B.10 were written by a colleague agent. I checked them against the earlier facts (α grid 1e-4..1e9, the affine map as a downstream step, untrained AlexNet, robust ε = 8/255) and they are consistent. B.11 is still a TODO.
+All three have enough code to write from. **B.1–B.3 were written on 2026-09-24**, so only B.11 remains a TODO. B.2 carries a `\todo` about the Fig. 1C R² values (#21). B.4–B.10 were written by a colleague agent. I checked them against the earlier facts (α grid 1e-4..1e9, the affine map as a downstream step, untrained AlexNet, robust ε = 8/255) and they are consistent. B.11 is still a TODO.
 
 **B.1 Natural-image data: enough code.**
 - **Source:** `CR/scripts/validate_vanhateren_disk_teacher.py` (`load_vanhateren_image`, `stage_vanhateren_uint8`, `compute_population_spectrum`).
@@ -40,8 +40,8 @@ All three have enough code to write from. B.4–B.10 were written by a colleague
   - B.5 null rotations: DE plus **Gaussian-design** Monte Carlo with this spectrum.
   - Fig. S4 selection vs estimation.
 - Issues:
-  17. The staging seed that produced the cached npz is not stored in it. The script default is 20260818; confirm it from logs or the run command.
-  18. B.4 says "radius 0.3 in image coordinates". Specify "on a [−1,1]² grid (≈15 px)".
+  17. ~~The staging seed is not stored in the npz.~~ **Mostly resolved:** `CR/logs/vanhateren_*` shows the 22,000-patch cache (4,000 disjoint images) was staged on 2026-08-18. The script default seed 20260818 matches that date, but the log does not print the seed.
+  18. ~~Radius wording in B.4.~~ **Fixed:** B.1 now says "radius 0.3 on the [−1,1]² grid (≈15 px; 692 px)", and the duplicate paragraph in B.4 was replaced by a pointer to B.1.
   19. There are **two van Hateren pipelines**: log-luminance (B.1/B.4/B.5) and the min–max/−0.15 pipeline of the Fig. 1 toy (B.2; see #16). Either B.1 states both, or Fig. 1 is regenerated with the log pipeline.
   20. The main Fig. 4 caption says "finite-$n$ Monte Carlo"; say "Gaussian-design" (B.5 already does).
 
@@ -61,9 +61,13 @@ All three have enough code to write from. B.4–B.10 were written by a colleague
 - **Caches:** `CR/tables/ridge_paths_iso_error_geometry.csv`, `ridge_gaussian_ellipses.csv`.
 - **Main Fig. 2 is panel (b), restyled.** Numbers verified: λ_pred = 0.0177, λ_ctrl = 0.0258, S = 1.2269 (so E_gen = 0.01/0.04/0.09 ↔ R² = 0.99/0.97/0.93), and z = −1/3 ↔ R² = 0.89.
 - Issues:
-  22. The main Fig. 2 caption says "Cross-validation picks the tangency". The marked point is the E_gen minimizer (prediction-stationary) of one fixed-design realization, not a CV selection. Say "the prediction-optimal penalty".
-  23. The dashed "mean Ridge path" is the conditional mean E[β̂|X] for fixed X (noise-averaged), not the DE mean weight β̄_κ of Eq. pixel-mean-weight. Clarify in the caption or B.3.
-  24. The design has d = 2 and n = 40 (γ = 0.05), so κ ≈ λ. State this in B.3 so the λ labels in Fig. 2 are not read as κ.
+  22. (B.3 now describes the marked penalties as oracle quantities of one draw; the main-text caption still needs fixing.) The main Fig. 2 caption says "Cross-validation picks the tangency". The marked point is the E_gen minimizer (prediction-stationary) of one fixed-design realization, not a CV selection. Say "the prediction-optimal penalty".
+  23. (B.3 now states this; the main-text caption still needs fixing.) The dashed "mean Ridge path" is the conditional mean E[β̂|X] for fixed X (noise-averaged), not the DE mean weight β̄_κ of Eq. pixel-mean-weight. Clarify in the caption or B.3.
+  24. The design has d = 2 and n = 40 (γ = 0.05), so κ ≈ λ. **Stated in B.3.**
+  25. **The Fig. 2 student path is one hand-picked noise realization** (the 4th of 4 draws, "chosen for visible low-variance motion"). Now disclosed in B.3. Consider also saying "one realization" in the main-text caption.
+  26. **The population spectrum is float32.** `compute_population_spectrum` builds the covariance and calls `eigh` in float32; the LOOCV and sample-space solves are float64. The tail eigenvalues (s_d ≈ 2×10⁻⁶) sit at float32 resolution (ε·s₁ ≈ 3.7×10⁻⁶). The DEs weight this tail through df₁,₂, B₁,₂, etc.
+      - Recommendation: recompute the eigensystem in float64 (one 10⁴×10⁴ `eigh`, minutes on a GPU) and check that the landscape and null-rotation DE curves do not change.
+      - There is a comment at the matching spot in B.1.
 
 ## Structure status (2026-09-24)
 - New `extended_results.tex` (A.1–A.5) and `extended_methods.tex` (B.1–B.11), with section labels, figure labels and placeholder boxes.
