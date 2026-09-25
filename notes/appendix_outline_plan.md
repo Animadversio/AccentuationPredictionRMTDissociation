@@ -1,5 +1,7 @@
 # Appendix outline plan (draft for review, 2026-09-24)
 
+**Live issue tracker (artifact):** https://claude.ai/artifact/AbCwhxjkCa5uvFw8MHtQrJ holds the issue list below (collection `issues`: #1–27, F1–F5 figure fixes, M1–M2 methods), with a shared status per issue. Keep the tracker and this file in sync: new issues get the next `#n` and an `order` field.
+
 ## Decisions (Binxu, 2026-09-24)
 - Order: **Extended results (A) → Methods (B) → Theory (C–L)**. Wired in `accentuation_rmt_main_compact_draft.tex`.
 - The null-rotation figure (`fig:app-null-rotation`) **moved to A.3**. Theory `sec:app-gauge-fragility` now points to it.
