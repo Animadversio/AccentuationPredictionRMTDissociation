@@ -23,11 +23,11 @@ A predictive model of a neural population is, in principle, also a controller: i
 We argue that none of this requires nonlinearity, depth or biology. It arises already for linear regression, from a single fact: \emph{control evaluates a model on a distribution the model itself generates}. Held-out prediction measures weight error in the metric of the data covariance $\Sigma$, which suppresses low-variance directions; accentuation moves along the fitted weight itself and therefore measures the same error in Euclidean geometry, where nothing is suppressed. For natural images, whose covariance spectrum decays over many orders of magnitude, this is the difference between not seeing an error and being dominated by it.
 
 Our contributions are:
-(i) a formulation of generalization, self-accentuation and peer review as evaluations of one predictor under three input distributions, with their equal-error sets (ellipsoid, sphere, hyperplane) exposing the dissociation geometrically (Sec.~\ref{sec:setup});
-(ii) deterministic equivalents for pixel-space ridge regression showing that prediction-optimal and control-optimal penalties satisfy different spectral conditions, so cross-validation leaves a computable residual control error (Sec.~\ref{sec:pixel});
-(iii) for ridge regression on a fixed linear feature map, a separation of the summary statistics that determine prediction from those that determine control, and a gauge family of feature maps with identical generalization but arbitrarily different control (Sec.~\ref{sec:feature});
-(iv) a response-independent gradient-geometry factor $T_F$ that identifies fragile feature maps, extends to nonlinear networks as a diagnostic, and recovers model ordering in the neuronal control data.
-All statements are proved in the appendix, where we also restates every result in derivation order (App.~\ref{sec:app-main-results}); numerical validation against Monte Carlo and natural-image regression accompanies each section.
+\textbf{(I)} a formulation of generalization, self-accentuation and peer review as evaluations of one predictor under three input distributions, with their equal-error sets (ellipsoid, sphere, hyperplane) exposing the dissociation geometrically (Sec.~\ref{sec:setup});
+\textbf{(ii)} deterministic equivalents for pixel-space ridge regression showing that prediction-optimal and control-optimal penalties satisfy different spectral conditions, so cross-validation in anisotropic data and teacher leaves a computable residual control error (Sec.~\ref{sec:pixel});
+\textbf{(iii)} for ridge regression on a fixed linear feature map, a separation of the summary statistics that determine prediction from those that determine control, and a gauge family of feature maps with identical generalization but arbitrarily different control (Sec.~\ref{sec:feature});
+\textbf{(iv)} a response-independent gradient-geometry factor $T_F$ that identifies fragile feature maps, extends to nonlinear networks as a diagnostic, and recovers model ordering in the neuronal control data.
+All statements are proved in the appendix, where we also restates every result in derivation order (App.~\ref{sec:app-main-results}); numerical validation against Monte Carlo and natural-image regression accompanies each section. 
 
 \paragraph{Related work.}
 High-dimensional ridge regression under anisotropic covariance is classical \citep{dobriban2018high,hastie2022surprises}, and deterministic equivalents for its risk are standard \citep{bai2010spectral,couillet2011random}; we use this toolkit but change the evaluation distribution from the training law to a model-generated path. Optimizing inputs against a fitted model is the setting of feature visualization and accentuation \citep{olah2017feature,hamblin2024feature}, adversarial examples and performative prediction; our contribution is a solvable model in which the resulting distribution shift is computed rather than assumed. Model-based closed-loop neuroscience \citepPW\ supplies the phenomena.
@@ -37,8 +37,8 @@ High-dimensional ridge regression under anisotropic covariance is classical \cit
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth,height=0.27\textheight,keepaspectratio]{figures/Figure_NeuroCtrl_results.png}\\[2pt]
-    \includegraphics[width=\linewidth,height=0.2\textheight,keepaspectratio]{figures/Figure_LinearToyModel.png}
+    \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}\\[2pt]
+    \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-04.png}%height=0.2\textheight,keepaspectratio
     \caption{\textbf{The same three phenomena in neurons (top) and in a linear teacher--student model (bottom).}
     Top: closed-loop experiment of \citetPW. Encoding models are fit to responses to natural images, generate accentuated images for graded target responses, and are tested in a second session.
     \textbf{A}~Two models predict held-out natural-image responses equally well.
@@ -47,6 +47,7 @@ High-dimensional ridge regression under anisotropic covariance is classical \cit
     Bottom: two linear students of a linear teacher (a disk-shaped weight on van~Hateren images), differing only along low-variance image directions, reproduce A--C exactly. Geometry inset: prediction sees weight error through the covariance ellipse; the accentuation path exposes the hidden Euclidean difference. Details: App.~\ref{sec:app-methods-neural-data} (neurons), App.~\ref{sec:app-methods-toy} (linear model).}
     \label{fig:phenomena}
 \end{figure}
+
 
 Figure~\ref{fig:phenomena} (top) summarizes the closed-loop experiments of \citetPW: responses of visual cortical sites (V2--IT, 25 sites in 5 macaques) to $\sim$1000 natural images were recorded; ten deep-network encoding models were fit by ridge regression on network features with penalty and layer chosen by cross-validation; each model then synthesized, by gradient-based \emph{feature accentuation} \citep{hamblin2024feature}, images that drive its own prediction to eleven target levels from ten seed images; and the images were presented to the same sites (data and models: Apps.~\ref{sec:app-methods-neural-data},~\ref{sec:app-methods-models}). Three observations motivate this paper.
 
@@ -59,7 +60,19 @@ Presenting model A's images to model B (``peer review'', Fig.~\ref{fig:phenomena
 \paragraph{Control tracks input-gradient structure.}
 Across the 250 site--model pairs, control success is predicted by the spectral profile of the model's input gradient $\nabla_\x f$: models whose gradients concentrate power at low spatial frequencies, like natural images, control better. The two adversarially trained models are the strongest controllers, but the association persists without them.
 
-The bottom row of Fig.~\ref{fig:phenomena} shows that a linear model reproduces all three observations once its weight error lies along low-variance directions of the image covariance. The remainder of the paper explains why finite-sample regression on noisy responses puts it there, why cross-validation does not remove it, and how the feature map decides how much of it reaches the pixel gradient.
+These phenomena are puzzling at first glance, though we show, even linear models on natural images can reproduce all three observations (\red{
+bottom, Fig.~\ref{fig:phenomena}}). 
+We constructed the bad controller to have weight error along low-variance directions of the image covariance (high spatial frequency), while the good controller has weight error more along the high eigenspace. Then matched prediction on natural data; diverse generated images; unequal control outcomes and relatively good peer reviews all emerge from it. 
+This shows the same symptom can emerge without deep network, nonlinearity or neurons. 
+Dissecting this idealistic set up, the remainder of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces this failure, why \textit{cross-validation does not eliminate it}, and how \textit{feature maps} introduce additional degrees of freedom that can greatly amplify the prediction--control dissociation. 
+% \begin{figure}[!ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-04.png}
+%     % \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-02.png}
+%     \caption{Caption}
+%     \label{fig:linear_toy}
+% \end{figure}
+
 
 \section{Three evaluations, three geometries of one predictor}
 \label{sec:setup}
@@ -97,7 +110,7 @@ z_{acc}:=\frac DN-1=\frac{{\bhat}^\top(\bhat-\bstar)}{{\bhat}^\top\bstar},
 \frac{E_{acc}}{S}=\Big(\frac{z}{1+z}\Big)^2,\quad R^2_{acc}=1-z^2,\quad \mathrm{slope}_{acc}=\frac{1}{1+z},
 \label{eq:acc_metric_ND_depen}
 \end{equation}
-\begin{wrapfigure}[24]{r}{0.5\linewidth}
+\begin{wrapfigure}[27]{r}{0.45\linewidth}
     \vspace{-8pt}
     \centering
     \vspace{-5pt}
@@ -115,7 +128,7 @@ A student can sit deep inside a small prediction ellipsoid, lie on a huge contro
 
 The remaining question is therefore not whether the dissociation is possible but when \emph{learning} produces it. We study three ingredients: finite-sample regression on noisy responses, the choice of regularization, and the feature map through which the gradient reaches the pixels. % We take them in turn.
 
-\section{Pixel-space ridge: noise, spectrum and the choice of regularization}
+\section{Pixel-space ridge: noise, spectrum and regularization}
 \label{sec:pixel}
 
 Ridge regression in pixel space, $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\|^2+\lambda\|\beta\|^2$, yields
@@ -152,7 +165,7 @@ For the ratio $N/D$ we use the leading approximation $\mu_N/\mu_D$ from the DEs 
 
 \begin{figure}[t]
     \centering
-    \vspace{-15pt}
+    \vspace{-19pt}
     \includegraphics[width=\linewidth]{figures/Figure_PixRidgeGeometry.png}
     \vspace{-15pt}
     \caption{\textbf{Pixel-space ridge separates prediction- and control-optimal regularization on natural images.}
@@ -257,7 +270,7 @@ Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric b
 
 \begin{figure}[!htp]
     \centering
-    % \vspace{-5pt}
+    \vspace{-15pt}
     % \includegraphics[width=0.55\linewidth,height=0.22\textheight,keepaspectratio]{figures/feature_summary_statistics_flow.pdf}%\hfill
     % \includegraphics[width=0.44\linewidth,height=0.22\textheight,keepaspectratio]{figures/nonlinear_control_biological_validation.pdf}\\[2pt]
     % \includegraphics[width=0.45\linewidth,height=0.2\textheight,keepaspectratio]{figures/VanHateren_Top500PC_prediction_null_feature_rotation.png}
@@ -326,7 +339,7 @@ Natural images make (ii) large for every model; the feature map decides (iii), a
 
 \begin{figure}[t]
     \centering
-    \vspace{-10pt}
+    \vspace{-15pt}
     \includegraphics[width=\linewidth]{figures/Figure_nonlinear_neuro_diagnostic.png}
     \vspace{-18pt}
     \caption{\textbf{Nonlinear gradient-feature geometry predicts biological control across encoding models.}
