@@ -63,8 +63,18 @@ All three have enough code to write from. **B.1–B.3 were written on 2026-09-24
           | f₂ → f₁ | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
           | f₂ → f₂ (self) | **−9.94** | **−9.97** | 0.0481 | 0.0524 |
 
+        - Replot layouts v1–v4 (editable-font PDFs; v4 is the compact Fig. 1-style triptych) come from `exp2_fig1_replot.py --version vN`, in `exp2_repro/fig1_toy_reproduction_alpha2_100_vN.pdf`.
         - With α₂ = 1000 (the original docstring value), f₂ still predicts natural images with R² = 0.99998. Peer review of f₁'s path drops to 0.66, and the self R² is −10.5.
       - Recommendation: redo the Fig. 1C labels with the paper's definition and state it in B.2.
+
+  27. **Fig. 1A panel text says "Eval on Heldout van Hateren".** The toy students are constructed, not fitted, and are evaluated on the same 12,000 patches that define Σ, so nothing is held out. Change the label in Illustrator to "natural van Hateren patches". The reproduction figures (v2–v4) already say "natural images".
+  - **B.1–B.3 review (2026-09-25):**
+    - Restored the word "With" that my earlier edit had swallowed in B.1.
+    - B.1 now says the eigendecomposition ran in single precision (#26).
+    - The w₁ eigen-slice is now given exactly (400 eigenvectors, ranks d−499 to d−100).
+    - The Fig. 1A R² is quoted at five decimals, and ‖w₂‖ ≈ 104 is noted.
+    - B.3 contour levels were checked against the script.
+    - The main text has no B.1–B.3 numbers to correct.
 
 **B.3 Two-dimensional geometry: enough code.**
 - **Source:** `CR/scripts/plot_ridge_paths_in_geometry.py` (commits 0fe8c5b, 44dd89f), with iso-set helpers in `CR/scripts/plot_iso_error_geometry.py`.

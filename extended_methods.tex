@@ -41,11 +41,11 @@ at $\sigma^2/S=0.03$.  Patches are vectorized in $\R^{d}$, $d=10^4$.
 \paragraph{Population covariance.}
 The population pool was centered once, and its empirical covariance
 $\Sigma=\frac1{20{,}000}P^\top P$ ($P$: centered patch matrix) was
-diagonalized on a GPU, $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$.
+diagonalized on a GPU in single precision, $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$.
 % NB (issue #26): covariance and eigh are computed in float32 in
 % compute_population_spectrum; tail eigenvalues (~2e-6) are near float32
-% resolution (eps*s_1 ~ 3.7e-6).  Recompute in float64 before final.  With
-20,000 samples in $d=10^4$ dimensions all eigenvalues are positive; they span
+% resolution (eps*s_1 ~ 3.7e-6).  Recompute in float64 before final.
+With 20,000 samples in $d=10^4$ dimensions all eigenvalues are positive; they span
 7.2 decades ($s_1=30.7$, $s_d=2.0\times10^{-6}$, $\operatorname{Tr}\Sigma=46.9$).
 The leading PC, essentially mean luminance, carries 65\% of the total
 variance, the top 100 PCs 89\%.  This $\Sigma$ serves both as the covariance
@@ -68,7 +68,10 @@ exposes.
 \label{sec:app-methods-toy}
 % Used by: Fig.~\ref{fig:phenomena} (bottom row).
 % SOURCE: Closed-loop-visual-insilico/scripts/accentuation_theory/
-%   exp2_accentuation.py (commit 09202ed; first run 2026-03-31); outputs in
+%   exp2_accentuation.py (commit 09202ed; first run 2026-03-31).  Deterministic
+%   reproduction + R^2 audit: exp2_fig1_reproduce.py (f44a023); replot layouts
+%   v1-v4: exp2_fig1_replot.py; outputs DL_Projects/AdvExampleLinearRegr/exp2_repro/.
+%   Original outputs in
 %   $STORE_DIR/DL_Projects/AdvExampleLinearRegr/exp2/ (exp2_weights,
 %   exp2_natural_scatter, exp2_accentuated_images_start*_highcontr,
 %   exp2_cross_eval).  Companion: exp1_adversarial_weight_construction.py,
@@ -112,14 +115,15 @@ of the teacher onto their span.  The two students are
 \[
 w_1=\bstar+\alpha_1u_{K_1},\qquad w_2=\bstar+\alpha_2u_{K_2},
 \]
-with $K_1$ the eigenvectors ranked $d-500$ to $d-100$ (moderately low
-variance), $\alpha_1=1$, and $K_2$ the 100 lowest-variance eigenvectors,
+with $K_1$ the 400 eigenvectors ranked $d-499$ to $d-100$ (moderately low
+variance; $d=10^4$), $\alpha_1=1$, and $K_2$ the 100 lowest-variance eigenvectors,
 $\alpha_2=100$.  Since $\|\bstar\|\approx26$, $w_1$ is visually
 indistinguishable from the teacher while $w_2$ carries a large
 high-spatial-frequency component (Fig.~\ref{fig:phenomena}B).  Both
 perturbations are nearly invisible to prediction: on the natural patches
-$1-\Var(f_i-f^\star)/\Var(f^\star)$ equals $1.0000$ to four decimals for both
-students (Fig.~\ref{fig:phenomena}A).
+$1-\Var(f_i-f^\star)/\Var(f^\star)$ equals $1.00000$ to five decimals for both
+students (Fig.~\ref{fig:phenomena}A), although $\|w_2\|\approx104$ is four
+times $\|\bstar\|$.
 
 \paragraph{Accentuation.}
 For a linear model $f(\x)=w^\top\x$, gradient ascent to a target $t$ from a
@@ -139,8 +143,10 @@ Fig.~\ref{fig:phenomena}C.
 \todo{Fig.~\ref{fig:phenomena}C currently prints $1-\Var(f^\star-f_e)/\Var(f_e)$
 (denominator: the evaluator's prediction), giving 0.9969 and 0.0481.  With the
 paper's convention (denominator $\Var f^\star$, as in Fig.~\ref{fig:phenomena}A
-and Table~\ref{tab:evaluation-metrics}) the same run gives 0.9966 and $-9.94$.
-Relabel the panels and state the definition here; see
+and Table~\ref{tab:evaluation-metrics}) the same run gives 0.9966 and $-9.94$
+(identity-line SSE: 0.9966, $-9.97$).  A deterministic reproduction
+(exp2\_fig1\_reproduce.py; layouts v1--v4 via exp2\_fig1\_replot.py) prints
+both; relabel the panels and state the definition here; see
 notes/appendix\_outline\_plan.md \#21.}
 
 % ---------------------------------------------------------------------------
