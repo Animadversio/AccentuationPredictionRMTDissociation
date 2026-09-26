@@ -14,7 +14,10 @@
 \begin{abstract}
 Recent experiments show that, models with similar held-out accuracy in predicting visual-neuron responses can differ sharply in the features they rely on and in their ability to generate stimuli to control those neurons. Moreover, the control success is more associated by the structure of a model's input gradient than its predictive accuracy. 
 We develop a geometric and analytical account of this prediction--control dissociation using a linear teacher--student model. 
-Classic generalization evaluates a fitted predictor on the natural-image distribution; feature accentuation evaluates it on a distribution generated along its own fitted direction. This change of distribution gives control error, $R^2$, and response slope a different dependence on estimation error than test loss: prediction weights error by the data covariance, control counts it in Euclidean geometry. Using deterministic equivalents for ridge regression we show that prediction-optimal and control-optimal regularization obey different spectral conditions, so cross-validation can leave large control error under noisy, anisotropic data. Extending the analysis to fixed linear feature maps, prediction depends only on the feature covariance and its alignment with the teacher, whereas control additionally depends on the map's Euclidean input-gradient geometry. We construct a gauge family of feature maps with identical generalization and cross-validated optimum but arbitrarily different control.  Control is most fragile when the feature directions that survive regularization backpropagate into low-variance, high-spatial-frequency image directions. The resulting gradient-geometry factor extends to nonlinear networks as a diagnostic and predicts the variation of \textit{in vivo} control capability of models better than held-out prediction accuracy.
+Classic generalization evaluates a fitted predictor on the natural-image distribution; model-based control evaluates it on a path along its own fitted direction. Such difference in evaluation distribution leads to different iso-error geometry in the weight space. 
+%feature accentuation evaluates it on a distribution generated along its own fitted direction. 
+% This change of distribution gives control error, $R^2$, and response slope a different dependence on estimation error than test loss: prediction weights error by the data covariance, control counts it in Euclidean geometry. 
+Using deterministic equivalents for ridge regression we show that prediction-optimal and control-optimal regularization obey different spectral conditions, so cross-validation can leave large control error under noisy, anisotropic data. Extending the analysis to fixed linear feature maps, prediction depends only on the feature covariance and its alignment with the teacher, whereas control additionally depends on the map's input-gradient geometry. We construct a gauge family of feature maps with identical generalization performance, but arbitrarily different control. Control is most fragile when the feature directions that survive regularization backpropagate into low-variance, high-spatial-frequency image directions. The resulting gradient-geometry factor extends to nonlinear networks as a diagnostic and predicts the variation of \textit{in vivo} control capability of models better than held-out prediction accuracy.
 \end{abstract}
 
 % suggested new abstract content - maybe something in here is useful
@@ -22,7 +25,8 @@ Classic generalization evaluates a fitted predictor on the natural-image distrib
 
 
 \section{Introduction}
-A predictive model of a neural population is, in principle, also a controller: if $f(\x)$ predicts the response of a neuron to an image $\x$, one can synthesize images that drive $f$ to a target level and present them to the neuron. Model-based control of visual neurons has been pursued with generative search \citep{ponce2019evolvingImages,xiao2020xdream}, population targeting \citep{bashivan2019neuralPopulationControl}, and predictive-model-guided synthesis \citep{walker2019inceptionLoops}, and recently at scale with deep-network encoding models and gradient-based stimulus synthesis by \citetPW.  The results of this latter study are puzzling. Encoding models that are nearly indistinguishable on predicting held-out natural images generate visibly different stimuli and differ several-fold in how well those stimuli modulate the neuron \textit{in vivo}; models that fail to control can still recognize the successful stimuli of other models; and the best predictor of control success is not accuracy but the spectral structure of the model's input gradient.
+A good predictive model of a neuron can, in principle, be used as a \textit{model-based} controller: if $f(\x)$ predicts the response of a neuron to an image $\x$, one can synthesize images that drive $f$ to a target level and present them to the subject to modulate neuronal state.  
+Aside from model-free generative search \citep{ponce2019evolvingImages,xiao2020xdream}, model-based control of visual neurons has been pursued across species \citep{bashivan2019neuralPopulationControl,walker2019inceptionLoops}, and recently performed at scale as a benchmark across many deep-network encoding models by \citetPW. The results of this latter study are puzzling. Encoding models that are nearly indistinguishable on predicting held-out natural images generate visibly different stimuli and differ several-fold in how well those stimuli modulate the neuron \textit{in vivo}; models that fail to control can still recognize the successful stimuli of other models; and the best predictor of control success is not accuracy but the spectral structure of the model's input gradient.
 
 % We argue that none of this requires nonlinearity, depth or biology. 
 We argue that these phenomena arise already in linear models, from a single fact: \emph{control evaluates a model on a distribution the model generates itself}. Held-out prediction measures weight error in the metric of the data covariance $\Sigma$, which suppresses low-variance directions; accentuation moves along the fitted weight itself and therefore measures the same error in Euclidean geometry, where nothing is suppressed. For natural images, whose covariance spectrum decays over many orders of magnitude, this is the difference between not seeing an error and being dominated by it.
@@ -37,10 +41,10 @@ All statements are proved in the appendix, where we also restates every result i
 % \paragraph{Related work.}
 % High-dimensional ridge regression under anisotropic covariance is classical \citep{dobriban2018high,hastie2022surprises}, and deterministic equivalents for its risk are standard \citep{bai2010spectral,couillet2011random}; we use this toolkit but change the evaluation distribution from the training law to a model-generated path. Optimizing inputs against a fitted model is the setting of feature visualization and accentuation \citep{olah2017feature,hamblin2024feature}, adversarial examples and performative prediction; our contribution is a solvable model in which the resulting distribution shift is computed rather than assumed. %Model-based closed-loop neuroscience \citepPW\ supplies the phenomena.
 \paragraph{Related work.}
-Encoding models built on deep networks now predict cortical responses so similarly that benchmarks no longer rank them \citep{yamins2014performanceOptimized,guclu2015deepGradientComplexity,cadena2019deepConvolutionalV1,schrimpf2018brainscore,conwell2024inductiveBiases}. Read one way this is convergence \citep{huh2024platonicRepresentationHypothesis,kapoor2026convergentLearning}; read another it is a weak test, answered by constraining the mapping \citep{prince2024sparsePositiveAlignment} or by seeking stimuli that split models apart \citep{golan2020controversialStimuli,feather2023modelMetamers,rajalingham2018large,geirhos2019imagenetTextureBias}. Closed-loop control is the limit of that strategy: the model writes the stimulus and the neuron grades it \citep{ponce2019evolvingImages,xiao2020xdream,bashivan2019neuralPopulationControl,walker2019inceptionLoops,prince2026parametric}. Optimizing an input against a fitted model likewise underlies feature visualization \citep{olah2017feature,hamblin2024feature,fel2023magnitudeConstrainedOptimization} and adversarial attack \citep{nguyen2015deepNeuralFooled,goodfellow2015explainingAdversarial,madry2018towardsResistant}, where robustness has been tied to alignment \citep{guo2022adversariallyTrainedNeuralRepresentations,dapello2020simulatingV1,taori2020measuring}. 
-In each case the test distribution is created by the model under test, which we make analytical.
-%  carrying theory of ridge risk under anisotropic covariance \citep{dobriban2018high,hastie2022surprises,mei2022generalization,bai2010spectral,couillet2011random} off the training law  and onto the model's own path.
+Encoding models built on deep networks now predict cortical responses so similarly that benchmarks no longer rank them \citep{yamins2014performanceOptimized,guclu2015deepGradientComplexity,cadena2019deepConvolutionalV1,schrimpf2018brainscore,conwell2024inductiveBiases}. Read one way this is convergence \citep{huh2024platonicRepresentationHypothesis,kapoor2026convergentLearning}; read another it is a weak test, answered by constraining the mapping \citep{prince2024sparsePositiveAlignment} or by seeking stimuli that split models apart \citep{golan2020controversialStimuli,feather2023modelMetamers,rajalingham2018large,geirhos2019imagenetTextureBias}. Closed-loop control is one limit of that strategy: the model writes the stimulus and the neuron grades it \citep{ponce2019evolvingImages,xiao2020xdream,bashivan2019neuralPopulationControl,walker2019inceptionLoops,prince2026parametric}. Optimizing an input against a fitted model likewise underlies feature visualization \citep{olah2017feature,hamblin2024feature,fel2023magnitudeConstrainedOptimization} and adversarial attack \citep{nguyen2015deepNeuralFooled,goodfellow2015explainingAdversarial,madry2018towardsResistant}, where robustness has been tied to alignment \citep{guo2022adversariallyTrainedNeuralRepresentations,dapello2020simulatingV1,taori2020measuring}. 
+In each case the test distribution is created by the model under test, which we make analytical. 
 Classic theory characterizes ridge risk under anisotropic covariance and signal--spectrum alignment \citep{dobriban2018high,hastie2022surprises,mei2022generalization,mel2021highDimensionalRegression}, as well as generalization and optimal regularization under an externally specified train--test distribution shift \citep{canatar2021outOfDistribution,tripuraneni2021covariateShift,patil2024optimalOODRidge}. We instead study a self-generated shift: the test distribution is supported on an optimization path created by the fitted predictor itself.
+%  carrying theory of ridge risk under anisotropic covariance \citep{dobriban2018high,hastie2022surprises,mei2022generalization,bai2010spectral,couillet2011random} off the training law  and onto the model's own path.
 
 \section{Prediction and control dissociate in neurons and in linear regression}
 \label{sec:phenomena}
@@ -146,6 +150,7 @@ A student can sit deep inside a small prediction ellipsoid, lie on a huge contro
 
 The remaining question is therefore not whether the dissociation is possible but when \emph{learning} produces it. We study three ingredients: finite-sample regression on noisy responses, the choice of regularization, and the feature map through which the gradient reaches the pixels. % We take them in turn.
 
+\vspace{-10pt}
 \section{Pixel-space ridge: noise, spectrum and regularization}
 \label{sec:pixel}
 
@@ -231,7 +236,7 @@ Among admissible values of $\kappa$, let $\kappa_{\rm gen}^{\star}$ be an
 interior differentiable minimizer of $E_{\rm gen,DE}$, and let
 $\kappa_{\rm acc}^{\star}$ denote a zero of the leading control error,
 equivalently satisfying $\mu_D=\mu_N$. Their defining conditions are
-\begin{align}
+\begin{align}\small
 E_{\rm gen,DE}+\sigma^2
 &=n\kappa\frac{B_{2,3}}{\mathrm{df}_{2,3}},
 &&(\kappa=\kappa_{\rm gen}^{\star};\ \text{prediction stationarity}),
@@ -250,7 +255,7 @@ E_{\rm gen,DE}+\sigma^2
 % \label{eq:acc_optim_reg_cond1}
 % \end{equation}
 Further, at the prediction optimum $\kappa_{\rm gen}^{\star}$ the control error is
-\begin{equation}
+\begin{equation}\small
 z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 \left(\frac{B_{2,3}}{\mathrm{df}_{2,3}}-\frac{B_{1,2}}{\mathrm{df}_{1,2}}\right)_{\kappa=\kappa^\star_{gen}} .
 \label{eq:pixel-zacc-cv}
@@ -258,7 +263,7 @@ z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 (Proofs: App.~\ref{sec:app-optimal-regularization}.)
 \end{prop}
 Geometrically, along the ridge path (Fig.~\ref{fig:geometry}), $\kappa_{\rm gen}^{\star}$ lands at the tangency with the prediction ellipsoid and $\kappa_{\rm acc}^{\star}$ at its crossing of the control sphere. 
-Both conditions equate the noisy prediction risk to $n\kappa$ times a spectral-band average of the teacher's per-mode power $b_k^2$, but the two bands sit at different places (App.~Fig.~\ref{fig:app-tuning-kernels}). The control kernel $s_k/(s_k+\kappa)^2$ is a bump centered at $s_k=\kappa$, symmetric on a log axis; the prediction kernel $s_k^2/(s_k+\kappa)^3$ is the same bump multiplied by the shrinkage factor $s_k/(s_k+\kappa)$, which shifts it up to $s_k\approx2\kappa$ and suppresses its low-variance side. 
+Both conditions equate the noisy prediction risk to $n\kappa$ times a spectral-band average of the teacher's per-mode power $b_k^2$, but the two bands sit at different places (Fig.~\ref{fig:app-tuning-kernels}). The control kernel $s_k/(s_k+\kappa)^2$ is a bump centered at $s_k=\kappa$, symmetric on a log axis; the prediction kernel $s_k^2/(s_k+\kappa)^3$ is the same bump multiplied by the shrinkage factor $s_k/(s_k+\kappa)$, which shifts it up to $s_k\approx2\kappa$ and suppresses its low-variance side. 
 % \red{Each kernel is a $\kappa$-sensitivity: the control condition asks which modes' shrinkage $s_k/(s_k+\kappa)$ changes as $\kappa$ moves, since that sets the mean weight $\bar\beta_\kappa$ and $N$, whereas prediction stationarity asks which modes' \emph{squared} shrinkage changes, since that sets $E_{gen}$.} 
 Consequently $z^{(0)}_{acc,CV}$ compares the teacher power around $2\kappa$ with that around $\kappa$. 
 It vanishes for isotropic data, or for a teacher whose per-mode power $b_k^2$ is constant across modes. % (\todo{Rem.~\ref{rem:app-tuning-remarks}}). 
@@ -269,7 +274,7 @@ For \textit{an anisotropic spectrum and a structured teacher} the averages diffe
 % Eq.~\ref{eq:pixel-zacc-cv} is the distance along the path between its tangency with the prediction ellipsoid and its crossing of the control sphere.
 %The gap is multiplied by $\kappa\,\mathrm{df}_{1,2}$, i.e. by the number of modes near the regularization edge. 
 
-Over the noise--regularization plane for natural images (Fig.~\ref{fig:pixel}A--C), the DE tracks Monte Carlo except at very low noise or regularization (Fig.~\ref{fig:supp-pixel-de-mc}). Prediction- and control-optimal penalties form two distinct valleys, the $E_{acc}$ valley a sharp cusp. At low noise, $\kappa^\star_{\rm gen}$ is also benign to control; as noise grows it approaches and crosses the $R^2_{acc}=0$ cliff, and control fails catastrophically. % tightened
+Over the noise--regularization plane for natural images (Fig.~\ref{fig:pixel}\textbf{A--C}), the DE tracks Monte Carlo except at very low noise or regularization (Fig.~\ref{fig:supp-pixel-de-mc}). Prediction- and control-optimal penalties form two distinct valleys, the $E_{acc}$ valley a sharp cusp. At low noise, $\kappa^\star_{\rm gen}$ is also benign to control; as noise grows it approaches and crosses the $R^2_{acc}=0$ cliff, and control fails catastrophically. % tightened
 % We visualize the landscape of prediction and control error over the noise-regularization plane ($\sigma^2,\kappa$), for regression on natural images (Fig.~\ref{fig:pixel}A-C). 
 % Our DE formula generally well tracks the Monte Carlo estimate of the error (Fig.~\ref{fig:supp-pixel-de-mc}), where deviation from leading DE occurs only at very low noise or low regularization cases. 
 % The prediction-optimal and control-optimal penalties form two distinct valleys, where the $E_{acc}$ valley is a cusp and much sharper than $E_{gen}$. 
@@ -293,7 +298,7 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1],
 using $B_{1,1}\ge B_{2,2}$ (Eq.~\ref{eq:app-spectral-inequalities}). Note, on the leading order, the peer slope is never below one, i.e. the \textit{student under-predicts the teacher on its peer's path}, and the peer $R^2$ is non-negative and degrades gracefully with noise through the selected $\kappa$. In contrast, on the self-generated path the norm inflation $V_{\rm pix}$ of Eq.~\ref{eq:pixel-de} adds to $D$ but not to $N$: 
 %in terms of $z=D/N-1$, $z_{acc}\asymp z_{peer}+V_{\rm pix}/B_{1,1}$ with $z_{peer}=B_{2,2}/B_{1,1}-1\le0$, 
 so the student over-predicts the teacher ($\mathrm{slope}_{acc}=N/D<1$), and $z_{acc}$ can grow without bound, driving $R^2_{acc}$ negative.
-The sign differences in neural data confirm this leading order picture: in \citetPW, the peer review score between pairs of models, have $R^2=0.04,[-0.06,0.10]$, $slope=1.35,[1.14,1.59]$ (median, [IQR], $n=90$); while accentuation score (eval on self generated path) have $R^2=-4.17,[-4.59,-3.51]$, $slope=0.38,[0.33,0.42]$ ($n=10$; App.~\ref{sec:app-ext-peer}, analysis in App.~\ref{sec:app-methods-peer}). % stats test between the two \todo
+The sign differences in neural data confirm this leading order picture: in \citetPW, the peer review score between pairs of models, have $R^2=0.04,[-0.06,0.10]$, $\mathrm{slope}=1.35,[1.14,1.59]$ (median, [IQR], $n=90$); while accentuation score (eval on self generated path) have $R^2=-4.17,[-4.59,-3.51]$, $\mathrm{slope}=0.38,[0.33,0.42]$ ($n=10$; App.~\ref{sec:app-ext-peer}, analysis in App.~\ref{sec:app-methods-peer}). % stats test between the two \todo
 Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric between models ($A\leftarrow B$ or $B\leftarrow A$). In practice the students are fitted to the same recordings through different feature maps; the review score then becomes asymmetric, and the evaluator can recognize its own noise in the generator's path only to the extent that the two maps route noise into the same pixel directions (Sec.~\ref{sec:feature}; App.~\ref{sec:app-peer-shared}). 
 % Peer review measures only the shared shrinkage bias: at leading order it is never negative, degrades gracefully with noise, and is symmetric between the two fits. Self-evaluation instead carries the estimator's own Euclidean noise energy through Eq.~\ref{eq:pixel-de}, so $z_{acc}$ grows without bound with $\sigma^2/n$ and $R^2_{acc}$ becomes arbitrarily negative. A student can therefore track a peer's path while failing on its own, which is the linear form of Fig.~\ref{fig:phenomena}C. 
 % The asymmetry between a strong and a weak generator in the data arises when the two differ in their feature maps (Sec.~\ref{sec:feature}); %and measured responses along a barely modulated path add trial noise that no evaluator can explain, which is why even the peer scores of a weak generator's images are poor.
@@ -312,24 +317,37 @@ Note, in simplistic pixel space peer review, the slope and $R^2$ are symmetric b
     %\textbf{C}~Neuronal data: site-demeaned association of each candidate predictor with biological control slope (left) and control error (right) across nine trained (filled) and seven conventionally trained (open) models. Held-out error carries no model-order information; the exact trace, $V_\phi$ and its neighborhood versions do. (Draft: keep 5 rows.)}
     \label{fig:feature}%\label{fig:nonlinear-biological-validation}
 \end{figure}
-
+\vspace{-8pt}
 \section{Linear feature ridge: effect of gradient geometry} %the map decides what reaches the gradient
 \label{sec:feature}
 
 Pixel regression explains why one student fails; it cannot explain why ten equally predictive backbones fail differently. We idealize a backbone as a fixed linear map $F\in\R^{p\times d}$, fit $\hat w$ by ridge on features $F\x$, and accentuate along the pixel gradient $\bhat=F^\top\hat w$. Let $\Sigma_F:=F\Sigma F^\top$ be the feature covariance and $\GramDef$ the Euclidean feature Gram. The best realizable feature weight and its irreducible error are $w^\star=\Sigma_F^\dagger F\Sigma\bstar$ and $S_\perp=S-{w^\star}^\top \Sigma_F w^\star$ (App.~\ref{lem:mr-feature-weights}).
 
+% \begin{prop}[Feature ridge: prediction and control]\label{prop:feature-de}\label{prop:linfeat_acc_ND}\label{prop:linfeat_gen_err}
+% With $\kappa$, $B^F$ and $\mathrm{df}^F$ built from $(\Sigma_F,w^\star)$ and aspect ratio $p/n$, the mean fitted pixel weight is the realizable weight shrunk in feature space and back-projected, and the norm inflation carries a map-dependent \emph{gradient-geometry factor} $T_F$:
+% \begin{equation}
+% \bar\beta_{F,\kappa}:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar,
+% \quad
+% % V_F(\kappa):=\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
+% % \,
+% % T_F(\kappa):=\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big].
+% V_F(\kappa):=\frac1n(E_{gen,DE}+\sigma^2)\,\underbrace{\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big]}_{T_F(\kappa):=},
+% \label{eq:feature-mean-variance}
+% \end{equation}
+% Then
+% \begin{equation}
+% E_{gen,DE}=\frac{n(\kappa^2B^F_{1,2}+S_\perp+\sigma^2)}{n-\mathrm{df}^F_2}-\sigma^2,
+% \qquad
+% N_{DE}={\bstar}^\top\bar\beta_{F,\kappa},
+% \qquad
+% D_{DE}=\|\bar\beta_{F,\kappa}\|^2+V_F(\kappa).
+% \label{eq:feature-de}
+% \end{equation}
+% Setting $F=I$ gives $\bar\beta_{F,\kappa}=\bar\beta_\kappa$ and $T_F=\mathrm{df}_{1,2}$, recovering Prop.~\ref{prop:pixel-de}. (Proofs: App.~\ref{sec:app-feature-regression}.)
+% \end{prop}
 \begin{prop}[Feature ridge: prediction and control]\label{prop:feature-de}\label{prop:linfeat_acc_ND}\label{prop:linfeat_gen_err}
-With $\kappa$, $B^F$ and $\mathrm{df}^F$ built from $(\Sigma_F,w^\star)$ and aspect ratio $p/n$, the mean fitted pixel weight is the realizable weight shrunk in feature space and back-projected, and the norm inflation carries a map-dependent \emph{gradient-geometry factor} $T_F$:
-\begin{equation}
-\bar\beta_{F,\kappa}:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar,
-\,
-V_F(\kappa):=\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
-\,
-T_F(\kappa):=\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big].
-\label{eq:feature-mean-variance}
-\end{equation}
-Then
-\begin{equation}
+With $\kappa$, $B^F$ and $\mathrm{df}^F$ built from $(\Sigma_F,w^\star)$ and aspect ratio $p/n$, 
+\begin{equation}\small
 E_{gen,DE}=\frac{n(\kappa^2B^F_{1,2}+S_\perp+\sigma^2)}{n-\mathrm{df}^F_2}-\sigma^2,
 \qquad
 N_{DE}={\bstar}^\top\bar\beta_{F,\kappa},
@@ -337,9 +355,20 @@ N_{DE}={\bstar}^\top\bar\beta_{F,\kappa},
 D_{DE}=\|\bar\beta_{F,\kappa}\|^2+V_F(\kappa).
 \label{eq:feature-de}
 \end{equation}
+where 
+the mean fitted pixel weight $\bar\beta_{F,\kappa}$ is the realizable weight shrunk in feature space and back-projected, and the norm inflation carries a map-dependent \emph{gradient-geometry factor} $T_F$:
+\begin{equation}\small
+\bar\beta_{F,\kappa}:=F^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar,
+\quad
+% V_F(\kappa):=\frac{E_{gen,DE}+\sigma^2}{n}\,T_F(\kappa),
+% \,
+% T_F(\kappa):=\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big].
+V_F(\kappa):=\frac1n(E_{gen,DE}+\sigma^2)\,\underbrace{\operatorname{Tr}\big[\Gram(\Sigma_F+\kappa I)^{-2}\Sigma_F\big]}_{T_F(\kappa):=},
+\label{eq:feature-mean-variance}
+\end{equation}
 Setting $F=I$ gives $\bar\beta_{F,\kappa}=\bar\beta_\kappa$ and $T_F=\mathrm{df}_{1,2}$, recovering Prop.~\ref{prop:pixel-de}. (Proofs: App.~\ref{sec:app-feature-regression}.)
 \end{prop}
-The structure is the same as in pixel ridge, so the interpretation carries over: $N$ is the teacher's alignment with the mean weight, $D$ is that weight's norm plus an inflation, and the unrealizable signal $S_\perp$ simply acts as extra response noise. What changes is what determines the two objects. Prediction sees the feature map only through $\Sigma_F$ and $F\Sigma\bstar$: the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen}$, is a function of $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$. Control additionally depends on the Gram $\Gram$, through $T_F$ and $\|\bar\beta_{F,\kappa}\|$, and on the teacher overlap $F\bstar$, through $N_{DE}$ (Fig.~\ref{fig:feature}A; Cor.~\ref{cor:mr-summary-statistics}). Thus the statistics governing control generically exceed those governing prediction. They coincide only in special cases, for instance white data $\Sigma=I$, where $\Gram=\Sigma_F$ and $F\bstar=F\Sigma\bstar$ (App.~\ref{sec:app-gauge-fragility}).
+The structure is the same as in pixel ridge, so the interpretation carries over: $N$ is the teacher's alignment with the mean weight, $D$ is that weight's norm plus an inflation, and the unrealizable signal $S_\perp$ simply acts as extra response noise. What changes is what determines the two objects. Prediction sees the feature map only through $\Sigma_F$ and $F\Sigma\bstar$: the whole curve $E_{gen,DE}(\kappa)$, hence the cross-validated $\kappa$ and $R^2_{gen}$, is a function of $(\Sigma_F,F\Sigma\bstar,S,\sigma^2,n)$. Control additionally depends on the Gram $\Gram$ and on the teacher overlap $F\bstar$, (Fig.~\ref{fig:feature}\textbf{A}; Cor.~\ref{cor:mr-summary-statistics}). Thus the statistics governing control generically exceed those governing prediction. They coincide only in special cases, for instance white data $\Sigma=I$, where $\Gram=\Sigma_F$ and $F\bstar=F\Sigma\bstar$ (App.~\ref{sec:app-gauge-fragility}).
 This extra degree of freedom can be seen clearly through the group that transforms feature map without affecting prediction. 
 \begin{prop}[Prediction-preserving gauge]\label{prop:gauge}
 For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $\Sigma_F$ and $F\Sigma\bstar$, hence the joint feature--response covariance, $E_{gen,DE}(\kappa)$ and the DE-based prediction-optimal penalty $\kappa^\star_{gen}$, while changing $\Gram$ and $F\bstar$ and therefore control (Prop.~\ref{prop:mr-gauge}; construction in App.~\ref{sec:app-gauge-fragility}).
@@ -364,7 +393,7 @@ Holding the prediction error fixed, the leading control error (Eqs.~\ref{eq:pixe
 \textbf{(i) noise} $(E_{gen}+\sigma^2)/n$, the estimation-noise level, which is the only factor visible from held-out accuracy;
 \textbf{(ii) spectrum} the mismatch between prediction-optimal and control-optimal penalties, Eq.~\ref{eq:pixel-zacc-cv}, which is zero for white data and grows with anisotropy and with teacher energy in low-variance modes;
 \textbf{(iii) map} $T_F$, the ridge-weighted ratio of Euclidean to natural-covariance gradient energy, a property of the feature map alone.
-Visual neuronal responses are known to be highly noisy \red{\citep{goris2014partitioning,churchland2010stimulus}}, meeting (i);
+Visual neuronal responses are known to be highly noisy \citep{goris2014partitioning,churchland2010stimulus}, meeting (i);
 Natural images make (ii) large for every model; the feature map decides (iii), and equally predictive maps can differ in it without bound.
 
 
@@ -392,8 +421,8 @@ Published preprocessed data of \citetPW.
 
 \section{Nonlinear feature ridge: a generalized diagnostic for DNN}
 \label{sec:nonlinear}
-For linear $\phi$, Prop.~\ref{prop:feature-de} shows $T_F$ is the main culprit of accentuation error. For nonlinear networks, is there an analogous quantity that preludes control failure? 
-Viewing a nonlinear feature map $\phi$ as locally linear, we use its Jacobian $J_\phi(x)$ to replace $F$ in Eq.~\ref{eq:TF} gives 
+For linear feature, Prop.~\ref{prop:feature-de} shows $T_F$ is the main culprit of accentuation error. For nonlinear features $\phi$, is there an analogous quantity that preludes control failure? 
+Viewing a nonlinear feature map $\phi$ as locally linear, we use its Jacobian $J_\phi(x)$ to replace $F$ in Eq.~\ref{eq:TF},
 % For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian gives
 \begin{equation}\small
 T_\phi(x,\kappa)=\sum_k\frac{s_k}{(s_k+\kappa)^2}\,\|J_\phi(x)^\top v_k\|^2,
@@ -406,7 +435,7 @@ Since an accentuation path travels far from the seed, we also evaluate smoothed 
 % This is exact for linear $\phi$ and a theory-motivated diagnostic for nonlinear networks. %, where $s_k=g_k^\top\Sigma g_k$ no longer holds. 
 %For linear $\phi$ this is exact; for a network it is a diagnostic motivated by the theory, because the identity $s_k=g_k^\top\Sigma g_k$ that made $T_F$ a ratio of gradient energies no longer holds. 
 
-We computed these quantities for all 250 site--model pairs of the neuronal experiment (App.~\ref{sec:app-methods-nonlinear}), using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:nonlinear-biological-validation}). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\ref{eq:feature-de} would also be needed.
+We computed these quantities for all 250 site--model pairs of the neuronal experiment (App.~\ref{sec:app-methods-nonlinear}), using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:nonlinear-biological-validation}\textbf{C,D}). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\ref{eq:feature-de} would also be needed.
 
 
 \section{Discussion}
