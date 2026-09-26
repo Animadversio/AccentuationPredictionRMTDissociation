@@ -272,21 +272,22 @@ Methods: App.~\ref{sec:app-methods-peer}.}
 
 \begin{figure}[ht]
 \centering
-% Source: CR/figures/nonlinear_control/neural_peer_review/peer_review_self_vs_peer.pdf
-% Script: CR/explorations/nonlinear_control/plot_peer_review_self_vs_peer.py
+% Source: CR/figures/nonlinear_control/neural_peer_review/peer_review_self_vs_peer_vertical.pdf
+% Script: CR/explorations/nonlinear_control/plot_peer_review_self_vs_peer.py --vertical
 % Statistics: CR/tables/nonlinear_control/biological_validation/PEER_REVIEW_SELF_VS_PEER_RESULTS.md
-\includegraphics[width=\linewidth]{figures/supp/peer_review_self_vs_peer.pdf}
-\caption{\textbf{Self-evaluation versus peer review.}
-\textbf{A,B}~For each generator model, identity $R^2$ (symlog) and slope of
-the self cell (diamond) and of the nine peer reviewers (gray dots; bar:
-median), from the 25-site-averaged matrices of
-Fig.~\ref{fig:supp-neural-peer-matrix}C,D.  Every self slope is below one and
+\includegraphics[width=0.95\linewidth]{figures/supp/peer_review_self_vs_peer_vertical.pdf}
+\caption{\textbf{Self-evaluation versus peer review.}  Top row: identity
+$R^2$; bottom row: slope.
+\textbf{A,\,C}~For each generator model, the self cell (diamond) and the nine
+peer reviewers (gray dots; bar: median), from the 25-site-averaged matrices of
+Fig.~\ref{fig:supp-neural-peer-matrix}C,D ($R^2$ on a symlog axis).  Every self slope is below one and
 every self $R^2$ is negative; 80 of 90 peer slopes exceed one.  Over matrix
 cells, peer versus self: $R^2$ $0.04$ $[-0.06,0.10]$ versus $-4.17$
 $[-4.59,-3.51]$, slope $1.35$ $[1.14,1.59]$ versus $0.38$ $[0.33,0.42]$
 (median [IQR]).
-\textbf{C}~Paired site contrasts (mean over peer cells minus mean over self
-cells), colored by subject: all 25 sites favor peer review on both metrics.
+\textbf{B,\,D}~Paired site contrasts for the same metric (mean over peer
+cells minus mean over self cells; log axis in B, linear from zero in D; bar:
+median), colored by subject: all 25 sites favor peer review on both metrics.
 Reviewer-label permutation $p<5\times10^{-6}$; with five subjects the exact
 sign-flip test attains its minimum $p=0.0625$.
 Methods: App.~\ref{sec:app-methods-peer}.}
