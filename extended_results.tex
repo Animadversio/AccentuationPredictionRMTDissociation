@@ -382,35 +382,63 @@ changes it.}
 \label{fig:supp-smoothing-scale}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[tbp]
 \centering
-% Source: CR/figures/nonlinear_control/biological_validation/site_centered_predictor_benchmark_control_session_export_pearson_10v9v8v7_all10_reference_residualized.pdf
-\includegraphics[width=0.85\linewidth]{figures/supp/site_centered_predictor_benchmark_control_session_export_pearson_10v9v8v7_all10_reference_residualized.pdf}\\[4pt]
-% Source: CR/figures/nonlinear_control/biological_validation/site_centered_predictor_benchmark_encoding_session.png
-\includegraphics[width=0.85\linewidth]{figures/supp/site_centered_predictor_benchmark_encoding_session.png}
-% Candidate, NOT included: CR/figures/nonlinear_control/biological_validation/
-% session_endpoint_image_bootstrap.png -- shows control-session Spearman(V,
-% slope) ~ +0.1 for non-robust models, inconsistent in sign with
-% site_centered_neighborhood_correlations.png (-0.28); check V variant /
-% endpoint version before using.  Other candidates: neural_validation_export/
-% paper_v4_raw_x, paper_v5_raw_predictors.
-\caption{\textbf{Robustness of the within-site association.}
-\textbf{Top}~As Fig.~\ref{fig:supp-nonlinear-benchmark} (Pearson, control
-session with the cross-session affine map of
-Eq.~\ref{eq:app-cross-session-affine}) for the main estimator families, but
-with every model subset residualized by the fixed 10-model site mean instead
-of its own subset mean.  Markers: all 10 models (filled diamond), without the
-untrained AlexNet (filled circle), without CLIPAG and robust RN50 (open
-diamond), without all three (open circle); stars: raw Pearson $p<0.05$.
-\textbf{Bottom}~All estimator families with a different endpoint and
-statistic: held-out MSE and $V_\phi$ evaluated on the 195 held-out
-encoding-session images, control outcomes on the upstream (identity) scale
-without the affine map, and site-residual \emph{Spearman} correlations with
-site means recomputed within each subset.  Markers as in
-Fig.~\ref{fig:supp-nonlinear-benchmark} (10, 8 and 7 models); stars: raw
-site-clustered $p<0.05$; $n$ is annotated where fewer rows give a valid
-estimate.}
+% Source: CR/figures/nonlinear_control/biological_validation/robustness_benchmark_main.pdf
+% Script: CR/explorations/nonlinear_control/plot_robustness_benchmarks.py
+% (tables/nonlinear_control/biological_validation/robustness_benchmark_main.csv)
+% Not included (superseded): site_centered_predictor_benchmark_encoding_session.png;
+% session_endpoint_image_bootstrap.png (sign conflict, issue F4).
+\includegraphics[width=\linewidth]{figures/supp/robustness_benchmark_main.pdf}
+\caption{\textbf{Robustness of the model ranking to the endpoint.}  Same
+convention as Fig.~\ref{fig:nonlinear-biological-validation}D: raw
+$\log_{10}$ predictor against the outcome minus its fixed all-10-model site
+mean; direction-aligned Pearson correlation (sign flipped for control slope,
+so positive is the predicted direction).
+\textbf{A,\,B}~Control session with the cross-session affine map
+(Eq.~\ref{eq:app-cross-session-affine}); A extends
+Fig.~\ref{fig:nonlinear-biological-validation}D to more estimators, B uses the
+direct control MSE.
+\textbf{C,\,D}~Encoding-session endpoint: held-out MSE and $V_\phi$ evaluated
+on the 195 held-out encoding-session images, outcomes on the upstream
+(identity) scale without the affine map.  Markers: all 10 models (filled
+diamond), without the untrained AlexNet (filled circle), without CLIPAG and
+robust RN50 (open diamond), without all three (open circle); stars: raw
+$p<0.05$.  For 9--10 models, the exact trace, exact local $V_\phi$ and
+neighborhood $V_\phi$ ($16/255$) reach $r=0.35$--$0.62$ at both endpoints and
+for both outcomes, while held-out MSE stays at or below $0.18$.
+Spearman and predictor-residualized versions:
+Figs.~\ref{fig:supp-nonlinear-robustness-spearman}
+and~\ref{fig:supp-nonlinear-robustness-resid}.}
 \label{fig:supp-nonlinear-robustness}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+% Source: CR/figures/nonlinear_control/biological_validation/robustness_benchmark_spearman.pdf
+\includegraphics[width=\linewidth]{figures/supp/robustness_benchmark_spearman.pdf}
+\caption{\textbf{Rank-based version} of
+Fig.~\ref{fig:supp-nonlinear-robustness}: identical, but with Spearman
+$\rho$ instead of Pearson $r$ (stars: raw Spearman $p<0.05$).  The
+geometry--control association is not driven by a few extreme values: for
+9--10 models the same three predictors reach $\rho=0.34$--$0.57$, while
+held-out MSE stays at or below $0.22$.}
+\label{fig:supp-nonlinear-robustness-spearman}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+% Source: CR/figures/nonlinear_control/biological_validation/robustness_benchmark_resid.pdf
+\includegraphics[width=\linewidth]{figures/supp/robustness_benchmark_resid.pdf}
+\caption{\textbf{Predictor-residualized version} of
+Fig.~\ref{fig:supp-nonlinear-robustness}: identical, but the $\log_{10}$
+predictor is also centered on its fixed all-10-model site mean, so only
+within-site differences between models enter on both axes.  The geometry
+predictors change little ($r=0.41$--$0.63$ for 9--10 models).  Held-out MSE
+gains a positive association here, up to $r=0.21$ in the control session and
+$0.45$ at the encoding endpoint, largest with the untrained AlexNet included;
+it vanishes for the seven conventional models ($r\le0.08$).}
+\label{fig:supp-nonlinear-robustness-resid}
 \end{figure}
 
 % Validation figures supporting the methods (App.~\ref{sec:app-methods-neural-data},
