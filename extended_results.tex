@@ -66,41 +66,83 @@ Setting: App.~\ref{sec:app-methods-geometry}.}
 % Theory: App.~\ref{sec:app-pixel-ridge}, \ref{sec:app-optimal-regularization},
 % \ref{sec:app-ratio-corrections}.
 % \todo{Short text: (i) DE vs.\ natural-image Monte Carlo over the full
-% noise--regularization plane; (ii) slope landscapes; (iii) fixed penalty
-% vs.\ CV-selected vs.\ control-oracle penalty along the noise axis, including
-% where the leading DE fails (near the control optimum) and the Gaussian
-% surrogate of App.~\ref{sec:app-ratio-gaussian} takes over.}
+% noise--regularization plane (error, $R^2$, slope; $\kappa$ and $\lambda$
+% views); (ii) fixed penalty vs.\ CV-selected vs.\ control-oracle penalty along
+% the noise axis, including where the leading DE fails (near the control
+% optimum) and the Gaussian surrogate of App.~\ref{sec:app-ratio-gaussian}
+% takes over.}
+% Figs. supp-pixel-de-mc / -r2 / -slope / -lambda share one layout: rows =
+% leading DE / natural-image MC mean (100 trials), columns = prediction /
+% control; paths are the DE optima and the median LOOCV choice, drawn
+% identically in both rows.  Script: CR/scripts/plot_vanhateren_supp_landscapes.py
 
 \begin{figure}[ht]
 \centering
-% Source: CR/figures/vanhateren_landscape/export/composite/paper_composite_three_landscapes_de_mc_rows_figexport.pdf
-% TODO(fig): rows G--I repeat main Fig. 3D--F; crop to the 2x3 heatmaps.
-\includegraphics[width=0.85\linewidth]{figures/supp/paper_composite_three_landscapes_de_mc_rows_figexport.pdf}
-\caption{\textbf{Deterministic equivalents versus natural-image Monte Carlo
-for the landscapes of Fig.~\ref{fig:pixel}.}
-\textbf{A--C}~Leading DE of $E_{gen}/S$, $E_{acc}/S$ and $R^2_{acc}$ over
-the noise ratio $\sigma^2/S$ and effective regularization $\kappa$.
-\textbf{D--F}~The same quantities as means over 100 natural-image Monte Carlo
-trials on the same grid.  Lines: prediction optimum $\kappa^\star_{gen}$
-(blue), control optimum $\kappa^\star_{acc}$ (orange dashed), median
-empirical LOOCV penalty (green dotted); black contour: $R^2_{acc}=0$.
-\textbf{G--I}~As in Fig.~\ref{fig:pixel}D--F.
+% Source: CR/figures/vanhateren_landscape/supp/supp_landscape_error_kappa.pdf
+\includegraphics[width=0.84\linewidth]{figures/supp/supp_landscape_error_kappa.pdf}
+\caption{\textbf{Error landscapes: deterministic equivalent versus
+natural-image Monte Carlo} over the full grid of Fig.~\ref{fig:pixel}
+(114 noise levels $\times$ 478 penalties, $\kappa$ up to $10^4$).
+\textbf{A,\,B}~Leading DE of the normalized prediction error $E_{gen}/S$ and
+control error $E_{acc}/S$ (Eq.~\ref{eq:pixel-de}).
+\textbf{C,\,D}~Mean over 100 natural-image Monte Carlo trials on the same
+grid.  Lines (same in all panels): prediction optimum $\kappa^\star_{gen}$
+(blue), control optimum $\kappa^\star_{acc}$ (orange dashed), both from the
+DE, and median empirical LOOCV penalty (green dotted).  For
+$\kappa\ge10^{-2}$ the Monte Carlo mean and the DE differ by a median of 2\%
+for $E_{gen}$ and 10\% for $E_{acc}$; larger deviations are confined to the
+near-ridgeless floor $\kappa\approx2.4\times10^{-3}$ and to the narrow
+$E_{acc}$ valley, where the leading DE vanishes.
 Methods: App.~\ref{sec:app-vanhateren-landscape-methods}.}
 \label{fig:supp-pixel-de-mc}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[tbp]
 \centering
-% Source: CR/figures/vanhateren_landscape/landscape_slope_kappa.pdf
-\includegraphics[width=0.85\linewidth]{figures/supp/landscape_slope_kappa.pdf}
-\caption{\textbf{Slope landscapes} of generalization (left) and accentuation
-(right) over the full penalty range, leading DE (top) and Monte Carlo mean
-over 100 trials (bottom).  White: prediction-optimal $\kappa$; pink dashed:
-control-optimal $\kappa$ (leading DE).  The generalization slope stays near
-one except at the highest noise and weakest regularization, whereas the
-accentuation slope falls by orders of magnitude below the prediction-optimal
-path.}
+% Source: CR/figures/vanhateren_landscape/supp/supp_landscape_r2_kappa.pdf
+\includegraphics[width=0.84\linewidth]{figures/supp/supp_landscape_r2_kappa.pdf}
+\caption{\textbf{$R^2$ landscapes}, layout as in
+Fig.~\ref{fig:supp-pixel-de-mc}: prediction $R^2_{gen}=1-E_{gen}/S$ (left)
+and control $R^2_{acc}=1-z^2$ (right).  Color is linear on $[0,1]$ and
+logarithmic in $|R^2|$ below $0$; black contour: $R^2=0$.  Prediction stays
+above zero except at the highest noise with the weakest penalty, while
+control falls below zero in a wedge under the prediction-optimal path, reaching
+$R^2_{acc}<-10^{4}$ at weak regularization; the prediction-optimal path meets
+the wedge at $\sigma^2/S\approx1$ (Fig.~\ref{fig:pixel}).}
+\label{fig:supp-pixel-r2}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+% Source: CR/figures/vanhateren_landscape/supp/supp_landscape_slope_kappa.pdf
+\includegraphics[width=0.84\linewidth]{figures/supp/supp_landscape_slope_kappa.pdf}
+\caption{\textbf{Slope landscapes}, layout as in
+Fig.~\ref{fig:supp-pixel-de-mc}: true-on-fitted slope for generalization
+(left) and $\mathrm{slope}_{acc}=N/D$ for accentuation (right); color is
+logarithmic and centered on the calibrated value $1$ (dash-dotted contour).
+Strong shrinkage makes both slopes exceed one.  Below the prediction-optimal
+path the generalization slope falls by at most about one order of magnitude,
+whereas the accentuation slope falls by up to four: the accentuated images move
+the teacher far less than the student predicts.}
 \label{fig:supp-pixel-slope}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+% Source: CR/figures/vanhateren_landscape/supp/supp_landscape_error_lam.pdf
+\includegraphics[width=0.84\linewidth]{figures/supp/supp_landscape_error_lam.pdf}
+\caption{\textbf{Error landscapes against the ridge penalty $\lambda$}
+($\alpha=n\lambda$) instead of the effective penalty $\kappa$; data, panels
+and lines as in Fig.~\ref{fig:supp-pixel-de-mc}.  Because $d>n$, all
+$\lambda\lesssim10^{-4}$ map onto the near-ridgeless floor of $\kappa$, so
+this view resolves the low-noise corner that the $\kappa$ view compresses.
+There the prediction optimum is ridgeless ($\lambda^\star_{gen}$ at the grid
+floor for $\sigma^2/S\lesssim5\times10^{-5}$), whereas the control optimum
+$\lambda^\star_{acc}$ shrinks in proportion to the noise along a deep valley of
+$E_{acc}$: at $\sigma^2/S=10^{-6}$ the two optima differ 4000-fold in
+$\lambda$ but only by 3\% in $\kappa$.  For $\sigma^2/S\ge10^{-3}$,
+$\lambda^\star_{acc}\approx2$--$2.5\,\lambda^\star_{gen}$.}
+\label{fig:supp-pixel-lambda}
 \end{figure}
 
 \begin{figure}[ht]

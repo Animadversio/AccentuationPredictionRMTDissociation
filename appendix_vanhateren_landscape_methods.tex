@@ -24,7 +24,8 @@ scikit-learn convention
 \end{equation}
 with $\alpha\in[10^{-5},10^7]$ ($\lambda\in[10^{-8},10^4]$).  The effective
 penalty $\kappa$ shown in Fig.~\ref{fig:pixel} is the positive solution of
-$n\lambda=\kappa\{n-\mathrm{df}_1(\kappa)\}$.  At each of the 54,492 grid
+$n\lambda=\kappa\{n-\mathrm{df}_1(\kappa)\}$; Fig.~\ref{fig:supp-pixel-lambda}
+shows the error landscapes against $\lambda$ itself.  At each of the 54,492 grid
 points we evaluated the deterministic equivalents using the eigenvalues of
 the empirical population covariance and the disk teacher's coordinates in
 that eigenbasis.  The prediction-optimal and control-optimal paths minimize,

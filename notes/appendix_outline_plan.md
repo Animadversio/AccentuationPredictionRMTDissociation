@@ -153,12 +153,12 @@ Proposed appendix order (in `accentuation_rmt_main_compact_draft.tex`):
 - Text ✍️: 1 short paragraph linking this to Prop. `mr-iso-geometry`.
 
 ### A.2 Pixel-ridge landscape: extra views (supports Fig. 3)
-- **Fig. S2 = missing `suppfig:pixl-MC`**: DE vs natural-image MC for E_gen, E_acc and R²_acc.
-  - Source: `CR/figures/vanhateren_landscape/export/composite/paper_composite_three_landscapes_de_mc_rows_figexport.pdf` ✅/🔧
-  - Rows G–I duplicate main Fig. 3, so crop to the 2×3 heatmaps.
-- **Fig. S3** slope landscape: slope_gen and slope_acc, DE and MC.
-  - Source: `CR/figures/vanhateren_landscape/landscape_slope_kappa.png` ✅/🔧
-  - Could be merged into S2 as a 4th column.
+- **Figs. S2–S3b (done 2026-09-26)**: four 2×2 figures (rows DE / MC mean, columns prediction / control), in main Fig. 3 path style. Script: `CR/scripts/plot_vanhateren_supp_landscapes.py`; outputs in `CR/figures/vanhateren_landscape/supp/`.
+  - `fig:supp-pixel-de-mc`: E_gen/S and E_acc/S over κ (full range to 10⁴). Replaces the old composite that repeated main Fig. 3D–F.
+  - `fig:supp-pixel-r2`: R²_gen and R²_acc; linear on [0,1], log|R²| below 0; R²=0 contour.
+  - `fig:supp-pixel-slope`: slope_gen and slope_acc, log color centered at 1; slope=1 contour.
+  - `fig:supp-pixel-lambda`: E_gen and E_acc over λ. This resolves the low-noise corner that the κ view collapses onto the κ floor of about 2.4e-3: at σ²/S=1e-6 the two optima differ 4000× in λ but by 3% in κ.
+  - DE-vs-MC agreement for κ ≥ 1e-2 is a median of 2% (E_gen) and 10% (E_acc), per the caption.
 - **Fig. S4** fixed penalty vs CV-selected vs E_acc-oracle along the noise axis, for E/S, R², slope and κ.
   - Source: `CR/notebooks/outputs/pixel_ridge/vanhateren_selection_estimation/selection_vs_estimation_extended_with_sklearn_cv.png` ✅
   - Also shows leading DE vs the Gaussian surrogate. This is the evidence for "leading DE fails near the control optimum" (App. ratio corrections).
