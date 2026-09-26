@@ -21,7 +21,7 @@ Classic generalization evaluates a fitted predictor on the natural-image distrib
 A predictive model of a neural population is, in principle, also a controller: if $f(\x)$ predicts the response of a neuron to an image $\x$, one can synthesize images that drive $f$ to a target level and present them to the neuron. Model-based control of visual neurons has recently been carried out at scale with deep-network encoding models and gradient-based stimulus synthesis\todo{History... but recently \citepPW}. The result is puzzling. Encoding models that are nearly indistinguishable on predicting held-out natural images generate visibly different stimuli and differ several-fold in how well those stimuli modulate the neuron \textit{in vivo}; models that fail to control can still recognize the successful stimuli of other models; and the best predictor of control success is not accuracy but the spectral structure of the model's input gradient.
 
 % We argue that none of this requires nonlinearity, depth or biology. 
-We argue that these symptoms arise already in linear models, from a single fact: \emph{control evaluates a model on a distribution the model generates itself}. Held-out prediction measures weight error in the metric of the data covariance $\Sigma$, which suppresses low-variance directions; accentuation moves along the fitted weight itself and therefore measures the same error in Euclidean geometry, where nothing is suppressed. For natural images, whose covariance spectrum decays over many orders of magnitude, this is the difference between not seeing an error and being dominated by it.
+We argue that these phenomena arise already in linear models, from a single fact: \emph{control evaluates a model on a distribution the model generates itself}. Held-out prediction measures weight error in the metric of the data covariance $\Sigma$, which suppresses low-variance directions; accentuation moves along the fitted weight itself and therefore measures the same error in Euclidean geometry, where nothing is suppressed. For natural images, whose covariance spectrum decays over many orders of magnitude, this is the difference between not seeing an error and being dominated by it.
 
 Our contributions are:
 \textbf{(I)} a formulation of generalization, self-accentuation and peer review as evaluations of one predictor under three input distributions, with their equal-error sets (ellipsoid, sphere, hyperplane) exposing the dissociation geometrically (Sec.~\ref{sec:setup});
@@ -31,7 +31,7 @@ Our contributions are:
 All statements are proved in the appendix, where we also restates every result in derivation order (App.~\ref{sec:app-main-results}); numerical validation against Monte Carlo and natural-image regression accompanies each section. 
 
 \paragraph{Related work.}
-High-dimensional ridge regression under anisotropic covariance is classical \citep{dobriban2018high,hastie2022surprises}, and deterministic equivalents for its risk are standard \citep{bai2010spectral,couillet2011random}; we use this toolkit but change the evaluation distribution from the training law to a model-generated path. Optimizing inputs against a fitted model is the setting of feature visualization and accentuation \citep{olah2017feature,hamblin2024feature}, adversarial examples and performative prediction; our contribution is a solvable model in which the resulting distribution shift is computed rather than assumed. Model-based closed-loop neuroscience \citepPW\ supplies the phenomena.
+High-dimensional ridge regression under anisotropic covariance is classical \citep{dobriban2018high,hastie2022surprises}, and deterministic equivalents for its risk are standard \citep{bai2010spectral,couillet2011random}; we use this toolkit but change the evaluation distribution from the training law to a model-generated path. Optimizing inputs against a fitted model is the setting of feature visualization and accentuation \citep{olah2017feature,hamblin2024feature}, adversarial examples and performative prediction; our contribution is a solvable model in which the resulting distribution shift is computed rather than assumed. %Model-based closed-loop neuroscience \citepPW\ supplies the phenomena.
 
 \section{Prediction and control dissociate in neurons and in linear regression}
 \label{sec:phenomena}
@@ -50,44 +50,42 @@ High-dimensional ridge regression under anisotropic covariance is classical \cit
 \end{figure}
 
 
-Figure~\ref{fig:phenomena} (top) summarizes the closed-loop experiments of \citetPW: responses of visual cortical sites (V2--IT, 25 sites in 5 macaques) to $\sim$1000 natural images were recorded; ten deep-network encoding models were fit by ridge regression on network features with penalty and layer chosen by cross-validation; each model then synthesized, by gradient-based \emph{feature accentuation} \citep{hamblin2024feature}, images that drive its own prediction to eleven target levels from ten seed images; and the images were presented to the same sites (data and models: Apps.~\ref{sec:app-methods-neural-data},~\ref{sec:app-methods-models}). Three observations motivate this paper.
+\citetPW   used the following closed-loop paradigm (Fig.~\ref{fig:phenomena}, top): responses of visual cortical sites (V2--IT, 25 sites in 5 macaques) to $\sim$1000 natural images were recorded; for each site, ten encoding models were fit by ridge regression on features from ten deep network backbones, with penalty and layer chosen by cross-validation; using \emph{feature accentuation} \citep{hamblin2024feature}, each model optimized a image using a variant of gradient ascent, and then synthesized images that drive its own prediction to eleven target levels from ten seed images (Fig.~\ref{fig:phenomena}, top right); and the images were presented to the same sites in the \textit{control session}. The control is successful if the proposed images evoked neural activations as predicted (data and models: Apps.~\ref{sec:app-methods-neural-data},~\ref{sec:app-methods-models}). Three observations motivate this paper.
 
 \paragraph{Similar prediction, divergent control.}
-The trained models were tightly matched on held-out natural images, yet the slope and correlation between predicted and measured responses to their own accentuated images varied widely across models, with far larger spread than on natural images. Many models reached their requested \emph{predicted} response by adding texture and high-spatial-frequency structure that left the neuron largely unmoved (Fig.~\ref{fig:phenomena}\red{C}).
+The trained models were tightly matched on held-out natural images (Fig.~\ref{fig:phenomena}\red{A}), yet the slope and correlation between predicted and measured responses to their own accentuated images varied widely across models, with far larger spread than on natural images. Many models reached their target \emph{predicted} response by adding texture and high-spatial-frequency structure that left the neuron largely unmoved (Fig.~\ref{fig:phenomena}\red{B,C}).
 
 \paragraph{Recognition without generation.}
-Presenting model A's images to model B (``peer review'', Fig.~\ref{fig:phenomena}\red{C}) shows an asymmetry: a model whose own images fail to modulate the neuron still predicts the neuronal responses to a successful model's images with good correlation and better calibration than the generator itself. Models can recognize good control stimuli that they cannot produce.
+Presenting model A's images to model B (``peer review'', Fig.~\ref{fig:phenomena}\red{C}) shows an asymmetry: a model whose own images fail to modulate the neuron still predicts the neuronal responses to a successful model's images with good correlation and better $R^2$ than the generator itself. Models can recognize good control stimuli that they cannot produce.
 
 \paragraph{Control tracks input-gradient structure.}
 Across the 250 site--model pairs, control success is predicted by the spectral profile of the model's input gradient $\nabla_\x f$: models whose gradients concentrate power at low spatial frequencies, like natural images, control better. The two adversarially trained models are the strongest controllers, but the association persists without them.
 
-These phenomena are puzzling at first glance, though we show, even linear models on natural images can reproduce all three observations (\red{
-bottom, Fig.~\ref{fig:phenomena}}). 
-We constructed the bad controller to have weight error along low-variance directions of the image covariance (high spatial frequency), while the good controller has weight error more along the high eigenspace. Then matched prediction on natural data; diverse generated images; unequal control outcomes and relatively good peer reviews all emerge from it. 
-This shows the same symptom can emerge without deep network, nonlinearity or neurons. 
-Dissecting this idealistic set up, the remainder of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces this failure, why \textit{cross-validation does not eliminate it}, and how \textit{feature maps} introduce additional degrees of freedom that can greatly amplify the prediction--control dissociation. 
-% \begin{figure}[!ht]
-%     \centering
-%     \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-04.png}
-%     % \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-02.png}
-%     \caption{Caption}
-%     \label{fig:linear_toy}
-% \end{figure}
+These phenomena are puzzling at first glance, but linear models on natural images reproduce all three observations (Fig.~\ref{fig:phenomena}, bottom). We construct the bad controller to differ from the teacher along the lowest-variance, high-spatial-frequency directions of the image covariance, the good controller only slightly and along less extreme ones; then matched prediction, diverse accentuations, unequal control and good peer review all follow. Dissecting this idealistic set up, the rest of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces such errors, why \textit{cross-validation does not remove them}, and how \textit{feature maps} can amplify the dissociation. 
+
+% These phenomena are puzzling at first glance, though we show, linear models on natural images can reproduce all three observations (\red{
+% bottom, Fig.~\ref{fig:phenomena}}). 
+% We constructed the bad controller to have weight error along low-variance directions of the image covariance (high spatial frequency), while the good controller has weight error more along the high eigenspace. Then matched prediction on natural data; diverse generated images; unequal control outcomes and relatively good peer reviews all emerge from it. 
+% This shows the same symptom can emerge without deep network, nonlinearity or neurons. 
+% Dissecting this idealistic set up, the remainder of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces this failure, why \textit{cross-validation does not eliminate it}, and how \textit{feature maps} introduce additional degrees of freedom that can greatly amplify the prediction--control dissociation. 
+
 
 
 \section{Three evaluations, three geometries of one predictor}
 \label{sec:setup}
 
 \paragraph{Teacher and student.}
-We idealize a visual neuron as a noisy linear teacher, its encoding model as a linear student, and natural image inputs $\x\in\R^d$ as draws from $\mathcal N(0,\Sigma)$, a centered Gaussian distribution with structured covariance $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$. 
+We idealize a visual neuron as a noisy linear teacher, its encoding model as a linear student, and natural image inputs as $\x\in\R^d,\x\sim\mathcal N(0,\Sigma)$, a centered Gaussian distribution with structured covariance $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$. 
 A linear teacher with weight $\bstar=\sum_kb_k\uvec_k$ produces noisy responses $y=\x^\top\bstar+\sigma\epsilon$, $\epsilon\sim\mathcal{N}(0,1)$, and $S:={\bstar}^\top\Sigma\bstar$ is the noiseless natural response variance. 
 The student is $f(\x)=\x^\top\bhat$, fitted from $n$ pairs $(X,\mathbf y)$; for linear feature-space students (Sec.~\ref{sec:feature}) $\bhat$ is the effective pixel weight $F^\top\hat w$, which is also the gradient $\nabla_\x f$.
 
 \paragraph{Three distributions.}
-Generalization evaluates $f$ on fresh natural inputs, $\x\sim\mathcal N(0,\Sigma)$. Accentuation evaluates $f$ on inputs it generates itself: gradient ascent from a seed $\x_0$ moves along $\nabla_\x f=\bhat$, so the idealized path is $\x=\x_0+\alpha\bhat$ with $\alpha$ set by the target level\footnotemark. In the main text, we study $\x_0=0$ and the target range is variance-matched, $\Var[\alpha]({\bhat}^\top\bhat)^2=S$, so the student's \emph{prediction} has natural dynamic range along its path. Peer review evaluates $f$ on the path $\x_0+\alpha\bprime$ generated by another student $\bprime$. Writing $\Delta=\bhat-\bstar$ and applying the standard formulas for MSE, $R^2$ and the slope of true-on-predicted response to each distribution (Lem.~\ref{lem:mr-metrics}) gives Table~\ref{tab:evaluation-metrics}.
+Generalization evaluates $f$ on fresh natural inputs, $\x\sim\mathcal N(0,\Sigma)$. Accentuation evaluates $f$ on inputs it generates itself: gradient ascent from a seed $\x_0$ moves along $\nabla_\x f=\bhat$, so the idealized path is $\x=\x_0+\alpha\bhat$ with $\alpha$ set by the target level\footnotemark. %In the main text, 
+We study $\x_0=0$ and the target range is variance-matched, $\Var[\alpha]({\bhat}^\top\bhat)^2=S$, so the student's \emph{prediction} has natural dynamic range along its path. Peer review evaluates $f$ on the path $\x_0+\alpha\bprime$ generated by another student $\bprime$. Writing $\Delta=\bhat-\bstar$ and applying the standard formulas for MSE, $R^2$ and the slope of true-on-predicted response to each distribution (Lem.~\ref{lem:mr-metrics}) gives Table~\ref{tab:evaluation-metrics}.
 \footnotetext{In practice, accentuation for DNN adds gradient preconditioning and augmentation \citep{hamblin2024feature,MACO}, some supplied image priors \cite{XXX}; App.~\ref{sec:app-evaluation-distributions} treats nonzero and multiple seeds.}
 
 \begin{table}[t]
+\vspace{-10pt}
 \centering\footnotesize\setlength{\tabcolsep}{3.5pt}
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}llcccl@{}}
@@ -99,8 +97,10 @@ Accentuation & $\Var[\alpha]\,\bhat{\bhat}^\top$ & $S\,(1-N/D)^2$ & $1-(D/N-1)^2
 Peer review & $\Var[\alpha']\,\bprime{\bprime}^\top$ & $S\,(D_{peer}-N_{peer})^2/\|\bprime\|^4$ & $1-(D_{peer}/N_{peer}-1)^2$ & $N_{peer}/D_{peer}$ & hyperplane \\
 \bottomrule
 \end{tabular}}
-\caption{One fitted weight, three evaluation distributions, three geometries. $\Delta:=\bhat-\bstar$; on the student's own path the true and predicted gains are $N:={\bhat}^\top\bstar$, $D:={\bhat}^\top\bhat$, and on a peer's path $N_{peer}:={\bstar}^\top\bprime$, $D_{peer}:={\bhat}^\top\bprime$; $z:=D/N-1$ in each row. The last column is the level set of each row's metrics in the space of student weights $\bhat$: an ellipsoid about $\bstar$, a sphere on the diameter $[0,(1+z)\bstar]$, a hyperplane normal to $\bprime$ (Prop.~\ref{prop:mr-iso-geometry}). Pearson correlation is degenerate on a noiseless rank-one path and is omitted.}
+\caption{Evaluation metrics on three distributions, and their geometries. $\Delta:=\bhat-\bstar$; on the student's own path the true and predicted gains are $N:={\bhat}^\top\bstar$, $D:={\bhat}^\top\bhat$, and on a peer's path $N_{peer}:={\bstar}^\top\bprime$, $D_{peer}:={\bhat}^\top\bprime$; $z:=D/N-1$ in each row. Last column: level sets of each row's metrics in the space of student weights $\bhat$ (Prop.~\ref{prop:mr-iso-geometry}).}
+% \caption{One fitted weight, three evaluation distributions, three geometries. $\Delta:=\bhat-\bstar$; on the student's own path the true and predicted gains are $N:={\bhat}^\top\bstar$, $D:={\bhat}^\top\bhat$, and on a peer's path $N_{peer}:={\bstar}^\top\bprime$, $D_{peer}:={\bhat}^\top\bprime$; $z:=D/N-1$ in each row. The last column is the level set of each row's metrics in the space of student weights $\bhat$: an ellipsoid about $\bstar$, a sphere on the diameter $[0,(1+z)\bstar]$, a hyperplane normal to $\bprime$ (Prop.~\ref{prop:mr-iso-geometry}). Pearson correlation is degenerate on a noiseless rank-one path and is omitted.}
 \label{tab:evaluation-metrics}
+\vspace{-17pt}
 \end{table}
 
 \paragraph{Prediction is covariance-weighted, control is Euclidean.}
@@ -157,7 +157,7 @@ Applied to Eq.~\ref{eq:ridge}, the DE says that the signal term concentrates aro
 \label{eq:pixel-mean-weight}
 \end{equation}
 while the noise term has zero mean, but carries Euclidean energy. We call this energy the \emph{norm inflation}, $V:=\E\|\bhat\|^2-\|\bar\beta\|^2\ge0$. As we will see, it is the part of the fitted weight that can induce severe accentuation error. The same two objects, a mean weight $\bar\beta$ and an inflation $V$, will organize the feature-space case (Sec.~\ref{sec:feature}) and the nonlinear diagnostic (Sec.~\ref{sec:nonlinear}). Results are written with the teacher-weighted and unweighted spectral sums
-\begin{equation}
+\begin{equation}\small 
 B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \mathrm{df}_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q},\qquad \mathrm{df}_2:=\mathrm{df}_{2,2},
 \end{equation}
@@ -232,7 +232,7 @@ z^{(0)}_{acc,CV}=\frac{\kappa\,\mathrm{df}_{1,2}}{B_{1,1}}
 \end{prop}
 Geometrically, along the ridge path (Fig.~\ref{fig:geometry}), $\kappa_{\rm gen}^{\star}$ lands at the tangency with the prediction ellipsoid and $\kappa_{\rm acc}^{\star}$ at its crossing of the control sphere. 
 Both conditions equate the noisy prediction risk to $n\kappa$ times a spectral-band average of the teacher's per-mode power $b_k^2$, but the two bands sit at different places (App.~Fig.~\ref{fig:app-tuning-kernels}). The control kernel $s_k/(s_k+\kappa)^2$ is a bump centered at $s_k=\kappa$, symmetric on a log axis; the prediction kernel $s_k^2/(s_k+\kappa)^3$ is the same bump multiplied by the shrinkage factor $s_k/(s_k+\kappa)$, which shifts it up to $s_k\approx2\kappa$ and suppresses its low-variance side. 
-\red{Each kernel is a $\kappa$-sensitivity: the control condition asks which modes' shrinkage $s_k/(s_k+\kappa)$ changes as $\kappa$ moves, since that sets the mean weight $\bar\beta_\kappa$ and $N$, whereas prediction stationarity asks which modes' \emph{squared} shrinkage changes, since that sets $E_{gen}$.} 
+% \red{Each kernel is a $\kappa$-sensitivity: the control condition asks which modes' shrinkage $s_k/(s_k+\kappa)$ changes as $\kappa$ moves, since that sets the mean weight $\bar\beta_\kappa$ and $N$, whereas prediction stationarity asks which modes' \emph{squared} shrinkage changes, since that sets $E_{gen}$.} 
 Consequently $z^{(0)}_{acc,CV}$ compares the teacher power around $2\kappa$ with that around $\kappa$. 
 It vanishes for isotropic data, or for a teacher whose per-mode power $b_k^2$ is constant across modes (\red{Rem.~\ref{rem:app-tuning-remarks}}). 
 For \textit{an anisotropic spectrum and a structured teacher} the two averages differ generally, and their difference is the control error left at the cross-validated penalty. Notably, when $b_k^2$ decreases toward the low-variance tail, as for a teacher aligned with the high variance image modes, $z^{(0)}_{acc,CV}>0$ is positive, and the cross-validated student over-predicts ($\mathrm{slope}_{acc}=1/(1+z)<1$). 
@@ -316,7 +316,9 @@ This extra degree of freedom can be seen clearly through the group that transfor
 For $\Sigma\succ0$ and any orthogonal $Q$ with $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, the map $F\mapsto F\Sigma^{1/2}Q\Sigma^{-1/2}$ preserves $\Sigma_F$ and $F\Sigma\bstar$, hence the joint feature--response covariance, $E_{gen,DE}(\kappa)$ and the DE-based prediction-optimal penalty $\kappa^\star_{gen}$, while changing $\Gram$ and $F\bstar$ and therefore control (Prop.~\ref{prop:mr-gauge}; construction in App.~\ref{sec:app-gauge-fragility}).
 \end{prop}
 Note, the gauge acts nontrivially on control only when the input is anisotropic: in white data, control error is also invariant to this group. 
-Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. \red{Random draws from the \textit{rotation group} span a huge range (Fig.~\ref{fig:supp-null-random}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.}
+Variation of accentuation error grows with anisotropy. Rotating within it moves feature energy from high-variance to low-variance pixel directions at no cost to prediction (Fig.~\ref{fig:feature}B): along a continuous path, $E_{gen}$, $R^2_{gen}$ and the selected penalty are exactly constant, while $\operatorname{Tr}(FF^\top)$ grows by four orders of magnitude and $R^2_{acc}$ falls from near one to $-10^{8}$. 
+%\red{Random draws from the \textit{rotation group} span a huge range (Fig.~\ref{fig:supp-null-random}), so a population of equally predictive backbones with widely different control is the generic situation, not a construction.}
+
 % For white data, the accentuation error is also invariant across this gauge group, leading to no dissociation. 
 
 \paragraph{What makes a map fragile.}
