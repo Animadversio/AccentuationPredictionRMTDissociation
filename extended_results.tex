@@ -395,11 +395,21 @@ changes it.}
 % endpoint version before using.  Other candidates: neural_validation_export/
 % paper_v4_raw_x, paper_v5_raw_predictors.
 \caption{\textbf{Robustness of the within-site association.}
-Top: as Fig.~\ref{fig:supp-nonlinear-benchmark} for the main estimators, with
-every model subset (10/9/8/7 models) residualized by the fixed 10-model site
-mean instead of its own subset mean; stars: raw Pearson $p<0.05$.
-Bottom: the same benchmark with the encoding-session endpoint.
-\todo{check caption against the encoding-session figure}}
+\textbf{Top}~As Fig.~\ref{fig:supp-nonlinear-benchmark} (Pearson, control
+session with the cross-session affine map of
+Eq.~\ref{eq:app-cross-session-affine}) for the main estimator families, but
+with every model subset residualized by the fixed 10-model site mean instead
+of its own subset mean.  Markers: all 10 models (filled diamond), without the
+untrained AlexNet (filled circle), without CLIPAG and robust RN50 (open
+diamond), without all three (open circle); stars: raw Pearson $p<0.05$.
+\textbf{Bottom}~All estimator families with a different endpoint and
+statistic: held-out MSE and $V_\phi$ evaluated on the 195 held-out
+encoding-session images, control outcomes on the upstream (identity) scale
+without the affine map, and site-residual \emph{Spearman} correlations with
+site means recomputed within each subset.  Markers as in
+Fig.~\ref{fig:supp-nonlinear-benchmark} (10, 8 and 7 models); stars: raw
+site-clustered $p<0.05$; $n$ is annotated where fewer rows give a valid
+estimate.}
 \label{fig:supp-nonlinear-robustness}
 \end{figure}
 
