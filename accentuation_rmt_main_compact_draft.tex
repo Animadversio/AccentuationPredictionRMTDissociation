@@ -26,6 +26,9 @@
 \usepackage{cancel}
 \usepackage{url}
 \usepackage{hyperref}
+% Link text in a deep sakura pink instead of the default red boxes.
+\definecolor{sakurapink}{RGB}{214,86,128}
+\hypersetup{colorlinks=true,linkcolor=sakurapink,citecolor=sakurapink,urlcolor=sakurapink}
 
 
 % \newcommand{\Sigma}{\mathbf{\Sigma}}
@@ -66,7 +69,8 @@
 % "Prince, Wang, et al." citation form for the companion experimental paper
 % (natbib alias; keeps hyperlink and bibliography entry).
 \defcitealias{prince2026parametric}{Prince, Wang, et~al., 2026}
-\newcommand{\citetPW}{Prince, Wang, et~al.\ \citeyearpar{prince2026parametric}}
+\usepackage{xspace}
+\newcommand{\citetPW}{Prince, Wang, et~al.\ \citeyearpar{prince2026parametric}\xspace}
 \newcommand{\citepPW}{\citepalias{prince2026parametric}}
 
 %\iclrfinalcopy
