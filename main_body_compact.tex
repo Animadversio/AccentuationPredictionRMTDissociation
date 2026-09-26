@@ -45,11 +45,13 @@ High-dimensional ridge regression under anisotropic covariance is classical \cit
     \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results_Neuro-linear-compose.png}
     \vspace{-10pt}
     \caption{\textbf{The dissociation of prediction and control in neurons and in a linear teacher--student model.}
-    \textbf{Top}: closed-loop experiment of \citetPW. Encoding models are fit to responses to natural images, generate accentuated images for graded target responses, and are tested in a second session.
- \textbf{Mid.}  \textbf{A}~Two models predict held-out natural-image responses equally well.
-    \textbf{B}~Their accentuations from the same seed differ visibly, and only one modulates the neuron.
-    \textbf{C}~Peer review: each model evaluated on the other's images. The weak controller tracks the strong controller's images but its own images barely modulate the neuron.
-    \textbf{Bottom}: two linear students of a linear teacher (a disk-shaped weight on van~Hateren images), differing only along low-variance image directions, reproduce A--C exactly. \textbf{right}: prediction sees weight error through the covariance ellipse; the accentuation path exposes the hidden Euclidean difference. Methods see App.~\ref{sec:app-methods-neural-data}, ~\ref{sec:app-methods-toy} }%Details: App.~\ref{sec:app-methods-neural-data} (neurons), App.~\ref{sec:app-methods-toy} (linear model).}
+    \textbf{A.} Closed-loop experiment of \citetPW. Encoding models are fit to responses to natural images, generate accentuated images for graded target responses, and are tested in a second session.
+    \textbf{B.} 
+    \textbf{I}~Two models predict held-out natural-image responses equally well.
+    \textbf{II}~Their accentuations from the same seed differ visibly. 
+    \textbf{III}~When each model evaluated on the other's images (\textit{peer review}), the weak controller (RN50) tracks neuronal responses on the strong controller's images but its own images barely modulate the neuron. % Only RN50-robust modulates the neuron. 
+    \textbf{C.}: two linear students of a linear teacher (a disk-shaped weight on van~Hateren images), weight differing along low-variance image directions, reproduce I-III qualitatively. 
+    \textbf{D.}: prediction on natural data hides weight error in small variance dim; the accentuation path exposes the hidden Euclidean difference. Methods see App.~\ref{sec:app-methods-neural-data}, ~\ref{sec:app-methods-toy} }%Details: App.~\ref{sec:app-methods-neural-data} (neurons), App.~\ref{sec:app-methods-toy} (linear model).}
     \label{fig:phenomena}
 \end{figure}
 
@@ -74,7 +76,7 @@ These phenomena are puzzling at first glance, but linear models on natural image
 % Dissecting this idealistic set up, the remainder of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces this failure, why \textit{cross-validation does not eliminate it}, and how \textit{feature maps} introduce additional degrees of freedom that can greatly amplify the prediction--control dissociation. 
 
 
-
+\vspace{-15pt}
 \section{Three evaluations, three geometries of one predictor}
 \label{sec:setup}
 
