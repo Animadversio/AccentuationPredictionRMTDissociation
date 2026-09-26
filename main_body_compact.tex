@@ -391,14 +391,21 @@ T_F(\kappa)=\sum_{k:s_k>0}\Big(\frac{s_k}{s_k+\kappa}\Big)^2\frac{\|g_k\|^2}{g_k
 \end{equation}
 with $(s_k,v_k)$ the eigenpairs of $\Sigma_F$ (Prop.~\ref{prop:mr-fragility}). It averages, over the feature PCs that survive ridge shrinkage ($s_k^2/(s_k+\kappa)^2\sim1$), the ratio between the Euclidean energy of the backpropagated PC gradient $\|g_k\|^2$ and its energy under the natural-image covariance $g_k^\top\Sigma g_k$. Thus, a map is fragile when its \textit{well-resolved feature directions backpropagate into low-variance, high-spatial-frequency pixel directions}. This is the linear counterpart of the third observation of Sec.~\ref{sec:phenomena}, and it can be computed from the map and the image statistics alone.
 
+% \paragraph{Summary: When is control fragile although prediction is fine?}
+% Holding the prediction error fixed, the leading control error (Eqs.~\ref{eq:pixel-de}, \ref{eq:pixel-zacc-cv}, \ref{eq:feature-de}) grows with three separable factors:
+% \textbf{(i) noise} $(E_{gen}+\sigma^2)/n$, the estimation-noise level, which is the only factor visible from held-out accuracy;
+% \textbf{(ii) spectrum} the mismatch between prediction-optimal and control-optimal penalties, Eq.~\ref{eq:pixel-zacc-cv}, which is zero for white data and grows with anisotropy and with teacher energy in low-variance modes;
+% \textbf{(iii) map} $T_F$, the ridge-weighted ratio of Euclidean to natural-covariance gradient energy, a property of the feature map alone.
+% Visual neuronal responses are known to be highly noisy \citep{goris2014partitioning,churchland2010stimulus}, meeting (i);
+% Natural images make (ii) large for every model; the feature map decides (iii), and equally predictive maps can differ in it without bound.
 \paragraph{Summary: When is control fragile although prediction is fine?}
-Holding the prediction error fixed, the leading control error (Eqs.~\ref{eq:pixel-de}, \ref{eq:pixel-zacc-cv}, \ref{eq:feature-de}) grows with three separable factors:
-\textbf{(i) noise} $(E_{gen}+\sigma^2)/n$, the estimation-noise level, which is the only factor visible from held-out accuracy;
-\textbf{(ii) spectrum} the mismatch between prediction-optimal and control-optimal penalties, Eq.~\ref{eq:pixel-zacc-cv}, which is zero for white data and grows with anisotropy and with teacher energy in low-variance modes;
-\textbf{(iii) map} $T_F$, the ridge-weighted ratio of Euclidean to natural-covariance gradient energy, a property of the feature map alone.
-Visual neuronal responses are known to be highly noisy \citep{goris2014partitioning,churchland2010stimulus}, meeting (i);
-Natural images make (ii) large for every model; the feature map decides (iii), and equally predictive maps can differ in it without bound.
-
+Control fails when the norm inflation $V_F$ overshoots the shrinkage deficit (Eqs.~\ref{eq:pixel-de},~\ref{eq:feature-de}). 
+The inflation $V_F=(E_{gen}+\sigma^2)\,T_F(\kappa)/n$ is a product of three factors, 
+\textbf{(i) response noise} $E_{gen}+\sigma^2$;
+\textbf{(ii) limited data} $1/n$;
+\textbf{(iii) gradient geometry} $T_F$, the ratio of Euclidean to covariance-weighted gradient energy, a property of the feature map;
+\textbf{(iv) mismatched regularization}: on anisotropic data, the cross-validated penalty is designed for prediction, but not control-optimal and can leave a large control error  (Eq.~\ref{eq:pixel-zacc-cv}).
+Held-out accuracy reflects only (i); (iii) and (iv) are invisible to it. Neuronal recordings are noisy and short \citep{goris2014partitioning,churchland2010stimulus}, supplying (i)--(ii); natural images make (iv) large for every model; and the feature map decides (iii), in which equally predictive maps differ without bound.
 
 
 \begin{figure}[t]
@@ -426,7 +433,8 @@ Published preprocessed data of \citetPW.
 \vspace{-7pt}
 \section{Nonlinear feature ridge: a generalized diagnostic for DNN}
 \label{sec:nonlinear}
-For linear feature, Prop.~\ref{prop:feature-de} shows $T_F$ is the main culprit of accentuation error. For nonlinear features $\phi$, is there an analogous quantity that preludes control failure?
+% Prop.~\ref{prop:feature-de} shows
+For linear feature,  $V_F$ is the main culprit of accentuation error. For nonlinear features $\phi$, is there an analogous quantity that preludes control failure?
 Viewing a nonlinear feature map $\phi$ as locally linear, we use its Jacobian $J_\phi(x)$ to replace $F$ in Eq.~\ref{eq:TF},
 % For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian gives
 \begin{equation}\small
