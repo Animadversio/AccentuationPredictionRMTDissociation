@@ -450,7 +450,7 @@ Eq.~\ref{eq:app-two-point-de} with $A=\bstar{\bstar}^\top$ and $B=\Sigma$:
 \begin{align*}
 \lambda^2\operatorname{Tr}\big[\bstar{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\Sigma(\hat\Sigma+\lambda I)^{-1}\big]
 &\asymp\kappa^2{\bstar}^\top(\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa I)^{-1}\bstar
-+\kappa^2\,\frac{{\bstar}^\top(\Sigma+\kappa I)^{-2}\Sigma\bstar\;\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-2}\Sigma]}{n-\mathrm{df}_2}\\
+\\&\quad+\kappa^2\,\frac{{\bstar}^\top(\Sigma+\kappa I)^{-2}\Sigma\bstar\;\operatorname{Tr}[\Sigma(\Sigma+\kappa I)^{-2}\Sigma]}{n-\mathrm{df}_2}\\
 &=\frac{n}{n-\mathrm{df}_2}\,\kappa^2B_{1,2}(\kappa).
 \end{align*}
 
@@ -860,8 +860,8 @@ sums built from $(\Sigma_F,w^\star)$.  Then
 \begin{align}
 E_{gen}&\asymp E_{gen,DE}=\frac{n}{n-\mathrm{df}^F_2}\Big(\kappa^2B^F_{1,2}+S_\perp+\sigma^2\Big)-\sigma^2,
 \label{eq:app-feature-egen-summary}\\
-\mu_N&\asymp{\bstar}^\top\bar\beta_{F,\kappa},\qquad
-\bar\beta_{F,\kappa}:=F^\top(\Sigma_F+\kappa I_p)^{-1}F\Sigma\bstar
+\mu_N&\asymp{\bstar}^\top\bar\beta_{F,\kappa},\\
+\bar\beta_{F,\kappa}&:=F^\top(\Sigma_F+\kappa I_p)^{-1}F\Sigma\bstar
 =F^\top \Sigma_F(\Sigma_F+\kappa I_p)^{-1}w^\star
 =(F^\top F\Sigma+\kappa I_d)^{-1}F^\top F\Sigma\bstar,
 \label{eq:feat_regr_shrinkage_effective_weight}\\
@@ -993,8 +993,8 @@ $F\bstar=\Gram w^P$ (as $F\bstar$ lies in the range of $\Gram$):
 {\bstar}^\top\bar\beta_{F,\kappa}-\|\bar\beta_{F,\kappa}\|^2
 &=(\bstar-F^\top\bar w_\kappa)^\top F^\top\bar w_\kappa
 =(F\bstar-\Gram\bar w_\kappa)^\top\bar w_\kappa\\
-&=\big(\Gram w^P-\Gram w^\star+\kappa \Gram(\Sigma_F+\kappa I)^{-1}w^\star\big)^\top\bar w_\kappa
-=(w^P-w^\star)^\top \Gram\bar w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\bar w_\kappa .
+&=\big(\Gram w^P-\Gram w^\star+\kappa \Gram(\Sigma_F+\kappa I)^{-1}w^\star\big)^\top\bar w_\kappa\\
+&=(w^P-w^\star)^\top \Gram\bar w_\kappa+\kappa\,{w^\star}^\top(\Sigma_F+\kappa I)^{-1}\Gram\bar w_\kappa .
 \end{align*}
 For $F=I_d$ the first term vanishes ($w^P=w^\star=\bstar$) and the second is
 $\kappa B_{1,2}$, recovering Eq.~\ref{eq:appendix-pixel-control-noise}.
@@ -1030,8 +1030,7 @@ Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \caption{Dependency graph of the summary statistics of feature-space
 regression.  Fixing $(\Sigma_F,h,S,S_\perp,\sigma^2,n)$ fixes the prediction
 branch; the accentuation branch additionally needs $\GramDef$ and
-$q=F\bstar$.  \red{(TikZ source: \texttt{figures/feature\_summary\_statistics\_flow\_SigmaF.tex}, also
-in the validation repository.)}}
+$q=F\bstar$.  }%\red{(TikZ source: \texttt{figures/feature\_summary\_statistics\_flow\_SigmaF.tex}, also in the validation repository.)}}
 \label{fig:summary_stats_dep_graph}
 \end{figure}
 
@@ -1247,6 +1246,7 @@ fails when the distribution of $N$ puts appreciable mass near zero, in which
 case moments of $D/N$ may not exist and medians and quantiles should be
 compared instead.
 
+\iffalse
 \subsection{Response-noise contribution to the variance of the ratio}
 
 The quantity that matters for the accentuation error is the second moment:
@@ -1303,6 +1303,7 @@ predicts the crossing of prediction and control error accurately, but not
 the value of $E_{acc}$ at the optimum, which is fluctuation-dominated.
 \end{remark}
 
+\fi 
 \subsection{Gaussian distributional surrogate}
 \label{sec:app-ratio-gaussian}
 
@@ -1315,7 +1316,7 @@ any metric by Monte Carlo over this surrogate:
 $\E_{\bhat\sim\mathcal N(m_{DE},V_{DE})}[\,{\bhat}^\top\bstar/{\bhat}^\top\bhat\,]$
 and likewise for $R^2_{acc}$ and the slope.  It yields medians, quantiles
 and the probability of sign changes of $N$, which the moment expansions cannot. 
-\red{It is a surrogate rather than a proved distributional deterministic equivalent: matching per-coordinate second moments does not match the joint fluctuations of quadratic forms; it omits off-diagonal, design-induced covariance; and it does not enforce the exact ridgeless identity $N=D$ that holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a projector, so $N=D$ for every design).  In practice it agrees with the leading DE where the latter is accurate and inherits its failures near $\lambda\to0$.}
+{It is a surrogate rather than a proved distributional deterministic equivalent: matching per-coordinate second moments does not match the joint fluctuations of quadratic forms; it omits off-diagonal, design-induced covariance; and it does not enforce the exact ridgeless identity $N=D$ that holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a projector, so $N=D$ for every design).  In practice it agrees with the leading DE where the latter is accurate and inherits its failures near $\lambda\to0$.}
 
 \subsection{Peer review between independent fits}
 \label{sec:app-peer-review}
@@ -1632,13 +1633,13 @@ For deterministic $A,B$,
 \begin{align}
 \operatorname{Tr}\big[A(\hat\Sigma+\lambda I)^{-1}B(\hat\Sigma+\lambda I)^{-1}\big]
 &\asymp\frac{\kappa^2}{\lambda^2}\Big\{
-\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-1}B(\Sigma+\kappa I)^{-1}\big]
-+\frac{\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)}
+\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-1}B(\Sigma+\kappa I)^{-1}\big]\\
+&\quad+\frac{\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)}
 \Big\},
 \label{eq:app-two-point-de}\\
 \operatorname{Tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}B\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big]
-&\asymp\operatorname{Tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}B\Sigma(\Sigma+\kappa I)^{-1}\big]
-+\frac{\kappa^2\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)} .
+&\asymp\operatorname{Tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}B\Sigma(\Sigma+\kappa I)^{-1}\big]\\
+&\quad+\frac{\kappa^2\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)} .
 \label{eq:app-two-point-de-weighted}
 \end{align}
 The second term is the finite-sample correction that couples the two
@@ -1647,13 +1648,13 @@ finite-sample signal-variance terms in the proofs.  For two different
 penalties $\lambda,\lambda'$ the same form holds with
 $T_\Sigma=\Sigma(\Sigma+\kappa I)^{-1}$, $T'_\Sigma=\Sigma(\Sigma+\kappa'I)^{-1}$,
 $G_\Sigma=(\Sigma+\kappa I)^{-1}$, $G'_\Sigma=(\Sigma+\kappa'I)^{-1}$:
-\[
+\begin{align}
 \operatorname{Tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}B\hat\Sigma(\hat\Sigma+\lambda'I)^{-1}\big]
-\asymp\operatorname{Tr}[AT_\Sigma BT'_\Sigma]
-+\frac{\kappa\kappa'}{n-\mathrm{df}_2(\kappa,\kappa')}\operatorname{Tr}[AG_\Sigma\Sigma G'_\Sigma]\operatorname{Tr}[G'_\Sigma\Sigma G_\Sigma B],
+&\asymp\operatorname{Tr}[AT_\Sigma BT'_\Sigma]
++\frac{\kappa\kappa'}{n-\mathrm{df}_2(\kappa,\kappa')}\operatorname{Tr}[AG_\Sigma\Sigma G'_\Sigma]\operatorname{Tr}[G'_\Sigma\Sigma G_\Sigma B],\\
 \qquad
-\mathrm{df}_2(\kappa,\kappa'):=\operatorname{Tr}[\Sigma^2G_\Sigma G'_\Sigma].
-\]
+\mathrm{df}_2(\kappa,\kappa')&:=\operatorname{Tr}[\Sigma^2G_\Sigma G'_\Sigma].
+\end{align}
 These are the standard anisotropic ridge equivalents
 \citep{dobriban2018high,hastie2022surprises}; the two-point form in the
 normalization used here follows the deterministic-equivalent calculus for
@@ -1662,10 +1663,12 @@ products of resolvents.
 \paragraph{Derivative of the effective penalty.}
 Differentiating Eq.~\ref{eq:app-kappa-fixed-point} in the form
 $\lambda=\kappa-\gamma\kappa\operatorname{tr}[\Sigma(\Sigma+\kappa I)^{-1}]$,
-\[
-\frac{d\lambda}{d\kappa}=1-\gamma\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-1}\big]+\gamma\kappa\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-2}\big]
-=1-\gamma\operatorname{tr}\big[\Sigma^2(\Sigma+\kappa I)^{-2}\big]=1-\frac{\mathrm{df}_2(\kappa)}{n},
-\]
+\begin{align*}
+\frac{d\lambda}{d\kappa}&=1-\gamma\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-1}\big]+\gamma\kappa\operatorname{tr}\big[\Sigma(\Sigma+\kappa I)^{-2}\big]
+\\
+&=1-\gamma\operatorname{tr}\big[\Sigma^2(\Sigma+\kappa I)^{-2}\big]\\
+&=1-\frac{\mathrm{df}_2(\kappa)}{n},
+\end{align*}
 so that
 \begin{equation}
 \frac{d\kappa}{d\lambda}=\frac{n}{n-\mathrm{df}_2(\kappa)}>0 .
