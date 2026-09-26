@@ -696,4 +696,26 @@ subjects contribute independent animal-level replication.
 % ---------------------------------------------------------------------------
 \subsection{Software and compute}
 \label{sec:app-methods-compute}
-\todo{Write (short).}
+\red{Experiments were implemented in Python~3.10 using PyTorch~2.4,
+NumPy~2.0, SciPy~1.14, pandas~2.2, scikit-learn~1.6, and
+statsmodels~0.14; figures and progress monitoring used Matplotlib~3.8 and
+\texttt{tqdm}.  Linear-feature and null-rotation simulations used the measured
+$d=10{,}000$ natural-image spectrum, $n=1{,}000$ samples, and feature dimension
+up to $p=1{,}000$ ($p=500$ in the main construction).  These simulations ran
+on CPU and required less than five CPU-minutes in aggregate; the
+full-dimensional PCA/whitening check required less than one minute on a single
+NVIDIA H100 80-GB GPU.}
+
+\red{The largest pixel-space landscape comprised 100 paired natural-image
+trials, 114 noise levels, and 478 ridge values.  Exact reuse of ridge-path
+coefficients across noise levels reduced this to one factorization per trial;
+including Gaussian-surrogate evaluation, the landscape required approximately
+one H100 GPU-minute.  The nonlinear gradient-geometry analysis evaluated 10
+pretrained encoders at 84 unique layer geometries (250 site--model pairs),
+using 750 feature PCs and 10 seed images.  Batched vector--Jacobian products
+and finite-neighborhood diagnostics required approximately two recorded H100
+GPU-hours, or a few GPU-hours including validation and reruns.  Intermediate
+arrays and plot-ready summaries were cached separately so that figures could
+be regenerated without recomputing model gradients; the principal cached
+outputs occupied approximately 6~GB, excluding source datasets and pretrained
+model weights.}
