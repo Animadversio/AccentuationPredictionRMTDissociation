@@ -254,14 +254,16 @@ Monte Carlo.}
 
 \begin{figure}[ht]
 \centering
-% Source: CR/figures/nonlinear_control/neural_peer_review/peer_review_four_metrics_jacob_order.pdf
-\includegraphics[width=\linewidth]{figures/supp/peer_review_four_metrics_jacob_order.pdf}
+% Source: CR/figures/nonlinear_control/neural_peer_review/peer_review_four_metrics_jacob_order_2x2.pdf
+% Script: CR/explorations/nonlinear_control/plot_neural_peer_review.py --jacob-order --grid
+\includegraphics[width=0.95\linewidth]{figures/supp/peer_review_four_metrics_jacob_order_2x2.pdf}
 \caption{\textbf{Neuronal peer review.}  Rows: model that generated the
 accentuated images; columns: model whose predictions are compared with the
 measured responses; boxed diagonal: self-evaluation.  Each cell is the
-equal-weight mean over 25 sites of MSE, Pearson $r$, identity $R^2$ (symlog
-color scale) and the OLS slope of measured on predicted response, with
-predictions mapped to the control session by the frozen site affine map.
+equal-weight mean over 25 sites of \textbf{A}~MSE, \textbf{B}~Pearson $r$,
+\textbf{C}~identity $R^2$ (symlog color scale) and \textbf{D}~the OLS slope of
+measured on predicted response (color centered at one), with predictions
+mapped to the control session by the frozen site affine map.
 Self-evaluation has slope below one and strongly negative $R^2$ for every
 model, whereas peer slopes are mostly above one (Sec.~\ref{sec:pixel}).
 Methods: App.~\ref{sec:app-methods-peer}.}
@@ -277,8 +279,8 @@ Methods: App.~\ref{sec:app-methods-peer}.}
 \caption{\textbf{Self-evaluation versus peer review.}
 \textbf{A,B}~For each generator model, identity $R^2$ (symlog) and slope of
 the self cell (diamond) and of the nine peer reviewers (gray dots; bar:
-median), from the 25-site-averaged matrix of
-Fig.~\ref{fig:supp-neural-peer-matrix}.  Every self slope is below one and
+median), from the 25-site-averaged matrices of
+Fig.~\ref{fig:supp-neural-peer-matrix}C,D.  Every self slope is below one and
 every self $R^2$ is negative; 80 of 90 peer slopes exceed one.  Over matrix
 cells, peer versus self: $R^2$ $0.04$ $[-0.06,0.10]$ versus $-4.17$
 $[-4.59,-3.51]$, slope $1.35$ $[1.14,1.59]$ versus $0.38$ $[0.33,0.42]$
