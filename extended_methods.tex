@@ -119,10 +119,10 @@ with $K_1$ the 400 eigenvectors ranked $d-499$ to $d-100$ (moderately low
 variance; $d=10^4$), $\alpha_1=1$, and $K_2$ the 100 lowest-variance eigenvectors,
 $\alpha_2=100$.  Since $\|\bstar\|\approx26$, $w_1$ is visually
 indistinguishable from the teacher while $w_2$ carries a large
-high-spatial-frequency component (Fig.~\ref{fig:phenomena}B).  Both
+high-spatial-frequency component (Fig.~\ref{fig:phenomena}C.II).  Both
 perturbations are nearly invisible to prediction: on the natural patches
 $1-\Var(f_i-f^\star)/\Var(f^\star)$ equals $1.00000$ to five decimals for both
-students (Fig.~\ref{fig:phenomena}A), although $\|w_2\|\approx104$ is four
+students (Fig.~\ref{fig:phenomena}C.I), although $\|w_2\|\approx104$ is four
 times $\|\bstar\|$.
 
 \paragraph{Accentuation.}
@@ -133,21 +133,23 @@ exactly on its own path.  Targets were 13 evenly spaced levels between
 $\mu\pm3\sigma$ of the teacher response on natural patches
 ($-309.6$ to $289.8$), and seeds were 20 natural patches (seed 7); unlike
 the analysis of Sec.~\ref{sec:setup}, seeds are natural images rather than
-the null seed.  Figure~\ref{fig:phenomena}B shows every third target for
+the null seed.  Figure~\ref{fig:phenomena}C.II shows every third target for
 one seed ($f^\star(\x_0)=-31.4$).
 
 \paragraph{Peer review.}
 Each student's accentuated images were evaluated by the teacher and by both
 students, giving the $2\times2$ generator--evaluator panels of
-Fig.~\ref{fig:phenomena}C.
-\todo{Fig.~\ref{fig:phenomena}C currently prints $1-\Var(f^\star-f_e)/\Var(f_e)$
-(denominator: the evaluator's prediction), giving 0.9969 and 0.0481.  With the
-paper's convention (denominator $\Var f^\star$, as in Fig.~\ref{fig:phenomena}A
-and Table~\ref{tab:evaluation-metrics}) the same run gives 0.9966 and $-9.94$
-(identity-line SSE: 0.9966, $-9.97$).  A deterministic reproduction
-(exp2\_fig1\_reproduce.py; layouts v1--v4 via exp2\_fig1\_replot.py) prints
-both; relabel the panels and state the definition here; see
-notes/appendix\_outline\_plan.md \#21.}
+Fig.~\ref{fig:phenomena}C.III (all 20 seeds $\times$ 13 targets; colors mark
+seeds).  Throughout Fig.~\ref{fig:phenomena}C we report
+$R^2=1-\Var(f^\star-f_e)/\Var(f^\star)$, where $f^\star$ is the teacher and $f_e$
+the evaluating model on the same images, i.e.\ the paper's convention of
+normalizing by the variance of the true response
+(Table~\ref{tab:evaluation-metrics}), together with the squared Pearson
+correlation $r^2$.  Each student predicts the teacher's response to the other's accentuated
+images almost perfectly ($R^2=1.0000$ and $0.9966$), and $w_1$ also controls
+through its own images ($R^2=1.0000$), whereas $w_2$'s own images barely move the teacher
+($R^2=-9.94$, $r^2=0.05$).  These values come from a deterministic
+reproduction of the original run.
 
 % ---------------------------------------------------------------------------
 \subsection{Two-dimensional geometry illustration}
