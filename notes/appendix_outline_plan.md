@@ -109,7 +109,7 @@ All three have enough code to write from. **B.1–B.3 were written on 2026-09-24
 | A | `sec:app-extended-results` |
 | A.1 | `sec:app-ext-geometry` · `fig:supp-ridge-path-geometry` |
 | A.2 | `sec:app-ext-pixel` · `fig:supp-pixel-de-mc`, `fig:supp-pixel-slope`, `fig:supp-pixel-selection`, (`fig:supp-synthetic-validation`, Q6) |
-| A.3 | `sec:app-ext-gauge` · `fig:app-null-rotation`, `fig:supp-null-random`, `fig:supp-null-row-spectra`, `fig:supp-null-dimension` |
+| A.3 | `sec:app-ext-gauge` · `fig:app-null-rotation`, `fig:supp-null-random`, `fig:supp-null-dimension` |
 | A.4 | `sec:app-ext-peer` · `fig:supp-neural-peer-matrix`, `fig:supp-neural-self-vs-peer` |
 | A.5 | `sec:app-ext-nonlinear` · `fig:supp-model-spectra`, `fig:supp-nonlinear-benchmark`, `fig:supp-smoothing-scale`, `fig:supp-nonlinear-robustness` |
 | B | `sec:app-methods` |
@@ -178,8 +178,7 @@ Proposed appendix order (in `accentuation_rmt_main_compact_draft.tex`):
     - Source: `CR/figures/null_rotations/vanhateren_p500_random_null_diversity.pdf` ✅
     - E_gen and R²_gen are identical; E_acc, R²_acc and slope span orders of magnitude.
     - This is the evidence for the main-text sentence "random draws from the rotation group span a huge range".
-  - **Fig. S7** what the rotation does to feature rows: per-row spectral energy over population PC rank at t = 0, 1e-4, 1e-2, 1.
-    - Source: `vanhateren_top_pc_tail_feature_spectra.pdf` ✅
+  - ~~**Fig. S7** per-row spectral energy~~: removed 2026-09-26. It was redundant with the Tr(FFᵀ) row of `fig:app-null-rotation`, and per-curve normalization hid what is preserved and what is not.
   - **Fig. S8** dependence on feature dimension p (16, 128, 500, 1000): leading DE vs Gaussian distributional DE vs MC.
     - Source: `vanhateren_null_dimension_curves.pdf` ✅
   - Optional: DE-selected α vs empirical CV, T_F vs DE/MC.
