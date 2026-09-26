@@ -324,7 +324,7 @@ Eq.~\ref{eq:app-numerical-tf}.  The paired design isolates the rotation effect,
 while separate validation selection allows finite-sample Gram matrices and CV
 choices to differ across otherwise prediction-equivalent maps.
 
-\paragraph{Random maps and feature-dimension sensitivity.}
+\paragraph{Random maps.}
 The random-family experiment used a canonicalized $p=500$ problem with
 $\Sigma_F=I_p$ and the realizable teacher aligned to the first feature axis.
 Of the remaining 499 joint-null rows, 300 were rotated and 199 were fixed.
@@ -340,15 +340,23 @@ $(\Sigma_F,F\Sigma\bstar,F\bstar)$ but produced a different diagonal spectrum
 of $G$.  We evaluated the maps using 2000 shared exact Gaussian ridge trials
 at each of the four noise levels.
 
-Finally, Fig.~\ref{fig:supp-null-dimension} repeated a nested joint-null
-rotation for $p\in\{16,128,500,1000\}$ at $n=1000$ and
-$\sigma^2/S\in\{0.01,0.1\}$.  Additional rows used disjoint three-PC supports
-in the middle $15$--$60\%$ of the spectrum and were again orthogonal to $b$
-and $c$.  Each setting used 41 rotation angles, 2000 exact real-Wishart ridge
-trials, and a 100,000-draw Gaussian distributional surrogate for the nonlinear
-control ratios.  This comparison separates failure of the leading
-ratio-of-moments approximation at low effective rank from the
-prediction--control dissociation itself.
+\paragraph{Single-row rotation.}
+Fig.~\ref{fig:supp-null-givens} uses the smallest version of the
+construction, $p=16$ with $\Sigma_F=I_p$.  The first row is the teacher axis
+$b/\sqrt S$ in whitened coordinates.  The second row rotates in one plane,
+$\cos\theta\,u_{\rm high}+\sin\theta\,u_{\rm low}$, where $u_{\rm high}$ and
+$u_{\rm low}$ are unit directions orthogonal to $b$ and $c$, supported on the
+PC-rank bands $0.2$--$3\%$ and $60$--$95\%$ of the spectrum, and chosen to
+minimize and maximize the inverse-variance Rayleigh quotient within their
+bands (dominant PC ranks 21 and 9500).  The remaining 14 rows are random
+orthonormal directions in the band $3$--$15\%$, also orthogonal to $b$ and
+$c$, and fixed along the path.  Every angle therefore satisfies
+Eq.~\ref{eq:app-numerical-null-invariants}, and only the second row's
+contribution to $G$ changes.  We used 41 angles in $[0,\pi/2]$, a penalty
+selected on a 281-point grid $\alpha\in[10^{-6},10^{8}]$ by the DE
+leave-one-out prediction risk, 500 shared exact ridge trials, and a
+200,000-draw Gaussian distributional surrogate
+(App.~\ref{sec:app-ratio-gaussian}) for the control ratios.
 
 % ---------------------------------------------------------------------------
 \subsection{Neuronal data}

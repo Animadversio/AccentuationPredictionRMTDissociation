@@ -181,8 +181,8 @@ magnitude, and the Gaussian surrogate is needed.}
 % Fig.~\ref{fig:summary_stats_dep_graph}.  Methods: App.~\ref{sec:app-methods-feature}.
 % \todo{Short text: continuous rotation from top-$p$ PC projectors
 % (Fig.~\ref{fig:app-null-rotation}); random draws from the family
-% (Fig.~\ref{fig:supp-null-random}); dependence on the
-% feature dimension $p$ (Fig.~\ref{fig:supp-null-dimension}).}
+% (Fig.~\ref{fig:supp-null-random}); a single-row rotation at small $p$
+% (Fig.~\ref{fig:supp-null-givens}).}
 
 \begin{figure}[ht]
 \centering
@@ -199,10 +199,34 @@ Lines: leading DE; markers: finite-$n$ Monte Carlo.}
 \label{fig:app-null-rotation}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[tbp]
+\centering
+% Source: CR/figures/null_rotations/vanhateren_null_givens_full_metrics_paper.pdf
+% Script: CR/scripts/plot_vanhateren_null_givens_paper.py (data:
+% tables/vanhateren_null_rotation_gap_summary.csv)
+\includegraphics[width=0.9\linewidth]{figures/supp/vanhateren_null_givens_full_metrics_paper.pdf}
+\caption{\textbf{Rotating a single prediction-null row ($p=16$).}  One
+feature row turns from a high-variance direction (PC rank 21) to a
+low-variance one (PC rank 9500; input-variance ratio $3\times10^4$), all other
+rows fixed, so that $\Sigma_F$, $F\Sigma\bstar$ and $F\bstar$ stay constant.
+Colors: $\sigma^2/S=0.01,0.1,1,10$.
+\textbf{A}~$\operatorname{Tr}(FF^\top)$ grows 27-fold while the effective
+rank of $FF^\top$ falls from 14 to 1.
+\textbf{B,\,C}~$E_{gen}/S$ and $R^2_{gen}$ are exactly invariant.
+\textbf{D--F}~$E_{acc}/S$, $R^2_{acc}$ and slope$_{acc}$ degrade
+monotonically; at $\sigma^2/S=0.01$, $R^2_{acc}$ falls from $0.93$ to $-11$.
+Because $FF^\top$ is dominated by one row, the control ratio does not
+concentrate: the leading DE (dotted) overstates the loss, whereas the
+Gaussian distributional DE (solid; App.~\ref{sec:app-ratio-gaussian}) tracks
+Monte Carlo (markers: 500 trials; mean, median for $R^2_{acc}$).  Penalty
+fixed at the DE-selected prediction optimum.}
+\label{fig:supp-null-givens}
+\end{figure}
+
+\begin{figure}[tbp]
 \centering
 % Source: CR/figures/null_rotations/vanhateren_p500_random_null_diversity.pdf
-\includegraphics[width=\linewidth]{figures/supp/vanhateren_p500_random_null_diversity.pdf}
+\includegraphics[width=0.9\linewidth]{figures/supp/vanhateren_p500_random_null_diversity.pdf}
 \caption{\textbf{Random maps from the prediction-null family ($p=500$).}
 Each map independently randomizes 300 row-wise high-to-tail rotations and
 their pairings; $\Sigma_F$, $F\Sigma\bstar$ and the teacher overlap stay
@@ -213,23 +237,6 @@ spread over orders of magnitude and degrade with
 $\operatorname{Tr}(FF^\top)$.  Filled: leading DE; open: exact finite-$n$
 Monte Carlo.}
 \label{fig:supp-null-random}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-% Source: CR/figures/null_rotations/vanhateren_null_dimension_curves.pdf
-\includegraphics[width=\linewidth]{figures/supp/vanhateren_null_dimension_curves.pdf}
-\caption{\textbf{Null rotation across feature dimension}
-$p\in\{16,128,500,1000\}$ ($n=1000$, $\sigma^2/S=0.01$), against the
-low-variance fraction $\sin^2\theta$.  Top: effective rank of $FF^\top$;
-$E_{gen}/S$ and $R^2_{gen}$ are invariant.  Bottom: $E_{acc}/S$, $R^2_{acc}$
-and slope$_{acc}$.  Dotted: leading DE; solid: Gaussian distributional DE
-(App.~\ref{sec:app-ratio-gaussian}); markers: exact finite-$n$ ridge Monte
-Carlo at the fixed DE-selected penalty.  For small $p$ the fitted weight
-concentrates on few directions and the leading DE is inaccurate, while the
-Gaussian surrogate stays accurate; larger $p$ appends disjoint
-prediction-null features.}
-\label{fig:supp-null-dimension}
 \end{figure}
 
 % Flush this subsection's figures before the next one.

@@ -109,7 +109,7 @@ All three have enough code to write from. **B.1–B.3 were written on 2026-09-24
 | A | `sec:app-extended-results` |
 | A.1 | `sec:app-ext-geometry` · `fig:supp-ridge-path-geometry` |
 | A.2 | `sec:app-ext-pixel` · `fig:supp-pixel-de-mc`, `fig:supp-pixel-slope`, `fig:supp-pixel-selection`, (`fig:supp-synthetic-validation`, Q6) |
-| A.3 | `sec:app-ext-gauge` · `fig:app-null-rotation`, `fig:supp-null-random`, `fig:supp-null-dimension` |
+| A.3 | `sec:app-ext-gauge` · `fig:app-null-rotation`, `fig:supp-null-givens`, `fig:supp-null-random` |
 | A.4 | `sec:app-ext-peer` · `fig:supp-neural-peer-matrix`, `fig:supp-neural-self-vs-peer` |
 | A.5 | `sec:app-ext-nonlinear` · `fig:supp-model-spectra`, `fig:supp-nonlinear-benchmark`, `fig:supp-smoothing-scale`, `fig:supp-nonlinear-robustness` |
 | B | `sec:app-methods` |
@@ -179,8 +179,8 @@ Proposed appendix order (in `accentuation_rmt_main_compact_draft.tex`):
     - E_gen and R²_gen are identical; E_acc, R²_acc and slope span orders of magnitude.
     - This is the evidence for the main-text sentence "random draws from the rotation group span a huge range".
   - ~~**Fig. S7** per-row spectral energy~~: removed 2026-09-26. It was redundant with the Tr(FFᵀ) row of `fig:app-null-rotation`, and per-curve normalization hid what is preserved and what is not.
-  - **Fig. S8** dependence on feature dimension p (16, 128, 500, 1000): leading DE vs Gaussian distributional DE vs MC.
-    - Source: `vanhateren_null_dimension_curves.pdf` ✅
+  - **Fig. S8 (replaced 2026-09-26)**: the p ∈ {16,128,500,1000} dimension figure had a misleading message. Its appended rows are *fixed* null rows at PC ranks 1501–6000, so Tr(FFᵀ) is already 10²–10³× larger at θ=0, and only 1 of p rows rotates. It is replaced by the p=16 Givens figure `fig:supp-null-givens`, placed right after `fig:app-null-rotation`.
+    - Source: `CR/figures/null_rotations/vanhateren_null_givens_full_metrics_paper.pdf` (script `plot_vanhateren_null_givens_paper.py`)
   - Optional: DE-selected α vs empirical CV, T_F vs DE/MC.
     - Source: `null_rotations/export/top500_final/empirical_cv_backup/top500_empirical_cv_tf_vs_de_mc.pdf` 🔧
 
