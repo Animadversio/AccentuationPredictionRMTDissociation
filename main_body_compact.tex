@@ -39,9 +39,10 @@ High-dimensional ridge regression under anisotropic covariance is classical \cit
 \begin{figure}[t]
     \centering
     \vspace{-14pt}
-    \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}\\[2pt]
-    \vspace{-5pt}
-    \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-04.png}
+    % \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results.png}\\[2pt]
+    % \vspace{-5pt}
+    % \includegraphics[width=\linewidth]{figures/Figure_LinearToyModel-04.png}
+    \includegraphics[width=\linewidth]{figures/Figure_NeuroCtrl_results_Neuro-linear-compose.png}
     \vspace{-10pt}
     \caption{\textbf{The dissociation of prediction and control in neurons and in a linear teacher--student model.}
     \textbf{Top}: closed-loop experiment of \citetPW. Encoding models are fit to responses to natural images, generate accentuated images for graded target responses, and are tested in a second session.
@@ -373,12 +374,14 @@ Control slope was mean-subtracted within site using all ten models; predictors r
 \section{Nonlinear feature ridge: a generalized diagnostic for DNN}
 \label{sec:nonlinear}
 For a nonlinear feature map $\phi$ with Jacobian $J_\phi(x)$ and natural-image feature covariance eigenpairs $(s_k,v_k)$, replacing $F$ by the local Jacobian in Eq.~\ref{eq:TF} gives
-\begin{equation}
+\vspace{-5pt}
+\begin{equation}\small
 T_\phi(x,\kappa)=\sum_k\frac{s_k}{(s_k+\kappa)^2}\,\|J_\phi(x)^\top v_k\|^2,
 \qquad
 V_\phi:=\frac{E_{val}}{n}\,\E_x\big[T_\phi(x,\kappa)\big],
 \label{eq:Tphi}
 \end{equation}
+\vspace{-2pt}
 where $J_\phi(x)^\top v_k=\nabla_x[v_k^\top\phi(x)]$ is the pixel gradient of feature PC $k$, obtainable by one backward pass per PC, and $V_\phi$ mirrors the norm inflation $V_F$ of Eq.~\ref{eq:feature-mean-variance} with $E_{val}\approx E_{gen}+\sigma^2$. For linear $\phi$ this is exact; for a network it is a diagnostic motivated by the theory, not a theorem, because the identity $s_k=g_k^\top\Sigma g_k$ that made $T_F$ a ratio of gradient energies no longer holds. Since an accentuation path travels far from the seed, we also evaluate smoothed versions in which the Jacobian is averaged, or the squared gradient is averaged, over a Gaussian neighborhood of the seed at pixel-noise scales from $0.5/255$ to $16/255$ (App.~\ref{sec:app-nonlinear-diagnostic}).
 
 We computed these quantities for all 250 site--model pairs of the neuronal experiment (App.~\ref{sec:app-methods-nonlinear}), using each model's cross-validated ridge penalty and empirical feature spectrum to set $\kappa$, the ten experimental seed images for $\E_x$, and the held-out natural-image error of the control session for $E_{val}$. Because sites differ greatly in how controllable they are at all, we compare predictors after removing site means, so that each predictor is judged on ordering the ten models within a site (Fig.~\ref{fig:nonlinear-biological-validation}). Held-out prediction error carries essentially no information about which model will control better: its site-residual correlation with control slope is $0.03$ and with direct control error $-0.07$. The exact-local $V_\phi$ reaches $0.62$ with control slope and $0.44$ with control error across the nine trained models, and the trace $T_\phi$ alone does nearly as well, so the ordering comes from gradient geometry rather than from the prediction-error prefactor. Among the seven conventionally trained models the association is weaker but same-signed ($\approx0.2$ with slope), consistent with the two adversarially trained models being the strongest controllers and having by far the smallest $T_\phi$. Neighborhood-smoothed versions preserve or slightly improve the ordering. These are descriptive associations with repeated models within sites, not independent-sample tests, and they concern model ordering rather than absolute control error, for which the teacher-dependent terms of Eq.~\ref{eq:feature-de} would also be needed.
