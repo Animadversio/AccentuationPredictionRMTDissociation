@@ -92,11 +92,12 @@ $\sigma$.
 The ridge estimator with penalty $\lambda$,
 $\bhat=\arg\min_\beta\frac1n\|X\beta-\mathbf y\|^2+\lambda\|\beta\|^2$, equals
 \begin{equation}
-\bhat=\underbrace{(\hat\Sigma+\lambda I_d)^{-1}\hat\Sigma\bstar}_{\text{signal}}
-+\underbrace{\sigma(\hat\Sigma+\lambda I_d)^{-1}\tfrac1nX^\top\eta}_{\text{noise}},
-\qquad
-\bhat-\bstar=-\lambda(\hat\Sigma+\lambda I_d)^{-1}\bstar
+\begin{aligned}
+\bhat&=\underbrace{(\hat\Sigma+\lambda I_d)^{-1}\hat\Sigma\bstar}_{\text{signal}}
++\underbrace{\sigma(\hat\Sigma+\lambda I_d)^{-1}\tfrac1nX^\top\eta}_{\text{noise}},\\
+\bhat-\bstar&=-\lambda(\hat\Sigma+\lambda I_d)^{-1}\bstar
 +\sigma(\hat\Sigma+\lambda I_d)^{-1}\tfrac1nX^\top\eta .
+\end{aligned}
 \label{eq:app-ridge-decomposition}
 \end{equation}
 \end{lem}
@@ -198,9 +199,11 @@ $E_{peer}=(\bhat-\bstar)^\top(\x_0\x_0^\top+\Var[\alpha']\bprime{\bprime}^\top)(
 In the main text the seed is null, $\x_0=0$, corresponding to a gray
 initialization.  The three errors then read
 \begin{equation}
+\begin{gathered}
 E_{gen}=(\bhat-\bstar)^\top\Sigma(\bhat-\bstar),\qquad
-E_{acc}=\Var[\alpha]\big({\bhat}^\top(\bhat-\bstar)\big)^2,\qquad
+E_{acc}=\Var[\alpha]\big({\bhat}^\top(\bhat-\bstar)\big)^2,\\
 E_{peer}=\Var[\alpha']\big({\bprime}^\top(\bhat-\bstar)\big)^2 .
+\end{gathered}
 \label{eq:app-three-errors}
 \end{equation}
 For a natural seed $\x_0\ne0$ the MSE and $R^2$ acquire the additional
@@ -410,7 +413,8 @@ E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{
 \mu_N&:=\E[N]\asymp B_{1,1},
 \label{eq:app-pixel-N-summary}\\
 \mu_D&:=\E[D]\asymp B_{2,2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{V_{\rm pix}(\kappa)}
-=\|\bar\beta_\kappa\|^2+V_{\rm pix}(\kappa),\qquad \bar\beta_\kappa:=\Sigma(\Sigma+\kappa I)^{-1}\bstar,
+\notag\\
+&\phantom{:}=\|\bar\beta_\kappa\|^2+V_{\rm pix}(\kappa),\qquad \bar\beta_\kappa:=\Sigma(\Sigma+\kappa I)^{-1}\bstar,
 \label{eq:app-pixel-D-summary}\\
 \E\big[(\uvec_k^\top(\bhat-\bstar))^2\big]&\asymp
 \frac{\kappa^2}{(s_k+\kappa)^2}b_k^2
@@ -505,9 +509,11 @@ where the last equality uses Eq.~\ref{eq:app-pixel-egen-summary}.
 Project Eq.~\ref{eq:app-ridge-decomposition} onto $\uvec_k$ and average
 over $\eta$:
 \[
+\begin{aligned}
 \E_\eta\big[(\uvec_k^\top(\bhat-\bstar))^2\big]
-=\lambda^2\operatorname{Tr}\big[\uvec_k\uvec_k^\top(\hat\Sigma+\lambda I)^{-1}\bstar{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\big]
-+\frac{\sigma^2}{n}\operatorname{Tr}\big[\uvec_k\uvec_k^\top(\hat\Sigma+\lambda I)^{-1}\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big].
+&=\lambda^2\operatorname{Tr}\big[\uvec_k\uvec_k^\top(\hat\Sigma+\lambda I)^{-1}\bstar{\bstar}^\top(\hat\Sigma+\lambda I)^{-1}\big]\\
+&\quad+\frac{\sigma^2}{n}\operatorname{Tr}\big[\uvec_k\uvec_k^\top(\hat\Sigma+\lambda I)^{-1}\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big].
+\end{aligned}
 \]
 The two-point DE with $A=\uvec_k\uvec_k^\top$, $B=\bstar{\bstar}^\top$ gives
 for the first term
@@ -670,10 +676,12 @@ With $\mu_N>0$, $z^{(0)}_{acc}=0$ iff this vanishes, which is the first form
 of Eq.~\ref{eq:appendix-pixel-control-noise}.  Substituting
 $E_{gen,DE}+\sigma^2=nH/q$ and clearing denominators,
 \[
-\mathrm{df}_{1,2}(\kappa^2B_{1,2}+\sigma^2)=(n-\mathrm{df}_2)\kappa B_{1,2}
-\quad\Longleftrightarrow\quad
-\sigma^2\mathrm{df}_{1,2}=\kappa\big(n-\mathrm{df}_2-\kappa\mathrm{df}_{1,2}\big)B_{1,2}
+\begin{aligned}
+&\mathrm{df}_{1,2}(\kappa^2B_{1,2}+\sigma^2)=(n-\mathrm{df}_2)\kappa B_{1,2}\\
+\Longleftrightarrow\quad
+&\sigma^2\mathrm{df}_{1,2}=\kappa\big(n-\mathrm{df}_2-\kappa\mathrm{df}_{1,2}\big)B_{1,2}
 =\kappa(n-\mathrm{df}_1)B_{1,2}=n\lambda B_{1,2},
+\end{aligned}
 \]
 using $\mathrm{df}_1=\mathrm{df}_2+\kappa\mathrm{df}_{1,2}$ and the fixed
 point $n\lambda=\kappa(n-\mathrm{df}_1)$.  At a root with $\lambda,\sigma^2>0$
@@ -1337,11 +1345,12 @@ effective penalties $\kappa$ and $\kappa'$.  Then
 \end{equation}
 so that for equal penalties
 \begin{equation}
-G_{peer}:=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],
-\qquad
+\begin{gathered}
+G_{peer}:=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],\\
 R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1],
 \qquad
 \mathrm{slope}^{(0)}_{peer}=\frac{B_{1,1}}{B_{2,2}}\ge1 .
+\end{gathered}
 \label{eq:app-peer-de}
 \end{equation}
 Equivalently, with $z_{peer}:={\bhat}^\top\bprime/{\bstar}^\top\bprime-1\asymp B_{2,2}/B_{1,1}-1\in(-1,0]$, the self-review error of Proposition~\ref{prop:mr-pixel-de} decomposes as $z^{(0)}_{acc}=z_{peer}+V_{\rm pix}/B_{1,1}$: self-review is peer review plus the norm inflation.
@@ -1618,9 +1627,11 @@ which is the ridgeless limit.
 \paragraph{One-point equivalent.}
 For deterministic $A$ of bounded norm,
 \begin{equation}
-\operatorname{tr}\big[A(\hat\Sigma+\lambda I)^{-1}\big]\asymp\frac{\kappa}{\lambda}\operatorname{tr}\big[A(\Sigma+\kappa I)^{-1}\big],
-\qquad\text{equivalently}\qquad
-\operatorname{tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big]\asymp\operatorname{tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}\big].
+\begin{aligned}
+&\operatorname{tr}\big[A(\hat\Sigma+\lambda I)^{-1}\big]\asymp\frac{\kappa}{\lambda}\operatorname{tr}\big[A(\Sigma+\kappa I)^{-1}\big],\\
+\text{equivalently}\quad
+&\operatorname{tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big]\asymp\operatorname{tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}\big].
+\end{aligned}
 \label{eq:app-one-point-de}
 \end{equation}
 The two forms are equivalent by $\hat\Sigma(\hat\Sigma+\lambda I)^{-1}=I-\lambda(\hat\Sigma+\lambda I)^{-1}$
@@ -1650,8 +1661,8 @@ $T_\Sigma=\Sigma(\Sigma+\kappa I)^{-1}$, $T'_\Sigma=\Sigma(\Sigma+\kappa'I)^{-1}
 $G_\Sigma=(\Sigma+\kappa I)^{-1}$, $G'_\Sigma=(\Sigma+\kappa'I)^{-1}$:
 \begin{align}
 \operatorname{Tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}B\hat\Sigma(\hat\Sigma+\lambda'I)^{-1}\big]
-&\asymp\operatorname{Tr}[AT_\Sigma BT'_\Sigma]
-+\frac{\kappa\kappa'}{n-\mathrm{df}_2(\kappa,\kappa')}\operatorname{Tr}[AG_\Sigma\Sigma G'_\Sigma]\operatorname{Tr}[G'_\Sigma\Sigma G_\Sigma B],\\
+&\asymp\operatorname{Tr}[AT_\Sigma BT'_\Sigma]\notag\\
+&\quad+\frac{\kappa\kappa'}{n-\mathrm{df}_2(\kappa,\kappa')}\operatorname{Tr}[AG_\Sigma\Sigma G'_\Sigma]\operatorname{Tr}[G'_\Sigma\Sigma G_\Sigma B],\\
 \qquad
 \mathrm{df}_2(\kappa,\kappa')&:=\operatorname{Tr}[\Sigma^2G_\Sigma G'_\Sigma].
 \end{align}
@@ -1687,10 +1698,12 @@ one-point trace.
 \paragraph{Definitions and interpretation.}
 With $\Sigma=\sum_ks_k\uvec_k\uvec_k^\top$ and $b_k=\uvec_k^\top\bstar$,
 \begin{equation}
-B_{p,q}(\kappa):=\sum_{k=1}^d\frac{s_k^p}{(s_k+\kappa)^q}b_k^2
-={\bstar}^\top\Sigma^p(\Sigma+\kappa I)^{-q}\bstar,\qquad
-\mathrm{df}_{p,q}(\kappa):=\sum_{k=1}^d\frac{s_k^p}{(s_k+\kappa)^q}
+\begin{aligned}
+B_{p,q}(\kappa)&:=\sum_{k=1}^d\frac{s_k^p}{(s_k+\kappa)^q}b_k^2
+={\bstar}^\top\Sigma^p(\Sigma+\kappa I)^{-q}\bstar,\\
+\mathrm{df}_{p,q}(\kappa)&:=\sum_{k=1}^d\frac{s_k^p}{(s_k+\kappa)^q}
 =\operatorname{Tr}\big[\Sigma^p(\Sigma+\kappa I)^{-q}\big],
+\end{aligned}
 \end{equation}
 with the classical shorthands $\mathrm{df}_1=\mathrm{df}_{1,1}$,
 $\mathrm{df}_2=\mathrm{df}_{2,2}$, and the endpoints $\mathrm{df}_{0,0}=d$,
