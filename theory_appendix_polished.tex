@@ -1575,36 +1575,7 @@ variance rather than treat a noisy Jacobian estimate as exact.
 \subsection{Empirical validation against neuronal control}
 \label{sec:app-nonlinear-biological-validation}
 
-We evaluated the diagnostic on 25 neuronal sites crossed with ten encoding
-models (250 site--model pairs); data, models and computation are described in
-Apps.~\ref{sec:app-methods-neural-data}--\ref{sec:app-methods-nonlinear}, and
-the full comparison of estimators is in App.~\ref{sec:app-ext-nonlinear}.  For each pair, $\kappa$ was computed from
-the model's cross-validated ridge penalty and its empirical feature spectrum
-(750 PCs), $\E_x$ was taken over the ten experimental seed images, and
-$E_{val}$ was the held-out natural-image error measured in the control
-session, with one cross-session affine calibration per site fitted on
-natural-image anchors and shared across models.  Because sites differ
-greatly in how controllable they are at all, the log diagnostic and the
-biological endpoint were both centered within site, so that each predictor is
-judged on ordering the ten models within a site.
-
-Among the nine trained models (225 pairs), exact-local $V_\phi$ achieved
-direction-aligned Pearson correlations $r=0.616$ with control slope and
-$r=0.442$ with direct control error; the trace $T_\phi$ alone did nearly as
-well, so the ordering comes from gradient geometry rather than from the
-prediction-error prefactor.  The corresponding correlations of held-out
-generalization error were $0.034$ and $-0.069$.  Neighborhood smoothing
-retained the ordering and, for slope, reached $r=0.605$ at noise scale
-$16/255$.  Restricting to the seven conventionally trained models attenuated
-the exact-local slope association to $r=0.189$, so part of the full ordering
-is carried by the contrast with the two adversarially trained models, which
-are the strongest controllers and have by far the smallest $T_\phi$.  These
-are descriptive repeated-measures associations with models nested within
-sites, not independent-observation significance tests, and they concern
-model ordering rather than absolute control error, for which the
-teacher-dependent terms of Eq.~\ref{eq:app-feature-D-summary} would also be
-needed.  Figure~\ref{fig:nonlinear-biological-validation} reports the full
-comparison of estimators.
+The empirical test of this diagnostic on the 250 site--model pairs of the neuronal experiment is reported in Sec.~\ref{sec:nonlinear} and Fig.~\ref{fig:nonlinear-biological-validation}, with data, models and computation in Apps.~\ref{sec:app-methods-neural-data}--\ref{sec:app-methods-nonlinear} and the full comparison of estimators in App.~\ref{sec:app-ext-nonlinear}.
 
 \section{Random-matrix toolkit}
 \label{sec:app-rmt-toolkit}
