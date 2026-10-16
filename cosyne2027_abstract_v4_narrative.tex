@@ -35,7 +35,7 @@ Encoding models of visual cortex are increasingly used to design images that dri
 Prince, Wang, et al.~[1] fitted deep-network encoding models to naturalistic-image responses from macaque V3/V4, inferotemporal cortex and superior temporal sulcus. Each model then modified seed images to reach graded predicted response targets, using feature accentuation~[2]; the images were presented to the same neural sites. Across nine trained models and an untrained baseline, prediction and control gave different rankings. The trained models had similar natural-image predictivity, but their control stimuli differed visibly and often added high-frequency structure with little effect on the neuron. Some unsuccessful controllers nevertheless predicted responses to a successful model's images. We ask how fitting a model can produce this combination.
 
 \head{Prediction and control test different directions.}
-We first model the neuron as a linear teacher, $y=x^\top\bt+\sigma\epsilon$, with Gaussian inputs $x\sim\mathcal N(0,\Sigma)$ and independent unit-variance noise $\epsilon$. A student $f(x)=x^\top\bh$ is fitted by ridge regression to $n$ examples. From a centered seed, gradient ascent follows $x=\alpha\bh$. Along this path, the actual and predicted response changes are $\alpha N$ and $\alpha D$:
+We first model the neuron as a linear teacher, $y=x^\top\bt+\sigma\epsilon$, with Gaussian inputs $x\sim\mathcal N(0,\Sigma)$ and independent unit-variance noise $\epsilon$. A student $f(x)=x^\top\bh$ is fitted by ridge regression to $n$ examples. Idealizing the feature accentuation, from a centered seed, gradient ascent follows $x=\alpha\bh$. Along this path, the actual and predicted response changes are $\alpha N$ and $\alpha D$:
 \begin{equation}
 \mathrm{slope}_{\rm control}=\frac ND=
 \frac{\bh^\top\bt}{\|\bh\|^2}\,
@@ -46,7 +46,7 @@ We first model the neuron as a linear teacher, $y=x^\top\bt+\sigma\epsilon$, wit
 \qquad R^2_{\rm control}=1-\left(\frac DN-1\right)^2.
 \label{eq:geometry}
 \end{equation}
-The alignment $N$ measures how much the neuron moves; the squared norm $D$ measures how much the model thinks it moves the neuron. For $N>0$, $D<N$ means underprediction (slope $>1$), $D=N$ means perfect calibration, and $D>N$ means overprediction (slope $<1$); $R^2$ becomes negative when $D>2N$. Natural-image prediction instead measures $E_{\rm gen}=(\bh-\bt)^\top\Sigma(\bh-\bt)$, downweighting low-variance directions. Errors along these directions can therefore inflate the model's claimed gain $D$ with little predictive cost or corresponding neural gain $N$.
+The alignment $N$ measures how much the neuron moves; the squared norm $D$ measures how much the model thinks it moves the neuron. $D<N$ means underprediction (slope $>1$), $D=N$ means perfect calibration, and $D>N$ means overprediction (slope $<1$), which could lead to negative $R^2$ (when $D>2N$). Natural-image prediction instead measures $E_{\rm gen}=(\bh-\bt)^\top\Sigma(\bh-\bt)$, downweighting low-variance directions. Errors along these directions can therefore inflate the model's claimed gain $D$ with little predictive cost or corresponding neural gain $N$.
 
 \head{Why cross-validation does not remove the problem.}
 Random matrix theory~[3] gives leading approximations for typical ridge fits as dimension and sample size grow proportionally. The mean weight is the teacher shrunk along each covariance eigenvector:
@@ -56,8 +56,8 @@ Random matrix theory~[3] gives leading approximations for typical ridge fits as 
 \qquad \Sigma u_k=s_k u_k,\quad b_k=u_k^\top\bt.
 \label{eq:mean-shrinkage}
 \end{equation}
-Here $\kappa$ is the effective ridge penalty accounting for finite sampling; each factor $s_k/(s_k+\kappa)$ lies between zero and one.
-Finite data and response noise add fluctuations, inflating the squared norm by $V$ without changing the leading alignment:
+Here $\kappa$ is the effective ridge penalty accounting for finite sampling; each shrinkgage factor $s_k/(s_k+\kappa)\in[0,1]$.% lies between zero and one.
+Finite data and response noise add fluctuations to fitted weight, inflating the squared norm by $V$ without changing the leading alignment $N$:
 \begin{equation}
 \mathrm{slope}_{\rm control}\simeq
 \frac{\mb^\top\bt}{\|\mb\|^2+V},
@@ -76,7 +76,7 @@ We derive distinct spectral conditions for prediction-optimal and control-calibr
 \head{Why equally predictive feature maps control differently.}
 To study effect of feature backbones, we fit ridge readouts on fixed linear features $Fx$, giving pixel gradients $\bh=F^\top\hat w$. Prediction depends on the feature covariance $F\Sigma F^\top$ and its relationship to the teacher; control also depends on how features map back into pixels $FF^\top$. We construct transformations preserving the joint feature--response distribution, hence the predicted generalization curve and its optimal penalty stay invariant, while control changes (Fig.~1B). The dissociation can become arbitrarily severe for anisotropic input.
 
-The additional geometry enters the norm inflation through
+The feature-gradient geometry enters the norm inflation, 
 \begin{equation}
 V_F=\frac{E_{\rm gen}+\sigma^2}{n}\,T_F(\kappa),
 \qquad
@@ -85,10 +85,12 @@ T_F(\kappa)=\sum_{k:s_k>0}
 \frac{\|g_k\|^2}{g_k^\top\Sigma g_k},
 \label{eq:features}
 \end{equation}
-where $(s_k,v_k)$ now denote feature-covariance eigenpairs and $g_k=F^\top v_k$ is a feature direction's pixel gradient. The sum weights features that survive regularization and compares their gradient energy with natural-image variation along that gradient. Control is fragile when well-estimated features send their gradients into weakly constrained pixel directions, making $T_F$ large without unchanging prediction error.
+where $(s_k,v_k)$ now denote feature-covariance eigenpairs and $g_k=F^\top v_k$ is a feature direction's pixel gradient. The sum weights features that survive regularization and compares their gradient energy with natural-image variation along that gradient. Thus, control is fragile when well-estimated features send their gradients into weakly constrained pixel directions, making $T_F$ large without unchanging prediction error.
 
 \head{From linear theory to biological control.}
-For nonlinear features $\phi$, we retain the spectral weights $s_k/(s_k+\kappa)^2$ and measure squared pixel-gradient norms $\|J_\phi(x)^\top v_k\|^2$. Their weighted sum, averaged over ten seed images, gives $T_\phi$, a diagnostic computable from a feature backbone before a control experiment. Across nine trained models at 25 sites (225 site--model pairs), $\log_{10}T_\phi$ correlates with site-centered control slope at $r=-0.61$, compared with $r=0.02$ for log held-out mean squared error (Fig.~1C). This supports our heuristic nonlinear extension as a prognostic predictor of control success. %This association weakens substantially without the two adversarially trained models. It supports the diagnostic descriptively; the nonlinear extension is not a proved control-error formula.
+For nonlinear features $\phi$, we replace $F$ in Eq.~\ref{eq:features} by the Jacobian of mapping $J_\phi$ at seed images, i.e. $T_\phi=\sum_k s_k/(s_k+\kappa)^2\|J_\phi(x)^\top v_k\|^2$. %we retain the spectral weights $s_k/(s_k+\kappa)^2$ and measure squared pixel-gradient norms $\|J_\phi(x)^\top v_k\|^2$. 
+% their weighted sum, averaged over ten seeds, gives $T_\phi$, 
+This is a diagnostic computable alone from a feature backbone before a control experiment. Across nine trained models at 25 sites (225 site--model pairs), $\log_{10}T_\phi$ correlates with site-centered control slope at $r=-0.61$, compared with $r=0.02$ for log held-out mean squared error (Fig.~1C). This supports our heuristic nonlinear extension as a prognostic predictor of control success. %This association weakens substantially without the two adversarially trained models. It supports the diagnostic descriptively; the nonlinear extension is not a proved control-error formula.
 
 \par\vspace{3pt}\noindent\begin{minipage}{\linewidth}\centering
 \includegraphics[width=\linewidth]{figures/cosyne2027_v4_evidence.pdf}
@@ -99,7 +101,7 @@ For nonlinear features $\phi$, we retain the spectral weights $s_k/(s_k+\kappa)^
 \end{minipage}\par\vspace{3pt}
 
 \head{Recognition without generation.}
-For independent pixel-space ridge fits at the same penalty, uncorrelated fluctuations drop out of the peer weight cross-product. The predicted gain loses the leading self-norm inflation: $D_{\rm peer}\simeq\|\mb\|^2\le\mb^\top\bt\simeq N_{\rm peer}$. Thus $\mathrm{slope}_{\rm peer}=N_{\rm peer}/D_{\rm peer}\gtrsim1$ and leading $R^2_{\rm peer}\ge0$: the evaluator underpredicts the neuron, whereas self-evaluation can give slope below one and negative $R^2$. Reanalysis of the neural data from~[1] supports this contrast: 80 of 90 peer slopes exceed one; median peer slope and $R^2$ are $1.35$ and $0.04$, versus $0.38$ and $-4.17$ for self-evaluation. Thus a model can recognize effective stimuli that it cannot generate.
+For independent ridge fits in pixel space, uncorrelated fluctuations drop out of the cross-product of peer weights; thus the leading predicted gain loses the norm inflation: $D_{\rm peer}\simeq\|\mb\|^2\le\mb^\top\bt\simeq N_{\rm peer}$. Thus $\mathrm{slope}_{\rm peer}=N_{\rm peer}/D_{\rm peer}\gtrsim1$ and leading $R^2_{\rm peer}\ge0$: on peer's generation, the evaluator underpredicts the neuron, whereas on its own path, evaluator can give slope below one and negative $R^2$. Reanalysis of the neural data from~[1] supports this contrast: 80 of 90 peer slopes exceed one; median peer slope and $R^2$ are $1.35$ and $0.04$, versus $0.38$ and $-4.17$ for self-evaluation. %Thus a model can recognize effective stimuli that it cannot generate.
 
 \vspace{2pt}
 {\fontsize{10}{11}\selectfont
