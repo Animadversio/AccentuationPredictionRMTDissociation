@@ -4,7 +4,7 @@
   <rdf:RDF>
    <ns2:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-    <dc:date>2026-10-18T23:40:47.851986</dc:date>
+    <dc:date>2026-10-18T23:48:18.415554</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <ns2:Agent>
@@ -23,19 +23,19 @@
   </g>
   <g id="axes_1">
    <g id="patch_2">
-    <path d="M 4.392 38.4  L 121.932 38.4  Q 123.432 38.4 123.432 36.9  L 123.432 10.42  Q 123.432 8.92 121.932 8.92  L 4.392 8.92  Q 2.892 8.92 2.892 10.42  L 2.892 36.9  Q 2.892 38.4 4.392 38.4  z " clip-path="url(#p1c24fe0984)" style="fill: #e4eef4; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
+    <path d="M 4.392 38.4  L 121.932 38.4  Q 123.432 38.4 123.432 36.9  L 123.432 10.42  Q 123.432 8.92 121.932 8.92  L 4.392 8.92  Q 2.892 8.92 2.892 10.42  L 2.892 36.9  Q 2.892 38.4 4.392 38.4  z " clip-path="url(#p1db4d28809)" style="fill: #e4eef4; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
    </g>
    <g id="patch_3">
-    <path d="M 135.414 38.4  L 252.954 38.4  Q 254.454 38.4 254.454 36.9  L 254.454 10.42  Q 254.454 8.92 252.954 8.92  L 135.414 8.92  Q 133.914 8.92 133.914 10.42  L 133.914 36.9  Q 133.914 38.4 135.414 38.4  z " clip-path="url(#p1c24fe0984)" style="fill: #eee7f3; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
+    <path d="M 135.414 38.4  L 252.954 38.4  Q 254.454 38.4 254.454 36.9  L 254.454 10.42  Q 254.454 8.92 252.954 8.92  L 135.414 8.92  Q 133.914 8.92 133.914 10.42  L 133.914 36.9  Q 133.914 38.4 135.414 38.4  z " clip-path="url(#p1db4d28809)" style="fill: #eee7f3; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
    </g>
    <g id="patch_4">
-    <path d="M 266.436 38.4  L 383.976 38.4  Q 385.476 38.4 385.476 36.9  L 385.476 10.42  Q 385.476 8.92 383.976 8.92  L 266.436 8.92  Q 264.936 8.92 264.936 10.42  L 264.936 36.9  Q 264.936 38.4 266.436 38.4  z " clip-path="url(#p1c24fe0984)" style="fill: #f9e9db; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
+    <path d="M 266.436 38.4  L 383.976 38.4  Q 385.476 38.4 385.476 36.9  L 385.476 10.42  Q 385.476 8.92 383.976 8.92  L 266.436 8.92  Q 264.936 8.92 264.936 10.42  L 264.936 36.9  Q 264.936 38.4 266.436 38.4  z " clip-path="url(#p1db4d28809)" style="fill: #f9e9db; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
    </g>
    <g id="patch_5">
-    <path d="M 397.458 38.4  L 514.998 38.4  Q 516.498 38.4 516.498 36.9  L 516.498 10.42  Q 516.498 8.92 514.998 8.92  L 397.458 8.92  Q 395.958 8.92 395.958 10.42  L 395.958 36.9  Q 395.958 38.4 397.458 38.4  z " clip-path="url(#p1c24fe0984)" style="fill: #e5f0e8; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
+    <path d="M 397.458 38.4  L 514.998 38.4  Q 516.498 38.4 516.498 36.9  L 516.498 10.42  Q 516.498 8.92 514.998 8.92  L 397.458 8.92  Q 395.958 8.92 395.958 10.42  L 395.958 36.9  Q 395.958 38.4 397.458 38.4  z " clip-path="url(#p1db4d28809)" style="fill: #e5f0e8; stroke: #8a8a8a; stroke-width: 0.45; stroke-linejoin: miter" />
    </g>
    <g id="text_1">
-    <text style="font-weight: 700; font-size: 7.1px; font-family: 'DejaVu Sans'; text-anchor: start" x="1.044" y="6.035691" transform="rotate(-0 1.044 6.035691)">A  Fit–optimize–test paradigm</text>
+    <text style="font-weight: 700; font-size: 7.1px; font-family: 'DejaVu Sans'; text-anchor: start" x="1.044" y="6.035691" transform="rotate(-0 1.044 6.035691)">A  Closed-loop model-based control paradigm</text>
    </g>
    <g id="text_2">
     <text style="font-weight: 700; font-size: 6.3px; font-family: 'DejaVu Sans'; text-anchor: middle" x="63.162" y="16.098406" transform="rotate(-0 63.162 16.098406)">1  Record neural data</text>
@@ -94,7 +94,7 @@
   </g>
  </g>
  <defs>
-  <clipPath id="p1c24fe0984">
+  <clipPath id="p1db4d28809">
    <rect x="0" y="0" width="522" height="128.16" />
   </clipPath>
  </defs>

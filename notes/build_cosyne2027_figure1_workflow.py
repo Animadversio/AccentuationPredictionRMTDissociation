@@ -30,7 +30,7 @@ fig = plt.figure(figsize=(W / 72, H / 72))
 ax = fig.add_axes((0, 0, 1, 1))
 ax.set(xlim=(0, W), ylim=(0, H))
 ax.axis('off')
-ax.text(1.044, H * .995, 'A  Fit–optimize–test paradigm',
+ax.text(1.044, H * .995, 'A  Closed-loop model-based control paradigm',
         fontsize=7.1, weight='bold', va='top')
 
 steps = [
