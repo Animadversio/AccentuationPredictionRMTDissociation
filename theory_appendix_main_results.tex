@@ -151,40 +151,27 @@ B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 The relation $n\lambda=\kappa\,(n-\mathrm{df}_1)$ and the derivative
 $d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ follow from Eq.~\ref{eq:mr-kappa}.
 \paragraph{Deterministic equivalence.}
-{\color{red}The estimator $\hat\beta$ depends on the random design $X$ and
+{The estimator $\hat\beta$ depends on the random design $X$ and
 noise $\eta$, so every quantity we study (the risks, $N$, $D$, the per-mode
 errors) is random.  In high dimension these quantities concentrate: up to
 fluctuations that vanish as $n$ and $d$ grow together, each equals a
 deterministic expression that depends only on the spectrum $\{s_k\}$ of
 $\Sigma$, the teacher coefficients $b_k$, the noise level $\sigma$, the penalty
-$\lambda$ and $n$, through $\kappa$ and the spectral sums above.  We write
-$a\asymp b$ for this, with $a$ the random quantity and $b$ its deterministic
-equivalent.  For matrices, $A\asymp B$ means that the two agree when tested
-against fixed objects: $\tfrac1d\operatorname{Tr}[M(A-B)]\to0$ for any fixed
-matrix $M$ of bounded norm, and $u^\top(A-B)v\to0$ for any fixed unit vectors
-$u,v$; for example
-$\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$.
+$\lambda$ and $n$, through $\kappa$ and the spectral sums above.  We write $a\asymp b$ to denote this \textit{deterministic equivalence} relationship (DE), with $a$ the random quantity and $b$ its deterministic
+equivalent.  
+For matrices, $A\asymp B$ means that the two agree when tested against fixed objects: $\tfrac1d\operatorname{Tr}[M(A-B)]\to0$ for any fixed matrix $M$ of bounded operator norm, and $u^\top(A-B)v\to0$ for any fixed unit vectors $u,v$; 
+for example $\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$. 
 This does not make $A-B$ small in operator norm.
-Section~\ref{sec:app-de-definition} gives the precise definition, as a limit
-along a sequence of growing problems, together with the assumptions under
-which it holds.
+Section~\ref{sec:app-de-definition} gives the precise technical definition, as a limit along a sequence of growing problems, together with the assumptions under which it holds.
 
-\emph{How the equivalents are used.}  Each analysis and experiment concerns a
-single finite problem: one covariance, estimated from natural images, one
-teacher and one sample size.  No sequence of covariances is ever constructed;
-the sequence in Section~\ref{sec:app-de-definition} only states what the
-approximation controls.  We evaluate
-the deterministic expressions ($\kappa$, $B_{p,q}$, $\mathrm{df}_{p,q}$ and the
-formulas built from them) on the actual finite spectrum of $\Sigma$, not on a
-limiting spectral distribution, and use them as approximations at that size.
-At the dimensions of our experiments they agree closely with Monte Carlo: for
-$\kappa\ge10^{-2}$ the DE and the Monte Carlo mean differ by a median of 2\%
-for $E_{gen}$ and 10\% for $E_{acc}$, with larger deviations confined to the
-near-ridgeless floor and the narrow $E_{acc}$ valley
-(Fig.~\ref{fig:supp-pixel-de-mc}).}
+\emph{How the equivalents are used.}   
+In practice, we do not construct sequence of covariance as demanded by the precise definition (Sec.~\ref{sec:app-de-definition}). Our experiment concerns a single finite problem: one covariance, estimated from natural images, one teacher and one sample size. 
+At the dimensions of our experiments, since $d,n$ are already large, they agree closely with Monte Carlo: 
+for $\kappa\ge10^{-2}$ the DE and the Monte Carlo mean differ by a median of 2\% for $E_{gen}$. 
+Note, since limiting spectral density is unavailable, we evaluate the deterministic expressions ($\kappa$, $B_{p,q}$, $\mathrm{df}_{p,q}$ etc.) on the large finite sample spectrum of covariance $\Sigma$, and treat it as population spectrum.
+% and 10\% for $E_{acc}$, with larger deviations confined to the near-ridgeless floor and the narrow $E_{acc}$ valley (Fig.~\ref{fig:supp-pixel-de-mc}).}
 
-The one- and two-resolvent deterministic equivalents used throughout are
-listed in Section~\ref{sec:app-de-toolkit}.
+The one- and two-resolvent deterministic equivalents we used are listed in Sec.~\ref{sec:app-de-toolkit}.
 % [Reviewer fix] (red draft v2: the technical definition, standing assumptions and
 % scalar conventions were moved verbatim, with two corrections, to
 % Section~\ref{sec:app-de-definition} in theory_appendix_polished.tex; this
