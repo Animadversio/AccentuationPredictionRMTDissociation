@@ -289,9 +289,13 @@ Approximating $\bhat$ by a Gaussian with the DE mean
 $\Sigma(\Sigma+\kappa I)^{-1}\bstar$ and diagonal per-mode variance from
 Eq.~\ref{eq:mr-per-pc}, and pushing it through $N$ and $D$, yields
 medians, quantiles and the probability of sign changes of $N$.  It is a
-surrogate, not a proved distributional deterministic equivalent: it does not
-enforce the exact ridgeless identity $N=D$, and it inherits the missing
-random-design covariance.  Section~\ref{sec:app-ratio-gaussian}.
+surrogate, not a proved distributional deterministic equivalent: it inherits
+the missing random-design covariance.  Section~\ref{sec:app-ratio-gaussian}.
+% [Reviewer fix] Previous version (removed the ridgeless/minimum-norm N=D clause,
+% which silently required noiseless responses):
+% surrogate, not a proved distributional deterministic equivalent: it does not
+% enforce the exact ridgeless identity $N=D$, and it inherits the missing
+% random-design covariance.  Section~\ref{sec:app-ratio-gaussian}.
 \end{remark}
 
 \subsection{Linear feature-space ridge regression}
@@ -390,17 +394,50 @@ Proof: Section~\ref{sec:app-gauge-fragility}.
 
 \begin{cor}[Continuous prediction-null rotation]
 \label{cor:mr-rotation}
-Write $A:=F\Sigma^{1/2}$ and let $P$ be the part of $A$ needed to fix
-$A\Sigma^{1/2}\bstar$ (and optionally $A\Sigma^{-1/2}\bstar$).  For any two
-row frames $R,V$ in the orthogonal complement with $RR^\top=VV^\top$ and
-$RV^\top=0$, the path $A(t)=P+\sqrt{1-t}\,R+\sqrt t\,V$, $F(t)=A(t)\Sigma^{-1/2}$,
-$t\in[0,1]$, lies in the gauge family.  Choosing $R$ in high-variance and $V$
-in low-variance pixel directions moves feature energy continuously from the
-spectral head to the tail: $E_{gen}$, $R^2_{gen}$ and $\kappa_{CV}$ are
-constant in $t$ while $\operatorname{Tr}(F(t)F(t)^\top)$, $T_F$ and
-$z_{acc}$ grow without bound.
+\red{Assume $\Sigma\succ0$ and write $A:=F\Sigma^{1/2}$.  Let
+$\R^d=U_0\oplus U_H\oplus U_L$ be an orthogonal decomposition into
+$\Sigma$-invariant subspaces with $\bstar\in U_0$,
+$\Sigma|_{U_H}\succeq s_HI$ and $\Sigma|_{U_L}\preceq s_LI$, $0<s_L<s_H$.
+Suppose $A=P+R$ with the rows of $P$ in $U_0$ and the rows of $R\neq0$ in
+$U_H$, and let $V$ have rows in $U_L$ with $VV^\top=RR^\top$.  Then the path
+$A(t):=P+\sqrt{1-t}\,R+\sqrt t\,V$, $F(t):=A(t)\Sigma^{-1/2}$, $t\in[0,1]$,
+satisfies $F(t)=F_{Q_t}$ for rotations $Q_t\in\mathcal G_{b,c}$ of
+Proposition~\ref{prop:mr-gauge}, with $F(0)=F$; hence $E_{gen,DE}$,
+$R^2_{gen}$, $\kappa_{CV}$ and $N_{DE}$ are constant in $t$.  Its Euclidean Gram matrix is affine in $t$,
+\begin{equation}
+\begin{aligned}
+\Gramt&=P\Sigma^{-1}P^\top+(1-t)\,R\Sigma^{-1}R^\top+t\,V\Sigma^{-1}V^\top,\\
+\Gramt-\Gram&=t\,\big(V\Sigma^{-1}V^\top-R\Sigma^{-1}R^\top\big)\succeq t\,\big(s_L^{-1}-s_H^{-1}\big)RR^\top\succeq0,
+\end{aligned}
+\label{eq:mr-rotation-gram}
+\end{equation}
+so $\operatorname{Tr}\Gramt$, $T_F(\kappa)$ for every $\kappa>0$, and (when
+$N_{DE}>0$ and $E_{gen,DE}+\sigma^2>0$) the leading-order
+$z_{acc}=D_{DE}/N_{DE}-1$ are affine and strictly increasing in $t$: moving feature energy from the spectral head to the tail
+raises control fragility at fixed prediction.  For a fixed $\Sigma$ these
+increases are finite, e.g.\
+$\operatorname{Tr}\Gramt\le\operatorname{Tr}\Gram+t\,\|R\|_F^2/\lambda_{\min}(\Sigma)$.
+They are, however, not bounded by the prediction summaries $\mathcal P$:
+changing $\Sigma$ only on $U_L$, with $A(t)$ and $\Sigma^{1/2}\bstar$ held
+fixed, leaves $\mathcal P$, $F(t)\bstar$ and $N_{DE}$ unchanged, while
+$\operatorname{Tr}\Gramt|_{t=1}\ge\|R\|_F^2/s_L$ and, when
+$E_{gen,DE}+\sigma^2>0$, also $T_F(\kappa)$ and $z_{acc}$ at $t=1$ diverge
+as $s_L\to0$.  For example, with a power-law spectrum $s_k\propto k^{-\alpha}$
+and $U_L$ spanned by tail eigenvectors, $s_L^{-1}$ grows like $d^{\alpha}$ as
+$d\to\infty$.}
 Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 \end{cor}
+% [Reviewer fix] Previous statement ("grow without bound" at fixed finite-dimensional Sigma):
+% Write $A:=F\Sigma^{1/2}$ and let $P$ be the part of $A$ needed to fix
+% $A\Sigma^{1/2}\bstar$ (and optionally $A\Sigma^{-1/2}\bstar$).  For any two
+% row frames $R,V$ in the orthogonal complement with $RR^\top=VV^\top$ and
+% $RV^\top=0$, the path $A(t)=P+\sqrt{1-t}\,R+\sqrt t\,V$, $F(t)=A(t)\Sigma^{-1/2}$,
+% $t\in[0,1]$, lies in the gauge family.  Choosing $R$ in high-variance and $V$
+% in low-variance pixel directions moves feature energy continuously from the
+% spectral head to the tail: $E_{gen}$, $R^2_{gen}$ and $\kappa_{CV}$ are
+% constant in $t$ while $\operatorname{Tr}(F(t)F(t)^\top)$, $T_F$ and
+% $z_{acc}$ grow without bound.
+% Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 
 \begin{prop}[Spectral form of the fragility factor]
 \label{prop:mr-fragility}

@@ -736,12 +736,36 @@ a power-law spectrum this count grows as $\kappa$ moves into the bulk, so the
 residual is amplified precisely in the noisy regime where cross-validation
 selects a larger penalty.
 \item \emph{Boundary optima.}  At low noise the DE prediction risk can be
-minimized at the boundary $\lambda\to0$ of the admissible path; there the
-stationarity formula does not apply and the ridgeless identity $N=D$ makes
-the leading control error vanish.  In the van Hateren experiment the interior
-optimum appears above a noise threshold, and
+minimized at the boundary $\lambda\to0$ of the admissible path, where the
+stationarity formula does not apply.  \red{For $d>n$ this boundary is
+$\kappa\to\kappa_0$ with $\mathrm{df}_1(\kappa_0)=n$, so that
+$n-\mathrm{df}_2=\kappa_0\,\mathrm{df}_{1,2}$ and
+$V_{\rm pix}=\kappa_0B_{1,2}+\sigma^2/\kappa_0$.  The signal part of the
+variance cancels the shrinkage term $B_{2,2}-B_{1,1}=-\kappa_0B_{1,2}$ exactly,
+and Eq.~\ref{eq:mr-pixel-z} reduces to
+\[
+\mu_D-\mu_N=\frac{\sigma^2}{\kappa_0},\qquad
+z^{(0)}_{acc}=\frac{\sigma^2}{\kappa_0B_{1,1}}>0 .
+\]
+(For $d\le n$ the boundary is least squares, $\kappa_0=0$, and
+$\mu_D-\mu_N=\sigma^2\mathrm{df}_{1,2}(0)/(n-d)>0$.)  The ridgeless student
+therefore over-shoots by a noise-driven amount of order $\sigma^2$, which
+vanishes only in the noiseless limit; prediction-optimal tuning at the
+boundary still does not calibrate control.  A small positive penalty adds
+the shrinkage that cancels this over-shoot, which is why the control optimum
+$\lambda^\star_{acc}$ shrinks with the noise while $\lambda^\star_{gen}$ stays
+at the grid floor (Fig.~\ref{fig:supp-pixel-lambda}).}  In the van Hateren
+experiment the interior optimum appears above a noise threshold, and
 Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
 evaluated at the numerically selected optimum and against empirical RidgeCV.
+% [Reviewer fix] Previous version (used N=D at lambda->0, which holds only for sigma=0):
+% \item \emph{Boundary optima.}  At low noise the DE prediction risk can be
+% minimized at the boundary $\lambda\to0$ of the admissible path; there the
+% stationarity formula does not apply and the ridgeless identity $N=D$ makes
+% the leading control error vanish.  In the van Hateren experiment the interior
+% optimum appears above a noise threshold, and
+% Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
+% evaluated at the numerically selected optimum and against empirical RidgeCV.
 \item \emph{Existence of a control root.}  Eq.~\ref{eq:appendix-pixel-control-noise}
 need not have an admissible solution for every $(\Sigma,\bstar,\sigma^2,n)$;
 it is a condition, not a guarantee.  Where a root exists, the leading metrics
@@ -1125,19 +1149,75 @@ feature maps used in the experiments (Fig.~\ref{fig:supp-null-random}).
 \end{example}
 
 \begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
-Let $P$ carry the components of $A$ that fix $Ab$ (and optionally $Ac$), and
-let $R,V$ be row frames with $PR^\top=PV^\top=0$, $RV^\top=0$, $RR^\top=VV^\top$,
-and $Rb=Vb=0$.  For $A(t)=P+\sqrt{1-t}\,R+\sqrt t\,V$ all cross terms vanish
-and
+{\color{red}\emph{Prediction invariance.}  Because $U_0$ is $\Sigma$-invariant and
+$\bstar\in U_0$, both $b=\Sigma^{1/2}\bstar$ and $c=\Sigma^{-1/2}\bstar$ lie in
+$U_0$, so $Rb=Vb=Rc=Vc=0$; orthogonality of the three subspaces gives
+$PR^\top=PV^\top=RV^\top=0$.  Hence all cross terms vanish and
 \[
-A(t)A(t)^\top=PP^\top+(1-t)RR^\top+tVV^\top=PP^\top+RR^\top,\qquad A(t)b=Pb,
+A(t)A(t)^\top=PP^\top+(1-t)RR^\top+tVV^\top=AA^\top,\qquad A(t)b=Ab,\qquad A(t)c=Ac .
 \]
-so $F(t)=A(t)\Sigma^{-1/2}$ lies in the family for every $t\in[0,1]$.
-Choosing $R$ supported on high-variance and $V$ on low-variance eigendirections
-of $\Sigma$ makes $\Gramt=A(t)\Sigma^{-1}A(t)^\top$ acquire the factor
-$s_k^{-1}$ of the tail directions as $t\to1$, so $\operatorname{Tr}\Gramt$ and
-$T_F$ grow without bound while every prediction summary is constant.
+The path is a gauge orbit.  Since $RR^\top=VV^\top$, the map
+$W:R^\top y\mapsto V^\top y$ is a well-defined isometry from the row space of
+$R$ (in $U_H$) onto the row space of $V$ (in $U_L$).  With
+$\theta=\arcsin\sqrt t$, let $Q_t$ act on row vectors as $x\mapsto\cos\theta\,x+\sin\theta\,Wx$
+on the row space of $R$, as $y\mapsto-\sin\theta\,W^{-1}y+\cos\theta\,y$ on
+the row space of $V$, and as the identity on the orthogonal complement of
+their sum.  Then $Q_t\in O(d)$ fixes $U_0\ni b,c$, so $Q_t\in\mathcal G_{b,c}$,
+and $AQ_t=P+\cos\theta\,R+\sin\theta\,V=A(t)$, i.e.\ $F(t)=F_{Q_t}$.
+Proposition~\ref{prop:app-feature-gauge} then fixes $\mathcal P$, the curve
+$E_{gen,DE}(\kappa)$, $R^2_{gen}$ and $\kappa_{CV}$; and
+$N_{DE}=(F\bstar)^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar=(Ac)^\top(AA^\top+\kappa I)^{-1}Ab$
+is constant as well.
+
+\emph{Gram matrix.}  $\Sigma^{-1}$ preserves $U_0,U_H,U_L$, so
+$P\Sigma^{-1}R^\top=P\Sigma^{-1}V^\top=R\Sigma^{-1}V^\top=0$ and
+$\Gramt=A(t)\Sigma^{-1}A(t)^\top$ reduces to the affine form of
+Eq.~\ref{eq:mr-rotation-gram}.  For any $u$, $\|V^\top u\|=\|R^\top u\|$,
+$u^\top V\Sigma^{-1}V^\top u\ge s_L^{-1}\|V^\top u\|^2$ and
+$u^\top R\Sigma^{-1}R^\top u\le s_H^{-1}\|R^\top u\|^2$, which gives the
+Loewner bound in Eq.~\ref{eq:mr-rotation-gram}.
+
+\emph{Monotonicity.}  With $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F\succeq0$
+fixed in $t$, $T_F(\kappa)=\operatorname{Tr}[\Gramt M_\kappa]$ is affine in $t$
+and $T_F(\kappa)|_t-T_F(\kappa)|_0\ge t\,(s_L^{-1}-s_H^{-1})\operatorname{Tr}[RR^\top M_\kappa]>0$
+for $t>0$, because $0\ne RR^\top\preceq\Sigma_F$ and $M_\kappa\succ0$ on the
+range of $\Sigma_F$.  Writing $\bar u:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star$
+(fixed by $\mathcal P$), $\|\bar\beta_{F,\kappa}\|^2=\bar u^\top\Gramt\bar u$ is
+affine and nondecreasing, so
+$D_{DE}=\bar u^\top\Gramt\bar u+(E_{gen,DE}+\sigma^2)T_F/n$ is affine and
+strictly increasing when $E_{gen,DE}+\sigma^2>0$; dividing by the constant
+$N_{DE}>0$ gives the claim for $z_{acc}$.  The trace bound follows from
+$\operatorname{Tr}\Gramt-\operatorname{Tr}\Gram\le t\operatorname{Tr}[V\Sigma^{-1}V^\top]\le t\|V\|_F^2/\lambda_{\min}(\Sigma)$
+and $\|V\|_F=\|R\|_F$.
+
+\emph{No bound in terms of $\mathcal P$.}  Replace $\Sigma$ by any $\Sigma'\succ0$
+that agrees with $\Sigma$ on $U_0\oplus U_H$ and satisfies
+$\Sigma'|_{U_L}\preceq s_LI$, and keep $A(t)$ fixed, so that
+$F'(t)=A(t)\Sigma'^{-1/2}$.  Since $\bstar\in U_0$, $\bstar$, $b$, $c$ and
+$S=\|b\|^2$ are unchanged; hence $\Sigma_F=AA^\top$, $F\Sigma\bstar=Ab$,
+$F\bstar=Ac$, $E_{gen,DE}$ and $N_{DE}$ are unchanged.  At $t=1$,
+$\Gramt\succeq V\Sigma'^{-1}V^\top\succeq s_L^{-1}VV^\top$, so
+$\operatorname{Tr}\Gramt\ge\|R\|_F^2/s_L$,
+$T_F(\kappa)\ge s_L^{-1}\operatorname{Tr}[RR^\top M_\kappa]$ and
+$z_{acc}\ge(E_{gen,DE}+\sigma^2)T_F(\kappa)/(nN_{DE})-1$, all of which diverge
+as $s_L\to0$.}
 \end{proof}
+% [Reviewer fix] Previous proof (claimed unbounded growth at fixed Sigma, and omitted
+% the Sigma^{-1} cross terms):
+% \begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
+% Let $P$ carry the components of $A$ that fix $Ab$ (and optionally $Ac$), and
+% let $R,V$ be row frames with $PR^\top=PV^\top=0$, $RV^\top=0$, $RR^\top=VV^\top$,
+% and $Rb=Vb=0$.  For $A(t)=P+\sqrt{1-t}\,R+\sqrt t\,V$ all cross terms vanish
+% and
+% \[
+% A(t)A(t)^\top=PP^\top+(1-t)RR^\top+tVV^\top=PP^\top+RR^\top,\qquad A(t)b=Pb,
+% \]
+% so $F(t)=A(t)\Sigma^{-1/2}$ lies in the family for every $t\in[0,1]$.
+% Choosing $R$ supported on high-variance and $V$ on low-variance eigendirections
+% of $\Sigma$ makes $\Gramt=A(t)\Sigma^{-1}A(t)^\top$ acquire the factor
+% $s_k^{-1}$ of the tail directions as $t\to1$, so $\operatorname{Tr}\Gramt$ and
+% $T_F$ grow without bound while every prediction summary is constant.
+% \end{proof}
 
 \begin{example}[Aligned features, discrete version]
 In the eigenbasis of $\Sigma=\operatorname{diag}(\lambda_1,\lambda_H,\lambda_L)$
@@ -1324,7 +1404,9 @@ any metric by Monte Carlo over this surrogate:
 $\E_{\bhat\sim\mathcal N(m_{DE},V_{DE})}[\,{\bhat}^\top\bstar/{\bhat}^\top\bhat\,]$
 and likewise for $R^2_{acc}$ and the slope.  It yields medians, quantiles
 and the probability of sign changes of $N$, which the moment expansions cannot. 
-{It is a surrogate rather than a proved distributional deterministic equivalent: matching per-coordinate second moments does not match the joint fluctuations of quadratic forms; it omits off-diagonal, design-induced covariance; and it does not enforce the exact ridgeless identity $N=D$ that holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a projector, so $N=D$ for every design).  In practice it agrees with the leading DE where the latter is accurate and inherits its failures near $\lambda\to0$.}
+{It is a surrogate rather than a proved distributional deterministic equivalent: matching per-coordinate second moments does not match the joint fluctuations of quadratic forms, and it omits off-diagonal, design-induced covariance.  In practice it agrees with the leading DE where the latter is accurate and inherits its failures near $\lambda\to0$.}
+% [Reviewer fix] Previous version (removed the ridgeless/minimum-norm N=D clause, which silently required noiseless responses):
+% {It is a surrogate rather than a proved distributional deterministic equivalent: matching per-coordinate second moments does not match the joint fluctuations of quadratic forms; it omits off-diagonal, design-induced covariance; and it does not enforce the exact ridgeless identity $N=D$ that holds for the minimum-norm interpolator ($\bhat=P_X\bstar$ with $P_X$ a projector, so $N=D$ for every design).  In practice it agrees with the leading DE where the latter is accurate and inherits its failures near $\lambda\to0$.}
 
 \subsection{Peer review between independent fits}
 \label{sec:app-peer-review}
