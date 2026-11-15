@@ -1,21 +1,17 @@
 \section{Theory results roadmap}
 \label{sec:app-theory-roadmap}
 
-The theory part of the appendix is organized in two layers (the extended
-results and the empirical methods precede it, in
-Sections~\ref{sec:app-extended-results} and~\ref{sec:app-methods}).
+The theory part of the appendix is organized in two levels.
 Section~\ref{sec:app-main-results}
 states every theoretical result of the paper once, in the order in which it is
 derived, so that it can be read as a self-contained summary.  The sections
 that follow contain the proofs, arranged by topic; each begins with a short
 motivation, restates the result it proves, gives the proof in numbered steps,
-and closes with remarks on interpretation.  Readers who want the statements
-only can stop at Section~\ref{sec:app-main-results}; readers who want a
-specific derivation can jump to it by the pointers given there.  Unless stated
-otherwise, every result concerns the linear teacher--student model with
-Gaussian inputs; the nonlinear diagnostic of
-Section~\ref{sec:app-nonlinear-diagnostic} is the only exception, and it is a
-diagnostic rather than a theorem.
+and closes with remarks on interpretation.  
+Readers who want the statements only can stop at Section~\ref{sec:app-main-results}; 
+readers who want a specific derivation can jump to it by the pointers given there. 
+% Unless stated otherwise, every result concerns the linear teacher--student model with Gaussian inputs; 
+% the nonlinear diagnostic of Section~\ref{sec:app-nonlinear-diagnostic} is the only exception, and it is a diagnostic rather than a theorem.
 
 \begin{enumerate}
 \item \textbf{Evaluation geometry} (Section~\ref{sec:app-evaluation-geometry}).
@@ -23,10 +19,9 @@ Generalization, self-accentuation and peer review are evaluations of one
 fitted weight under three input covariances.  Their equal-error sets are
 covariance ellipsoids, Euclidean spheres and peer-normal hyperplanes.
 \item \textbf{Pixel-space ridge} (Section~\ref{sec:app-pixel-ridge}).
-Deterministic equivalents for the generalization risk, for the two
-accentuation forms $N={\bhat}^\top\bstar$ and $D={\bhat}^\top\bhat$, and for
-the per-eigenmode weight error.  The Euclidean estimation-noise term in $D$
-is what prediction does not see.
+Deterministic equivalents for the generalization risk, for the two forms $N={\bhat}^\top\bstar$ and $D={\bhat}^\top\bhat$ relevant to accentuation and control error, and for
+the per-eigenmode weight error. 
+The Euclidean estimation-noise term in $D$ is what prediction does not see.
 \item \textbf{Prediction- versus control-optimal tuning}
 (Section~\ref{sec:app-optimal-regularization}).  The two optima equate the
 noisy prediction risk to different teacher-weighted spectral averages;
@@ -715,7 +710,7 @@ Solid: the control kernel $s/(s+\kappa)^2$ (peak at $s=\kappa$, symmetric on the
 \label{fig:app-tuning-kernels}
 \end{figure}
 
-\begin{remark}[Reading the residual]
+\begin{remark}[Interpretation of the residual]
 \label{rem:app-tuning-remarks}
 \begin{enumerate}
 \item \emph{Two spectral averages.}  Define the probability weights over
