@@ -161,19 +161,10 @@ $B_n$ we write $A_n\asymp B_n$ if
 \[
 \operatorname{Tr}\big[C_n(A_n-B_n)\big]\to0\qquad\text{almost surely}
 \]
-for every sequence of deterministic matrices $C_n$ whose trace (nuclear) norm
-is bounded by a constant independent of $n$.  This contains both normalized
-traces, $\tfrac1d\operatorname{Tr}[M_n(A_n-B_n)]\to0$ whenever
-$\sup_n\|M_n\|_{op}<\infty$ (take $C_n=M_n/d$), and bilinear forms,
-$u_n^\top(A_n-B_n)v_n\to0$ for unit vectors $u_n,v_n$ (take
-$C_n=v_nu_n^\top$), which is how the quadratic forms in $\bstar$ below are
-used; it does not imply $\|A_n-B_n\|_{op}\to0$.  For scalars, $a_n\asymp b_n$
-means $a_n-b_n\to0$ almost surely when both are of order one (risks, $N$,
-$D$, quadratic forms in $\bstar$), and $a_n/b_n\to1$ for scalars that scale
-with $n$, such as unnormalized traces $\operatorname{Tr}[\cdot]$, or with
-$1/n$, such as per-mode variances; when $b_n$ is itself an expectation over
-$X$ and $\eta$, both sides are deterministic and the statement is a limit of
-numbers.
+for every sequence of deterministic matrices $C_n$ (fixed in advance, i.e.\ not depending on $X$ or $\eta$) whose trace (nuclear) norm is bounded by a constant independent of $n$.  
+This contains both normalized traces, $\tfrac1d\operatorname{Tr}[M_n(A_n-B_n)]\to0$ whenever $\sup_n\|M_n\|_{op}<\infty$ (take $C_n=M_n/d$), and 
+bilinear forms, $u_n^\top(A_n-B_n)v_n\to0$ for unit vectors $u_n,v_n$ (take $C_n=v_nu_n^\top$), which is how the quadratic forms in $\bstar$ below are used. Note, it does not imply $\|A_n-B_n\|_{op}\to0$.  
+For scalars, $a_n\asymp b_n$ means $a_n-b_n\to0$ almost surely when both are of order one (risks, $N$, $D$, quadratic forms in $\bstar$), and $a_n/b_n\to1$ for scalars that scale with $n$, such as unnormalized traces $\operatorname{Tr}[\cdot]$, or with $1/n$, such as per-mode variances; when $b_n$ is itself an expectation over $X$ and $\eta$, both sides are deterministic and the statement is a limit of numbers.
 
 \emph{Standing assumptions.}  The covariance and the teacher are bounded by a
 constant independent of $n$, $\sup_n\|\Sigma_n\|_{op}<\infty$ and
