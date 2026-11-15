@@ -87,11 +87,22 @@ control error $E_{acc}/S$ (Eq.~\ref{eq:pixel-de}).
 \textbf{C,\,D}~Mean over 100 natural-image Monte Carlo trials on the same
 grid.  Lines (same in all panels): prediction optimum $\kappa^\star_{gen}$
 (blue), control optimum $\kappa^\star_{acc}$ (orange dashed), both from the
-DE, and median empirical LOOCV penalty (green dotted).  For
+DE, and median empirical LOOCV penalty (green dotted).  \red{For
 $\kappa\ge10^{-2}$ the Monte Carlo mean and the DE differ by a median of 2\%
-for $E_{gen}$ and 10\% for $E_{acc}$; larger deviations are confined to the
-near-ridgeless floor $\kappa\approx2.4\times10^{-3}$ and to the narrow
-$E_{acc}$ valley, where the leading DE vanishes.
+for $E_{gen}$ (90\% of grid points within 8\%) and 9\% for $E_{acc}$ (90\%
+within 15\%).  $E_{acc}/S=(1-N/D)^2$ is not itself a deterministic
+equivalent but the plug-in of the equivalents of $N$ and $D$; its gap mostly
+reflects few-percent errors in the means of $N$ and $D$, roughly doubled by
+the square, while the nonlinearity of the ratio contributes under 1\%.
+Larger deviations are concentrated at the near-ridgeless floor
+$\kappa\approx2.4\times10^{-3}$ and in the narrow $E_{acc}$ valley, where the
+leading DE vanishes.}
+% [Reviewer fix] Previous wording:
+% For
+% $\kappa\ge10^{-2}$ the Monte Carlo mean and the DE differ by a median of 2\%
+% for $E_{gen}$ and 10\% for $E_{acc}$; larger deviations are confined to the
+% near-ridgeless floor $\kappa\approx2.4\times10^{-3}$ and to the narrow
+% $E_{acc}$ valley, where the leading DE vanishes.
 Methods: App.~\ref{sec:app-vanhateren-landscape-methods}.}
 \label{fig:supp-pixel-de-mc}
 \end{figure}
