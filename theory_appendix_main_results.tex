@@ -150,10 +150,38 @@ B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \end{equation}
 The relation $n\lambda=\kappa\,(n-\mathrm{df}_1)$ and the derivative
 $d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ follow from Eq.~\ref{eq:mr-kappa}.
-The notation $A\asymp B$ means that $A-B\to0$ almost surely in the
-proportional limit $n,d\to\infty$, $d/n\to\gamma$; the one- and two-resolvent
-deterministic equivalents used throughout are listed in
-Section~\ref{sec:app-de-toolkit}.
+\paragraph{Deterministic equivalence.}
+\red{Throughout, $n,d\to\infty$ with $d/n\to\gamma\in(0,\infty)$, the rows of
+$X$ are i.i.d.\ $\mathcal N(0,\Sigma)$, $\|\Sigma\|_{op}$ and $\|\bstar\|$ are
+uniformly bounded, and $\lambda>0$ is fixed; the ridgeless boundary
+$\lambda\to0$ with $\gamma>1$ is understood as the limit of these statements,
+which stays well defined because $\kappa\to\kappa_0>0$.  For a random matrix
+$A_n$ and a deterministic matrix $B_n$ we write $A_n\asymp B_n$
+(\emph{deterministic equivalence}) if
+\[
+\operatorname{Tr}\big[C_n(A_n-B_n)\big]\to0\qquad\text{almost surely}
+\]
+for every sequence of deterministic matrices $C_n$ with uniformly bounded
+trace (nuclear) norm.  This contains both normalized traces,
+$\tfrac1d\operatorname{Tr}[M_n(A_n-B_n)]\to0$ for $\|M_n\|_{op}$ uniformly
+bounded (take $C_n=M_n/d$), and bilinear forms, $u_n^\top(A_n-B_n)v_n\to0$ for
+unit vectors $u_n,v_n$ (take $C_n=v_nu_n^\top$), which is how the quadratic
+forms in $\bstar$ below are used; it does not imply $\|A_n-B_n\|_{op}\to0$.
+For scalars, $a_n\asymp b_n$ means $a_n-b_n\to0$ almost surely when both are
+of order one (risks, $N$, $D$, quadratic forms in $\bstar$), and $a_n/b_n\to1$
+for scalars that scale with $n$, such as unnormalized traces
+$\operatorname{Tr}[\cdot]$, or with $1/n$, such as per-mode variances; when
+$b_n$ is itself an expectation over $X$ and $\eta$, both sides are
+deterministic and the statement is a limit of numbers.  The same conventions
+apply in feature space with $(\Sigma,d,\bstar)$ replaced by
+$(\Sigma_F,p,w^\star)$.}  The one- and two-resolvent deterministic
+equivalents used throughout are listed in Section~\ref{sec:app-de-toolkit}.
+% [Reviewer fix] Previous definition (A-B->0 a.s., not meaningful for matrices
+% or unnormalized traces):
+% The notation $A\asymp B$ means that $A-B\to0$ almost surely in the
+% proportional limit $n,d\to\infty$, $d/n\to\gamma$; the one- and two-resolvent
+% deterministic equivalents used throughout are listed in
+% Section~\ref{sec:app-de-toolkit}.
 
 \subsection{Pixel-space ridge regression}
 
