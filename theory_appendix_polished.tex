@@ -1149,58 +1149,36 @@ feature maps used in the experiments (Fig.~\ref{fig:supp-null-random}).
 \end{example}
 
 \begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
-{\color{red}\emph{Prediction invariance.}  Because $U_0$ is $\Sigma$-invariant and
-$\bstar\in U_0$, both $b=\Sigma^{1/2}\bstar$ and $c=\Sigma^{-1/2}\bstar$ lie in
-$U_0$, so $Rb=Vb=Rc=Vc=0$; orthogonality of the three subspaces gives
-$PR^\top=PV^\top=RV^\top=0$.  Hence all cross terms vanish and
-\[
-A(t)A(t)^\top=PP^\top+(1-t)RR^\top+tVV^\top=AA^\top,\qquad A(t)b=Ab,\qquad A(t)c=Ac .
-\]
-The path is a gauge orbit.  Since $RR^\top=VV^\top$, the map
-$W:R^\top y\mapsto V^\top y$ is a well-defined isometry from the row space of
-$R$ (in $U_H$) onto the row space of $V$ (in $U_L$).  With
-$\theta=\arcsin\sqrt t$, let $Q_t$ act on row vectors as $x\mapsto\cos\theta\,x+\sin\theta\,Wx$
-on the row space of $R$, as $y\mapsto-\sin\theta\,W^{-1}y+\cos\theta\,y$ on
-the row space of $V$, and as the identity on the orthogonal complement of
-their sum.  Then $Q_t\in O(d)$ fixes $U_0\ni b,c$, so $Q_t\in\mathcal G_{b,c}$,
-and $AQ_t=P+\cos\theta\,R+\sin\theta\,V=A(t)$, i.e.\ $F(t)=F_{Q_t}$.
-Proposition~\ref{prop:app-feature-gauge} then fixes $\mathcal P$, the curve
-$E_{gen,DE}(\kappa)$, $R^2_{gen}$ and $\kappa_{CV}$; and
-$N_{DE}=(F\bstar)^\top(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar=(Ac)^\top(AA^\top+\kappa I)^{-1}Ab$
-is constant as well.
+{\color{red}\emph{Prediction.}  Let $Q_t$ rotate each plane
+$\operatorname{span}(u_h,u_{\ell(h)})$ by $\theta=\arcsin\sqrt t$ and act as the
+identity on the orthogonal complement of these mutually orthogonal planes.
+Since $u_h,u_{\ell(h)}$ are eigenvectors orthogonal to $\bstar$, they are
+orthogonal to $b=\Sigma^{1/2}\bstar$ and $c=\Sigma^{-1/2}\bstar$, so
+$Q_t\in\mathcal G_{b,c}$.  As $u_h^\top Q_t=\sqrt{1-t}\,u_h^\top+\sqrt t\,u_{\ell(h)}^\top$
+and $a_\ell=0$ on $L$, $AQ_t=A(t)$, i.e.\ $F(t)=F_{Q_t}$.
+Proposition~\ref{prop:app-feature-gauge} then fixes $\mathcal P$,
+$E_{gen,DE}$, $R^2_{gen}$ and $\kappa_{CV}$, and
+$N_{DE}=(Ac)^\top(AA^\top+\kappa I)^{-1}Ab$ is constant because $A(t)$ has the
+same $AA^\top$, $Ab$ and $Ac$.
 
-\emph{Gram matrix.}  $\Sigma^{-1}$ preserves $U_0,U_H,U_L$, so
-$P\Sigma^{-1}R^\top=P\Sigma^{-1}V^\top=R\Sigma^{-1}V^\top=0$ and
-$\Gramt=A(t)\Sigma^{-1}A(t)^\top$ reduces to the affine form of
-Eq.~\ref{eq:mr-rotation-gram}.  For any $u$, $\|V^\top u\|=\|R^\top u\|$,
-$u^\top V\Sigma^{-1}V^\top u\ge s_L^{-1}\|V^\top u\|^2$ and
-$u^\top R\Sigma^{-1}R^\top u\le s_H^{-1}\|R^\top u\|^2$, which gives the
-Loewner bound in Eq.~\ref{eq:mr-rotation-gram}.
+\emph{Gram matrix.}  The unit vectors $u_k$ ($k\notin H\cup L$) and
+$w_h:=\sqrt{1-t}\,u_h+\sqrt t\,u_{\ell(h)}$ ($h\in H$) are mutually
+$\Sigma^{-1}$-orthogonal, with $u_k^\top\Sigma^{-1}u_k=1/s_k$ and
+$w_h^\top\Sigma^{-1}w_h=(1-t)/s_h+t/s_{\ell(h)}$.  Hence
+$\Gramt=A(t)\Sigma^{-1}A(t)^\top$ equals Eq.~\ref{eq:mr-rotation-gram}, and the
+contribution of mode $h$ to the trace goes from $\|a_h\|^2/s_h$ at $t=0$ to
+$\|a_h\|^2/s_{\ell(h)}$ at $t=1$.
 
-\emph{Monotonicity.}  With $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F\succeq0$
-fixed in $t$, $T_F(\kappa)=\operatorname{Tr}[\Gramt M_\kappa]$ is affine in $t$
-and $T_F(\kappa)|_t-T_F(\kappa)|_0\ge t\,(s_L^{-1}-s_H^{-1})\operatorname{Tr}[RR^\top M_\kappa]>0$
-for $t>0$, because $0\ne RR^\top\preceq\Sigma_F$ and $M_\kappa\succ0$ on the
-range of $\Sigma_F$.  Writing $\bar u:=\Sigma_F(\Sigma_F+\kappa I)^{-1}w^\star$
-(fixed by $\mathcal P$), $\|\bar\beta_{F,\kappa}\|^2=\bar u^\top\Gramt\bar u$ is
-affine and nondecreasing, so
-$D_{DE}=\bar u^\top\Gramt\bar u+(E_{gen,DE}+\sigma^2)T_F/n$ is affine and
-strictly increasing when $E_{gen,DE}+\sigma^2>0$; dividing by the constant
-$N_{DE}>0$ gives the claim for $z_{acc}$.  The trace bound follows from
-$\operatorname{Tr}\Gramt-\operatorname{Tr}\Gram\le t\operatorname{Tr}[V\Sigma^{-1}V^\top]\le t\|V\|_F^2/\lambda_{\min}(\Sigma)$
-and $\|V\|_F=\|R\|_F$.
-
-\emph{No bound in terms of $\mathcal P$.}  Replace $\Sigma$ by any $\Sigma'\succ0$
-that agrees with $\Sigma$ on $U_0\oplus U_H$ and satisfies
-$\Sigma'|_{U_L}\preceq s_LI$, and keep $A(t)$ fixed, so that
-$F'(t)=A(t)\Sigma'^{-1/2}$.  Since $\bstar\in U_0$, $\bstar$, $b$, $c$ and
-$S=\|b\|^2$ are unchanged; hence $\Sigma_F=AA^\top$, $F\Sigma\bstar=Ab$,
-$F\bstar=Ac$, $E_{gen,DE}$ and $N_{DE}$ are unchanged.  At $t=1$,
-$\Gramt\succeq V\Sigma'^{-1}V^\top\succeq s_L^{-1}VV^\top$, so
-$\operatorname{Tr}\Gramt\ge\|R\|_F^2/s_L$,
-$T_F(\kappa)\ge s_L^{-1}\operatorname{Tr}[RR^\top M_\kappa]$ and
-$z_{acc}\ge(E_{gen,DE}+\sigma^2)T_F(\kappa)/(nN_{DE})-1$, all of which diverge
-as $s_L\to0$.}
+\emph{Monotonicity.}  With $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$ fixed in
+$t$, $T_F(\kappa)=\operatorname{Tr}[\Gramt M_\kappa]$ increases by
+$t\sum_h(s_{\ell(h)}^{-1}-s_h^{-1})\,a_h^\top M_\kappa a_h$, which is positive
+when some $a_h\neq0$ because $a_h$ lies in the range of
+$\Sigma_F=\sum_ka_ka_k^\top$, where $M_\kappa\succ0$.  With
+$\bar u:=(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar$ fixed,
+$\|\bar\beta_{F,\kappa}\|^2=\bar u^\top\Gramt\bar u$ is nondecreasing, so
+$D_{DE}=\|\bar\beta_{F,\kappa}\|^2+(E_{gen,DE}+\sigma^2)T_F/n$ increases strictly
+when $E_{gen,DE}+\sigma^2>0$; dividing by the constant $N_{DE}>0$ gives the
+claim for $z_{acc}$.}
 \end{proof}
 % [Reviewer fix] Previous proof (claimed unbounded growth at fixed Sigma, and omitted
 % the Sigma^{-1} cross terms):

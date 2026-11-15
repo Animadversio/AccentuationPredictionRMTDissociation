@@ -392,41 +392,50 @@ choices for the same finite realization of $X$.
 Proof: Section~\ref{sec:app-gauge-fragility}.
 \end{prop}
 
-\begin{cor}[Continuous prediction-null rotation]
+\begin{cor}[Rotating feature energy from high- to low-variance modes]
 \label{cor:mr-rotation}
-\red{Assume $\Sigma\succ0$ and write $A:=F\Sigma^{1/2}$.  Let
-$\R^d=U_0\oplus U_H\oplus U_L$ be an orthogonal decomposition into
-$\Sigma$-invariant subspaces with $\bstar\in U_0$,
-$\Sigma|_{U_H}\succeq s_HI$ and $\Sigma|_{U_L}\preceq s_LI$, $0<s_L<s_H$.
-Suppose $A=P+R$ with the rows of $P$ in $U_0$ and the rows of $R\neq0$ in
-$U_H$, and let $V$ have rows in $U_L$ with $VV^\top=RR^\top$.  Then the path
-$A(t):=P+\sqrt{1-t}\,R+\sqrt t\,V$, $F(t):=A(t)\Sigma^{-1/2}$, $t\in[0,1]$,
-satisfies $F(t)=F_{Q_t}$ for rotations $Q_t\in\mathcal G_{b,c}$ of
-Proposition~\ref{prop:mr-gauge}, with $F(0)=F$; hence $E_{gen,DE}$,
-$R^2_{gen}$, $\kappa_{CV}$ and $N_{DE}$ are constant in $t$.  Its Euclidean Gram matrix is affine in $t$,
+\red{Let $\Sigma=\sum_ks_ku_ku_k^\top\succ0$ and write
+$A:=F\Sigma^{1/2}=\sum_ka_ku_k^\top$ with $a_k:=Au_k$.  Then
+\[
+\operatorname{Tr}\Gram=\operatorname{Tr}[A\Sigma^{-1}A^\top]=\sum_k\frac{\|a_k\|^2}{s_k}:
+\]
+the Euclidean feature energy weights each eigenmode by its inverse variance.
+Pick disjoint sets $H$, $L$ of eigenmodes orthogonal to $\bstar$, with
+$a_\ell=0$ for $\ell\in L$, and pair each $h\in H$ with a distinct
+$\ell(h)\in L$ of lower variance, $s_{\ell(h)}<s_h$.  Move a fraction $t\in[0,1]$
+of each $a_h$ onto its partner mode,
+\[
+A(t):=\sum_{k\notin H}a_ku_k^\top+\sum_{h\in H}a_h\big(\sqrt{1-t}\,u_h+\sqrt t\,u_{\ell(h)}\big)^\top,
+\qquad F(t):=A(t)\Sigma^{-1/2}.
+\]
+\textbf{(i) Prediction is unchanged:} $F(t)=F_{Q_t}$ for a rotation
+$Q_t\in\mathcal G_{b,c}$ of Proposition~\ref{prop:mr-gauge}, so $E_{gen,DE}$,
+$R^2_{gen}$, $\kappa_{CV}$ and $N_{DE}$ do not depend on $t$.
+\textbf{(ii) Control degrades:}
 \begin{equation}
-\begin{aligned}
-\Gramt&=P\Sigma^{-1}P^\top+(1-t)\,R\Sigma^{-1}R^\top+t\,V\Sigma^{-1}V^\top,\\
-\Gramt-\Gram&=t\,\big(V\Sigma^{-1}V^\top-R\Sigma^{-1}R^\top\big)\succeq t\,\big(s_L^{-1}-s_H^{-1}\big)RR^\top\succeq0,
-\end{aligned}
+\Gramt=\Gram+t\sum_{h\in H}\Big(\frac{1}{s_{\ell(h)}}-\frac{1}{s_h}\Big)a_ha_h^\top,
 \label{eq:mr-rotation-gram}
 \end{equation}
-so $\operatorname{Tr}\Gramt$, $T_F(\kappa)$ for every $\kappa>0$, and (when
-$N_{DE}>0$ and $E_{gen,DE}+\sigma^2>0$) the leading-order
-$z_{acc}=D_{DE}/N_{DE}-1$ are affine and strictly increasing in $t$: moving feature energy from the spectral head to the tail
-raises control fragility at fixed prediction.  For a fixed $\Sigma$ these
-increases are finite, e.g.\
-$\operatorname{Tr}\Gramt\le\operatorname{Tr}\Gram+t\,\|R\|_F^2/\lambda_{\min}(\Sigma)$.
-They are, however, not bounded by the prediction summaries $\mathcal P$:
-changing $\Sigma$ only on $U_L$, with $A(t)$ and $\Sigma^{1/2}\bstar$ held
-fixed, leaves $\mathcal P$, $F(t)\bstar$ and $N_{DE}$ unchanged, while
-$\operatorname{Tr}\Gramt|_{t=1}\ge\|R\|_F^2/s_L$ and, when
-$E_{gen,DE}+\sigma^2>0$, also $T_F(\kappa)$ and $z_{acc}$ at $t=1$ diverge
-as $s_L\to0$.  For example, with a power-law spectrum $s_k\propto k^{-\alpha}$
-and $U_L$ spanned by tail eigenvectors, $s_L^{-1}$ grows like $d^{\alpha}$ as
-$d\to\infty$.}
+so $\operatorname{Tr}\Gramt$, $T_F(\kappa)$ for every $\kappa>0$ and (when
+$N_{DE}>0$ and $E_{gen,DE}+\sigma^2>0$) $z_{acc}=D_{DE}/N_{DE}-1$ increase
+strictly and linearly in $t$ whenever some $a_h\neq0$.  At $t=1$ the
+contribution of each rotated mode to $\operatorname{Tr}\Gram$ is multiplied by
+$s_h/s_{\ell(h)}$.}
 Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 \end{cor}
+
+\begin{remark}[How large can the increase be?]
+\red{The amplification factor $s_h/s_{\ell(h)}$ is at most the condition
+number $\lambda_{\max}(\Sigma)/\lambda_{\min}(\Sigma)$, so for a fixed
+$\Sigma$ the increase is finite.  It is, however, not limited by anything
+prediction can see: the prediction summaries depend on $A$ only through
+$AA^\top$, $Ab$ and $Ac$ (with $b=\Sigma^{1/2}\bstar$, $c=\Sigma^{-1/2}\bstar$),
+which do not involve the eigenvalues of the tail modes $L$.  For natural
+images the covariance spectrum spans many orders of magnitude, so the factor
+is very large in practice.  It becomes unbounded only along a sequence of
+covariances with $\lambda_{\min}\to0$, e.g.\ a power law $s_k\propto k^{-\alpha}$
+as $d\to\infty$, where $s_1/s_d\sim d^{\alpha}$.}
+\end{remark}
 % [Reviewer fix] Previous statement ("grow without bound" at fixed finite-dimensional Sigma):
 % Write $A:=F\Sigma^{1/2}$ and let $P$ be the part of $A$ needed to fix
 % $A\Sigma^{1/2}\bstar$ (and optionally $A\Sigma^{-1/2}\bstar$).  For any two
