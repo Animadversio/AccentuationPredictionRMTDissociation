@@ -394,52 +394,84 @@ Proof: Section~\ref{sec:app-gauge-fragility}.
 
 \begin{cor}[Rotating feature energy from high- to low-variance modes]
 \label{cor:mr-rotation}
-\red{Let $\Sigma=\sum_ks_ku_ku_k^\top\succ0$ and write
-$A:=F\Sigma^{1/2}=\sum_ka_ku_k^\top$ with $a_k:=Au_k$.  Then
+{\color{red}Let $\Sigma=\sum_ks_ku_ku_k^\top\succ0$ and write the feature map in
+whitened input coordinates as $A:=F\Sigma^{1/2}$.  Its column $a_k:=Au_k\in
+\mathbb R^p$ records how all $p$ features use input mode $u_k$.
+Choose disjoint pairs $(h,\ell(h))$ satisfying
 \[
-\operatorname{Tr}\Gram=\operatorname{Tr}[A\Sigma^{-1}A^\top]=\sum_k\frac{\|a_k\|^2}{s_k}:
+s_{\ell(h)}<s_h,\qquad
+u_h^\top\bstar=u_{\ell(h)}^\top\bstar=0,\qquad a_{\ell(h)}=0.
 \]
-the Euclidean feature energy weights each eigenmode by its inverse variance.
-Pick disjoint sets $H$, $L$ of eigenmodes orthogonal to $\bstar$, with
-$a_\ell=0$ for $\ell\in L$, and pair each $h\in H$ with a distinct
-$\ell(h)\in L$ of lower variance, $s_{\ell(h)}<s_h$.  Move a fraction $t\in[0,1]$
-of each $a_h$ onto its partner mode,
-\[
-A(t):=\sum_{k\notin H}a_ku_k^\top+\sum_{h\in H}a_h\big(\sqrt{1-t}\,u_h+\sqrt t\,u_{\ell(h)}\big)^\top,
-\qquad F(t):=A(t)\Sigma^{-1/2}.
-\]
-\textbf{(i) Prediction is unchanged:} $F(t)=F_{Q_t}$ for a rotation
-$Q_t\in\mathcal G_{b,c}$ of Proposition~\ref{prop:mr-gauge}, so $E_{gen,DE}$,
-$R^2_{gen}$, $\kappa_{CV}$ and $N_{DE}$ do not depend on $t$.
-\textbf{(ii) Control degrades:}
+Thus each pair consists of a high-variance mode and an unused low-variance
+mode, both carrying no teacher signal.  Rotate the feature loading between
+these two modes by $\theta\in[0,\pi/2]$:
+\begin{equation}
+A(t)u_h=\sqrt{1-t}\,a_h,\qquad
+A(t)u_{\ell(h)}=\sqrt t\,a_h,\qquad t:=\sin^2\theta.
+\label{eq:mr-rotation-pair}
+\end{equation}
+Leave every other column unchanged and set $F(t):=A(t)\Sigma^{-1/2}$.
+At $t=0$ the loading is entirely on $u_h$; at $t=1$ it is entirely on
+$u_{\ell(h)}$.  Here $t$ is the fraction of squared whitened loading
+transferred to the low-variance mode, not the rotation angle.
+
+\textbf{(i) Prediction and alignment stay fixed.}
+Each pair contributes the same $a_ha_h^\top$ to $A(t)A(t)^\top$, and neither
+mode contributes to $A(t)\Sigma^{\pm1/2}\bstar$.  Hence $\Sigma_F$,
+$F(t)\Sigma\bstar$ and $F(t)\bstar$ are unchanged.  The family belongs to
+$\mathcal G_{b,c}$ of Proposition~\ref{prop:mr-gauge}, so the entire
+DE prediction curve, its CV choice, and $N_{DE}$ are independent of $t$.
+
+\textbf{(ii) Pixel-gradient energy increases.}
+Writing $\Gram$ for the Gram matrix at $t=0$, we have
 \begin{equation}
 \Gramt=\Gram+t\sum_{h\in H}\Big(\frac{1}{s_{\ell(h)}}-\frac{1}{s_h}\Big)a_ha_h^\top,
 \label{eq:mr-rotation-gram}
 \end{equation}
-so $\operatorname{Tr}\Gramt$, $T_F(\kappa)$ for every $\kappa>0$ and (when
-$N_{DE}>0$ and $E_{gen,DE}+\sigma^2>0$) $z_{acc}=D_{DE}/N_{DE}-1$ increase
-strictly and linearly in $t$ whenever some $a_h\neq0$.  At $t=1$ the
-contribution of each rotated mode to $\operatorname{Tr}\Gram$ is multiplied by
-$s_h/s_{\ell(h)}$.}
+where $H$ indexes the high-variance members of the pairs.
+Consequently $\operatorname{Tr}\Gramt$ and $T_{F(t)}(\kappa)$ increase
+strictly and linearly in $t$ for every fixed $\kappa>0$, provided some
+$a_h\ne0$.  If also $N_{DE}>0$ and $E_{gen,DE}+\sigma^2>0$, then
+$z_{acc}(t)=D_{DE}(t)/N_{DE}-1$ increases strictly and linearly as well.
+At $t=1$ each rotated pair's contribution to $\operatorname{Tr}\Gram$ is
+multiplied by $s_h/s_{\ell(h)}$.}
 Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 \end{cor}
+
+\red{The mechanism is visible directly in pixel coordinates:
+\[
+F(t)u_h=\frac{\sqrt{1-t}}{\sqrt{s_h}}a_h,\qquad
+F(t)u_{\ell(h)}=\frac{\sqrt t}{\sqrt{s_{\ell(h)}}}a_h.
+\]
+Preserving feature variance while reading a lower-variance input requires a
+larger pixel weight.  Prediction sees the same feature statistics, whereas
+backpropagation exposes this larger weight.  If the starting point is
+calibrated ($z_{acc}(0)=0$), then $R^2_{acc}(t)=1-z_{acc}(t)^2$ decreases
+and becomes negative once $z_{acc}(t)>1$.  From an arbitrary starting point,
+increasing $z_{acc}$ can first improve calibration if $z_{acc}(0)<0$;
+monotonic growth of $z_{acc}$ alone does not imply monotonic worsening of
+every control metric.}
 
 \begin{remark}[How large can the increase be?]
 \red{The amplification factor $s_h/s_{\ell(h)}$ is at most the condition
 number $\lambda_{\max}(\Sigma)/\lambda_{\min}(\Sigma)$, so for a fixed
 $\Sigma$ the increase is finite.  It is, however, not limited by anything
 prediction can see: the prediction summaries depend on $A$ only through
-$AA^\top$, $Ab$ and $Ac$ (with $b=\Sigma^{1/2}\bstar$, $c=\Sigma^{-1/2}\bstar$),
-which do not involve the eigenvalues of the tail modes $L$.  For natural
+$AA^\top$ and $Ab$ (with $b=\Sigma^{1/2}\bstar$); this construction additionally
+preserves $Ac$, where $c=\Sigma^{-1/2}\bstar$, to keep $N_{DE}$ fixed.
+Because the unused tail modes carry no teacher signal, lowering their
+variances while rescaling $F$ to keep $A$ fixed leaves these quantities
+unchanged.  For natural
 images the covariance spectrum spans many orders of magnitude, so the factor
 is very large in practice.  It becomes unbounded only along a sequence of
 covariances with $\lambda_{\min}\to0$, e.g.\ a power law $s_k\propto k^{-\alpha}$
 as $d\to\infty$, where $s_1/s_d\sim d^{\alpha}$.
 Orthogonality of the rotated modes to $\bstar$ only makes the formula exact.
 For a generic teacher, rotating the component of $A$ orthogonal to $b$ and $c$
-into the tail still preserves prediction exactly; $\Gramt$ then acquires cross
-terms, but $\operatorname{Tr}\Gramt$ grows by a similar variance ratio
-(Fig.~\ref{fig:app-null-rotation}).}
+into the tail still preserves prediction exactly.  In that more general
+construction $\Gramt$ acquires cross terms, so the affine monotonicity above
+does not follow automatically; Fig.~\ref{fig:app-null-rotation} illustrates
+the resulting amplification for a generic teacher.}
 \end{remark}
 % [Reviewer fix] Previous statement ("grow without bound" at fixed finite-dimensional Sigma):
 % Write $A:=F\Sigma^{1/2}$ and let $P$ be the part of $A$ needed to fix

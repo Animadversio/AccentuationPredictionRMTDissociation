@@ -1149,36 +1149,61 @@ feature maps used in the experiments (Fig.~\ref{fig:supp-null-random}).
 \end{example}
 
 \begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
-{\color{red}\emph{Prediction.}  Let $Q_t$ rotate each plane
+{\color{red}\emph{Step 1: rotate a pair without changing its feature covariance.}
+For a single pair, Eq.~\ref{eq:mr-rotation-pair} replaces the two whitened
+columns $(a_h,0)$ by $(\sqrt{1-t}\,a_h,\sqrt t\,a_h)$.  Their contribution
+to the feature covariance is therefore
+\[
+(1-t)a_ha_h^\top+t a_ha_h^\top=a_ha_h^\top.
+\]
+The same identity holds for all disjoint pairs, so
+$A(t)A(t)^\top=AA^\top$.  Moreover, both modes in each pair are orthogonal
+to $b=\Sigma^{1/2}\bstar$ and $c=\Sigma^{-1/2}\bstar$, because they are
+eigenvectors orthogonal to $\bstar$.  Thus $A(t)b=Ab$ and $A(t)c=Ac$.
+Equivalently, let $Q_t$ rotate each plane
 $\operatorname{span}(u_h,u_{\ell(h)})$ by $\theta=\arcsin\sqrt t$ and act as the
 identity on the orthogonal complement of these mutually orthogonal planes.
-Since $u_h,u_{\ell(h)}$ are eigenvectors orthogonal to $\bstar$, they are
-orthogonal to $b=\Sigma^{1/2}\bstar$ and $c=\Sigma^{-1/2}\bstar$, so
-$Q_t\in\mathcal G_{b,c}$.  As $u_h^\top Q_t=\sqrt{1-t}\,u_h^\top+\sqrt t\,u_{\ell(h)}^\top$
-and $a_\ell=0$ on $L$, $AQ_t=A(t)$, i.e.\ $F(t)=F_{Q_t}$.
+Choose its orientation so that
+$u_h^\top Q_t=\sqrt{1-t}\,u_h^\top+\sqrt t\,u_{\ell(h)}^\top$.
+Then $Q_t\in\mathcal G_{b,c}$; since $a_\ell=0$ on $L$, we also have
+$AQ_t=A(t)$, i.e.\ $F(t)=F_{Q_t}$.
 Proposition~\ref{prop:app-feature-gauge} then fixes $\mathcal P$,
 $E_{gen,DE}$, $R^2_{gen}$ and $\kappa_{CV}$, and
 $N_{DE}=(Ac)^\top(AA^\top+\kappa I)^{-1}Ab$ is constant because $A(t)$ has the
 same $AA^\top$, $Ab$ and $Ac$.
 
-\emph{Gram matrix.}  The unit vectors $u_k$ ($k\notin H\cup L$) and
-$w_h:=\sqrt{1-t}\,u_h+\sqrt t\,u_{\ell(h)}$ ($h\in H$) are mutually
-$\Sigma^{-1}$-orthogonal, with $u_k^\top\Sigma^{-1}u_k=1/s_k$ and
-$w_h^\top\Sigma^{-1}w_h=(1-t)/s_h+t/s_{\ell(h)}$.  Hence
-$\Gramt=A(t)\Sigma^{-1}A(t)^\top$ equals Eq.~\ref{eq:mr-rotation-gram}, and the
-contribution of mode $h$ to the trace goes from $\|a_h\|^2/s_h$ at $t=0$ to
-$\|a_h\|^2/s_{\ell(h)}$ at $t=1$.
+\emph{Step 2: convert the same loading back to pixel coordinates.}
+Since $\Sigma^{-1/2}u_k=u_k/\sqrt{s_k}$, the pair contributes to the
+pixel Gram matrix
+\[
+\left(\frac{1-t}{s_h}+\frac{t}{s_{\ell(h)}}\right)a_ha_h^\top
+=\frac{a_ha_h^\top}{s_h}
++t\left(\frac{1}{s_{\ell(h)}}-\frac{1}{s_h}\right)a_ha_h^\top.
+\]
+Summing over pairs gives Eq.~\ref{eq:mr-rotation-gram}; all other columns
+are unchanged.  The trace contribution increases from $\|a_h\|^2/s_h$
+to $\|a_h\|^2/s_{\ell(h)}$, giving the variance-ratio factor.
 
-\emph{Monotonicity.}  With $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$ fixed in
+\emph{Step 3: propagate the Gram increase to control.}
+With $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$ fixed in
 $t$, $T_F(\kappa)=\operatorname{Tr}[\Gramt M_\kappa]$ increases by
 $t\sum_h(s_{\ell(h)}^{-1}-s_h^{-1})\,a_h^\top M_\kappa a_h$, which is positive
 when some $a_h\neq0$ because $a_h$ lies in the range of
 $\Sigma_F=\sum_ka_ka_k^\top$, where $M_\kappa\succ0$.  With
 $\bar u:=(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar$ fixed,
 $\|\bar\beta_{F,\kappa}\|^2=\bar u^\top\Gramt\bar u$ is nondecreasing, so
-$D_{DE}=\|\bar\beta_{F,\kappa}\|^2+(E_{gen,DE}+\sigma^2)T_F/n$ increases strictly
-when $E_{gen,DE}+\sigma^2>0$; dividing by the constant $N_{DE}>0$ gives the
-claim for $z_{acc}$.}
+$D_{DE}=\|\bar\beta_{F,\kappa}\|^2+(E_{gen,DE}+\sigma^2)T_F/n$ is affine in
+$t$ and increases strictly when $E_{gen,DE}+\sigma^2>0$.
+More explicitly, set $\delta_h:=s_{\ell(h)}^{-1}-s_h^{-1}>0$.  Then
+\[
+z_{acc}(t)=z_{acc}(0)+\frac{t}{N_{DE}}
+\sum_{h\in H}\delta_h\left[
+(a_h^\top\bar u)^2+
+\frac{E_{gen,DE}+\sigma^2}{n}\,a_h^\top M_\kappa a_h\right].
+\]
+Every summand is nonnegative and at least one is positive under the stated
+conditions.  The same formula applies at the DE-based CV choice, since
+$\kappa_{CV}$ is constant along the rotation.}
 \end{proof}
 % [Reviewer fix] Previous proof (claimed unbounded growth at fixed Sigma, and omitted
 % the Sigma^{-1} cross terms):
