@@ -434,7 +434,12 @@ which do not involve the eigenvalues of the tail modes $L$.  For natural
 images the covariance spectrum spans many orders of magnitude, so the factor
 is very large in practice.  It becomes unbounded only along a sequence of
 covariances with $\lambda_{\min}\to0$, e.g.\ a power law $s_k\propto k^{-\alpha}$
-as $d\to\infty$, where $s_1/s_d\sim d^{\alpha}$.}
+as $d\to\infty$, where $s_1/s_d\sim d^{\alpha}$.
+Orthogonality of the rotated modes to $\bstar$ only makes the formula exact.
+For a generic teacher, rotating the component of $A$ orthogonal to $b$ and $c$
+into the tail still preserves prediction exactly; $\Gramt$ then acquires cross
+terms, but $\operatorname{Tr}\Gramt$ grows by a similar variance ratio
+(Fig.~\ref{fig:app-null-rotation}).}
 \end{remark}
 % [Reviewer fix] Previous statement ("grow without bound" at fixed finite-dimensional Sigma):
 % Write $A:=F\Sigma^{1/2}$ and let $P$ be the part of $A$ needed to fix
