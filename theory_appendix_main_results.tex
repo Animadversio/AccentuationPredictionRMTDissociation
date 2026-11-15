@@ -438,19 +438,19 @@ multiplied by $s_h/s_{\ell(h)}$.}
 Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 \end{cor}
 
-\red{The mechanism is visible directly in pixel coordinates:
-\[
-F(t)u_h=\frac{\sqrt{1-t}}{\sqrt{s_h}}a_h,\qquad
-F(t)u_{\ell(h)}=\frac{\sqrt t}{\sqrt{s_{\ell(h)}}}a_h.
-\]
-Preserving feature variance while reading a lower-variance input requires a
-larger pixel weight.  Prediction sees the same feature statistics, whereas
-backpropagation exposes this larger weight.  If the starting point is
-calibrated ($z_{acc}(0)=0$), then $R^2_{acc}(t)=1-z_{acc}(t)^2$ decreases
-and becomes negative once $z_{acc}(t)>1$.  From an arbitrary starting point,
-increasing $z_{acc}$ can first improve calibration if $z_{acc}(0)<0$;
-monotonic growth of $z_{acc}$ alone does not imply monotonic worsening of
-every control metric.}
+% \red{The mechanism is visible directly in pixel coordinates:
+% \[
+% F(t)u_h=\frac{\sqrt{1-t}}{\sqrt{s_h}}a_h,\qquad
+% F(t)u_{\ell(h)}=\frac{\sqrt t}{\sqrt{s_{\ell(h)}}}a_h.
+% \]
+% Preserving feature variance while reading a lower-variance input requires a
+% larger pixel weight.  Prediction sees the same feature statistics, whereas
+% backpropagation exposes this larger weight.  If the starting point is
+% calibrated ($z_{acc}(0)=0$), then $R^2_{acc}(t)=1-z_{acc}(t)^2$ decreases
+% and becomes negative once $z_{acc}(t)>1$.  From an arbitrary starting point,
+% increasing $z_{acc}$ can first improve calibration if $z_{acc}(0)<0$;
+% monotonic growth of $z_{acc}$ alone does not imply monotonic worsening of
+% every control metric.}
 
 \begin{remark}[How large can the increase be?]
 \red{The amplification factor $s_h/s_{\ell(h)}$ is at most the condition
@@ -463,7 +463,7 @@ Because the unused tail modes carry no teacher signal, lowering their
 variances while rescaling $F$ to keep $A$ fixed leaves these quantities
 unchanged.  For natural
 images the covariance spectrum spans many orders of magnitude, so the factor
-is very large in practice.  It becomes unbounded only along a sequence of
+is very large in practice.  It becomes unbounded along a sequence of
 covariances with $\lambda_{\min}\to0$, e.g.\ a power law $s_k\propto k^{-\alpha}$
 as $d\to\infty$, where $s_1/s_d\sim d^{\alpha}$.
 Orthogonality of the rotated modes to $\bstar$ only makes the formula exact.
