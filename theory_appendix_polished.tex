@@ -1715,18 +1715,79 @@ This section records the deterministic equivalents and the spectral-sum
 identities used in the proofs.  The design is $X\in\R^{n\times d}$ with
 i.i.d. rows $\x_i\sim\mathcal N(0,\Sigma)$, $\hat\Sigma=X^\top X/n$, and
 $\gamma=d/n$; all statements hold in the proportional limit, \red{and $\asymp$
-denotes deterministic equivalence as defined in
-Section~\ref{sec:mr-toolkit}: convergence of $\operatorname{Tr}[C_n(A_n-B_n)]$
-to zero almost surely for every deterministic $C_n$ whose trace norm is bounded
-independently of $n$, which covers both normalized traces against bounded matrices (as in
-Eq.~\ref{eq:app-one-point-de}) and bilinear forms in deterministic vectors;
-unnormalized traces are compared to leading order, i.e.\ their ratio tends to
-one.}  For
+denotes deterministic equivalence, defined precisely in
+Section~\ref{sec:app-de-definition} below.}  For
+% [Reviewer fix] Red draft v1 of this sentence (definition now lives in
+% Section~\ref{sec:app-de-definition}):
+% and $\asymp$
+% denotes deterministic equivalence as defined in
+% Section~\ref{sec:mr-toolkit}: convergence of $\operatorname{Tr}[C_n(A_n-B_n)]$
+% to zero almost surely for every deterministic $C_n$ whose trace norm is bounded
+% independently of $n$, which covers both normalized traces against bounded matrices (as in
+% Eq.~\ref{eq:app-one-point-de}) and bilinear forms in deterministic vectors;
+% unnormalized traces are compared to leading order, i.e.\ their ratio tends to
+% one.
 % [Reviewer fix] Previous wording:
 % $\gamma=d/n$; all statements hold in the proportional limit and $\asymp$
 % denotes almost-sure asymptotic equivalence of the two sides.  For
 feature-space regression the same statements apply to the design $Z=XF^\top$
 with $(\Sigma,d)$ replaced by $(\Sigma_F,p)$.
+
+\subsection{Definition of deterministic equivalence}
+\label{sec:app-de-definition}
+
+{\color{red}Section~\ref{sec:mr-toolkit} describes deterministic equivalence
+informally; here is the precise statement.  Deterministic equivalents are
+statements about a sequence of problems indexed by the sample size $n$: a
+dimension $d=d_n$, a covariance $\Sigma=\Sigma_n\in\R^{d\times d}$, a teacher
+$\bstar=\beta^{\star}_n\in\R^d$ and a design $X=X_n\in\R^{n\times d}$ with
+i.i.d.\ rows $\x_i\sim\mathcal N(0,\Sigma_n)$, with $n,d\to\infty$ and
+$d/n\to\gamma\in(0,\infty)$.  We suppress the index $n$ everywhere else.  For
+a random matrix $A_n$ and a deterministic matrix $B_n$ we write
+$A_n\asymp B_n$ if
+\[
+\operatorname{Tr}\big[C_n(A_n-B_n)\big]\to0\qquad\text{almost surely}
+\]
+for every sequence of deterministic matrices $C_n$ (fixed in advance, i.e.\
+not depending on $X$ or $\eta$) whose trace (nuclear) norm is bounded by a
+constant independent of $n$.  By conditioning, the same then holds for $C_n$
+random but independent of $(X,\eta)$, as used for independent fits in
+Section~\ref{sec:app-peer-review}.  The definition contains both normalized
+traces, $\tfrac1d\operatorname{Tr}[M_n(A_n-B_n)]\to0$ whenever
+$\sup_n\|M_n\|_{op}<\infty$ (take $C_n=M_n/d$; this is the form of
+Eq.~\ref{eq:app-one-point-de}), and bilinear forms,
+$u_n^\top(A_n-B_n)v_n\to0$ for unit vectors $u_n,v_n$ (take
+$C_n=v_nu_n^\top$), which is how the quadratic forms in $\bstar$ are used.
+It does not imply $\|A_n-B_n\|_{op}\to0$.
+
+For scalars, $a_n\asymp b_n$ means $a_n-b_n\to0$ almost surely when both are
+of order one (risks, $N$, $D$, quadratic forms in $\bstar$), and
+$a_n/b_n\to1$ for scalars that scale with $n$, such as unnormalized traces
+$\operatorname{Tr}[\cdot]$, or with $1/n$, such as per-mode variances.  When
+$a_n$ is an expectation over both $X$ and $\eta$ (e.g.\ $\mu_N=\E[N]$), both
+sides are deterministic, ``almost surely'' is vacuous, and $a_n\asymp b_n$
+states that two deterministic sequences become asymptotically equal,
+$a_n-b_n\to0$ (or $a_n/b_n\to1$); neither needs to converge on its own.  This
+expectation form follows from the almost-sure one because, for fixed
+$\lambda>0$, $N$, $D$ and the risks have uniformly bounded moments.  An
+expectation over $\eta$ alone, such as $\E_\eta[E_{gen}]$, is still random in
+$X$ and is covered by the almost-sure statement.
+
+\emph{Standing assumptions.}  The covariance and the teacher are bounded by a
+constant independent of $n$, $\sup_n\|\Sigma_n\|_{op}<\infty$ and
+$\sup_n\|\beta^{\star}_n\|<\infty$, so that the signal power $S$, the risks,
+$N$ and $D$ are of order one; the noise level $\sigma$ and the penalty
+$\lambda>0$ are fixed.  The ridgeless boundary $\lambda\to0$ with $\gamma>1$
+is understood as the limit of these statements, which stays well defined
+because $\kappa\to\kappa_0>0$.  The same conventions apply in feature space
+with $(\Sigma,d,\bstar)$ replaced by $(\Sigma_F,p,w^\star)$.  In practice the
+deterministic expressions are evaluated on a single finite spectrum and used
+as approximations at that size (Section~\ref{sec:mr-toolkit}).}
+% [Reviewer fix] Moved here from Section~\ref{sec:mr-toolkit} (red draft v2).
+% Corrections relative to the moved text: (i) the conditioning sentence for
+% C_n independent of (X,eta); (ii) the old clause "when $b_n$ is itself an
+% expectation over $X$ and $\eta$, both sides are deterministic and the
+% statement is a limit of numbers" was replaced by the expectation paragraph above.
 
 \subsection{Fixed point and deterministic equivalents}
 \label{sec:app-de-identities}

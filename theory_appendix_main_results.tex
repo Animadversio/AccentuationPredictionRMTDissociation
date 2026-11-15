@@ -150,35 +150,30 @@ B_{p,q}(\kappa)=\sum_k\frac{s_k^p}{(s_k+\kappa)^q}b_k^2,\qquad
 \end{equation}
 The relation $n\lambda=\kappa\,(n-\mathrm{df}_1)$ and the derivative
 $d\kappa/d\lambda=n/(n-\mathrm{df}_2)$ follow from Eq.~\ref{eq:mr-kappa}.
-\paragraph{Technical definition of deterministic equivalence.}
-{\color{red}Technically, deterministic equivalents are statements about a sequence of
-problems indexed by the sample size $n$, for example: a dimension $d=d_n$, a covariance
-$\Sigma=\Sigma_n\in\R^{d\times d}$, a teacher $\bstar=\beta^{\star}_n\in\R^d$ and a
-design $X=X_n\in\R^{n\times d}$ with i.i.d.\ rows $\x_i\sim\mathcal N(0,\Sigma_n)$,
-with $n,d\to\infty$ and $d/n\to\gamma\in(0,\infty)$.  We suppress the index
-$n$ everywhere else.  For a random matrix $A_n$ and a deterministic matrix
-$B_n$ we write $A_n\asymp B_n$ if
-\[
-\operatorname{Tr}\big[C_n(A_n-B_n)\big]\to0\qquad\text{almost surely}
-\]
-for every sequence of deterministic matrices $C_n$ (fixed in advance, i.e.\ not depending on $X$ or $\eta$) whose trace (nuclear) norm is bounded by a constant independent of $n$.  
-This contains both normalized traces, $\tfrac1d\operatorname{Tr}[M_n(A_n-B_n)]\to0$ whenever $\sup_n\|M_n\|_{op}<\infty$ (take $C_n=M_n/d$), and 
-bilinear forms, $u_n^\top(A_n-B_n)v_n\to0$ for unit vectors $u_n,v_n$ (take $C_n=v_nu_n^\top$), which is how the quadratic forms in $\bstar$ below are used. Note, it does not imply $\|A_n-B_n\|_{op}\to0$.  
-For scalars, $a_n\asymp b_n$ means $a_n-b_n\to0$ almost surely when both are of order one (risks, $N$, $D$, quadratic forms in $\bstar$), and $a_n/b_n\to1$ for scalars that scale with $n$, such as unnormalized traces $\operatorname{Tr}[\cdot]$, or with $1/n$, such as per-mode variances; when $b_n$ is itself an expectation over $X$ and $\eta$, both sides are deterministic and the statement is a limit of numbers.
-
-\emph{Standing assumptions.}  The covariance and the teacher are bounded by a
-constant independent of $n$, $\sup_n\|\Sigma_n\|_{op}<\infty$ and
-$\sup_n\|\beta^{\star}_n\|<\infty$, so that the signal power $S$, the risks, $N$ and
-$D$ are of order one; the noise level $\sigma$ and the penalty $\lambda>0$
-are fixed.  The ridgeless boundary $\lambda\to0$ with $\gamma>1$ is
-understood as the limit of these statements, which stays well defined because
-$\kappa\to\kappa_0>0$.  The same conventions apply in feature space with
-$(\Sigma,d,\bstar)$ replaced by $(\Sigma_F,p,w^\star)$.
+\paragraph{Deterministic equivalence.}
+{\color{red}The estimator $\hat\beta$ depends on the random design $X$ and
+noise $\eta$, so every quantity we study (the risks, $N$, $D$, the per-mode
+errors) is random.  In high dimension these quantities concentrate: up to
+fluctuations that vanish as $n$ and $d$ grow together, each equals a
+deterministic expression that depends only on the spectrum $\{s_k\}$ of
+$\Sigma$, the teacher coefficients $b_k$, the noise level $\sigma$, the penalty
+$\lambda$ and $n$, through $\kappa$ and the spectral sums above.  We write
+$a\asymp b$ for this, with $a$ the random quantity and $b$ its deterministic
+equivalent.  For matrices, $A\asymp B$ means that the two agree when tested
+against fixed objects: $\tfrac1d\operatorname{Tr}[M(A-B)]\to0$ for any fixed
+matrix $M$ of bounded norm, and $u^\top(A-B)v\to0$ for any fixed unit vectors
+$u,v$; for example
+$\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\asymp\Sigma(\Sigma+\kappa I)^{-1}$.
+This does not make $A-B$ small in operator norm.
+Section~\ref{sec:app-de-definition} gives the precise definition, as a limit
+along a sequence of growing problems, together with the assumptions under
+which it holds.
 
 \emph{How the equivalents are used.}  Each analysis and experiment concerns a
 single finite problem: one covariance, estimated from natural images, one
 teacher and one sample size.  No sequence of covariances is ever constructed;
-the sequence above only states what the approximation controls.  We evaluate
+the sequence in Section~\ref{sec:app-de-definition} only states what the
+approximation controls.  We evaluate
 the deterministic expressions ($\kappa$, $B_{p,q}$, $\mathrm{df}_{p,q}$ and the
 formulas built from them) on the actual finite spectrum of $\Sigma$, not on a
 limiting spectral distribution, and use them as approximations at that size.
@@ -190,6 +185,10 @@ near-ridgeless floor and the narrow $E_{acc}$ valley
 
 The one- and two-resolvent deterministic equivalents used throughout are
 listed in Section~\ref{sec:app-de-toolkit}.
+% [Reviewer fix] (red draft v2: the technical definition, standing assumptions and
+% scalar conventions were moved verbatim, with two corrections, to
+% Section~\ref{sec:app-de-definition} in theory_appendix_polished.tex; this
+% paragraph now gives only the intuitive meaning.)
 % [Reviewer fix] (red draft v1 of this paragraph was reordered: sequence setup and
 % definition first, then standing assumptions, then how the equivalents are used.)
 % [Reviewer fix] Previous definition (A-B->0 a.s., not meaningful for matrices
