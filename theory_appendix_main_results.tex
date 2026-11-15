@@ -466,12 +466,15 @@ images the covariance spectrum spans many orders of magnitude, so the factor
 is very large in practice.  It becomes unbounded along a sequence of
 covariances with $\lambda_{\min}\to0$, e.g.\ a power law $s_k\propto k^{-\alpha}$
 as $d\to\infty$, where $s_1/s_d\sim d^{\alpha}$.
-Orthogonality of the rotated modes to $\bstar$ only makes the formula exact.
-For a generic teacher, rotating the component of $A$ orthogonal to $b$ and $c$
-into the tail still preserves prediction exactly.  In that more general
-construction $\Gramt$ acquires cross terms, so the affine monotonicity above
-does not follow automatically; Fig.~\ref{fig:app-null-rotation} illustrates
-the resulting amplification for a generic teacher.}
+The paired-eigenmode construction gives the exact affine Gram update in
+Eq.~\ref{eq:mr-rotation-gram}; orthogonality to $\bstar$ ensures that the
+rotation also preserves $Ab$ and $Ac$.  For a generic teacher, rotations
+within $\operatorname{span}(b,c)^\perp$ still preserve prediction and
+$N_{DE}$ exactly (Proposition~\ref{prop:mr-gauge}).  However, these directions
+need not be covariance eigenvectors, so $\Gramt$ generally contains
+additional cross terms and need not obey Eq.~\ref{eq:mr-rotation-gram} or
+its affine-monotonicity conclusions.  Figure~\ref{fig:app-null-rotation}
+illustrates the resulting amplification for a generic teacher.}
 \end{remark}
 % [Reviewer fix] Previous statement ("grow without bound" at fixed finite-dimensional Sigma):
 % Write $A:=F\Sigma^{1/2}$ and let $P$ be the part of $A$ needed to fix
@@ -501,6 +504,27 @@ backpropagated gradient.  It is response-independent and large when feature
 PCs backpropagate into low-variance (high spatial frequency) input
 directions.  Proof: Section~\ref{sec:app-feature-fragility}.
 \end{prop}
+
+{\color{red}\paragraph{The paired rotation viewed through feature PCs.}
+Corollary~\ref{cor:mr-rotation} rotates \emph{input} eigenmodes; the same
+construction can be read in the \emph{feature} frame of
+Proposition~\ref{prop:mr-fragility}.  Since $\Sigma_F$ is unchanged, choose
+a fixed eigenbasis $\Sigma_Fv_j=\rho_jv_j$ and write
+$g_j(t):=F(t)^\top v_j$.  For each $\rho_j>0$,
+\begin{align}
+g_j(t)^\top\Sigma g_j(t)&=\rho_j,\qquad
+\|g_j(t)\|^2=\|g_j(0)\|^2+t\sum_{h\in H}\delta_h(v_j^\top a_h)^2,
+\label{eq:mr-rotation-feature-gradients}\\
+T_{F(t)}(\kappa)-T_{F(0)}(\kappa)
+&=t\sum_{j:\rho_j>0}\frac{\rho_j}{(\rho_j+\kappa)^2}
+\sum_{h\in H}\delta_h(v_j^\top a_h)^2\ge0,
+\label{eq:mr-rotation-feature-trace}
+\end{align}
+where $\delta_h:=s_{\ell(h)}^{-1}-s_h^{-1}>0$.
+Thus the rotation preserves each feature PC's natural-image variance and
+ridge shrinkage, while increasing its pixel-gradient energy whenever that
+PC uses a rotated loading ($v_j^\top a_h\ne0$).  Equation~\ref{eq:mr-fragility}
+then converts this increase directly into a larger fragility factor.}
 
 \begin{prop}[Peer review on shared data across feature maps]
 \label{prop:mr-peer-shared}
