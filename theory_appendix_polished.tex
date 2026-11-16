@@ -712,17 +712,14 @@ $s_k/(s_k+\kappa)\le1$.
 \begin{remark}[Why peer review is benign and self-review is not]
 The Euclidean noise energy $h^\top h$ that inflates the self-denominator
 $D$ is absent from ${\bhat}^\top\bprime$ because independent noise
-realizations are uncorrelated.  Peer review therefore measures only the
-shared shrinkage bias: at leading order $R^2_{peer}$ is never negative,
-degrades gracefully with noise (through $\kappa$), and is symmetric between
-the two fits.  Self-review contains the estimator's own fluctuation energy and
-$R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
+realizations are uncorrelated.  Peer review therefore measures only the shared shrinkage bias: 
+at leading order $D^\prime\leq N^\prime$, $\mathrm{slope}\geq1$, the students under-predict teacher on their peer's path, and $R^2_{peer}$ is never negative,
+degrades gracefully with noise (through $\kappa$). 
+In contrast, self-review contains the estimator's own fluctuation energy and $D \gg N$ could happen, and $R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
 This is the linear form of ``recognition without generation''.  
-{\color{red}The symmetry requires the two fits to share the feature map and
+The symmetry requires the two fits to share the feature map and
 penalty: for different maps or different penalties, $G_{1\leftarrow2}\approx
-\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$ has the generator's own
-true gain in the denominator, so the two directions of review differ
-(Section~\ref{sec:app-peer-shared}).}
+\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$ has the generator's own gain in the denominator, so the two directions of review differ (Section~\ref{sec:app-peer-shared}).
 % [Reviewer fix] Previous sentence (noise energies do not enter peer review
 % for independent fits, and the weak-generator claim holds for peer r but not R^2):
 % With observation noise on the measured responses, a path that barely modulates the true response (small ${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator, which is why the peer scores of a weak generator's images are also low in the data; and two models with different feature maps have different noise
@@ -1544,7 +1541,7 @@ $b$.  A left rotation $F\mapsto O_pF$, $O_p\in O(p)$, is a change of feature
 coordinates that is undone by $w\mapsto O_pw$ and produces no new control
 behavior; the nontrivial freedom is on the right.
 
-{\color{red}Concretely, let $\mathcal S=\operatorname{span}(b,c)$ with
+{Concretely, let $\mathcal S=\operatorname{span}(b,c)$ with
 orthogonal projector $\Pi$.  Every $Q\in\mathcal G_{b,c}$
 (Proposition~\ref{prop:mr-gauge}) fixes $\mathcal S$ pointwise and therefore
 has the form $Q=\Pi+WRW^\top$, where $W$ has orthonormal columns spanning
@@ -1582,10 +1579,10 @@ Taking $r_1=u_h$, $r_2=u_{\ell(h)}$ and $a=a_h$ gives a single pair in
 Corollary~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
 Arbitrary $r_1,r_2\in\mathcal S^\perp$ preserve the same statistics, but
 need not be eigenvectors of $\Sigma$; their Gram update can therefore
-contain $\sin\theta\cos\theta$ cross terms.  \red{This rotation is the
-building block of the numerical families:
+contain $\sin\theta\cos\theta$ cross terms.  This rotation is the
+building block of the families in numerical experiment:
 Fig.~\ref{fig:supp-null-givens} rotates a single feature row, and
-Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}}
+Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}
 \end{example}
 
 % [Reviewer fix] Example removed (no figure uses this construction; the
