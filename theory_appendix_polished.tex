@@ -777,7 +777,7 @@ Solid: the control kernel $s/(s+\kappa)^2$ (peak at $s=\kappa$, symmetric on the
 \label{fig:app-tuning-kernels}
 \end{figure}
 
-\begin{remark}[Interpretation of the residual]
+\begin{remark}[Interpretation of the prediction and control optimal penalty]
 \label{rem:app-tuning-remarks}
 \leavevmode
 \begin{enumerate}
@@ -852,15 +852,11 @@ evaluated at the numerically selected optimum and against empirical RidgeCV.
 % optimum appears above a noise threshold, and
 % Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
 % evaluated at the numerically selected optimum and against empirical RidgeCV.
-\item \emph{Existence of a control root.}  {\color{red}For pixel ridge,
-Eq.~\ref{eq:appendix-pixel-control-noise} always has a solution with
-$\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  To see this, follow
-$z^{(0)}_{acc}=\mu_D/\mu_N-1$ along the ridge path.
+\item \emph{Existence of a control root.}  {For pixel ridge, Eq.~\ref{eq:appendix-pixel-control-noise} always has a solution with $\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  To see this, follow $z^{(0)}_{acc}=\mu_D/\mu_N-1$ along the ridge path.
 \begin{itemize}
-\item \emph{Ridgeless end, $\lambda\to0$.}  Noise has inflated the norm and
-$z^{(0)}_{acc}>0$: it equals $\sigma^2/(\kappa_0B_{1,1})$ for $d>n$
-(optima at ridgeless limit, above) and $\sigma^2\mathrm{df}_{1,2}(0)/((n-d)B_{1,1})$ for
-$d\le n$.
+\item \emph{Ridgeless end, $\lambda\to0$.}  We can see 
+$z^{(0)}_{acc}>0$: it equals $\sigma^2/(\kappa_0B_{1,1})$ for $d>n$ and $\sigma^2\mathrm{df}_{1,2}(0)/((n-d)B_{1,1})$ for
+$d\le n$ (see above, optima at ridgeless limit)
 \item \emph{Heavy-penalty end, $\lambda\to\infty$.}  Then $\kappa\approx\lambda$,
 the weight shrinks to zero, and $E_{gen,DE}\to S$.  Keeping the leading power
 of $1/\kappa$ in each spectral sum,
@@ -869,22 +865,17 @@ of $1/\kappa$ in each spectral sum,
 \mu_D=B_{2,2}+V_{\rm pix}\approx\frac1{\kappa^2}
 \Big(\sum_ks_k^2b_k^2+\frac{\operatorname{Tr}\Sigma\,(S+\sigma^2)}{n}\Big),
 \]
-so $\mu_D/\mu_N=O(1/\kappa)\to0$ and $z^{(0)}_{acc}\to-1$.  The reason is
-that $N$ is linear in the shrinking weight while $D$ is quadratic, so $D$
-vanishes first.
+so $\mu_D/\mu_N=O(1/\kappa)\to0$ and $z^{(0)}_{acc}\to-1$.  
+Intuitively, the reason is that $N$ is linear in the shrinking weight while $D$ is quadratic, so $D$ vanishes first.
 \item \emph{In between}, $z^{(0)}_{acc}$ is continuous in $\lambda$, so it
 crosses zero at some $\lambda>0$.
 \end{itemize}
 Geometrically, $z_{acc}=0$ is the sphere with diameter $[0,\bstar]$
-(Eq.~\ref{eq:iso-accentuation-sphere}), with $D<N$ inside and $D>N$ outside.
-The ridge path starts outside it, at the noise-inflated ridgeless solution,
-and ends at the origin, which lies on the sphere and is approached from
-inside ($D/N\to0$); on the way it must cross the sphere
-(Fig.~\ref{fig:geometry}).  The root need not be unique in general,
-although for the van Hateren spectrum and teacher $z^{(0)}_{acc}$ crosses
-zero exactly once at every noise level.
-For $\sigma=0$, $z^{(0)}_{acc}<0$ for all $\lambda>0$ and the only zero is
-the boundary $\lambda=0$.  In feature space a root need not exist
+(Eq.~\ref{eq:iso-accentuation-sphere}), with $D<N$ inside and $D>N$ outside. 
+In high dimensions and for fixed $\sigma>0$, concentration makes the fitted ridge path start outside the sphere with probability tending to one, at the noise-inflated ridgeless solution; 
+and ends at the origin, which lies on the sphere and is approached from inside ($D/N\to0$); on the way it must cross the sphere (Fig.~\ref{fig:geometry}).  
+The root need not be unique in general, although for the van Hateren spectrum and teacher $z^{(0)}_{acc}$ crosses zero exactly once at every noise level.
+For $\sigma=0$, $z^{(0)}_{acc}<0$ for all $\lambda>0$ and the only zero is the boundary $\lambda=0$.  In feature space a root need not exist
 (Proposition~\ref{prop:mr-feature-tuning}).  Where a root exists, the
 leading metrics are perfectly calibrated ($z^{(0)}_{acc}=0$), but the
 finite-sample expectation retains the fluctuation term $\Var(N/D)$, see
@@ -958,7 +949,7 @@ $Z^\top\mathbf y=FX^\top(X\bstar+\sigma\eta)$.
 
 \subsection{Realizable decomposition}
 
-In the cases we concern (e.g. DNN feature space), often $p<d$, the teacher is generally not representable in the feature space.  
+In the cases we tackle (e.g. DNN feature space), often $p<d$, the teacher weight is generally not representable in the feature space.  
 Two notions of ``\textit{best representable weight}'' arise, and the difference between them is the first sign of the dissociation.
 
 \begin{lem}[Restatement of Lemma~\ref{lem:mr-feature-weights}]
@@ -974,7 +965,8 @@ F\Sigma(\bstar-F^\top w^\star)=0 .
 \label{eq:feat_regr_optim_weight_condition}
 \end{equation}
 The Euclidean reconstruction error $\|\bstar-F^\top w\|^2$ is instead
-minimized by the projection $w^P=(FF^\top)^\dagger F\bstar$, and
+minimized by the projection 
+\begin{equation}w^P=(FF^\top)^\dagger F\bstar\end{equation}, and
 $F^\top w^P$ is the orthogonal projection of $\bstar$ onto the row space of
 $F$.  The two coincide when $\Sigma$ acts as a multiple of the identity on
 the row space of $F$, in particular for white data, and differ otherwise.
@@ -1014,10 +1006,9 @@ and substituting into Eq.~\ref{eq:app-feature-estimator} gives
 Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp}.  For a single sample,
 $\mathbf z_i=F\x_i$ and $r_i=\x_i^\top(\bstar-F^\top w^\star)$ are jointly
 Gaussian with $\E[\mathbf z_ir_i]=F\Sigma(\bstar-F^\top w^\star)=0$ by
-Eq.~\ref{eq:feat_regr_optim_weight_condition}, hence independent; different
-samples are independent by construction.  The variance follows by expanding
-the quadratic form and using the orthogonality condition once more to drop
-the cross term.
+Eq.~\ref{eq:feat_regr_optim_weight_condition}, hence the linear feature and the non-representable residual are independent; different
+samples are independent by construction.  
+The variance follows by expanding the quadratic form and using the orthogonality condition once more to drop the cross term.
 \end{proof}
 
 The decomposition Eq.~\ref{eq:feat-regr-non-repr-as-noise-decomp} is the
@@ -1116,9 +1107,7 @@ by Eq.~\ref{eq:app-feature-egen-summary}.
 \begin{remark}[Interpretation of the feature-space forms]
 \leavevmode
 \begin{enumerate}
-\item $\bar\beta_{F,\kappa}$ is the realizable weight $w^\star$, shrunk by the
-usual ridge factor $\Sigma_F(\Sigma_F+\kappa I)^{-1}$ in feature space, and then mapped to
-pixels by $F^\top$.  Setting $F=I_d$ gives $\Sigma_F=\Sigma$, $w^\star=\bstar$,
+\item $\bar\beta_{F,\kappa}$ is the mean effective weight, i.e. realizable weight $w^\star$, shrunk by the usual ridge factor $\Sigma_F(\Sigma_F+\kappa I)^{-1}$ in feature space, and then mapped back to pixels by $F^\top$.  Setting $F=I_d$ gives $\Sigma_F=\Sigma$, $w^\star=\bstar$,
 $S_\perp=0$, $\Gram=I$, $T_F=\mathrm{df}_{1,2}$, and
 Proposition~\ref{prop:app-feature-de} reduces to
 Proposition~\ref{prop:app-pixel-ridge-de}.
@@ -1127,7 +1116,7 @@ $h:=F\Sigma\bstar=\Cov(F\x,{\bstar}^\top\x)$ enters $w^\star$, $S_\perp$ and
 $E_{gen}$, and measures how the teacher covaries with the features on the
 natural distribution; $q:=F\bstar$ enters $N=\hat w^\top q$ and measures how
 the teacher responds when inputs move along the back-propagated gradient
-$F^\top\hat w$.  Likewise $\Sigma_F$ is the covariance the fit sees, while $\Gram$ is the
+$F^\top\hat w$.  Likewise $\Sigma_F$ is the feature covariance the fit sees, while $\Gram$ is the
 Euclidean length that back-propagation assigns to feature directions.  This
 is the origin of Corollary~\ref{cor:mr-summary-statistics}.
 \item Holding $E_{gen}$ fixed, the leading control error
@@ -1205,6 +1194,7 @@ Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=1\textwidth]{figures/feature_summary_statistics_flow_SigmaF}
+\vspace{-15pt}
 \caption{Dependency graph of the summary statistics of feature-space
 regression.  Fixing $(\Sigma_F,h,S,S_\perp,\sigma^2,n)$ fixes the prediction
 branch; the accentuation branch additionally needs $\GramDef$ and
@@ -1232,18 +1222,23 @@ $Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then $q_Q=q$ and only $\Gramsub{Q}$ 
 For $\Sigma=I$ the family acts trivially on both prediction and control.
 \end{prop}
 \begin{proof}
-Direct computation: $F_Q\Sigma F_Q^\top=F\Sigma^{1/2}QQ^\top\Sigma^{1/2}F^\top=\Sigma_F$
-and $F_Q\Sigma\bstar=F\Sigma^{1/2}Q\Sigma^{1/2}\bstar=F\Sigma^{1/2}\Sigma^{1/2}\bstar=h$.
+Direct computation: 
+\begin{align*}
+    F_Q\Sigma F_Q^\top=F\Sigma^{1/2}QQ^\top\Sigma^{1/2}F^\top=\Sigma_F\\
+F_Q\Sigma\bstar=F\Sigma^{1/2}Q\Sigma^{1/2}\bstar=F\Sigma^{1/2}\Sigma^{1/2}\bstar=h
+\end{align*}
 The pairs $(F_Q\x,y)$ are jointly Gaussian with covariance blocks
 $\Cov(F_Q\x)=\Sigma_F$, $\Cov(F_Q\x,y)=h$, $\Var(y)=S+\sigma^2$, all invariant; hence
 every functional of the training data, including the fitted $\hat w$, any
 $K$-fold or leave-one-out cross-validation score, and the population risk
-$E_{gen}=(\hat w-w^\star)^\top \Sigma_F(\hat w-w^\star)+S_\perp$, has the same law
-across the family.  (Two members need not give the same CV choice on the
-same realization of $X$, only the same distribution of choices.)  On the
-other hand $\Gramsub{Q}=F\Sigma^{1/2}Q\Sigma^{-1}Q^\top\Sigma^{1/2}F^\top$ and
-$q_Q=F\Sigma^{1/2}Q\Sigma^{-1/2}\bstar$ are not invariant unless $Q$ commutes
-with $\Sigma$ on the relevant subspace, respectively fixes
+$E_{gen}=(\hat w-w^\star)^\top \Sigma_F(\hat w-w^\star)+S_\perp$, has the same law across the family.  
+(Two members need not give the same CV choice on the same realization of $X$, only the same distribution of choices.)  On the
+other hand 
+\begin{align*}
+    \Gramsub{Q}=F\Sigma^{1/2}Q\Sigma^{-1}Q^\top\Sigma^{1/2}F^\top\\
+    q_Q=F\Sigma^{1/2}Q\Sigma^{-1/2}\bstar
+\end{align*} 
+are not invariant, unless $Q$ commutes with $\Sigma$ on the relevant subspace, respectively fixes
 $\Sigma^{-1/2}\bstar$.  For $\Sigma=I$, $F_Q=FQ$ with $Q\bstar=\bstar$, so
 $\Gramsub{Q}=\Gram$ and $q_Q=q$.
 \end{proof}
