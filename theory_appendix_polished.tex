@@ -1240,7 +1240,7 @@ other hand
 \end{align*} 
 {depend on $Q$ through $\Sigma^{-1}$ and $\Sigma^{-1/2}\bstar$, which the
 family constraint does not fix, so they vary in general
-(\red{Example}~\ref{cor:mr-rotation} gives an explicit example).  If
+({Example}~\ref{cor:mr-rotation} gives an explicit example).  If
 $Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then
 $q_Q=F\Sigma^{1/2}\Sigma^{-1/2}\bstar=q$.  For $\Sigma=I$, $F_Q=FQ$, so
 $\Gramsub{Q}=FQQ^\top F^\top=\Gram$ and $q_Q=FQ\bstar=F\bstar=q$.  When the
@@ -1260,7 +1260,7 @@ say when these are preserved.
 \begin{itemize}
 \item If $Q$ fixes $\Sigma^{-1/2}\bstar$, then $q_Q=q$, but $\Gramsub{Q}$ may
 still change, so control can change through the Gram matrix alone.  The
-rotation of \red{Example}~\ref{cor:mr-rotation} is of this kind.
+rotation of Example~\ref{cor:mr-rotation} is of this kind.
 \item If $Q$ commutes with $\Sigma$, then $Q\Sigma^{-1}Q^\top=\Sigma^{-1}$, so
 $\Gramsub{Q}=\Gram$.  Combined with the family constraint
 $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, it also fixes $\Sigma^{-1/2}\bstar$,
@@ -1281,7 +1281,7 @@ inputs.}
 
 {We first describe the rotations that preserve prediction for a general
 teacher, then specialize to the paired input-eigenmode rotation of
-\red{Example}~\ref{cor:mr-rotation} which gives an explicit Gram update. 
+Example~\ref{cor:mr-rotation} which gives an explicit Gram update. 
 % viewing that update through feature PCs connects the construction to
 % Proposition~\ref{prop:mr-fragility}.}
 
@@ -1295,7 +1295,7 @@ $b$.  A left rotation $F\mapsto O_pF$, $O_p\in O(p)$, is a change of feature
 coordinates that is undone by $w\mapsto O_pw$ and produces no new control
 behavior; the nontrivial freedom is on the right.
 
-{\color{red}Concretely, let $\mathcal S=\operatorname{span}(b,c)$ with
+{Concretely, let $\mathcal S=\operatorname{span}(b,c)$ with
 orthogonal projector $\Pi$.  Every $Q\in\mathcal G_{b,c}$
 (Proposition~\ref{prop:mr-gauge}) fixes $\mathcal S$ pointwise and therefore
 has the form $Q=\Pi+WRW^\top$, where $W$ has orthonormal columns spanning
@@ -1330,13 +1330,13 @@ A(\theta)=\tilde A+a(\cos\theta\,r_1+\sin\theta\,r_2)^\top
 has $A(\theta)A(\theta)^\top=\tilde A\tilde A^\top+aa^\top$,
 $A(\theta)b=\tilde Ab$ and $A(\theta)c=\tilde Ac$.
 Taking $r_1=u_h$, $r_2=u_{\ell(h)}$ and $a=a_h$ gives a single pair in
-\red{Example}~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
+Example~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
 Arbitrary $r_1,r_2\in\mathcal S^\perp$ preserve the same statistics, but
 need not be eigenvectors of $\Sigma$; their Gram update can therefore
-contain $\sin\theta\cos\theta$ cross terms.  \red{This rotation is the
-building block of the numerical families:
+contain $\sin\theta\cos\theta$ cross terms.  This rotation is the
+building block of the families in numerical experiment:
 Fig.~\ref{fig:supp-null-givens} rotates a single feature row, and
-Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}}
+Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}
 \end{example}
 
 % [Reviewer fix] Example removed (no figure uses this construction; the
@@ -1359,7 +1359,7 @@ Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}}
 % Fig.~\ref{fig:supp-null-random}, without changing $N_{DE}$.}
 % \end{example}
 
-\begin{proof}[Proof of \red{Example}~\ref{cor:mr-rotation}]
+\begin{proof}[Proof of Example~\ref{cor:mr-rotation}]
 {\color{red}\emph{Step 1: rotate a pair without changing its feature covariance.}
 For a single pair, Eq.~\ref{eq:mr-rotation-pair} replaces the two whitened
 columns $(a_h,0)$ by $(\sqrt{1-t}\,a_h,\sqrt t\,a_h)$.  Their contribution
@@ -1698,17 +1698,14 @@ $s_k/(s_k+\kappa)\le1$.
 \begin{remark}[Why peer review is benign and self-review is not]
 The Euclidean noise energy $h^\top h$ that inflates the self-denominator
 $D$ is absent from ${\bhat}^\top\bprime$ because independent noise
-realizations are uncorrelated.  Peer review therefore measures only the
-shared shrinkage bias: at leading order $R^2_{peer}$ is never negative,
-degrades gracefully with noise (through $\kappa$), and is symmetric between
-the two fits.  Self-review contains the estimator's own fluctuation energy and
-$R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
+realizations are uncorrelated.  Peer review therefore measures only the shared shrinkage bias: 
+at leading order $D^\prime\leq N^\prime$, $\mathrm{slope}\geq1$, the students under-predict teacher on their peer's path, and $R^2_{peer}$ is never negative,
+degrades gracefully with noise (through $\kappa$). 
+In contrast, self-review contains the estimator's own fluctuation energy and $D \gg N$ could happen, and $R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
 This is the linear form of ``recognition without generation''.  
-{\color{red}The symmetry requires the two fits to share the feature map and
+The symmetry requires the two fits to share the feature map and
 penalty: for different maps or different penalties, $G_{1\leftarrow2}\approx
-\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$ has the generator's own
-true gain in the denominator, so the two directions of review differ
-(Section~\ref{sec:app-peer-shared}).}
+\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$ has the generator's own gain in the denominator, so the two directions of review differ (Section~\ref{sec:app-peer-shared}).
 % [Reviewer fix] Previous sentence (noise energies do not enter peer review
 % for independent fits, and the weak-generator claim holds for peer r but not R^2):
 % With observation noise on the measured responses, a path that barely modulates the true response (small ${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator, which is why the peer scores of a weak generator's images are also low in the data; and two models with different feature maps have different noise
