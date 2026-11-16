@@ -602,6 +602,7 @@ Eq.~\ref{eq:app-pixel-D-summary} divided by $B_{1,1}$.
 \end{proof}
 
 \begin{remark}[{Calibration as a balance between $\mu_N$ and $\mu_D$, and when $R^2_{acc}$ turns negative}]
+\label{rem:app-calibration-balance}
 {Along its own gradient path the student predicts a response
 change proportional to $D=\|\bhat\|^2$, while the true change is
 proportional to $N={\bstar}^\top\bhat$ (Eq.~\ref{eq:app-acc-metrics-z}).
@@ -800,17 +801,27 @@ selects a larger penalty.
 \item \emph{Boundary optima.}  At low noise the DE prediction risk can be
 minimized at the boundary $\lambda\to0$ of the admissible path, where the
 stationarity formula does not apply.  \red{For $d>n$ this boundary is
-$\kappa\to\kappa_0$ with $\mathrm{df}_1(\kappa_0)=n$, so that
-$n-\mathrm{df}_2=\kappa_0\,\mathrm{df}_{1,2}$ and
-$V_{\rm pix}=\kappa_0B_{1,2}+\sigma^2/\kappa_0$.  The signal part of the
-variance cancels the shrinkage term $B_{2,2}-B_{1,1}=-\kappa_0B_{1,2}$ exactly,
-and Eq.~\ref{eq:mr-pixel-z} reduces to
-\[
-\mu_D-\mu_N=\frac{\sigma^2}{\kappa_0},\qquad
-z^{(0)}_{acc}=\frac{\sigma^2}{\kappa_0B_{1,1}}>0 .
-\]
-(For $d\le n$ the boundary is least squares, $\kappa_0=0$, and
-$\mu_D-\mu_N=\sigma^2\mathrm{df}_{1,2}(0)/(n-d)>0$.)  The ridgeless student
+$\kappa\to\kappa_0>0$, and the leading control error follows in four steps:
+\begin{align*}
+\mathrm{df}_1(\kappa_0)&=n
+&&\text{fixed point Eq.~\ref{eq:app-kappa-fixed-point} at }\lambda\to0,\\
+n-\mathrm{df}_2&=\mathrm{df}_1-\mathrm{df}_2=\kappa_0\,\mathrm{df}_{1,2}
+&&\text{recursion Eq.~\ref{eq:app-spectral-recursion},}\\
+V_{\rm pix}&=\frac{\mathrm{df}_{1,2}\,(\kappa_0^2B_{1,2}+\sigma^2)}{n-\mathrm{df}_2}
+&&\text{$V_{\rm pix}$ with $E_{gen,DE}$ of Eq.~\ref{eq:app-pixel-egen-summary},}\\
+&=\kappa_0B_{1,2}+\frac{\sigma^2}{\kappa_0}
+&&\text{by the second line,}\\
+\mu_D-\mu_N&=-\kappa_0B_{1,2}+V_{\rm pix}=\frac{\sigma^2}{\kappa_0}
+&&\text{shrinkage $B_{2,2}-B_{1,1}=-\kappa_0B_{1,2}$.}
+\end{align*}
+In the language of Remark~\ref{rem:app-calibration-balance}, noise inflates
+the norm by $\kappa_0B_{1,2}+\sigma^2/\kappa_0$, of which $\kappa_0B_{1,2}$
+exactly makes up for the shrinkage, leaving a surplus $\sigma^2/\kappa_0$ and
+$z^{(0)}_{acc}=\sigma^2/(\kappa_0B_{1,1})>0$.
+(For $d\le n$ the boundary is least squares, $\kappa_0=0$: the shrinkage term
+vanishes, $n-\mathrm{df}_2=n-d$, and
+$\mu_D-\mu_N=V_{\rm pix}=\sigma^2\,\mathrm{df}_{1,2}(0)/(n-d)>0$, with
+$\mathrm{df}_{1,2}(0)=\operatorname{Tr}\Sigma^{-1}$.)  The ridgeless student
 therefore over-shoots by a noise-driven amount of order $\sigma^2$, which
 vanishes only in the noiseless limit; prediction-optimal tuning at the
 boundary still does not calibrate control.  A small positive penalty adds
@@ -820,6 +831,19 @@ at the grid floor (Fig.~\ref{fig:supp-pixel-lambda}).}  In the van Hateren
 experiment the interior optimum appears above a noise threshold, and
 Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
 evaluated at the numerically selected optimum and against empirical RidgeCV.
+% [Reviewer fix] Previous compact derivation of the ridgeless boundary (expanded above):
+% For $d>n$ this boundary is
+% $\kappa\to\kappa_0$ with $\mathrm{df}_1(\kappa_0)=n$, so that
+% $n-\mathrm{df}_2=\kappa_0\,\mathrm{df}_{1,2}$ and
+% $V_{\rm pix}=\kappa_0B_{1,2}+\sigma^2/\kappa_0$.  The signal part of the
+% variance cancels the shrinkage term $B_{2,2}-B_{1,1}=-\kappa_0B_{1,2}$ exactly,
+% and Eq.~\ref{eq:mr-pixel-z} reduces to
+% \[
+% \mu_D-\mu_N=\frac{\sigma^2}{\kappa_0},\qquad
+% z^{(0)}_{acc}=\frac{\sigma^2}{\kappa_0B_{1,1}}>0 .
+% \]
+% (For $d\le n$ the boundary is least squares, $\kappa_0=0$, and
+% $\mu_D-\mu_N=\sigma^2\mathrm{df}_{1,2}(0)/(n-d)>0$.)
 % [Reviewer fix] Previous version (used N=D at lambda->0, which holds only for sigma=0):
 % \item \emph{Boundary optima.}  At low noise the DE prediction risk can be
 % minimized at the boundary $\lambda\to0$ of the admissible path; there the
