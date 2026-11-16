@@ -573,27 +573,23 @@ Only factor (i) is visible from held-out prediction.
 % PC uses a rotated loading ($v_j^\top a_h\ne0$).  Equation~\ref{eq:mr-fragility}
 % then converts this increase directly into a larger fragility factor.}
 
-{\color{red}\paragraph{Peer review without independence (informal).}
-Proposition~\ref{prop:mr-peer} assumes that the reviewer $\bhat$ and the
-generator $\bprime$ are fitted to independent data.  For students with maps
-$F$ and $F'$ on independent data the same argument gives, at leading order,
+{\paragraph{Peer review without independent data (informal).}
+In pixel space, our theory of peer review (Prop.~\ref{prop:mr-peer}) assumes that the reviewer $\bhat$ and the generator $\bprime$ models are fitted to independent noisy data. 
+For students with feature maps $F$ and $F'$, on independent data, the same argument holds. At leading order,
 \[
 G_{peer}=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}
 \approx\frac{\bar\beta_{F,\kappa}^\top\bar\beta_{F',\kappa'}}{{\bstar}^\top\bar\beta_{F',\kappa'}},
 \]
-so peer review sees only the shrinkage bias the two fits share, whereas
-self-review adds the student's own noise energy,
+so peer review sees only the shrinkage bias the two fits share, whereas self-review adds the student's own fluctuation energy,
 $D/N\asymp(\|\bar\beta_{F,\kappa}\|^2+V_F)/N_{DE}$
-(Eq.~\ref{eq:mr-feature-D}).  In the neuronal experiments all students are
-fitted to the same recordings, and the numerator becomes, informally,
+(Eq.~\ref{eq:mr-feature-D}).  
+In the neuronal experiments, however, all models are fitted to the same recordings, and the numerator becomes, informally,
 \[
 {\bhat}^\top\bprime\approx\bar\beta_{F,\kappa}^\top\bar\beta_{F',\kappa'}
 +(\text{shared noise}),\qquad
 |\text{shared noise}|\le\sqrt{V_F\,V_{F'}} .
 \]
-The shared-noise term is the inner product of the two fits' noise-driven
-weights: it vanishes for independent data, equals $V_F$ for identical
-students, and in between is large when $F$ and $F'$ send estimation noise
+The shared-noise term is the inner product of the two fits' noise-driven weights: it vanishes for independent data, equals $V_F$ for identical students, and in between is large when $F$ and $F'$ send estimation noise
 into the same pixel directions.  Since the denominator ${\bstar}^\top\bprime$
 belongs to the generator, peer review on shared data is also asymmetric.  We
 do not derive a deterministic equivalent for the shared-noise term;
