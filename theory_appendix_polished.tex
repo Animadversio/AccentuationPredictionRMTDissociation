@@ -1216,7 +1216,7 @@ ${\bstar}^\top\bar\beta_{F,\kappa}$, and through $T_F$.
 \end{enumerate}
 \end{remark}
 
-\subsection{Tuning conditions in feature space}
+\subsection{Ridge penalty tuning conditions in feature space}
 \label{app:regularization-derivations}
 
 \begin{proof}[Proof of Proposition~\ref{prop:mr-feature-tuning}]
@@ -1261,7 +1261,7 @@ every $\kappa$, in which case no ridge level calibrates control at leading
 order.
 \end{proof}
 
-\subsection{Peer review without independence}
+\subsection{Peer review on shared data across feature maps}
 % [Reviewer fix] Previous title: Peer review on shared data across feature maps
 \label{sec:app-peer-shared}
 
@@ -1276,7 +1276,7 @@ generator's path. {The computation below is exact conditionally on the design $X
 
 Let two students $i\in\{1,2\}$ read out from fixed maps
 $F_i\in\R^{p_i\times d}$ with penalties $\lambda_i$, both trained on
-$(X,\eta)$.  Define the pixel-space smoother of student $i$,
+$(X,\eta)$.  Define the pixel-space ridge operator of student $i$,
 \begin{equation}
 M_i:=F_i^\top\big(F_i\hat\Sigma F_i^\top+\lambda_iI_{p_i}\big)^{-1}F_i\in\R^{d\times d},
 \qquad
@@ -1290,20 +1290,20 @@ $G_{1\leftarrow2}:={\bhat_2}^\top\bhat_1/{\bhat_2}^\top\bstar$,
 $R^2_{1\leftarrow2}=1-(G_{1\leftarrow2}-1)^2$ and
 $\mathrm{slope}_{1\leftarrow2}=1/G_{1\leftarrow2}$.
 
-{\color{red}Conditionally on the design $X$, expanding
+{Conditional on the design $X$, expanding
 ${\bhat_1}^\top\bhat_2=(g_1+\varepsilon_1)^\top(g_2+\varepsilon_2)$, the
 cross terms are linear in $\eta$ and average out, so
-\begin{equation}
-\E_\eta\big[{\bhat_1}^\top\bhat_2\big]=g_1^\top g_2+\Omega_{12},
+\begin{align}
+\E_\eta\big[{\bhat_1}^\top\bhat_2\big]&=g_1^\top g_2+\Omega_{12},
 \qquad
 \Omega_{12}:=\E_\eta\big[\varepsilon_1^\top\varepsilon_2\big]=\frac{\sigma^2}{n}\operatorname{Tr}\big[M_1\hat\Sigma M_2\big],
-\qquad
-\E_\eta\big[{\bstar}^\top\bhat_2\big]={\bstar}^\top g_2 ,
+\\
+\E_\eta\big[{\bstar}^\top\bhat_2\big]&={\bstar}^\top g_2 ,
 \label{eq:app-shared-cross}
-\end{equation}
+\end{align}
 where the trace uses $\E[\eta\eta^\top]=I_n$ and $M_i=M_i^\top$.  The
-overlap $\Omega_{12}$ is the only term that independence would remove.  By
-Cauchy--Schwarz, $|\Omega_{12}|\le\sqrt{\Omega_{11}\Omega_{22}}$, where
+overlap $\Omega_{12}$ would be removed given independent noise.  
+By Cauchy--Schwarz, $|\Omega_{12}|\le\sqrt{\Omega_{11}\Omega_{22}}$, where
 $\Omega_{ii}=\frac{\sigma^2}{n}\operatorname{Tr}[M_i\hat\Sigma M_i]$ is the
 Euclidean noise energy of student~$i$, so we may write
 $\Omega_{12}=\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}$ with
@@ -1390,8 +1390,8 @@ as on its own.  Two models with dissimilar gradient geometry, e.g. one whose
 gradients live in high-spatial-frequency directions and one whose gradients
 are natural-image-like, have small $\rho_{12}$ and evaluate each other with
 little noise-induced inflation, so each can recognize what the other's path
-does to the teacher.  Peer review across dissimilar models therefore behaves
-like the independent-fit case even though the data are shared.
+does to the teacher.  Peer review across dissimilar models therefore \textit{behaves
+like the independent-fit case} even though the data are shared.
 \item \emph{Asymmetry.}  The numerator of Eq.~\ref{eq:app-shared-gain} is
 symmetric in the two students; the asymmetry between $G_{1\leftarrow2}$ and
 $G_{2\leftarrow1}$ comes from the denominators, the true gains
@@ -1606,7 +1606,7 @@ Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}
 % \end{example}
 
 \begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
-{\color{red}\emph{Step 1: rotate a pair without changing its feature covariance.}
+\emph{Step 1: rotate a pair without changing its feature covariance.}
 For a single pair, Eq.~\ref{eq:mr-rotation-pair} replaces the two whitened
 columns $(a_h,0)$ by $(\sqrt{1-t}\,a_h,\sqrt t\,a_h)$.  Their contribution
 to the feature covariance is therefore
@@ -1642,7 +1642,7 @@ are unchanged.  The trace contribution increases from $\|a_h\|^2/s_h$
 to $\|a_h\|^2/s_{\ell(h)}$, giving the variance-ratio factor.
 
 \emph{Step 3: the fragility factor increases.}
-{\color{red}Write $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$, which Step~1
+{Write $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$, which Step~1
 keeps fixed.  Since $T_F=\operatorname{Tr}[\Gram M_\kappa]$, Step~2 gives
 \[
 T_{F(t)}-T_{F(0)}=t\sum_{h\in H}\delta_h\,a_h^\top M_\kappa a_h,
@@ -1691,7 +1691,7 @@ z_{acc}(t)=z_{acc}(0)+\frac{t}{N_{DE}}
 \]
 Every summand is nonnegative and at least one is positive under the stated
 conditions.  The same formula applies at the DE-based CV choice, since
-$\kappa_{CV}$ is constant along the rotation.}
+$\kappa_{CV}$ is constant along the rotation.
 \end{proof}
 % [Reviewer fix] Previous proof (claimed unbounded growth at fixed Sigma, and omitted
 % the Sigma^{-1} cross terms):
