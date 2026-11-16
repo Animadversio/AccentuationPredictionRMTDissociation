@@ -1489,7 +1489,7 @@ other hand
 \end{align*} 
 {depend on $Q$ through $\Sigma^{-1}$ and $\Sigma^{-1/2}\bstar$, which the
 family constraint does not fix, so they vary in general
-(\red{Example}~\ref{cor:mr-rotation} gives an explicit example).  If
+(Corollary~\ref{cor:mr-rotation} gives an explicit example).  If
 $Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then
 $q_Q=F\Sigma^{1/2}\Sigma^{-1/2}\bstar=q$.  For $\Sigma=I$, $F_Q=FQ$, so
 $\Gramsub{Q}=FQQ^\top F^\top=\Gram$ and $q_Q=FQ\bstar=F\bstar=q$.  When the
@@ -1509,7 +1509,7 @@ say when these are preserved.
 \begin{itemize}
 \item If $Q$ fixes $\Sigma^{-1/2}\bstar$, then $q_Q=q$, but $\Gramsub{Q}$ may
 still change, so control can change through the Gram matrix alone.  The
-rotation of \red{Example}~\ref{cor:mr-rotation} is of this kind.
+rotation of Corollary~\ref{cor:mr-rotation} is of this kind.
 \item If $Q$ commutes with $\Sigma$, then $Q\Sigma^{-1}Q^\top=\Sigma^{-1}$, so
 $\Gramsub{Q}=\Gram$.  Combined with the family constraint
 $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, it also fixes $\Sigma^{-1/2}\bstar$,
@@ -1530,7 +1530,7 @@ inputs.}
 
 {We first describe the rotations that preserve prediction for a general
 teacher, then specialize to the paired input-eigenmode rotation of
-\red{Example}~\ref{cor:mr-rotation} which gives an explicit Gram update. 
+Corollary~\ref{cor:mr-rotation} which gives an explicit Gram update. 
 % viewing that update through feature PCs connects the construction to
 % Proposition~\ref{prop:mr-fragility}.}
 
@@ -1579,7 +1579,7 @@ A(\theta)=\tilde A+a(\cos\theta\,r_1+\sin\theta\,r_2)^\top
 has $A(\theta)A(\theta)^\top=\tilde A\tilde A^\top+aa^\top$,
 $A(\theta)b=\tilde Ab$ and $A(\theta)c=\tilde Ac$.
 Taking $r_1=u_h$, $r_2=u_{\ell(h)}$ and $a=a_h$ gives a single pair in
-\red{Example}~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
+Corollary~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
 Arbitrary $r_1,r_2\in\mathcal S^\perp$ preserve the same statistics, but
 need not be eigenvectors of $\Sigma$; their Gram update can therefore
 contain $\sin\theta\cos\theta$ cross terms.  \red{This rotation is the
@@ -1608,7 +1608,7 @@ Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}}
 % Fig.~\ref{fig:supp-null-random}, without changing $N_{DE}$.}
 % \end{example}
 
-\begin{proof}[Proof of \red{Example}~\ref{cor:mr-rotation}]
+\begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
 {\color{red}\emph{Step 1: rotate a pair without changing its feature covariance.}
 For a single pair, Eq.~\ref{eq:mr-rotation-pair} replaces the two whitened
 columns $(a_h,0)$ by $(\sqrt{1-t}\,a_h,\sqrt t\,a_h)$.  Their contribution
