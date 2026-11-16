@@ -798,7 +798,7 @@ modes in the band $s_k\approx\kappa$ (Section~\ref{sec:app-pixel-ridge}); for
 a power-law spectrum this count grows as $\kappa$ moves into the bulk, so the
 residual is amplified precisely in the noisy regime where cross-validation
 selects a larger penalty.
-\item \emph{Boundary optima.}  At low noise the DE prediction risk can be
+\item \emph{Optima at ridgeless limit.}  At low noise the DE prediction risk can be
 minimized at the boundary $\lambda\to0$ of the admissible path, where the
 stationarity formula does not apply.  For $d>n$ this boundary is
 $\kappa\to\kappa_0>0$, and the leading control error follows in four steps:
@@ -854,14 +854,16 @@ evaluated at the numerically selected optimum and against empirical RidgeCV.
 % evaluated at the numerically selected optimum and against empirical RidgeCV.
 \item \emph{Existence of a control root.}  {\color{red}For pixel ridge,
 Eq.~\ref{eq:appendix-pixel-control-noise} always has a solution with
-$\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  Write it as
-$\sigma^2=h(\lambda):=n\lambda B_{1,2}(\kappa)/\mathrm{df}_{1,2}(\kappa)$.  As
-$\lambda\to0$, $h\to0$, because $B_{1,2}$ and $\mathrm{df}_{1,2}$ stay finite
-(at $\kappa_0>0$ for $d>n$, and at $\kappa_0=0$ for $d\le n$ since
-$\Sigma\succ0$); as $\lambda\to\infty$, $\kappa\approx\lambda$ and
-$h\approx n\lambda S/\operatorname{Tr}\Sigma\to\infty$.  By continuity every
-$\sigma^2>0$ is attained.  Equivalently, $z^{(0)}_{acc}$ is positive at the
-ridgeless end (Boundary optima) and tends to $-1$ as $\lambda\to\infty$, so it
+$\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  
+% Write it as
+% $\sigma^2=h(\lambda):=n\lambda B_{1,2}(\kappa)/\mathrm{df}_{1,2}(\kappa)$.  As
+% $\lambda\to0$, $h\to0$, because $B_{1,2}$ and $\mathrm{df}_{1,2}$ stay finite
+% (at $\kappa_0>0$ for $d>n$, and at $\kappa_0=0$ for $d\le n$ since
+% $\Sigma\succ0$); as $\lambda\to\infty$, $\kappa\approx\lambda$ and
+% $h\approx n\lambda S/\operatorname{Tr}\Sigma\to\infty$.  By continuity every
+% $\sigma^2>0$ is attained.  
+As is showed above, $z^{(0)}_{acc}$ is positive at the
+ridgeless end and tends to $-1$ as $\lambda\to\infty$ (since ), so it
 crosses zero in between.  The root need not be unique in general, although
 $h$ is increasing for the van Hateren spectrum and teacher, which gives exactly
 one root at every noise level.  For $\sigma=0$, $z^{(0)}_{acc}<0$ for all
