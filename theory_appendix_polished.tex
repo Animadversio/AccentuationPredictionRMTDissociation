@@ -423,6 +423,44 @@ E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{
 \end{align}
 \end{prop}
 
+\begin{remark}[Interpretation of the three quantities]
+\leavevmode
+\begin{enumerate}
+\item $\mu_N=\bstar^\top\bar\beta_\kappa=\sum_k\frac{s_k}{s_k+\kappa}b_k^2\ge0$ is the teacher power in
+the modes that ridge resolves, i.e. those with $s_k\gtrsim\kappa$; it
+vanishes only if $\Sigma\bstar=0$.
+\item $\mu_D$ is the squared norm of the mean weight $B_{2,2}=\|\bar\beta_\kappa\|^2$ with effective shrinkage $\kappa$, plus
+the \emph{Euclidean} energy of weight fluctuation $V_{pix}$: 
+$(E_{gen,DE}+\sigma^2)/n$, multiplied by $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$,
+a count of modes in a bell-shaped band around $s_k\approx\kappa$ (the weight
+$4\kappa s_k/(s_k+\kappa)^2$ peaks at $1$ for $s_k=\kappa$ with constant
+width on a logarithmic axis, see Fig.~\ref{fig:app-tuning-kernels}).  
+Prediction weights this same noise by $s_k$; control does not.
+\item {\emph{Which weight modes are wrong, and how.}  Eq.~\ref{eq:app-per-pc}
+splits the error in mode $k$ into a systematic and a random part.  The
+systematic part is shrinkage: $\E[\uvec_k^\top\bhat]\asymp
+\frac{s_k}{s_k+\kappa}b_k$, so a fraction $\kappa/(s_k+\kappa)$ of the
+teacher coefficient is lost whatever the teacher, and modes with
+$s_k\ll\kappa$ are essentially not learned.  The random part is
+$s_k/(s_k+\kappa)^2$ times a mode-independent factor; it is largest at
+$s_k=\kappa$ and small at both ends, because the data pin down modes with
+$s_k\gg\kappa$ and shrinkage pins modes with $s_k\ll\kappa$ near zero.
+High-variance modes are thus learned accurately, modes near $\kappa$ are the
+most uncertain, and low-variance modes are stably wrong.  Prediction weights
+all of these errors by data variance $s_k$ and barely sees those in modes with
+$s_k\lesssim\kappa$; control weights them equally.}
+% [Reviewer fix] Previous wording (the claim covered only the variance term,
+% and "relative to s_k" had no clear meaning):
+% The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
+% mode's own variance $s_k$, for low-variance modes: the variance term divided
+% by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
+% Overleaf wording of the previous version (overleaf-2026-11-16-0216):
+% \item Relative to the
+% mode's own variance $s_k$, the per-mode weight error Eq.~\ref{eq:app-per-pc} is largest, for low-variance modes: the variance term divided
+% by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
+\end{enumerate}
+\end{remark}
+
 \subsection{Generalization risk}
 
 \begin{proof}[Proof of Eq.~\ref{eq:app-pixel-egen-summary}]
@@ -505,6 +543,7 @@ Collecting,
 where the last equality uses Eq.~\ref{eq:app-pixel-egen-summary}.
 \end{proof}
 
+\subsection{Per-mode weight error}
 \begin{proof}[Proof of Eq.~\ref{eq:app-per-pc}]
 Project Eq.~\ref{eq:app-ridge-decomposition} onto $\uvec_k$ and average
 over $\eta$:
@@ -526,44 +565,6 @@ over $k$ recovers Eq.~\ref{eq:app-pixel-egen-summary}; summing without
 weights and adding the squared mean $\sum_k(s_kb_k/(s_k+\kappa))^2=B_{2,2}$
 recovers Eq.~\ref{eq:app-pixel-D-summary}.
 \end{proof}
-
-\begin{remark}[Interpretation of the three quantities]
-\leavevmode
-\begin{enumerate}
-\item $\mu_N=\bstar^\top\bar\beta_\kappa=\sum_k\frac{s_k}{s_k+\kappa}b_k^2\ge0$ is the teacher power in
-the modes that ridge resolves, i.e. those with $s_k\gtrsim\kappa$; it
-vanishes only if $\Sigma\bstar=0$.
-\item $\mu_D$ is the squared norm of the mean weight $B_{2,2}=\|\bar\beta_\kappa\|^2$ with effective shrinkage $\kappa$, plus
-the \emph{Euclidean} energy of weight fluctuation $V_{pix}$: 
-$(E_{gen,DE}+\sigma^2)/n$, multiplied by $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$,
-a count of modes in a bell-shaped band around $s_k\approx\kappa$ (the weight
-$4\kappa s_k/(s_k+\kappa)^2$ peaks at $1$ for $s_k=\kappa$ with constant
-width on a logarithmic axis, see Fig.~\ref{fig:app-tuning-kernels}).  
-Prediction weights this same noise by $s_k$; control does not.
-\item {\color{red}\emph{Which weight modes are wrong, and how.}  Eq.~\ref{eq:app-per-pc}
-splits the error in mode $k$ into a systematic and a random part.  The
-systematic part is shrinkage: $\E[\uvec_k^\top\bhat]\asymp
-\frac{s_k}{s_k+\kappa}b_k$, so a fraction $\kappa/(s_k+\kappa)$ of the
-teacher coefficient is lost whatever the teacher, and modes with
-$s_k\ll\kappa$ are essentially not learned.  The random part is
-$s_k/(s_k+\kappa)^2$ times a mode-independent factor; it is largest at
-$s_k=\kappa$ and small at both ends, because the data pin down modes with
-$s_k\gg\kappa$ and shrinkage pins modes with $s_k\ll\kappa$ near zero.
-High-variance modes are thus learned accurately, modes near $\kappa$ are the
-most uncertain, and low-variance modes are stably wrong.  Prediction weights
-all of these errors by $s_k$ and barely sees those in modes with
-$s_k\lesssim\kappa$; control weights them equally.}
-% [Reviewer fix] Previous wording (the claim covered only the variance term,
-% and "relative to s_k" had no clear meaning):
-% The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
-% mode's own variance $s_k$, for low-variance modes: the variance term divided
-% by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
-% Overleaf wording of the previous version (overleaf-2026-11-16-0216):
-% \item Relative to the
-% mode's own variance $s_k$, the per-mode weight error Eq.~\ref{eq:app-per-pc} is largest, for low-variance modes: the variance term divided
-% by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
-\end{enumerate}
-\end{remark}
 
 \subsection{The leading control error $z_{acc}$}
 
