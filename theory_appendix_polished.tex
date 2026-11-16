@@ -1705,7 +1705,7 @@ the two fits.  Self-review contains the estimator's own fluctuation energy and
 $R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
 This is the linear form of ``recognition without generation''.  
 {\color{red}The symmetry requires the two fits to share the feature map and
-penalty: for different maps, $G_{1\leftarrow2}\approx
+penalty: for different maps or different penalties, $G_{1\leftarrow2}\approx
 \bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$ has the generator's own
 true gain in the denominator, so the two directions of review differ
 (Section~\ref{sec:app-peer-shared}).}
@@ -1744,9 +1744,7 @@ recordings, and the models differ in their feature maps.  Peer review then
 involves two fits that share the design $X$ and the noise realization
 $\eta$, and the independence used in Proposition~\ref{prop:app-peer} is
 lost: the evaluator can recognize its own estimation noise in the
-generator's path.  \red{The computation below is exact conditionally on the
-design and isolates the term that carries this effect; we do not derive
-deterministic equivalents for it, so the discussion is informal.}
+generator's path. {The computation below is exact conditionally on the design $X$ and isolates the term that carries this effect; we do not derive deterministic equivalents for it, so the discussion is informal.}
 % [Reviewer fix] Previous sentence: The following statement is exact
 % conditionally on the design and isolates the term that carries this effect.
 
