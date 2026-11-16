@@ -39,9 +39,12 @@ ridge-weighted ratio of Euclidean to natural gradient energy.
 \item \textbf{Ratios of random quadratic forms and peer review}
 (Section~\ref{sec:app-ratio-corrections}).  Second-order and distributional
 refinements of the ratio-of-DE approximation, the deterministic equivalent
-of peer review between independent fits, and the exact conditional form of
-peer review between models fitted to the same data through different
-feature maps.
+of peer review between independent fits, and \red{an informal discussion of
+what changes when the fits are not independent, i.e.\ when models with
+different feature maps are fitted to the same data.}
+% [Reviewer fix] Previous wording: and the exact conditional form of
+% peer review between models fitted to the same data through different
+% feature maps.
 \item \textbf{Nonlinear diagnostic} (Section~\ref{sec:app-nonlinear-diagnostic}).
 Replacing $F$ by a local Jacobian, with its estimators and its empirical
 association with neuronal control.
@@ -1522,7 +1525,8 @@ validation experiments), consistent with the benign character of the peer
 ratio.
 \end{remark}
 
-\subsection{Peer review on shared data across feature maps}
+\subsection{\red{Peer review without independence (informal)}}
+% [Reviewer fix] Previous title: Peer review on shared data across feature maps
 \label{sec:app-peer-shared}
 
 In the neuronal experiment all encoding models are fitted to the \emph{same}
@@ -1530,8 +1534,11 @@ recordings, and the models differ in their feature maps.  Peer review then
 involves two fits that share the design $X$ and the noise realization
 $\eta$, and the independence used in Proposition~\ref{prop:app-peer} is
 lost: the evaluator can recognize its own estimation noise in the
-generator's path.  The following statement is exact conditionally on the
-design and isolates the term that carries this effect.
+generator's path.  \red{The computation below is exact conditionally on the
+design and isolates the term that carries this effect; we do not derive
+deterministic equivalents for it, so the discussion is informal.}
+% [Reviewer fix] Previous sentence: The following statement is exact
+% conditionally on the design and isolates the term that carries this effect.
 
 Let two students $i\in\{1,2\}$ read out from fixed maps
 $F_i\in\R^{p_i\times d}$ with penalties $\lambda_i$, both trained on
@@ -1549,22 +1556,24 @@ $G_{1\leftarrow2}:={\bhat_2}^\top\bhat_1/{\bhat_2}^\top\bstar$,
 $R^2_{1\leftarrow2}=1-(G_{1\leftarrow2}-1)^2$ and
 $\mathrm{slope}_{1\leftarrow2}=1/G_{1\leftarrow2}$.
 
-\begin{prop}[Restatement of Proposition~\ref{prop:mr-peer-shared}]
-\label{prop:app-peer-shared}
-Conditionally on the design $X$,
+{\color{red}Conditionally on the design $X$, expanding
+${\bhat_1}^\top\bhat_2=(g_1+\varepsilon_1)^\top(g_2+\varepsilon_2)$, the
+cross terms are linear in $\eta$ and average out, so
 \begin{equation}
 \E_\eta\big[{\bhat_1}^\top\bhat_2\big]=g_1^\top g_2+\Omega_{12},
 \qquad
 \Omega_{12}:=\E_\eta\big[\varepsilon_1^\top\varepsilon_2\big]=\frac{\sigma^2}{n}\operatorname{Tr}\big[M_1\hat\Sigma M_2\big],
 \qquad
-\E_\eta\big[{\bstar}^\top\bhat_2\big]={\bstar}^\top g_2 .
+\E_\eta\big[{\bstar}^\top\bhat_2\big]={\bstar}^\top g_2 ,
 \label{eq:app-shared-cross}
 \end{equation}
-The shared-noise overlap satisfies $|\Omega_{12}|\le\sqrt{\Omega_{11}\Omega_{22}}$,
-where $\Omega_{ii}=\frac{\sigma^2}{n}\operatorname{Tr}[M_i\hat\Sigma M_i]$ is
-the Euclidean noise energy that inflates the self-denominator $D_i$; we
-write $\Omega_{12}=\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}$ with
-$\rho_{12}\in[-1,1]$.  Consequently, at the level of ratios of conditional
+where the trace uses $\E[\eta\eta^\top]=I_n$ and $M_i=M_i^\top$.  The
+overlap $\Omega_{12}$ is the only term that independence would remove.  By
+Cauchy--Schwarz, $|\Omega_{12}|\le\sqrt{\Omega_{11}\Omega_{22}}$, where
+$\Omega_{ii}=\frac{\sigma^2}{n}\operatorname{Tr}[M_i\hat\Sigma M_i]$ is the
+Euclidean noise energy of student~$i$, so we may write
+$\Omega_{12}=\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}$ with
+$\rho_{12}\in[-1,1]$.  Heuristically, at the level of ratios of conditional
 means,
 \begin{equation}
 G_{1\leftarrow2}\approx\frac{g_1^\top g_2+\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}}{{\bstar}^\top g_2},
@@ -1572,28 +1581,66 @@ G_{1\leftarrow2}\approx\frac{g_1^\top g_2+\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}
 G_{2\leftarrow2}=\frac{D_2}{N_2}\approx\frac{\|g_2\|^2+\Omega_{22}}{{\bstar}^\top g_2}.
 \label{eq:app-shared-gain}
 \end{equation}
-Two limits are exact: for identical students ($F_1=F_2$, $\lambda_1=\lambda_2$)
-Eq.~\ref{eq:app-shared-cross} reduces to the self-accentuation
-denominator of Proposition~\ref{prop:app-feature-de}; for fits on
-independent data the overlap term is absent and, at leading order,
+The two ends of this range are the cases treated before.  For identical
+students ($F_1=F_2$, $\lambda_1=\lambda_2$) the overlap is the full noise
+energy, $\Omega_{12}=\Omega_{22}$, and $\E_\eta[{\bhat_1}^\top\bhat_2]$ is
+the self-accentuation denominator $\E_\eta[D_2]=\|g_2\|^2+\Omega_{22}$ of
+Proposition~\ref{prop:app-feature-de}.  For fits on independent data the
+overlap is absent and, at leading order,
 $G_{1\leftarrow2}\asymp\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$
-with $\bar\beta_i=F_i^\top(\Sigma_{F_i}+\kappa_iI)^{-1}F_i\Sigma\bstar$, which
-generalizes Proposition~\ref{prop:app-peer} to different feature maps.
-\end{prop}
-\begin{proof}
-Expanding ${\bhat_1}^\top\bhat_2=(g_1+\varepsilon_1)^\top(g_2+\varepsilon_2)$,
-the cross terms are linear in $\eta$ and vanish under $\E_\eta$, while
-$\E_\eta[\varepsilon_1^\top\varepsilon_2]=\frac{\sigma^2}{n^2}\E_\eta[\eta^\top XM_1M_2X^\top\eta]
-=\frac{\sigma^2}{n^2}\operatorname{Tr}[XM_1M_2X^\top]=\frac{\sigma^2}{n}\operatorname{Tr}[M_1\hat\Sigma M_2]$,
-using $\E[\eta\eta^\top]=I_n$ and $M_i=M_i^\top$.  The bound on
-$\Omega_{12}$ is the Cauchy--Schwarz inequality for
-$\E_\eta[\varepsilon_1^\top\varepsilon_2]$.  For identical students
-$g_1=g_2$ and $\Omega_{12}=\Omega_{22}$, which is $\E_\eta[D_2]$.  For
-independent data $\varepsilon_1$ and $\varepsilon_2$ are independent with
-zero mean, $g_1$ and $g_2$ are independent, and the one-point DE gives
-$g_i\asymp\bar\beta_i$ in quadratic forms
-(Eq.~\ref{eq:feat_space_acc_N_expectation_DE}).
-\end{proof}
+with $\bar\beta_i=F_i^\top(\Sigma_{F_i}+\kappa_iI)^{-1}F_i\Sigma\bstar$
+(by the one-point equivalent, Eq.~\ref{eq:feat_space_acc_N_expectation_DE}),
+which extends Proposition~\ref{prop:app-peer} to different feature maps.
+Between the two ends we have no deterministic equivalent: how large
+$\rho_{12}$ is for two given maps is left as a qualitative question, discussed
+next.}
+% [Reviewer fix] Previous formal statement and proof (replaced by the informal
+% discussion above; it also misstated E_eta[D_2] as Omega_22):
+% \begin{prop}[Restatement of Proposition~\ref{prop:mr-peer-shared}]
+% \label{prop:app-peer-shared}
+% Conditionally on the design $X$,
+% \begin{equation}
+% \E_\eta\big[{\bhat_1}^\top\bhat_2\big]=g_1^\top g_2+\Omega_{12},
+% \qquad
+% \Omega_{12}:=\E_\eta\big[\varepsilon_1^\top\varepsilon_2\big]=\frac{\sigma^2}{n}\operatorname{Tr}\big[M_1\hat\Sigma M_2\big],
+% \qquad
+% \E_\eta\big[{\bstar}^\top\bhat_2\big]={\bstar}^\top g_2 .
+% \label{eq:app-shared-cross}
+% \end{equation}
+% The shared-noise overlap satisfies $|\Omega_{12}|\le\sqrt{\Omega_{11}\Omega_{22}}$,
+% where $\Omega_{ii}=\frac{\sigma^2}{n}\operatorname{Tr}[M_i\hat\Sigma M_i]$ is
+% the Euclidean noise energy that inflates the self-denominator $D_i$; we
+% write $\Omega_{12}=\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}$ with
+% $\rho_{12}\in[-1,1]$.  Consequently, at the level of ratios of conditional
+% means,
+% \begin{equation}
+% G_{1\leftarrow2}\approx\frac{g_1^\top g_2+\rho_{12}\sqrt{\Omega_{11}\Omega_{22}}}{{\bstar}^\top g_2},
+% \qquad\text{versus}\qquad
+% G_{2\leftarrow2}=\frac{D_2}{N_2}\approx\frac{\|g_2\|^2+\Omega_{22}}{{\bstar}^\top g_2}.
+% \label{eq:app-shared-gain}
+% \end{equation}
+% Two limits are exact: for identical students ($F_1=F_2$, $\lambda_1=\lambda_2$)
+% Eq.~\ref{eq:app-shared-cross} reduces to the self-accentuation
+% denominator of Proposition~\ref{prop:app-feature-de}; for fits on
+% independent data the overlap term is absent and, at leading order,
+% $G_{1\leftarrow2}\asymp\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$
+% with $\bar\beta_i=F_i^\top(\Sigma_{F_i}+\kappa_iI)^{-1}F_i\Sigma\bstar$, which
+% generalizes Proposition~\ref{prop:app-peer} to different feature maps.
+% \end{prop}
+% \begin{proof}
+% Expanding ${\bhat_1}^\top\bhat_2=(g_1+\varepsilon_1)^\top(g_2+\varepsilon_2)$,
+% the cross terms are linear in $\eta$ and vanish under $\E_\eta$, while
+% $\E_\eta[\varepsilon_1^\top\varepsilon_2]=\frac{\sigma^2}{n^2}\E_\eta[\eta^\top XM_1M_2X^\top\eta]
+% =\frac{\sigma^2}{n^2}\operatorname{Tr}[XM_1M_2X^\top]=\frac{\sigma^2}{n}\operatorname{Tr}[M_1\hat\Sigma M_2]$,
+% using $\E[\eta\eta^\top]=I_n$ and $M_i=M_i^\top$.  The bound on
+% $\Omega_{12}$ is the Cauchy--Schwarz inequality for
+% $\E_\eta[\varepsilon_1^\top\varepsilon_2]$.  For identical students
+% $g_1=g_2$ and $\Omega_{12}=\Omega_{22}$, which is $\E_\eta[D_2]$.  For
+% independent data $\varepsilon_1$ and $\varepsilon_2$ are independent with
+% zero mean, $g_1$ and $g_2$ are independent, and the one-point DE gives
+% $g_i\asymp\bar\beta_i$ in quadratic forms
+% (Eq.~\ref{eq:feat_space_acc_N_expectation_DE}).
+% \end{proof}
 
 \begin{remark}[Recognition, agreement and the overlap of noise directions]
 \begin{enumerate}
