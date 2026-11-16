@@ -22,8 +22,8 @@ covariance ellipsoids, Euclidean spheres and peer-normal hyperplanes.
 Deterministic equivalents for the generalization risk, for the two forms $N={\bhat}^\top\bstar$ and $D={\bhat}^\top\bhat$ relevant to accentuation and control error, and for
 the per-eigenmode weight error. 
 The Euclidean estimation-noise term in $D$ is what prediction does not see.
-\red{The same equivalents give peer review between independent fits, where
-this noise term drops out.}
+The same equivalents give peer review between independent fits, where
+this noise term drops out.
 \item \textbf{Prediction- versus control-optimal tuning}
 (Section~\ref{sec:app-optimal-regularization}).  The two optima equate the
 noisy prediction risk to different teacher-weighted spectral averages;
@@ -32,23 +32,23 @@ error.
 \item \textbf{Feature-space regression} (Section~\ref{sec:app-feature-regression}).
 Ridge on a fixed linear feature map inherits the pixel-space prediction
 theory with effective noise $\sigma^2+S_\perp$, while pixel-space control
-additionally depends on $FF^\top$ and $F\bstar$.  \red{It closes with an
+additionally depends on $FF^\top$ and $F\bstar$.  It closes with an
 informal discussion of peer review between models with different feature
-maps fitted to the same data.}
+maps fitted to the same data.
 \item \textbf{Gauge invariance and gradient fragility}
 (Section~\ref{sec:app-gauge-fragility}).  Transformations preserving
 $F\Sigma F^\top$ and $F\Sigma\bstar$ preserve prediction and its
 cross-validated optimum but not control; the fragility factor $T_F$ is a
 ridge-weighted ratio of Euclidean to natural gradient energy.
 \item \textbf{Ratios of random quadratic forms}
-(Section~\ref{sec:app-ratio-corrections}).  \red{Second-order and
-distributional refinements of the ratio-of-DE approximation.}
+(Section~\ref{sec:app-ratio-corrections}).  Second-order and
+distributional refinements of the ratio-of-DE approximation.
 % [Reviewer fix] Previous roadmap entry (peer review moved to the pixel and
 % feature sections):
 % \item \textbf{Ratios of random quadratic forms and peer review}
 % (Section~\ref{sec:app-ratio-corrections}).  Second-order and distributional
 % refinements of the ratio-of-DE approximation, the deterministic equivalent
-% of peer review between independent fits, and \red{an informal discussion of
+% of peer review between independent fits, and {an informal discussion of
 % what changes when the fits are not independent, i.e.\ when models with
 % different feature maps are fitted to the same data.}
 % [Reviewer fix] Previous wording: and the exact conditional form of
@@ -707,7 +707,7 @@ By the one-point DE, $m\asymp\Sigma(\Sigma+\kappa I)^{-1}\bstar$ in the sense
 of quadratic forms, giving
 $m^\top m'\asymp{\bstar}^\top\Sigma(\Sigma+\kappa I)^{-1}\Sigma(\Sigma+\kappa'I)^{-1}\bstar$,
 which is the stated sum; similarly ${\bstar}^\top\bprime\asymp{\bstar}^\top\Sigma(\Sigma+\kappa'I)^{-1}\bstar=B_{1,1}(\kappa')$.
-For $\kappa=\kappa'$ the first is $B_{2,2}$, and $0<B_{2,2}\le B_{1,1}$ since
+For $\kappa=\kappa'$ the first is $m^\top m'\asymp B_{2,2}$, and $0<B_{2,2}\le B_{1,1}$ since
 $s_k/(s_k+\kappa)\le1$.
 \end{proof}
 
@@ -1442,7 +1442,7 @@ Figure~\ref{fig:summary_stats_dep_graph} displays these dependencies.
 \caption{Dependency graph of the summary statistics of feature-space
 regression.  Fixing $(\Sigma_F,h,S,S_\perp,\sigma^2,n)$ fixes the prediction
 branch; the accentuation branch additionally needs $\GramDef$ and
-$q=F\bstar$.  }%\red{(TikZ source: \texttt{figures/feature\_summary\_statistics\_flow\_SigmaF.tex}, also in the validation repository.)}}
+$q=F\bstar$.  }%{(TikZ source: \texttt{figures/feature\_summary\_statistics\_flow\_SigmaF.tex}, also in the validation repository.)}}
 \label{fig:summary_stats_dep_graph}
 \end{figure}
 
@@ -1826,6 +1826,9 @@ $\Var(N)$, $\Var(D)$ and $\Cov(N,D)$ relative to the means.  The expansion
 fails when the distribution of $N$ puts appreciable mass near zero, in which
 case moments of $D/N$ may not exist and medians and quantiles should be
 compared instead.
+
+
+
 
 \iffalse
 \subsection{Response-noise contribution to the variance of the ratio}
