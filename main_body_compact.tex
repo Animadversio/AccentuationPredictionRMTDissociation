@@ -80,6 +80,7 @@ Classic theory characterizes ridge risk under anisotropic covariance and signal-
     Methods see App.~\ref{sec:app-methods-neural-data}, ~\ref{sec:app-methods-toy} }
     %Details: App.~\ref{sec:app-methods-neural-data} (neurons), App.~\ref{sec:app-methods-toy} (linear model).}
     \label{fig:phenomena}
+    \vspace{-17pt}
 \end{figure}
 
 
@@ -92,7 +93,7 @@ The trained models were tightly matched on held-out natural images (Fig.~\ref{fi
 Presenting model A's images to model B (``peer review'', Fig.~\ref{fig:phenomena}\textbf{B.III}) shows an asymmetry: a model whose own images fail to modulate the neuron still predicts the neuronal responses to a successful model's images with good correlation and better $R^2$ than the generator itself. Models can recognize good control stimuli that they cannot produce.
 
 \paragraph{Control tracks input-gradient structure.}
-Across the 250 site--model pairs, control success is predicted by the spectral profile of the model's input gradient $\nabla_\x f$: models whose gradients concentrate power at low spatial frequencies, like natural images, control better. The two adversarially trained models are the strongest controllers, but the association persists without them \citepPW. Recent work shows consistent evidence in human perception: robustified networks steer human category percepts with small perturbations where standard networks cannot \citep{gaziv2023strongPreciseModulation}.
+Across the 250 site--model pairs, control success is predicted by the spectral profile of the model's input gradient $\nabla_\x f$: models whose gradients concentrate power at low spatial frequencies, like natural images, control better. The two adversarially trained models are the strongest controllers, but the association persists without them \citepPW. Recent work shows consistent evidence in perception: robustified networks steer human category percepts with small perturbations where standard networks cannot \citep{gaziv2023strongPreciseModulation}.
 
 These phenomena are puzzling at first glance, but linear models on natural images reproduce all three observations (Fig.~\ref{fig:phenomena}\textbf{C}). We construct the bad controller to deviate from the teacher along the lowest-variance, high-spatial-frequency directions of the image covariance, the good controller to deviate mildly along mid-band PCs; then matched prediction, diverse accentuations, unequal control and good peer review all follow. Dissecting this idealistic set up, the rest of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces such errors, why \textit{cross-validation does not remove them}, and how \textit{feature maps} can amplify the dissociation.
 
@@ -103,7 +104,7 @@ These phenomena are puzzling at first glance, but linear models on natural image
 % Dissecting this idealistic set up, the remainder of the paper explains why \textit{finite-sample} regression on \textit{noisy responses} produces this failure, why \textit{cross-validation does not eliminate it}, and how \textit{feature maps} introduce additional degrees of freedom that can greatly amplify the prediction--control dissociation.
 
 
-\vspace{-15pt}
+\vspace{-12pt}
 \section{Three evaluations, three geometries of one predictor}
 \label{sec:setup}
 
