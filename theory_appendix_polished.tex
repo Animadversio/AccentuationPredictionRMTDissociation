@@ -410,7 +410,7 @@ For pixel ridge under Gaussian design,
 \begin{align}
 E_{gen}&\asymp E_{gen,DE}:=\frac{n\big(\kappa^2B_{1,2}+\sigma^2\big)}{n-\mathrm{df}_2}-\sigma^2,
 \label{eq:app-pixel-egen-summary}\\
-\mu_N&:=\E[N]\asymp B_{1,1},
+\mu_N&:=\E[N]\asymp B_{1,1}=\bstar^\top\bar\beta_\kappa,
 \label{eq:app-pixel-N-summary}\\
 \mu_D&:=\E[D]\asymp B_{2,2}+\underbrace{\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big)}_{V_{\rm pix}(\kappa)}
 \notag\\
@@ -519,7 +519,7 @@ The two-point DE with $A=\uvec_k\uvec_k^\top$, $B=\bstar{\bstar}^\top$ gives
 for the first term
 $$\kappa^2\big[b_k^2/(s_k+\kappa)^2+\frac{s_k}{(s_k+\kappa)^2}\frac{B_{1,2}}{n-\mathrm{df}_2}\big]$$,
 and the derivative argument of Step 2 gives for the second
-$$\frac{\sigma^2}{n}\frac{n}{n-\mathrm{df}_2}\frac{s_k}{(s_k+\kappa)^2}$$.
+$$\frac{\sigma^2}{n}\frac{n}{n-\mathrm{df}_2}\frac{s_k}{(s_k+\kappa)^2}$$
 
 Summing yields Eq.~\ref{eq:app-per-pc}.  Weighting by $s_k$ and summing
 over $k$ recovers Eq.~\ref{eq:app-pixel-egen-summary}; summing without
@@ -530,16 +530,16 @@ recovers Eq.~\ref{eq:app-pixel-D-summary}.
 \begin{remark}[Interpretation of the three quantities]
 \leavevmode
 \begin{enumerate}
-\item $\mu_N=\sum_k\frac{s_k}{s_k+\kappa}b_k^2\ge0$ is the teacher power in
+\item $\mu_N=\bstar^\top\bar\beta_\kappa=\sum_k\frac{s_k}{s_k+\kappa}b_k^2\ge0$ is the teacher power in
 the modes that ridge resolves, i.e. those with $s_k\gtrsim\kappa$; it
 vanishes only if $\Sigma\bstar=0$.
-\item $\mu_D$ is the squared norm of the shrunken mean weight, $B_{2,2}$, plus
-the \emph{Euclidean} energy of estimation noise: $(E_{gen,DE}+\sigma^2)/n$
-per effective sample, multiplied by $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$,
+\item $\mu_D$ is the squared norm of the mean weight $B_{2,2}=\|\bar\beta_\kappa\|^2$ with effective shrinkage $\kappa$, plus
+the \emph{Euclidean} energy of weight fluctuation $V_{pix}$: 
+$(E_{gen,DE}+\sigma^2)/n$, multiplied by $\mathrm{df}_{1,2}=\sum_ks_k/(s_k+\kappa)^2$,
 a count of modes in a bell-shaped band around $s_k\approx\kappa$ (the weight
 $4\kappa s_k/(s_k+\kappa)^2$ peaks at $1$ for $s_k=\kappa$ with constant
-width on a logarithmic axis).  Prediction weights this same noise by $s_k$;
-control does not.
+width on a logarithmic axis, see Fig.~\ref{fig:app-tuning-kernels}).  
+Prediction weights this same noise by $s_k$; control does not.
 \item The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
 mode's own variance $s_k$, for low-variance modes: the variance term divided
 by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
