@@ -1715,23 +1715,25 @@ true gain in the denominator, so the two directions of review differ
 % energies, which breaks the symmetry.
 \end{remark}
 
-\begin{remark}[Perfect peer, and second-order corrections]
-If the generator is the teacher itself, $\bprime=\bstar$, then
-$E_{peer}=\Var[\alpha]({\bstar}^\top(\bhat-\bstar))^2$,
-$R^2_{peer}=1-({\bstar}^\top\bhat/\|\bstar\|^2-1)^2$ and
-$\mathrm{slope}_{peer}=\|\bstar\|^2/{\bstar}^\top\bhat$, to be compared with
-the self-review slope ${\bhat}^\top\bstar/{\bhat}^\top\bhat$: the generation
-side divides by the student's own norm, the evaluation side by the teacher's.
-The peer slope is again an expectation of a random ratio and is handled by
-Proposition~\ref{prop:app-ratio-delta}.  For two independent fits, writing
-$m_k=s_kb_k/(s_k+\kappa)$ and $v_k$ for the per-mode fluctuation variance of
-Eq.~\ref{eq:app-per-pc}, the delta method with $U={\bhat}^\top\bprime$,
-$V={\bstar}^\top\bprime$ uses $\Var(U)=2\sum_km_k^2v_k+\sum_kv_k^2$,
-$\Var(V)=\sum_kb_k^2v_k$, $\Cov(U,V)=\sum_km_kb_kv_k$; the resulting
-corrections to $R^2_{peer}$ are small (maximum gap below $0.005$ in the
-validation experiments), consistent with the benign character of the peer
-ratio.
-\end{remark}
+% [Reviewer fix] Removed remark (not cited anywhere; its 0.005 figure was the
+% post-correction gap, not the size of the correction; see REPORT.md):
+% \begin{remark}[Perfect peer, and second-order corrections]
+% If the generator is the teacher itself, $\bprime=\bstar$, then
+% $E_{peer}=\Var[\alpha]({\bstar}^\top(\bhat-\bstar))^2$,
+% $R^2_{peer}=1-({\bstar}^\top\bhat/\|\bstar\|^2-1)^2$ and
+% $\mathrm{slope}_{peer}=\|\bstar\|^2/{\bstar}^\top\bhat$, to be compared with
+% the self-review slope ${\bhat}^\top\bstar/{\bhat}^\top\bhat$: the generation
+% side divides by the student's own norm, the evaluation side by the teacher's.
+% The peer slope is again an expectation of a random ratio and is handled by
+% Proposition~\ref{prop:app-ratio-delta}.  For two independent fits, writing
+% $m_k=s_kb_k/(s_k+\kappa)$ and $v_k$ for the per-mode fluctuation variance of
+% Eq.~\ref{eq:app-per-pc}, the delta method with $U={\bhat}^\top\bprime$,
+% $V={\bstar}^\top\bprime$ uses $\Var(U)=2\sum_km_k^2v_k+\sum_kv_k^2$,
+% $\Var(V)=\sum_kb_k^2v_k$, $\Cov(U,V)=\sum_km_kb_kv_k$; the resulting
+% corrections to $R^2_{peer}$ are small (maximum gap below $0.005$ in the
+% validation experiments), consistent with the benign character of the peer
+% ratio.
+% \end{remark}
 
 \subsection{Peer review without independence}
 % [Reviewer fix] Previous title: Peer review on shared data across feature maps
