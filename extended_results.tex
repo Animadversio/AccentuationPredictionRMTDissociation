@@ -87,7 +87,7 @@ control error $E_{acc}/S$ (Eq.~\ref{eq:pixel-de}).
 \textbf{C,\,D}~Mean over 100 natural-image Monte Carlo trials on the same
 grid.  Lines (same in all panels): prediction optimum $\kappa^\star_{gen}$
 (blue), control optimum $\kappa^\star_{acc}$ (orange dashed), both from the
-DE, and median empirical LOOCV penalty (green dotted).  \red{For
+DE, and median empirical LOOCV penalty (green dotted).  For
 $\kappa\ge10^{-2}$ the Monte Carlo mean and the DE differ by a median of 2\%
 for $E_{gen}$ (90\% of grid points within 8\%) and 9\% for $E_{acc}$ (90\%
 within 15\%).  $E_{acc}/S=(1-N/D)^2$ is not itself a deterministic
@@ -96,7 +96,7 @@ reflects few-percent errors in the means of $N$ and $D$, roughly doubled by
 the square, while the nonlinearity of the ratio contributes under 1\%.
 Larger deviations are concentrated at the near-ridgeless floor
 $\kappa\approx2.4\times10^{-3}$ and in the narrow $E_{acc}$ valley, where the
-leading DE vanishes.}
+leading DE vanishes.
 % [Reviewer fix] Previous wording:
 % For
 % $\kappa\ge10^{-2}$ the Monte Carlo mean and the DE differ by a median of 2\%
@@ -200,8 +200,8 @@ magnitude, and the Gaussian surrogate is needed.}
 \includegraphics[width=1\linewidth]{figures/VanHateren_Top500PC_prediction_null_feature_rotation}\\
 \includegraphics[width=1\linewidth]{figures/VanHateren_Top100PC_prediction_null_feature_rotation}
 \caption{\textbf{Continuous prediction-null rotation on van Hateren images}
-\red{(similar to the construction of Corollary~\ref{cor:mr-rotation}, extended to a generic teacher)}, starting from the top-500 (top) and
-top-100 (bottom) PC projectors and rotating their null part \red{(the component orthogonal to $\Sigma^{1/2}\bstar$ and $\Sigma^{-1/2}\bstar$)} into the
+{(similar to the construction of Corollary~\ref{cor:mr-rotation}, extended to a generic teacher)}, starting from the top-500 (top) and
+top-100 (bottom) PC projectors and rotating their null part {(the component orthogonal to $\Sigma^{1/2}\bstar$ and $\Sigma^{-1/2}\bstar$)} into the
 spectral tail.  Generalization error, $R^2_{gen}$ and the selected penalty are
 exactly constant in the tail loading $t$, while $\operatorname{Tr}(FF^\top)$,
 accentuation error, $R^2_{acc}$ and slope change by orders of magnitude.
