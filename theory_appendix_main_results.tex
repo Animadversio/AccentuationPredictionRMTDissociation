@@ -197,9 +197,9 @@ For pixel ridge under Gaussian design,
 \frac{\kappa^2B_{1,2}(\kappa)+\sigma^2}{n-\mathrm{df}_2(\kappa)}}_{\text{finite-sample signal and noise variance}} .
 \label{eq:mr-per-pc}
 \end{equation}
-\red{Ridge keeps a fraction $s_k/(s_k+\kappa)$ of each teacher coefficient, so
+Ridge keeps a fraction $s_k/(s_k+\kappa)$ of each teacher coefficient, so
 low-variance modes are essentially not learned; the variance term peaks at
-$s_k\approx\kappa$, where the estimate is most uncertain.}
+$s_k\approx\kappa$, where the estimate is most uncertain.
 % [Reviewer fix] Previous wording:
 % The variance term is largest for modes with $s_k\approx\kappa$ and, relative
 % to the mode's own variance $s_k$, is largest for low-variance modes.
@@ -288,7 +288,7 @@ Equivalently, with $z_{peer}:={\bhat}^\top\bprime/{\bstar}^\top\bprime-1\asymp B
 The peer path removes the Euclidean variance term of
 Eq.~\ref{eq:mr-pixel-D} because independent noise realizations are
 uncorrelated; peer review therefore measures shared shrinkage bias only.
-Proof: \red{Section~\ref{sec:app-peer-review}}.
+Proof: Section~\ref{sec:app-peer-review}.
 % [Reviewer fix] Previous: Proof: Section~\ref{sec:app-ratio-corrections}, peer-review subsection.
 \end{prop}
 
@@ -479,7 +479,7 @@ multiplied by the ratio of the eigen pair $s_h/s_{\ell(h)}$.}
 Proof: Section~\ref{sec:app-gauge-fragility}, construction subsection.
 \end{cor}
 
-% \red{The mechanism is visible directly in pixel coordinates:
+% {The mechanism is visible directly in pixel coordinates:
 % \[
 % F(t)u_h=\frac{\sqrt{1-t}}{\sqrt{s_h}}a_h,\qquad
 % F(t)u_{\ell(h)}=\frac{\sqrt t}{\sqrt{s_{\ell(h)}}}a_h.
