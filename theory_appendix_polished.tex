@@ -852,12 +852,32 @@ evaluated at the numerically selected optimum and against empirical RidgeCV.
 % optimum appears above a noise threshold, and
 % Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
 % evaluated at the numerically selected optimum and against empirical RidgeCV.
-\item \emph{Existence of a control root.}  Eq.~\ref{eq:appendix-pixel-control-noise}
-need not have an admissible solution for every $(\Sigma,\bstar,\sigma^2,n)$;
-it is a condition, not a guarantee.  Where a root exists, the leading metrics
-are perfectly calibrated ($z^{(0)}_{acc}=0$), but the finite-sample expectation
-retains the fluctuation term $\Var(N/D)$, see
-Section~\ref{sec:app-ratio-corrections}.
+\item \emph{Existence of a control root.}  {\color{red}For pixel ridge,
+Eq.~\ref{eq:appendix-pixel-control-noise} always has a solution with
+$\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  Write it as
+$\sigma^2=h(\lambda):=n\lambda B_{1,2}(\kappa)/\mathrm{df}_{1,2}(\kappa)$.  As
+$\lambda\to0$, $h\to0$, because $B_{1,2}$ and $\mathrm{df}_{1,2}$ stay finite
+(at $\kappa_0>0$ for $d>n$, and at $\kappa_0=0$ for $d\le n$ since
+$\Sigma\succ0$); as $\lambda\to\infty$, $\kappa\approx\lambda$ and
+$h\approx n\lambda S/\operatorname{Tr}\Sigma\to\infty$.  By continuity every
+$\sigma^2>0$ is attained.  Equivalently, $z^{(0)}_{acc}$ is positive at the
+ridgeless end (Boundary optima) and tends to $-1$ as $\lambda\to\infty$, so it
+crosses zero in between.  The root need not be unique in general, although
+$h$ is increasing for the van Hateren spectrum and teacher, which gives exactly
+one root at every noise level.  For $\sigma=0$, $z^{(0)}_{acc}<0$ for all
+$\lambda>0$ and the only zero is the boundary $\lambda=0$.  In feature space
+a root need not exist (Proposition~\ref{prop:mr-feature-tuning}).  Where a
+root exists, the leading metrics are perfectly calibrated
+($z^{(0)}_{acc}=0$), but the finite-sample expectation retains the
+fluctuation term $\Var(N/D)$, see Section~\ref{sec:app-ratio-corrections}.}
+% [Reviewer fix] Previous version (claimed a root may not exist; for pixel
+% ridge with sigma^2>0 it always does):
+% \item \emph{Existence of a control root.}  Eq.~\ref{eq:appendix-pixel-control-noise}
+% need not have an admissible solution for every $(\Sigma,\bstar,\sigma^2,n)$;
+% it is a condition, not a guarantee.  Where a root exists, the leading metrics
+% are perfectly calibrated ($z^{(0)}_{acc}=0$), but the finite-sample expectation
+% retains the fluctuation term $\Var(N/D)$, see
+% Section~\ref{sec:app-ratio-corrections}.
 \end{enumerate}
 \end{remark}
 
