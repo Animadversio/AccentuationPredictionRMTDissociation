@@ -1238,9 +1238,44 @@ other hand
     \Gramsub{Q}=F\Sigma^{1/2}Q\Sigma^{-1}Q^\top\Sigma^{1/2}F^\top\\
     q_Q=F\Sigma^{1/2}Q\Sigma^{-1/2}\bstar
 \end{align*} 
-are not invariant, unless $Q$ commutes with $\Sigma$ on the relevant subspace, respectively fixes
-$\Sigma^{-1/2}\bstar$.  For $\Sigma=I$, $F_Q=FQ$ with $Q\bstar=\bstar$, so $\Gramsub{Q}=\Gram$ and $q_Q=q$, i.e. this gauge family leaves both prediction and control invariant. 
+\red{depend on $Q$ through $\Sigma^{-1}$ and $\Sigma^{-1/2}\bstar$, which the
+family constraint does not fix, so they vary in general
+(Corollary~\ref{cor:mr-rotation} gives an explicit example).  If
+$Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then
+$q_Q=F\Sigma^{1/2}\Sigma^{-1/2}\bstar=q$.  For $\Sigma=I$, $F_Q=FQ$, so
+$\Gramsub{Q}=FQQ^\top F^\top=\Gram$ and $q_Q=FQ\bstar=F\bstar=q$.  When the
+family leaves control unchanged is discussed in
+Remark~\ref{rem:app-gauge-control-invariant}.}
+% [Reviewer fix] Previous ending of the proof (moved to the remark below):
+% are not invariant, unless $Q$ commutes with $\Sigma$ on the relevant subspace, respectively fixes
+% $\Sigma^{-1/2}\bstar$.  For $\Sigma=I$, $F_Q=FQ$ with $Q\bstar=\bstar$, so $\Gramsub{Q}=\Gram$ and $q_Q=q$, i.e. this gauge family leaves both prediction and control invariant. 
 \end{proof}
+
+\begin{remark}[\red{When a gauge transformation also leaves control unchanged}]
+\label{rem:app-gauge-control-invariant}
+{\color{red}Control depends on $F$ only through $\Gram$ and $q=F\bstar$
+(Corollary~\ref{cor:mr-summary-statistics}).  Within the family of
+Proposition~\ref{prop:app-feature-gauge}, two nested sufficient conditions
+say when these are preserved.
+\begin{itemize}
+\item If $Q$ fixes $\Sigma^{-1/2}\bstar$, then $q_Q=q$, but $\Gramsub{Q}$ may
+still change, so control can change through the Gram matrix alone.  The
+rotation of Corollary~\ref{cor:mr-rotation} is of this kind.
+\item If $Q$ commutes with $\Sigma$, then $Q\Sigma^{-1}Q^\top=\Sigma^{-1}$, so
+$\Gramsub{Q}=\Gram$.  Combined with the family constraint
+$Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, it also fixes $\Sigma^{-1/2}\bstar$,
+since $Q\Sigma^{-1/2}\bstar=\Sigma^{-1}Q\Sigma^{1/2}\bstar=\Sigma^{-1/2}\bstar$,
+so $q_Q=q$ as well: such a $Q$ changes neither prediction nor control.
+\end{itemize}
+The members that change control are therefore those that do not commute
+with $\Sigma$.  Both conditions are sufficient but not necessary, because $Q$
+enters only through $A:=F\Sigma^{1/2}$: exactly, $\Gramsub{Q}=\Gram$ iff
+$A(Q\Sigma^{-1}Q^\top-\Sigma^{-1})A^\top=0$, and $q_Q=q$ iff
+$A(Q-I)\Sigma^{-1/2}\bstar=0$.  For isotropic inputs, $\Sigma=I$, every $Q$
+commutes with $\Sigma$, so the whole gauge family leaves both prediction and
+control unchanged: the dissociation between the two requires anisotropic
+inputs.}
+\end{remark}
 
 \subsection{Constructing the family}
 
