@@ -854,24 +854,62 @@ evaluated at the numerically selected optimum and against empirical RidgeCV.
 % evaluated at the numerically selected optimum and against empirical RidgeCV.
 \item \emph{Existence of a control root.}  {\color{red}For pixel ridge,
 Eq.~\ref{eq:appendix-pixel-control-noise} always has a solution with
-$\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  
-% Write it as
-% $\sigma^2=h(\lambda):=n\lambda B_{1,2}(\kappa)/\mathrm{df}_{1,2}(\kappa)$.  As
-% $\lambda\to0$, $h\to0$, because $B_{1,2}$ and $\mathrm{df}_{1,2}$ stay finite
-% (at $\kappa_0>0$ for $d>n$, and at $\kappa_0=0$ for $d\le n$ since
-% $\Sigma\succ0$); as $\lambda\to\infty$, $\kappa\approx\lambda$ and
-% $h\approx n\lambda S/\operatorname{Tr}\Sigma\to\infty$.  By continuity every
-% $\sigma^2>0$ is attained.  
-As is showed above, $z^{(0)}_{acc}$ is positive at the
-ridgeless end and tends to $-1$ as $\lambda\to\infty$ (since ), so it
-crosses zero in between.  The root need not be unique in general, although
-$h$ is increasing for the van Hateren spectrum and teacher, which gives exactly
-one root at every noise level.  For $\sigma=0$, $z^{(0)}_{acc}<0$ for all
-$\lambda>0$ and the only zero is the boundary $\lambda=0$.  In feature space
-a root need not exist (Proposition~\ref{prop:mr-feature-tuning}).  Where a
-root exists, the leading metrics are perfectly calibrated
-($z^{(0)}_{acc}=0$), but the finite-sample expectation retains the
-fluctuation term $\Var(N/D)$, see Section~\ref{sec:app-ratio-corrections}.}
+$\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  To see this, follow
+$z^{(0)}_{acc}=\mu_D/\mu_N-1$ along the ridge path.
+\begin{itemize}
+\item \emph{Ridgeless end, $\lambda\to0$.}  Noise has inflated the norm and
+$z^{(0)}_{acc}>0$: it equals $\sigma^2/(\kappa_0B_{1,1})$ for $d>n$
+(optima at ridgeless limit, above) and $\sigma^2\mathrm{df}_{1,2}(0)/((n-d)B_{1,1})$ for
+$d\le n$.
+\item \emph{Heavy-penalty end, $\lambda\to\infty$.}  Then $\kappa\approx\lambda$,
+the weight shrinks to zero, and $E_{gen,DE}\to S$.  Keeping the leading power
+of $1/\kappa$ in each spectral sum,
+\[
+\mu_N=B_{1,1}\approx\frac{S}{\kappa},\qquad
+\mu_D=B_{2,2}+V_{\rm pix}\approx\frac1{\kappa^2}
+\Big(\sum_ks_k^2b_k^2+\frac{\operatorname{Tr}\Sigma\,(S+\sigma^2)}{n}\Big),
+\]
+so $\mu_D/\mu_N=O(1/\kappa)\to0$ and $z^{(0)}_{acc}\to-1$.  The reason is
+that $N$ is linear in the shrinking weight while $D$ is quadratic, so $D$
+vanishes first.
+\item \emph{In between}, $z^{(0)}_{acc}$ is continuous in $\lambda$, so it
+crosses zero at some $\lambda>0$.
+\end{itemize}
+Geometrically, $z_{acc}=0$ is the sphere with diameter $[0,\bstar]$
+(Eq.~\ref{eq:iso-accentuation-sphere}), with $D<N$ inside and $D>N$ outside.
+The ridge path starts outside it, at the noise-inflated ridgeless solution,
+and ends at the origin, which lies on the sphere and is approached from
+inside ($D/N\to0$); on the way it must cross the sphere
+(Fig.~\ref{fig:geometry}).  The root need not be unique in general,
+although for the van Hateren spectrum and teacher $z^{(0)}_{acc}$ crosses
+zero exactly once at every noise level.
+For $\sigma=0$, $z^{(0)}_{acc}<0$ for all $\lambda>0$ and the only zero is
+the boundary $\lambda=0$.  In feature space a root need not exist
+(Proposition~\ref{prop:mr-feature-tuning}).  Where a root exists, the
+leading metrics are perfectly calibrated ($z^{(0)}_{acc}=0$), but the
+finite-sample expectation retains the fluctuation term $\Var(N/D)$, see
+Section~\ref{sec:app-ratio-corrections}.}
+% [Reviewer fix] Red draft v1 of this item (expanded above):
+% \item \emph{Existence of a control root.}  {\color{red}For pixel ridge,
+% Eq.~\ref{eq:appendix-pixel-control-noise} always has a solution with
+% $\lambda>0$ when $\sigma^2>0$ and $\Sigma\bstar\ne0$.  
+% % Write it as
+% % $\sigma^2=h(\lambda):=n\lambda B_{1,2}(\kappa)/\mathrm{df}_{1,2}(\kappa)$.  As
+% % $\lambda\to0$, $h\to0$, because $B_{1,2}$ and $\mathrm{df}_{1,2}$ stay finite
+% % (at $\kappa_0>0$ for $d>n$, and at $\kappa_0=0$ for $d\le n$ since
+% % $\Sigma\succ0$); as $\lambda\to\infty$, $\kappa\approx\lambda$ and
+% % $h\approx n\lambda S/\operatorname{Tr}\Sigma\to\infty$.  By continuity every
+% % $\sigma^2>0$ is attained.  
+% As is showed above, $z^{(0)}_{acc}$ is positive at the
+% ridgeless end and tends to $-1$ as $\lambda\to\infty$ (since ), so it
+% crosses zero in between.  The root need not be unique in general, although
+% $h$ is increasing for the van Hateren spectrum and teacher, which gives exactly
+% one root at every noise level.  For $\sigma=0$, $z^{(0)}_{acc}<0$ for all
+% $\lambda>0$ and the only zero is the boundary $\lambda=0$.  In feature space
+% a root need not exist (Proposition~\ref{prop:mr-feature-tuning}).  Where a
+% root exists, the leading metrics are perfectly calibrated
+% ($z^{(0)}_{acc}=0$), but the finite-sample expectation retains the
+% fluctuation term $\Var(N/D)$, see Section~\ref{sec:app-ratio-corrections}.}
 % [Reviewer fix] Previous version (claimed a root may not exist; for pixel
 % ridge with sigma^2>0 it always does):
 % \item \emph{Existence of a control root.}  Eq.~\ref{eq:appendix-pixel-control-noise}
