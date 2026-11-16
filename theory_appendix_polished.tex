@@ -133,31 +133,31 @@ $\Sigma_p$, against the noiseless teacher response $y^\star={\bstar}^\top\x$.
 
 \begin{lem}[Mean squared error]
 \label{lem:pred_error}
-$\displaystyle
+$$\displaystyle
 \mathrm{MSE}[p]=\E_{\x\sim p}\big[(\hat y-y^\star)^2\big]
-=(\bhat-\bstar)^\top(\mu_p\mu_p^\top+\Sigma_p)(\bhat-\bstar).$
+=(\bhat-\bstar)^\top(\mu_p\mu_p^\top+\Sigma_p)(\bhat-\bstar).$$
 \end{lem}
 \begin{lem}[Direct $R^2$]
 \label{lem:R2_pred_obs}
-$\displaystyle
+$$\displaystyle
 R^2[p]=1-\frac{\E[(\hat y-y^\star)^2]}{\Var[y^\star]}
 =1-\frac{(\bhat-\bstar)^\top(\mu_p\mu_p^\top+\Sigma_p)(\bhat-\bstar)}{{\bstar}^\top\Sigma_p\bstar}
-=1-\frac{\mathrm{MSE}[p]}{{\bstar}^\top\Sigma_p\bstar}.$
+=1-\frac{\mathrm{MSE}[p]}{{\bstar}^\top\Sigma_p\bstar}.$$
 \end{lem}
 \begin{lem}[Pearson correlation]
 \label{lem:Pearson-r_pred_obs}
-$\displaystyle
+$$\displaystyle
 r[p]=\frac{\Cov[\hat y,y^\star]}{\sqrt{\Var[\hat y]\Var[y^\star]}}
 =\frac{{\bhat}^\top\Sigma_p\bstar}
-{\sqrt{({\bhat}^\top\Sigma_p\bhat)({\bstar}^\top\Sigma_p\bstar)}}.$
+{\sqrt{({\bhat}^\top\Sigma_p\bhat)({\bstar}^\top\Sigma_p\bstar)}}.$$
 \end{lem}
 \begin{lem}[Slope of true on predicted]
 \label{lem:linear_slope}
 The slope of the least-squares line (with intercept) of $y^\star$ on
 $\hat y$ is
-$\displaystyle
+$$\displaystyle
 \mathrm{slope}_{y^\star\gets\hat y}[p]=\frac{\Cov[\hat y,y^\star]}{\Var[\hat y]}
-=\frac{{\bhat}^\top\Sigma_p\bstar}{{\bhat}^\top\Sigma_p\bhat}.$
+=\frac{{\bhat}^\top\Sigma_p\bstar}{{\bhat}^\top\Sigma_p\bhat}.$$
 \end{lem}
 \begin{proof}
 All four follow from $\hat y-y^\star=(\bhat-\bstar)^\top\x$, from
