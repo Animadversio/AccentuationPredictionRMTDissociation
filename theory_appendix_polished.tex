@@ -1238,7 +1238,7 @@ other hand
     \Gramsub{Q}=F\Sigma^{1/2}Q\Sigma^{-1}Q^\top\Sigma^{1/2}F^\top\\
     q_Q=F\Sigma^{1/2}Q\Sigma^{-1/2}\bstar
 \end{align*} 
-\red{depend on $Q$ through $\Sigma^{-1}$ and $\Sigma^{-1/2}\bstar$, which the
+{depend on $Q$ through $\Sigma^{-1}$ and $\Sigma^{-1/2}\bstar$, which the
 family constraint does not fix, so they vary in general
 (Corollary~\ref{cor:mr-rotation} gives an explicit example).  If
 $Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then
@@ -1251,9 +1251,9 @@ Remark~\ref{rem:app-gauge-control-invariant}.}
 % $\Sigma^{-1/2}\bstar$.  For $\Sigma=I$, $F_Q=FQ$ with $Q\bstar=\bstar$, so $\Gramsub{Q}=\Gram$ and $q_Q=q$, i.e. this gauge family leaves both prediction and control invariant. 
 \end{proof}
 
-\begin{remark}[\red{When a gauge transformation also leaves control unchanged}]
+\begin{remark}[{When a gauge transformation also leaves control unchanged}]
 \label{rem:app-gauge-control-invariant}
-{\color{red}Control depends on $F$ only through $\Gram$ and $q=F\bstar$
+{Control depends on $F$ only through $\Gram$ and $q=F\bstar$
 (Corollary~\ref{cor:mr-summary-statistics}).  Within the family of
 Proposition~\ref{prop:app-feature-gauge}, two nested sufficient conditions
 say when these are preserved.
@@ -1279,11 +1279,11 @@ inputs.}
 
 \subsection{Constructing the family}
 
-\red{We first describe the rotations that preserve prediction for a general
+{We first describe the rotations that preserve prediction for a general
 teacher, then specialize to the paired input-eigenmode rotation of
-Corollary~\ref{cor:mr-rotation}.  The latter gives an explicit Gram update;
-viewing that update through feature PCs connects the construction to
-Proposition~\ref{prop:mr-fragility}.}
+Corollary~\ref{cor:mr-rotation} which gives an explicit Gram update. 
+% viewing that update through feature PCs connects the construction to
+% Proposition~\ref{prop:mr-fragility}.}
 
 \paragraph{Whitened coordinates.}
 The constraints are transparent in whitened coordinates.  Let
@@ -1312,7 +1312,7 @@ $\mathcal S=\operatorname{span}(b)$ instead; fixing $c$ is the additional
 constraint that keeps teacher--student alignment unchanged.}
 
 \begin{example}[Two-dimensional rotation]
-{\color{red}Choose orthonormal input directions $r_1,r_2\in\mathcal S^\perp$
+{Choose orthonormal input directions $r_1,r_2\in\mathcal S^\perp$
 and a feature-loading vector $a\in\mathbb R^p$.  If
 $\tilde A r_1=\tilde A r_2=0$, then
 \[
@@ -1518,7 +1518,7 @@ the ratio involves two independent fits.
 \begin{prop}[Restatement of Proposition~\ref{prop:mr-ratio-delta}, first part]
 \label{prop:app-ratio-delta}
 Let $N=\mu_N+\delta_N$, $D=\mu_D+\delta_D$ with $\mu_N,\mu_D\ne0$ and
-fluctuations small enough for a second-order expansion.  Then
+zero-mean fluctuations small enough for a second-order expansion.  Then
 \begin{align}
 \E\Big[\frac ND\Big]&\approx\frac{\mu_N}{\mu_D}
 \Big(1-\frac{\Cov(N,D)}{\mu_N\mu_D}+\frac{\Var(D)}{\mu_D^2}\Big),
@@ -1542,7 +1542,7 @@ terms give Eq.~\ref{eq:app-ratio-mean}.  For the square,
 \Big(1-2\frac{\delta_D}{\mu_D}+3\frac{\delta_D^2}{\mu_D^2}+O(\delta^3)\Big),
 \]
 whose expectation retains
-$\mu_N^2/\mu_D^2+3\mu_N^2\Var(D)/\mu_D^4-4\mu_N\Cov(N,D)/\mu_D^3+\Var(N)/\mu_D^2$,
+$$\mu_N^2/\mu_D^2+3\mu_N^2\Var(D)/\mu_D^4-4\mu_N\Cov(N,D)/\mu_D^3+\Var(N)/\mu_D^2$$,
 which is Eq.~\ref{eq:app-ratio-second-moment}.
 \end{proof}
 
@@ -1646,7 +1646,7 @@ effective penalties $\kappa$ and $\kappa'$.  Then
 so that for equal penalties
 \begin{equation}
 \begin{gathered}
-G_{peer}:=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],\\
+\frac{D^\prime}{N^\prime}=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}\asymp\frac{B_{2,2}}{B_{1,1}}\in(0,1],\\
 R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1],
 \qquad
 \mathrm{slope}^{(0)}_{peer}=\frac{B_{1,1}}{B_{2,2}}\ge1 .
@@ -1674,13 +1674,10 @@ $D$ is absent from ${\bhat}^\top\bprime$ because independent noise
 realizations are uncorrelated.  Peer review therefore measures only the
 shared shrinkage bias: at leading order $R^2_{peer}$ is never negative,
 degrades gracefully with noise (through $\kappa$), and is symmetric between
-the two fits.  Self-review contains the estimator's own noise energy and
-$R^2_{acc}=1-z_{acc}^2$ is unbounded below.  This is the linear form of
-``recognition without generation''.  With observation noise on the measured
-responses, a path that barely modulates the true response (small
-${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator,
-which is why the peer scores of a weak generator's images are also low in
-the data; and two models with different feature maps have different noise
+the two fits.  Self-review contains the estimator's own fluctuation energy and
+$R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
+This is the linear form of ``recognition without generation''.  
+With observation noise on the measured responses, a path that barely modulates the true response (small ${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator, which is why the peer scores of a weak generator's images are also low in the data; and two models with different feature maps have different noise
 energies, which breaks the symmetry.
 \end{remark}
 
