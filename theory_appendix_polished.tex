@@ -601,8 +601,8 @@ gives the first form; the second is
 Eq.~\ref{eq:app-pixel-D-summary} divided by $B_{1,1}$.
 \end{proof}
 
-\begin{remark}[\red{Calibration as a balance between $\mu_N$ and $\mu_D$, and when $R^2_{acc}$ turns negative}]
-{\color{red}Along its own gradient path the student predicts a response
+\begin{remark}[{Calibration as a balance between $\mu_N$ and $\mu_D$, and when $R^2_{acc}$ turns negative}]
+{Along its own gradient path the student predicts a response
 change proportional to $D=\|\bhat\|^2$, while the true change is
 proportional to $N={\bstar}^\top\bhat$ (Eq.~\ref{eq:app-acc-metrics-z}).
 Control is calibrated when the two agree, and since
@@ -711,7 +711,7 @@ H'(\kappa)=\frac{d}{d\kappa}\sum_k\frac{\kappa^2s_k}{(s_k+\kappa)^2}b_k^2
 \qquad
 q'(\kappa)=-\frac{d}{d\kappa}\mathrm{df}_2=2\,\mathrm{df}_{2,3}.
 \]
-At interior stationary point the derivative of $E_{gen}$ and $H/q$ vanishes, which satisfies $qH'=Hq'$, i.e.
+At interior stationary point, the derivative of $E_{gen}$ and $H/q$ vanishes, which entails $qH'=Hq'$, i.e.
 \begin{equation}
 (n-\mathrm{df}_2)\,\kappa\,B_{2,3}=\mathrm{df}_{2,3}\big(\kappa^2B_{1,2}+\sigma^2\big),
 \label{eq:optimal_CV_E_gen_condition_abbrev}
@@ -725,14 +725,15 @@ the boundary $\lambda=0$ (see Remark~\ref{rem:app-tuning-remarks}).
 \subsection{Control-optimal condition and the risk at the control optimum}
 
 \begin{proof}[Proof of Eq.~\ref{eq:appendix-pixel-control-noise}]
-From Lemma~\ref{lem:app-z-closed-form},
+Using Prop.~\ref{prop:app-pixel-ridge-de} and recursion relation of $B_{p,q}$ (Eq.~\ref{eq:app-spectral-recursion}), we have 
 \begin{equation}
 \mu_D-\mu_N=-\kappa B_{1,2}+\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big).
 \label{eq:appendix-pixel-d-minus-n}
 \end{equation}
-With $\mu_N>0$, $z^{(0)}_{acc}=0$ iff this vanishes, which is the first form
-of Eq.~\ref{eq:appendix-pixel-control-noise}.  Substituting
-$E_{gen,DE}+\sigma^2=nH/q$ and clearing denominators,
+With $\mu_N>0$, $z^{(0)}_{acc}=0$ if and only if $\mu_D=\mu_N$, which gives the first form of Eq.~\ref{eq:appendix-pixel-control-noise}. 
+$$
+\kappa B_{1,2}=\frac{\mathrm{df}_{1,2}}{n}\big(E_{gen,DE}+\sigma^2\big).$$
+Substituting $E_{gen,DE}+\sigma^2=nH/q$ and clearing denominators,
 \[
 \begin{aligned}
 &\mathrm{df}_{1,2}(\kappa^2B_{1,2}+\sigma^2)=(n-\mathrm{df}_2)\kappa B_{1,2}\\
@@ -742,9 +743,9 @@ $E_{gen,DE}+\sigma^2=nH/q$ and clearing denominators,
 \end{aligned}
 \]
 using $\mathrm{df}_1=\mathrm{df}_2+\kappa\mathrm{df}_{1,2}$ and the fixed
-point $n\lambda=\kappa(n-\mathrm{df}_1)$.  At a root with $\lambda,\sigma^2>0$
-the two forms divide to $(E_{gen,DE}+\sigma^2)/\sigma^2=\kappa/\lambda=n/(n-\mathrm{df}_1)$,
-hence
+point $n\lambda=\kappa(n-\mathrm{df}_1)$. This gives the 2nd form of the control calibration condition. 
+At a root with $\lambda,\sigma^2>0$ the two forms divide to $$(E_{gen,DE}+\sigma^2)/\sigma^2=\kappa/\lambda\Longleftrightarrow(E_{gen,DE}+\sigma^2)/\sigma^2=n/(n-\mathrm{df}_1)$$,
+hence the risk can be expressed through $\mathrm{df}_1$ at this calibration point
 \begin{equation}
 E_{gen,DE}(\kappa^\star_{acc})=\sigma^2\frac{\mathrm{df}_1(\kappa^\star_{acc})}{n-\mathrm{df}_1(\kappa^\star_{acc})} .
 \label{eq:appendix-pixel-risk-at-control}
@@ -790,7 +791,7 @@ noise-counting weight $w^{(2)}$ does, which is the typical situation for
 natural signals, and negative in the opposite case.
 \item \emph{Isotropic data.}  If $s_k\equiv s$, both averages equal
 $\|\bstar\|^2/d$ and the residual vanishes: prediction-optimal tuning
-calibrates control.  The dissociation is a consequence of anisotropy.
+calibrates control.  As we see again, the prediction-control dissociation is a consequence of data anisotropy.
 \item \emph{Magnitude.}  The prefactor $\kappa\,\mathrm{df}_{1,2}$ counts the
 modes in the band $s_k\approx\kappa$ (Section~\ref{sec:app-pixel-ridge}); for
 a power-law spectrum this count grows as $\kappa$ moves into the bulk, so the
