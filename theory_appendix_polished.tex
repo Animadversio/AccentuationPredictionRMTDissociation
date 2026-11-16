@@ -558,6 +558,10 @@ $s_k\lesssim\kappa$; control weights them equally.}
 % The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
 % mode's own variance $s_k$, for low-variance modes: the variance term divided
 % by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
+% Overleaf wording of the previous version (overleaf-2026-11-16-0216):
+% \item Relative to the
+% mode's own variance $s_k$, the per-mode weight error Eq.~\ref{eq:app-per-pc} is largest, for low-variance modes: the variance term divided
+% by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
 \end{enumerate}
 \end{remark}
 
@@ -727,7 +731,9 @@ and divide by $\mu_N=B_{1,1}$.
 
 \begin{figure}[t]
 \centering
+\vspace{-10pt}
 \includegraphics[width=0.7\linewidth]{figures/tuning_kernels_inset}
+\vspace{-15pt}
 \caption{\textbf{The two spectral kernels of Proposition~\ref{prop:app-prediction-control-optima}.}
 Solid: the control kernel $s/(s+\kappa)^2$ (peak at $s=\kappa$, symmetric on the log axis) and the prediction kernel $s^2/(s+\kappa)^3$ (peak at $s=2\kappa$), both scaled by $\kappa$.  Dotted: the linear and squared shrinkage factors whose $\kappa$-derivatives they are.  The residual control error at the prediction optimum, Eq.~\ref{eq:app-zacc-cv-summary}, is the difference between the teacher power averaged over the blue band and over the red band.}
 \label{fig:app-tuning-kernels}
