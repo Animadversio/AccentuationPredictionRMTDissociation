@@ -800,7 +800,7 @@ residual is amplified precisely in the noisy regime where cross-validation
 selects a larger penalty.
 \item \emph{Boundary optima.}  At low noise the DE prediction risk can be
 minimized at the boundary $\lambda\to0$ of the admissible path, where the
-stationarity formula does not apply.  \red{For $d>n$ this boundary is
+stationarity formula does not apply.  For $d>n$ this boundary is
 $\kappa\to\kappa_0>0$, and the leading control error follows in four steps:
 \begin{align*}
 \mathrm{df}_1(\kappa_0)&=n
@@ -827,7 +827,7 @@ vanishes only in the noiseless limit; prediction-optimal tuning at the
 boundary still does not calibrate control.  A small positive penalty adds
 the shrinkage that cancels this over-shoot, which is why the control optimum
 $\lambda^\star_{acc}$ shrinks with the noise while $\lambda^\star_{gen}$ stays
-at the grid floor (Fig.~\ref{fig:supp-pixel-lambda}).}  In the van Hateren
+at the grid floor (Fig.~\ref{fig:supp-pixel-lambda}).  In the van Hateren
 experiment the interior optimum appears above a noise threshold, and
 Eq.~\ref{eq:app-zacc-cv-summary} was checked against the leading DE
 evaluated at the numerically selected optimum and against empirical RidgeCV.
@@ -876,9 +876,9 @@ and $F\bstar$.
 The teacher is unchanged, $y={\bstar}^\top\x+\sigma\epsilon$.  The student
 reads out linearly from features $F\x$, $F\in\R^{p\times d}$ fixed:
 $f(\x)=w^\top F\x$, so its effective pixel weight is $\bhat=F^\top\hat w$ and
-must lie in the row space of $F$.  We condition on $F$ throughout; it is a
-structured map, not a random sketch.  The accentuation path
-$\x_0+\alpha\bhat=\x_0+\alpha F^\top\hat w$ also lies in the row space of $F$.
+must lie in the row space of $F$.  
+We condition on (fixed) $F$ throughout; it is a structured feature map, not a random sketch.  
+The accentuation path $\x_0+\alpha\bhat=\x_0+\alpha F^\top\hat w$ also lies in the row space of $F$.
 
 \begin{lem}[Feature ridge estimator]
 \label{lem:app-feature-estimator}
@@ -898,8 +898,8 @@ $Z^\top\mathbf y=FX^\top(X\bstar+\sigma\eta)$.
 
 \subsection{Realizable decomposition}
 
-Since $p<d$ in general, the teacher is usually not representable in the
-feature space.  Two notions of ``best representable weight'' arise, and the
+Since $p<d$ in general, the teacher is generally not representable in the
+feature space.  Two notions of ``\textit{best representable weight}'' arise, and the
 difference between them is the first sign of the dissociation.
 
 \begin{lem}[Restatement of Lemma~\ref{lem:mr-feature-weights}]
