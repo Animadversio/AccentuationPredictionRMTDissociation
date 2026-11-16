@@ -197,8 +197,12 @@ For pixel ridge under Gaussian design,
 \frac{\kappa^2B_{1,2}(\kappa)+\sigma^2}{n-\mathrm{df}_2(\kappa)}}_{\text{finite-sample signal and noise variance}} .
 \label{eq:mr-per-pc}
 \end{equation}
-The variance term is largest for modes with $s_k\approx\kappa$ and, relative
-to the mode's own variance $s_k$, is largest for low-variance modes.
+\red{Ridge keeps a fraction $s_k/(s_k+\kappa)$ of each teacher coefficient, so
+low-variance modes are essentially not learned; the variance term peaks at
+$s_k\approx\kappa$, where the estimate is most uncertain.}
+% [Reviewer fix] Previous wording:
+% The variance term is largest for modes with $s_k\approx\kappa$ and, relative
+% to the mode's own variance $s_k$, is largest for low-variance modes.
 Proof: Section~\ref{sec:app-pixel-ridge}.
 \end{prop}
 

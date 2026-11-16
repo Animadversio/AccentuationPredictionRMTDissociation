@@ -540,9 +540,24 @@ a count of modes in a bell-shaped band around $s_k\approx\kappa$ (the weight
 $4\kappa s_k/(s_k+\kappa)^2$ peaks at $1$ for $s_k=\kappa$ with constant
 width on a logarithmic axis, see Fig.~\ref{fig:app-tuning-kernels}).  
 Prediction weights this same noise by $s_k$; control does not.
-\item The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
-mode's own variance $s_k$, for low-variance modes: the variance term divided
-by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
+\item {\color{red}\emph{Which weight modes are wrong, and how.}  Eq.~\ref{eq:app-per-pc}
+splits the error in mode $k$ into a systematic and a random part.  The
+systematic part is shrinkage: $\E[\uvec_k^\top\bhat]\asymp
+\frac{s_k}{s_k+\kappa}b_k$, so a fraction $\kappa/(s_k+\kappa)$ of the
+teacher coefficient is lost whatever the teacher, and modes with
+$s_k\ll\kappa$ are essentially not learned.  The random part is
+$s_k/(s_k+\kappa)^2$ times a mode-independent factor; it is largest at
+$s_k=\kappa$ and small at both ends, because the data pin down modes with
+$s_k\gg\kappa$ and shrinkage pins modes with $s_k\ll\kappa$ near zero.
+High-variance modes are thus learned accurately, modes near $\kappa$ are the
+most uncertain, and low-variance modes are stably wrong.  Prediction weights
+all of these errors by $s_k$ and barely sees those in modes with
+$s_k\lesssim\kappa$; control weights them equally.}
+% [Reviewer fix] Previous wording (the claim covered only the variance term,
+% and "relative to s_k" had no clear meaning):
+% The per-mode error Eq.~\ref{eq:app-per-pc} is largest, relative to the
+% mode's own variance $s_k$, for low-variance modes: the variance term divided
+% by $s_k$ is $(s_k+\kappa)^{-2}$ times a mode-independent factor.
 \end{enumerate}
 \end{remark}
 
