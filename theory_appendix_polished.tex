@@ -695,8 +695,8 @@ R^{2,(0)}_{peer}=1-\Big(1-\frac{B_{2,2}}{B_{1,1}}\Big)^2\in(0,1],
 Equivalently, with $z_{peer}:={\bhat}^\top\bprime/{\bstar}^\top\bprime-1\asymp B_{2,2}/B_{1,1}-1\in(-1,0]$, the self-review error of Proposition~\ref{prop:mr-pixel-de} decomposes as $z^{(0)}_{acc}=z_{peer}+V_{\rm pix}/B_{1,1}$: self-review is peer review plus the norm inflation.
 \end{prop}
 \begin{proof}
-Write $\bhat=g+h$ and $\bprime=g'+h'$ \red{for the signal and noise parts of
-Eq.~\ref{eq:app-ridge-decomposition}}.
+Write $\bhat=g+h$ and $\bprime=g'+h'$ for the signal and noise parts of
+Eq.~\ref{eq:app-ridge-decomposition}.
 % [Reviewer fix] Previous: as in the previous subsection.  By
 independence of the two samples and $\E[h\,|\,X]=\E[h'\,|\,X']=0$, the cross
 products $g^\top h'$, $h^\top g'$, $h^\top h'$ have zero mean, and their
@@ -1408,12 +1408,7 @@ recordings are used for every model.  Replacing $g_i$ by $\bar\beta_i$ and
 the noise traces by population quantities requires deterministic
 equivalents for products of resolvents of two \emph{different} sample
 covariances $F_1\hat\Sigma F_1^\top$ and $F_2\hat\Sigma F_2^\top$ built from
-the same design; these are not derived here.  The naive replacement of
-each resolvent by its own one-point equivalent misses the coupling between
-the two: in the identical-map limit it gives
-$\Omega_{ii}\approx\sigma^2(\kappa/\lambda)T_F$ instead of the correct
-$\sigma^2\,nT_F/(n-\mathrm{df}_2)$, so it should be used only as a
-qualitative guide to the overlap.
+the same design; these are not derived here. % The naive replacement of each resolvent by its own one-point equivalent misses the coupling between the two: in the identical-map limit it gives $\Omega_{ii}\approx\sigma^2(\kappa/\lambda)T_F$ instead of the correct $\sigma^2\,nT_F/(n-\mathrm{df}_2)$, so it should be used only as a qualitative guide to the overlap.
 \end{enumerate}
 \end{remark}
 
