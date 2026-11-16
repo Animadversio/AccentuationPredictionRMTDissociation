@@ -1240,7 +1240,7 @@ other hand
 \end{align*} 
 {depend on $Q$ through $\Sigma^{-1}$ and $\Sigma^{-1/2}\bstar$, which the
 family constraint does not fix, so they vary in general
-(Corollary~\ref{cor:mr-rotation} gives an explicit example).  If
+(\red{Example}~\ref{cor:mr-rotation} gives an explicit example).  If
 $Q\Sigma^{-1/2}\bstar=\Sigma^{-1/2}\bstar$, then
 $q_Q=F\Sigma^{1/2}\Sigma^{-1/2}\bstar=q$.  For $\Sigma=I$, $F_Q=FQ$, so
 $\Gramsub{Q}=FQQ^\top F^\top=\Gram$ and $q_Q=FQ\bstar=F\bstar=q$.  When the
@@ -1260,7 +1260,7 @@ say when these are preserved.
 \begin{itemize}
 \item If $Q$ fixes $\Sigma^{-1/2}\bstar$, then $q_Q=q$, but $\Gramsub{Q}$ may
 still change, so control can change through the Gram matrix alone.  The
-rotation of Corollary~\ref{cor:mr-rotation} is of this kind.
+rotation of \red{Example}~\ref{cor:mr-rotation} is of this kind.
 \item If $Q$ commutes with $\Sigma$, then $Q\Sigma^{-1}Q^\top=\Sigma^{-1}$, so
 $\Gramsub{Q}=\Gram$.  Combined with the family constraint
 $Q\Sigma^{1/2}\bstar=\Sigma^{1/2}\bstar$, it also fixes $\Sigma^{-1/2}\bstar$,
@@ -1281,7 +1281,7 @@ inputs.}
 
 {We first describe the rotations that preserve prediction for a general
 teacher, then specialize to the paired input-eigenmode rotation of
-Corollary~\ref{cor:mr-rotation} which gives an explicit Gram update. 
+\red{Example}~\ref{cor:mr-rotation} which gives an explicit Gram update. 
 % viewing that update through feature PCs connects the construction to
 % Proposition~\ref{prop:mr-fragility}.}
 
@@ -1295,21 +1295,30 @@ $b$.  A left rotation $F\mapsto O_pF$, $O_p\in O(p)$, is a change of feature
 coordinates that is undone by $w\mapsto O_pw$ and produces no new control
 behavior; the nontrivial freedom is on the right.
 
-\paragraph{Right rotations with a fixed point.}
-{\color{red}Let $\mathcal S=\operatorname{span}(b,c)$, let $\Pi$ be its
-orthogonal projector, and let $W\in\mathbb R^{d\times m}$ have orthonormal
-columns spanning $\mathcal S^\perp$, where $m=d-\dim\mathcal S$.
-For any $R\in O(m)$,
-\begin{equation}
-Q:=\Pi+WRW^\top\in O(d),\qquad Qb=b,\qquad Qc=c.
-\end{equation}
-Thus $A_Q:=AQ$ preserves $AA^\top$, $Ab$ and $Ac$; setting
-$F_Q:=A_Q\Sigma^{-1/2}$ preserves prediction and $N_{DE}$ while allowing
-the pixel Gram matrix to vary.  Geometrically, the component $A\Pi$ is
-held fixed and the remaining component $A(I-\Pi)$ is rotated within
-$\mathcal S^\perp$.  If only prediction is to be fixed, use
-$\mathcal S=\operatorname{span}(b)$ instead; fixing $c$ is the additional
-constraint that keeps teacher--student alignment unchanged.}
+{\color{red}Concretely, let $\mathcal S=\operatorname{span}(b,c)$ with
+orthogonal projector $\Pi$.  Every $Q\in\mathcal G_{b,c}$
+(Proposition~\ref{prop:mr-gauge}) fixes $\mathcal S$ pointwise and therefore
+has the form $Q=\Pi+WRW^\top$, where $W$ has orthonormal columns spanning
+$\mathcal S^\perp$ and $R$ is orthogonal: it keeps the teacher-constrained
+component $A\Pi$ and rotates the rest of $A$ within $\mathcal S^\perp$.  For
+$\mathcal G_b$, replace $\mathcal S$ by $\operatorname{span}(b)$.}
+% [Reviewer fix] Previous paragraph (merged into the sentence above; it
+% restated the gauge family of Proposition~\ref{prop:mr-gauge}):
+% \paragraph{Right rotations with a fixed point.}
+% {\color{red}Let $\mathcal S=\operatorname{span}(b,c)$, let $\Pi$ be its
+% orthogonal projector, and let $W\in\mathbb R^{d\times m}$ have orthonormal
+% columns spanning $\mathcal S^\perp$, where $m=d-\dim\mathcal S$.
+% For any $R\in O(m)$,
+% \begin{equation}
+% Q:=\Pi+WRW^\top\in O(d),\qquad Qb=b,\qquad Qc=c.
+% \end{equation}
+% Thus $A_Q:=AQ$ preserves $AA^\top$, $Ab$ and $Ac$; setting
+% $F_Q:=A_Q\Sigma^{-1/2}$ preserves prediction and $N_{DE}$ while allowing
+% the pixel Gram matrix to vary.  Geometrically, the component $A\Pi$ is
+% held fixed and the remaining component $A(I-\Pi)$ is rotated within
+% $\mathcal S^\perp$.  If only prediction is to be fixed, use
+% $\mathcal S=\operatorname{span}(b)$ instead; fixing $c$ is the additional
+% constraint that keeps teacher--student alignment unchanged.}
 
 \begin{example}[Two-dimensional rotation]
 {Choose orthonormal input directions $r_1,r_2\in\mathcal S^\perp$
@@ -1321,31 +1330,36 @@ A(\theta)=\tilde A+a(\cos\theta\,r_1+\sin\theta\,r_2)^\top
 has $A(\theta)A(\theta)^\top=\tilde A\tilde A^\top+aa^\top$,
 $A(\theta)b=\tilde Ab$ and $A(\theta)c=\tilde Ac$.
 Taking $r_1=u_h$, $r_2=u_{\ell(h)}$ and $a=a_h$ gives a single pair in
-Corollary~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
+\red{Example}~\ref{cor:mr-rotation}, with $t=\sin^2\theta$.
 Arbitrary $r_1,r_2\in\mathcal S^\perp$ preserve the same statistics, but
 need not be eigenvectors of $\Sigma$; their Gram update can therefore
-contain $\sin\theta\cos\theta$ cross terms.}
+contain $\sin\theta\cos\theta$ cross terms.  \red{This rotation is the
+building block of the numerical families:
+Fig.~\ref{fig:supp-null-givens} rotates a single feature row, and
+Fig.~\ref{fig:supp-null-random} composes many randomly paired rotations.}}
 \end{example}
 
-\begin{example}[Resampling the null part]
-{\color{red}Using the same projector, write
-$A=A\Pi+KQ_0$, where $KQ_0$ is a thin SVD factorization of
-$A(I-\Pi)$ with the singular values absorbed into $K\in\mathbb R^{p\times r}$,
-and $Q_0\in\mathbb R^{r\times d}$ has orthonormal rows in
-$\mathcal S^\perp$.  Replace $Q_0$ by any other such row frame $Q_\phi$.
-Then $A_\phi:=A\Pi+KQ_\phi$ satisfies
-\[
-A_\phi A_\phi^\top=A\Pi A^\top+KK^\top=AA^\top,\qquad
-A_\phi b=Ab,\qquad A_\phi c=Ac.
-\]
-The recipe is therefore to keep the teacher-constrained component $A\Pi$
-and the residual singular values and left singular vectors, while
-resampling the residual right singular vectors within $\mathcal S^\perp$.
-It produces the family of equally predictive maps illustrated in
-Fig.~\ref{fig:supp-null-random}, without changing $N_{DE}$.}
-\end{example}
+% [Reviewer fix] Example removed (no figure uses this construction; the
+% random family of Fig. supp-null-random is built from 2D rotations):
+% \begin{example}[Resampling the null part]
+% {\color{red}Using the same projector, write
+% $A=A\Pi+KQ_0$, where $KQ_0$ is a thin SVD factorization of
+% $A(I-\Pi)$ with the singular values absorbed into $K\in\mathbb R^{p\times r}$,
+% and $Q_0\in\mathbb R^{r\times d}$ has orthonormal rows in
+% $\mathcal S^\perp$.  Replace $Q_0$ by any other such row frame $Q_\phi$.
+% Then $A_\phi:=A\Pi+KQ_\phi$ satisfies
+% \[
+% A_\phi A_\phi^\top=A\Pi A^\top+KK^\top=AA^\top,\qquad
+% A_\phi b=Ab,\qquad A_\phi c=Ac.
+% \]
+% The recipe is therefore to keep the teacher-constrained component $A\Pi$
+% and the residual singular values and left singular vectors, while
+% resampling the residual right singular vectors within $\mathcal S^\perp$.
+% It produces the family of equally predictive maps illustrated in
+% Fig.~\ref{fig:supp-null-random}, without changing $N_{DE}$.}
+% \end{example}
 
-\begin{proof}[Proof of Corollary~\ref{cor:mr-rotation}]
+\begin{proof}[Proof of \red{Example}~\ref{cor:mr-rotation}]
 {\color{red}\emph{Step 1: rotate a pair without changing its feature covariance.}
 For a single pair, Eq.~\ref{eq:mr-rotation-pair} replaces the two whitened
 columns $(a_h,0)$ by $(\sqrt{1-t}\,a_h,\sqrt t\,a_h)$.  Their contribution
@@ -1381,29 +1395,42 @@ Summing over pairs gives Eq.~\ref{eq:mr-rotation-gram}; all other columns
 are unchanged.  The trace contribution increases from $\|a_h\|^2/s_h$
 to $\|a_h\|^2/s_{\ell(h)}$, giving the variance-ratio factor.
 
-\emph{Step 3: read the increase in the feature-PC frame.}
-Choose fixed eigenpairs $\Sigma_Fv_j=\rho_jv_j$ and set
-$g_j(t):=F(t)^\top v_j$, as in Proposition~\ref{prop:mr-fragility}.
-Step~1 gives
-$g_j(t)^\top\Sigma g_j(t)=v_j^\top\Sigma_Fv_j=\rho_j$:
-each feature PC has the same natural-image variance throughout the rotation.
-Step~2 instead gives
+\emph{Step 3: the fragility factor increases.}
+{\color{red}Write $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$, which Step~1
+keeps fixed.  Since $T_F=\operatorname{Tr}[\Gram M_\kappa]$, Step~2 gives
 \[
-\|g_j(t)\|^2=v_j^\top\Gramt v_j
-=\|g_j(0)\|^2+t\sum_{h\in H}\delta_h(v_j^\top a_h)^2,
-\qquad \delta_h:=s_{\ell(h)}^{-1}-s_h^{-1}>0.
+T_{F(t)}-T_{F(0)}=t\sum_{h\in H}\delta_h\,a_h^\top M_\kappa a_h,
+\qquad \delta_h:=s_{\ell(h)}^{-1}-s_h^{-1}>0 .
 \]
-This proves Eq.~\ref{eq:mr-rotation-feature-gradients}.  Substitution into
-the spectral formula of Proposition~\ref{prop:mr-fragility} yields
-Eq.~\ref{eq:mr-rotation-feature-trace}.  Thus the increase comes from
-larger pixel-gradient energy, with feature variances and ridge factors
-held fixed.  It is strictly positive for $t>0$ if any $a_h\ne0$:
-each nonzero $a_h$ lies in $\operatorname{range}(\Sigma_F)$ and therefore
-has a nonzero projection onto at least one $v_j$ with $\rho_j>0$.
+Each nonzero $a_h$ is a column of $A$ and so lies in
+$\operatorname{range}(AA^\top)=\operatorname{range}(\Sigma_F)$, on which
+$M_\kappa$ is positive definite; the increase is therefore strictly positive
+for $t>0$ if any $a_h\ne0$.  In the feature-PC frame of
+Proposition~\ref{prop:mr-fragility}, every feature PC keeps its
+natural-image variance and ridge factor, and only its pixel-gradient energy
+$\|F(t)^\top v_j\|^2$ grows.}
+% [Reviewer fix] Previous Step 3 (cited equations that are now commented out in D.6):
+% \emph{Step 3: read the increase in the feature-PC frame.}
+% Choose fixed eigenpairs $\Sigma_Fv_j=\rho_jv_j$ and set
+% $g_j(t):=F(t)^\top v_j$, as in Proposition~\ref{prop:mr-fragility}.
+% Step~1 gives
+% $g_j(t)^\top\Sigma g_j(t)=v_j^\top\Sigma_Fv_j=\rho_j$:
+% each feature PC has the same natural-image variance throughout the rotation.
+% Step~2 instead gives
+% \[
+% \|g_j(t)\|^2=v_j^\top\Gramt v_j
+% =\|g_j(0)\|^2+t\sum_{h\in H}\delta_h(v_j^\top a_h)^2,
+% \qquad \delta_h:=s_{\ell(h)}^{-1}-s_h^{-1}>0.
+% \]
+% This proves Eq.~\ref{eq:mr-rotation-feature-gradients}.  Substitution into
+% the spectral formula of Proposition~\ref{prop:mr-fragility} yields
+% Eq.~\ref{eq:mr-rotation-feature-trace}.  Thus the increase comes from
+% larger pixel-gradient energy, with feature variances and ridge factors
+% held fixed.  It is strictly positive for $t>0$ if any $a_h\ne0$:
+% each nonzero $a_h$ lies in $\operatorname{range}(\Sigma_F)$ and therefore
+% has a nonzero projection onto at least one $v_j$ with $\rho_j>0$.
 
 \emph{Step 4: propagate the gradient increase to control.}
-Write $M_\kappa:=(\Sigma_F+\kappa I)^{-2}\Sigma_F$.  Step~3 equivalently
-gives $T_{F(t)}-T_{F(0)}=t\sum_h\delta_h a_h^\top M_\kappa a_h$.
 With
 $\bar u:=(\Sigma_F+\kappa I)^{-1}F\Sigma\bstar$ fixed,
 $\|\bar\beta_{F,\kappa}\|^2=\bar u^\top\Gramt\bar u$ is nondecreasing, so
@@ -1677,8 +1704,15 @@ degrades gracefully with noise (through $\kappa$), and is symmetric between
 the two fits.  Self-review contains the estimator's own fluctuation energy and
 $R^2_{acc}=1-z_{acc}^2$ is unbounded below.  
 This is the linear form of ``recognition without generation''.  
-With observation noise on the measured responses, a path that barely modulates the true response (small ${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator, which is why the peer scores of a weak generator's images are also low in the data; and two models with different feature maps have different noise
-energies, which breaks the symmetry.
+{\color{red}The symmetry requires the two fits to share the feature map and
+penalty: for different maps, $G_{1\leftarrow2}\approx
+\bar\beta_1^\top\bar\beta_2/{\bstar}^\top\bar\beta_2$ has the generator's own
+true gain in the denominator, so the two directions of review differ
+(Section~\ref{sec:app-peer-shared}).}
+% [Reviewer fix] Previous sentence (noise energies do not enter peer review
+% for independent fits, and the weak-generator claim holds for peer r but not R^2):
+% With observation noise on the measured responses, a path that barely modulates the true response (small ${\bstar}^\top\bprime$) yields poor empirical scores for every evaluator, which is why the peer scores of a weak generator's images are also low in the data; and two models with different feature maps have different noise
+% energies, which breaks the symmetry.
 \end{remark}
 
 \begin{remark}[Perfect peer, and second-order corrections]
