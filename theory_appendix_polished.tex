@@ -601,23 +601,59 @@ gives the first form; the second is
 Eq.~\ref{eq:app-pixel-D-summary} divided by $B_{1,1}$.
 \end{proof}
 
-\begin{remark}[Two competing terms, and when $R^2_{acc}$ turns negative]
-The two forms of Eq.~\ref{eq:z_simplify_identity} expose the competition.
-The ridge term $-n\lambda B_{1,2}$ (equivalently $B_{2,2}-B_{1,1}<0$) is
-shrinkage: the student under-shoots along its own path, $z<0$, slope $>1$.
-The noise term $\sigma^2\mathrm{df}_{1,2}$ is Euclidean noise energy: the
-student over-shoots, $z>0$, slope $<1$.  Since $\mu_N,\mu_D>0$, always
-$z>-1$, and $R^2_{acc}=1-z^2$ crosses zero at $z=1$.  Writing the condition
-$z\ge1$ as
+\begin{remark}[\red{Calibration as a balance between $\mu_N$ and $\mu_D$, and when $R^2_{acc}$ turns negative}]
+{\color{red}Along its own gradient path the student predicts a response
+change proportional to $D=\|\bhat\|^2$, while the true change is
+proportional to $N={\bstar}^\top\bhat$ (Eq.~\ref{eq:app-acc-metrics-z}).
+Control is calibrated when the two agree, and since
+$\|\bar\beta_\kappa\|^2=B_{2,2}=B_{1,1}-\kappa B_{1,2}$,
+Eq.~\ref{eq:app-pixel-D-summary} shows what drives them apart:
 \[
-\sigma^2\,\mathrm{df}_{1,2}\;\ge\;n\lambda\,B_{1,2}+(n-\mathrm{df}_2)\,B_{1,1},
+\mu_D-\mu_N=\underbrace{V_{\rm pix}(\kappa)}_{\text{noise inflates the norm}}
+-\underbrace{\kappa B_{1,2}}_{\text{shrinkage deflates it}} .
 \]
-one sees that at fixed $\lambda$ (hence fixed $\kappa$) the right-hand side is
-bounded, $B_{1,1}\le\|\bstar\|^2$, while the left-hand side grows without
-bound in $\sigma^2$: for any fixed regularization, enough response noise
-drives $R^2_{acc}$ to any negative value.  Whether tuning $\lambda$ with the
-noise can prevent this is the subject of the next section.
+\begin{itemize}
+\item $\mu_D=\mu_N$ (calibrated): the noise energy exactly compensates the
+norm lost to shrinkage; slope $=1$ and $R^2_{acc}=1$.
+\item $\mu_D<\mu_N$ (under-prediction): shrinkage dominates, and the student
+predicts less change than it achieves; slope $>1$, and since $\mu_D>0$,
+$R^2_{acc}>0$ always.
+\item $\mu_D>\mu_N$ (over-prediction): noise dominates, and the student
+``hallucinates'' response change along noise directions that the teacher
+does not respond to; slope $<1$, and $R^2_{acc}<0$ once $\mu_D>2\mu_N$.
+\end{itemize}
+In terms of $z^{(0)}_{acc}=\mu_D/\mu_N-1$
+(Lemma~\ref{lem:app-z-closed-form}) these are $z=0$, $-1<z<0$ and $z>0$, with
+$R^2_{acc}=1-z^2$ and slope $=1/(1+z)$.  By the lemma, the negative-$R^2$
+condition $\mu_D\ge2\mu_N$ reads
+\[
+\sigma^2\,\mathrm{df}_{1,2}\;\ge\;n\lambda\,B_{1,2}+(n-\mathrm{df}_2)\,B_{1,1}.
+\]
+At fixed $\lambda$ (hence fixed $\kappa$) the right-hand side is bounded,
+since $B_{1,1}\le\|\bstar\|^2$, while the left-hand side grows without bound
+in $\sigma^2$: for any fixed regularization, enough response noise drives
+$R^2_{acc}$ to any negative value.  Whether tuning $\lambda$ with the noise
+can prevent this is the subject of the next section.}
 \end{remark}
+% [Reviewer fix] Previous version of this remark:
+% \begin{remark}[Two competing terms, and when $R^2_{acc}$ turns negative]
+% The two forms of Eq.~\ref{eq:z_simplify_identity} expose the competition.
+% The ridge term $-n\lambda B_{1,2}$ (equivalently $B_{2,2}-B_{1,1}<0$) is
+% shrinkage: the student under-shoots along its own path, $z<0$, slope $>1$.
+% The noise term $\sigma^2\mathrm{df}_{1,2}$ is Euclidean noise energy: the
+% student over-shoots, $z>0$, slope $<1$.  Since $\mu_N,\mu_D>0$, always
+% $z>-1$, and $R^2_{acc}=1-z^2$ crosses zero at $z=1$.  Writing the condition
+% $z\ge1$ as
+% \[
+% \sigma^2\,\mathrm{df}_{1,2}\;\ge\;n\lambda\,B_{1,2}+(n-\mathrm{df}_2)\,B_{1,1},
+% \]
+% one sees that at fixed $\lambda$ (hence fixed $\kappa$) the right-hand side is
+% bounded, $B_{1,1}\le\|\bstar\|^2$, while the left-hand side grows without
+% bound in $\sigma^2$: for any fixed regularization, enough response noise
+% drives $R^2_{acc}$ to any negative value.  Whether tuning $\lambda$ with the
+% noise can prevent this is the subject of the next section.
+% \end{remark}
+
 
 \section{Cross-validation versus control-optimal regularization: proofs}
 \label{sec:app-optimal-regularization}
