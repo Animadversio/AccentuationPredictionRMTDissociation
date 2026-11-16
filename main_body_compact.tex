@@ -456,7 +456,7 @@ We computed these quantities for all 250 site--model pairs (App.~\ref{sec:app-me
 \section{Discussion}
 \label{sec:discussion}
 \vspace{-9pt}
-A single mechanism accounts for the three neuronal phenomena: prediction measures weight error in the covariance metric, control measures it along the model's own gradient. In the linear theory the control error at fixed prediction error is governed by the three factors: noise, spectrum, and map, of which only the first is visible from held-out accuracy.
+A single mechanism could account for the three neuronal phenomena: prediction measures weight error in the covariance metric, control measures it along the model's own gradient. In the linear theory the control error at fixed prediction error is governed by the three factors: noise, spectrum, and map, of which only the first is visible from held-out accuracy.
 The practical implication is that selecting encoding models or penalties by held-out prediction cannot certify gradient-based control; validation must constrain the gradient, for instance through $T_\phi$, or test generated stimuli directly. The high-frequency artifacts of failed accentuations are not a cosmetic defect but the expected signature of low-variance directions that natural images never constrained.
 
 \paragraph{Limitations.}
