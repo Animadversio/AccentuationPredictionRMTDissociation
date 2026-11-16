@@ -1771,7 +1771,7 @@ diagnostic of Section~\ref{sec:app-nonlinear-diagnostic} the per-PC gradient
 energies $\|g_k\|^2$ are replaced by local Jacobian energies.
 \end{remark}
 
-\section{\red{Ratios of random quadratic forms}}
+\section{Ratios of random quadratic forms}
 % [Reviewer fix] Previous title: Ratios of random quadratic forms, and peer review
 \label{sec:app-ratio-approximations}
 \label{sec:app-ratio-corrections}
@@ -1781,9 +1781,9 @@ controls their ratio, and every accentuation metric is a nonlinear function
 of $N/D$.  The main text uses the leading approximation
 $\E[N/D]\approx\mu_N/\mu_D$.  This section quantifies its error, gives the
 response-noise contribution to the variance of the ratio, and describes a
-distributional surrogate.  \red{Peer review, whose metrics are also ratios, is
+distributional surrogate.  Peer review, whose metrics are also ratios, is
 treated with the pixel-space and feature-space proofs
-(Sections~\ref{sec:app-peer-review} and~\ref{sec:app-peer-shared}).}
+(Sections~\ref{sec:app-peer-review} and~\ref{sec:app-peer-shared}).
 % [Reviewer fix] Previous ending: distributional surrogate, and then uses the
 % same tools for peer review, where the ratio involves two independent fits.
 
@@ -1985,9 +1985,9 @@ The empirical test of this diagnostic on the 250 site--model pairs of the neuron
 This section records the deterministic equivalents and the spectral-sum
 identities used in the proofs.  The design is $X\in\R^{n\times d}$ with
 i.i.d. rows $\x_i\sim\mathcal N(0,\Sigma)$, $\hat\Sigma=X^\top X/n$, and
-$\gamma=d/n$; all statements hold in the proportional limit, \red{and $\asymp$
+$\gamma=d/n$; all statements hold in the proportional limit, and $\asymp$
 denotes deterministic equivalence, defined precisely in
-Section~\ref{sec:app-de-definition} below.}  For
+Section~\ref{sec:app-de-definition} below. 
 % [Reviewer fix] Red draft v1 of this sentence (definition now lives in
 % Section~\ref{sec:app-de-definition}):
 % and $\asymp$
@@ -2001,20 +2001,16 @@ Section~\ref{sec:app-de-definition} below.}  For
 % [Reviewer fix] Previous wording:
 % $\gamma=d/n$; all statements hold in the proportional limit and $\asymp$
 % denotes almost-sure asymptotic equivalence of the two sides.  For
-feature-space regression the same statements apply to the design $Z=XF^\top$
+For feature-space regression the same statements apply to the design $Z=XF^\top$
 with $(\Sigma,d)$ replaced by $(\Sigma_F,p)$.
 
 \subsection{Definition of deterministic equivalence}
 \label{sec:app-de-definition}
 
-{\color{red}Section~\ref{sec:mr-toolkit} describes deterministic equivalence
+{Section~\ref{sec:mr-toolkit} describes deterministic equivalence
 informally; here is the precise statement.  Deterministic equivalents are
-statements about a sequence of problems indexed by the sample size $n$: a
-dimension $d=d_n$, a covariance $\Sigma=\Sigma_n\in\R^{d\times d}$, a teacher
-$\bstar=\beta^{\star}_n\in\R^d$ and a design $X=X_n\in\R^{n\times d}$ with
-i.i.d.\ rows $\x_i\sim\mathcal N(0,\Sigma_n)$, with $n,d\to\infty$ and
-$d/n\to\gamma\in(0,\infty)$.  We suppress the index $n$ everywhere else.  For
-a random matrix $A_n$ and a deterministic matrix $B_n$ we write
+statements about a sequence of problems, in our case, indexed by the sample size $n$: a dimension $d=d_n$, a covariance $\Sigma=\Sigma_n\in\R^{d\times d}$, a teacher $\bstar=\beta^{\star}_n\in\R^d$ and a design $X=X_n\in\R^{n\times d}$ with i.i.d.\ rows $\x_i\sim\mathcal N(0,\Sigma_n)$, with $n,d\to\infty$ and $d/n\to\gamma\in(0,\infty)$.  
+We suppress the index $n$ everywhere else.  For a random matrix $A_n$ and a deterministic matrix $B_n$ we write
 $A_n\asymp B_n$ if
 \[
 \operatorname{Tr}\big[C_n(A_n-B_n)\big]\to0\qquad\text{almost surely}
@@ -2105,12 +2101,12 @@ For deterministic $A,B$,
 \begin{align}
 \operatorname{Tr}\big[A(\hat\Sigma+\lambda I)^{-1}B(\hat\Sigma+\lambda I)^{-1}\big]
 &\asymp\frac{\kappa^2}{\lambda^2}\Big\{
-\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-1}B(\Sigma+\kappa I)^{-1}\big]\\
+\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-1}B(\Sigma+\kappa I)^{-1}\big]\notag\\
 &\quad+\frac{\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)}
 \Big\},
 \label{eq:app-two-point-de}\\
 \operatorname{Tr}\big[A\hat\Sigma(\hat\Sigma+\lambda I)^{-1}B\hat\Sigma(\hat\Sigma+\lambda I)^{-1}\big]
-&\asymp\operatorname{Tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}B\Sigma(\Sigma+\kappa I)^{-1}\big]\\
+&\asymp\operatorname{Tr}\big[A\Sigma(\Sigma+\kappa I)^{-1}B\Sigma(\Sigma+\kappa I)^{-1}\big]\notag\\
 &\quad+\frac{\kappa^2\operatorname{Tr}\big[A(\Sigma+\kappa I)^{-2}\Sigma\big]\operatorname{Tr}\big[B(\Sigma+\kappa I)^{-2}\Sigma\big]}{n-\mathrm{df}_2(\kappa)} .
 \label{eq:app-two-point-de-weighted}
 \end{align}
