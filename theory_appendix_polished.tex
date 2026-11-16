@@ -624,13 +624,12 @@ noise can prevent this is the subject of the next section.
 
 Along the ridge path the fitted weight moves from the least-squares or
 minimum-norm solution ($\lambda\to0$) to the origin ($\lambda\to\infty$).
-Cross-validation selects the point of the path that is tangent to the
-smallest reachable prediction ellipsoid; control calibration asks where the
-path crosses the sphere $D=N$.  This section shows that the two selections
-obey different spectral conditions and computes the control error left over
-by prediction-optimal tuning.  Since $d\kappa/d\lambda>0$
-(Eq.~\ref{eq:app-dkappa-dlambda}), selecting $\lambda$ is equivalent to
-selecting $\kappa$, and all conditions are written in $\kappa$.
+Cross-validation selects the point of the path that minimizes generalization error; geometrically, this means the tangent point to the smallest reachable prediction ellipsoid; 
+control calibration asks where the control slope is $1$, on the leading order this means $D=N$, i.e. the point where the path crosses the control optimal sphere. 
+This section shows that the two selections obey different spectral conditions and computes the control error left over
+by prediction-optimal tuning.  
+Since $d\kappa/d\lambda>0$
+(Eq.~\ref{eq:app-dkappa-dlambda}), selecting $\lambda$ is equivalent to selecting $\kappa$, and all conditions are written in $\kappa$.
 
 \begin{prop}[Restatement of Proposition~\ref{prop:mr-pixel-tuning}]
 \label{prop:app-prediction-control-optima}
@@ -676,7 +675,7 @@ H'(\kappa)=\frac{d}{d\kappa}\sum_k\frac{\kappa^2s_k}{(s_k+\kappa)^2}b_k^2
 \qquad
 q'(\kappa)=-\frac{d}{d\kappa}\mathrm{df}_2=2\,\mathrm{df}_{2,3}.
 \]
-An interior stationary point of $H/q$ satisfies $qH'=Hq'$, i.e.
+At interior stationary point the derivative of $E_{gen}$ and $H/q$ vanishes, which satisfies $qH'=Hq'$, i.e.
 \begin{equation}
 (n-\mathrm{df}_2)\,\kappa\,B_{2,3}=\mathrm{df}_{2,3}\big(\kappa^2B_{1,2}+\sigma^2\big),
 \label{eq:optimal_CV_E_gen_condition_abbrev}
