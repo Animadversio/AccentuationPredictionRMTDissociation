@@ -574,22 +574,31 @@ Only factor (i) is visible from held-out prediction.
 % then converts this increase directly into a larger fragility factor.}
 
 {\color{red}\paragraph{Peer review without independence (informal).}
-Proposition~\ref{prop:mr-peer} assumes that the two models are fitted to
-independent data.  Each fit then carries its own estimation noise, the two
-noises are uncorrelated, and peer review measures only the shrinkage bias
-that the two fits share.  In the neuronal experiments all encoding models
-are fitted to the same recordings, so this no longer holds: the two fits
-share part of their estimation noise, and the shared part inflates the peer
-score in the same way that a model's own noise inflates its self-review
-score.  How much noise is shared depends on the feature maps.  Two maps that
-send estimation noise into the same pixel directions review each other
-almost as in self-review; two maps that send it into different directions
-review each other almost as independent fits.  Peer review on shared data is
-also no longer symmetric, because each score is normalized by the true
-response change along the generator's path, which differs between the two
-models.  We do not derive deterministic equivalents for this case;
-Section~\ref{sec:app-peer-shared} gives the exact identity conditional on
-the data and a longer discussion.}
+Proposition~\ref{prop:mr-peer} assumes that the reviewer $\bhat$ and the
+generator $\bprime$ are fitted to independent data.  For students with maps
+$F$ and $F'$ on independent data the same argument gives, at leading order,
+\[
+G_{peer}=\frac{{\bhat}^\top\bprime}{{\bstar}^\top\bprime}
+\approx\frac{\bar\beta_{F,\kappa}^\top\bar\beta_{F',\kappa'}}{{\bstar}^\top\bar\beta_{F',\kappa'}},
+\]
+so peer review sees only the shrinkage bias the two fits share, whereas
+self-review adds the student's own noise energy,
+$D/N\asymp(\|\bar\beta_{F,\kappa}\|^2+V_F)/N_{DE}$
+(Eq.~\ref{eq:mr-feature-D}).  In the neuronal experiments all students are
+fitted to the same recordings, and the numerator becomes, informally,
+\[
+{\bhat}^\top\bprime\approx\bar\beta_{F,\kappa}^\top\bar\beta_{F',\kappa'}
++(\text{shared noise}),\qquad
+|\text{shared noise}|\le\sqrt{V_F\,V_{F'}} .
+\]
+The shared-noise term is the inner product of the two fits' noise-driven
+weights: it vanishes for independent data, equals $V_F$ for identical
+students, and in between is large when $F$ and $F'$ send estimation noise
+into the same pixel directions.  Since the denominator ${\bstar}^\top\bprime$
+belongs to the generator, peer review on shared data is also asymmetric.  We
+do not derive a deterministic equivalent for the shared-noise term;
+Section~\ref{sec:app-peer-shared} gives its exact form conditional on the
+data.}
 % [Reviewer fix] Previous formal statement (replaced by the informal
 % paragraph above; its deterministic equivalents were never derived):
 % \begin{prop}[Peer review on shared data across feature maps]
