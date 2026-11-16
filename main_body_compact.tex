@@ -405,7 +405,8 @@ The inflation $V_F=(E_{gen}+\sigma^2)\,T_F(\kappa)/n$ is a product of three fact
 \textbf{(ii) limited data} $1/n$;
 \textbf{(iii) gradient geometry} $T_F$, the ratio of Euclidean to covariance-weighted gradient energy, a property of the feature map;
 \textbf{(iv) mismatched regularization}: on anisotropic data, the cross-validated penalty is designed for prediction, but not control-optimal and can leave a large control error  (Eq.~\ref{eq:pixel-zacc-cv}).
-Held-out accuracy reflects only (i); (iii) and (iv) are invisible to it. Neuronal recordings are noisy and short \citep{goris2014partitioning,churchland2010stimulus}, supplying (i)--(ii); natural images make (iv) large for every model; and the feature map decides (iii), in which equally predictive maps \red{can differ by the variance ratio of the image modes their features load on (Cor.~\ref{cor:mr-rotation}), which spans orders of magnitude for natural images}.
+Held-out accuracy reflects only (i); (iii) and (iv) are invisible to it. Neuronal recordings are noisy and short \citep{goris2014partitioning,churchland2010stimulus}, supplying (i)--(ii); natural images make (iv) large for every model; and the feature map decides (iii), \red{which can differ by orders of magnitude between equally predictive maps (Cor.~\ref{cor:mr-rotation})}.
+% [Reviewer fix] Previous red draft: in which equally predictive maps can differ by the variance ratio of the image modes their features load on (Cor.~\ref{cor:mr-rotation}), which spans orders of magnitude for natural images.
 % [Reviewer fix] Previous ending: "...and the feature map decides (iii), in which equally predictive maps differ without bound."
 
 
